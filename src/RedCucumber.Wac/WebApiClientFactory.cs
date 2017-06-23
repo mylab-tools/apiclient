@@ -10,30 +10,44 @@ namespace RedCucumber.Wac
     public class WebApiClientFactory<T>
         where T : class
     {
+        private readonly IWebApiRequestProcessor _requestProcessor;
+
         public string BasePath { get; }
 
-        public WebApiClientFactory(string basePath)
+        public WebApiClientFactory(string basePath, IWebApiRequestProcessor requestProcessor = null)
         {
+            _requestProcessor = requestProcessor ?? new WebApiRequestProcessor();
+
             BasePath = basePath;
         }
 
         public T Create()
         {
             var serviceAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<WebApiServiceAttribute>();
-            if (serviceAttribute != null)
-            {
-                var factory = new ServiceApiClientFactory<T>(serviceAttribute);
-                return factory.Create();
-            }
-
             var resourceAttribute = typeof(T).GetTypeInfo().GetCustomAttribute<WebApiResourceAttribute>();
-            if (resourceAttribute != null)
+
+            if (serviceAttribute == null && resourceAttribute == null)
             {
-                var factory = new ResourceApiClientFactory<T>(resourceAttribute);
-                return factory.Create();
+                throw new WebApiContractException($"Web api contract '{typeof(T).FullName}' should be marked with '{typeof(WebApiServiceAttribute).FullName}' or with '{typeof(WebApiResourceAttribute).FullName}'.");
             }
 
-            throw new WebApiContractException($"Web api contract '{typeof(T).FullName}' should be marked with '{typeof(WebApiServiceAttribute).FullName}' or with '{typeof(WebApiResourceAttribute).FullName}'.");
+            var desc = WebApiDescription.Create(typeof(T));
+
+            ProcessBaseAddress(desc);
+
+            return (T)new WebApiProxy<T>(desc, _requestProcessor).GetTransparentProxy();
+        }
+
+        private void ProcessBaseAddress(WebApiDescription desc)
+        {
+            if (!string.IsNullOrWhiteSpace(BasePath))
+            {
+                desc.BaseUrl = !string.IsNullOrWhiteSpace(desc.BaseUrl) 
+                    ? new Uri(new Uri(BasePath), desc.BaseUrl).ToString()
+                    : BasePath;
+            }
+            if (string.IsNullOrWhiteSpace(desc.BaseUrl))
+                throw new WebApiContractException("The base address is empty");
         }
     }
 }

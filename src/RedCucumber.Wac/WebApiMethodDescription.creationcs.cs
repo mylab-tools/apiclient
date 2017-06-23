@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -101,7 +102,7 @@ namespace RedCucumber.Wac
         {
             var d = new WebApiMethodDescription
             {
-                MethodId = method.ToString(),
+                MethodId = CreateMethodId(method.Name, method.GetParameters().Select(p => p.Name))
             };
 
             Wac.ContentType defaultSubmitContentType;
@@ -115,6 +116,11 @@ namespace RedCucumber.Wac
             CheckParametersConflict(d.Parameters);
 
             return d;
+        }
+
+        public static string CreateMethodId(string methodName, IEnumerable<string> parameterNames)
+        {
+            return methodName + string.Join("_", parameterNames);
         }
     }
 }

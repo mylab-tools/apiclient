@@ -8,12 +8,18 @@ namespace RedCucumber.Wac
     {
         public string Name { get; set; }
 
+        public string MethodParameterName { get;set; }
+
         public WebApiParameterType Type { get; set; }
+
+        public int Order { get; set; }
 
         public static WebApiParameterDescription Create(ParameterInfo parameter)
         {
             return new WebApiParameterDescription
             {
+                Order = parameter.Position,
+                MethodParameterName = parameter.Name,
                 Name = parameter.GetCustomAttribute<NameAttribute>()?.Name ?? parameter.Name,
                 Type = parameter.GetCustomAttribute<ParameterTypeAttribute>()?.ParameterType ?? WebApiParameterType.Undefined
             };

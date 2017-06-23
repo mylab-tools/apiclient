@@ -5,7 +5,7 @@ namespace RedCucumber.Wac
     /// <summary>
     /// Throws when error found whern interface analysis 
     /// </summary>
-    public class WebApiContractException : Exception
+    public class WebApiContractException : WebApiException
     {
         /// <summary>
         /// Initializes a new instance of <see cref="WebApiContractException"/>

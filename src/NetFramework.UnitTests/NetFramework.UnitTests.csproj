@@ -44,6 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebApiProxyBehavior.cs" />
+    <Compile Include="WebApiDescriptionBehavior.cs" />
+    <Compile Include="WebApiProxyBehavior.stuff.cs" />
+    <Compile Include="WebApiRequestFactoryBehavior.cs" />
     <Compile Include="WebApiClientFctoryBehavior.stuff.cs" />
     <Compile Include="WebApiMethodDescriptionBahavior.stuff.cs" />
     <Compile Include="WebApiParameterDescripitonBehavior.cs" />

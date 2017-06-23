@@ -21,7 +21,7 @@ namespace NetFramework.UnitTests
         public void ShouldNotErrorWhenCreateByServiceContract()
         {
             //Arrange
-            var factory = new WebApiClientFactory<IService>(string.Empty);
+            var factory = new WebApiClientFactory<IService>("http://localhost");
             //Act
             factory.Create();
         }
@@ -30,7 +30,7 @@ namespace NetFramework.UnitTests
         public void ShouldNotErrorWhenCreateByResourceContract()
         {
             //Arrange
-            var factory = new WebApiClientFactory<IResource>(string.Empty);
+            var factory = new WebApiClientFactory<IResource>("http://localhost");
             //Act
             factory.Create();
         }
