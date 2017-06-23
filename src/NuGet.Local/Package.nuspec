@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <!-- this name is used to locate the assembly that defines the version of nuget package -->
+    <!-- if the assembly with this name is not found then the value of 'version' is used -->
+    <id>RedCucumber.Wac</id>
+    <version>1.0.0</version>
+    <title>Red cucumber Web Api Client</title>
+    <authors>Andrey Osintsev</authors>
+    <owners></owners>
+    <description>Allow to describe web api contract and use it like a proxy</description>
+    <releaseNotes>
+    </releaseNotes>
+    <summary></summary>
+    <language>en-US</language>
+    <projectUrl>https://github.com/ozzy-ext/redcucumber-wac</projectUrl>
+    <!--<iconUrl>https://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <copyright>
+      Copyright (c) 2017 Andrey Osintsev 'ozzy.ext@gmail.com'
+    </copyright>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="10.0"/>
+    </dependencies>
+    <references></references>
+    <!-- a name of the project that defines the version of nuget package -->
+    <!-- if it's empty then the value of 'id' is used -->
+    <tags></tags>
+  </metadata>
+  <files>
+    <file src="..\RedCucumber.Wac\bin\Debug\RedCucumber.Wac.dll" target="lib\net45" />
+    <file src="..\RedCucumber.Wac\bin\Debug\RedCucumber.Wac.XML" target="lib\net45" />
+    <file src="..\NuGet\tools\" target="tools" />
+    <file src="..\NuGet\content\" target="content" />
+    <file src="..\NuGet\build\" target="build" />
+  </files>
+</package>
