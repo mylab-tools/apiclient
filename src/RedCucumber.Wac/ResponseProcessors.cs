@@ -33,8 +33,12 @@ namespace RedCucumber.Wac
     class VoidResponseProcessor : IResponseProcessor
     {
         public bool Predicate(Type returnType) => returnType == typeof(void);
-        
-        public object GetResponse(Task<HttpResponseMessage> message, Type returnType) => null;
+
+        public object GetResponse(Task<HttpResponseMessage> message, Type returnType)
+        {
+            message.Wait();
+            return null;
+        }
     }
 
     class TaskResponseProcessor : IResponseProcessor
