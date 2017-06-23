@@ -8,7 +8,7 @@
     <title>Red cucumber Web Api Client</title>
     <authors>Andrey Osintsev</authors>
     <owners></owners>
-    <description></description>
+    <description>Allow to describe web api contract and use it like a proxy</description>
     <releaseNotes>
     </releaseNotes>
     <summary></summary>
