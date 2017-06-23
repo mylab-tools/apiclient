@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -68,8 +69,6 @@ namespace RedCucumber.Wac
         {
             switch (_methodDescription.ContentType)
             {
-                case ContentType.FromData:
-                    throw new PrepareRequestException("'Form' data not supported yet. Please, use 'UrlEncodedForm' instead.");
                 case ContentType.UrlEncodedForm:
                     req.Content = new FormUrlEncodedContent(CreateForm(formParameters, invokeParameter));
                     break;
@@ -96,23 +95,49 @@ namespace RedCucumber.Wac
             HttpRequestMessage req, 
             object payload)
         {
+            var encoding = new UTF8Encoding(false);
+
             switch (_methodDescription.ContentType)
             {
-                case ContentType.FromData:
-                    throw new PrepareRequestException("'Form' data not supported yet. Please, use 'UrlEncodedForm' instead.");
                 case ContentType.UrlEncodedForm:
                     req.Content = new FormUrlEncodedContent(PayloadToForm(payload));
                     break;
                 case ContentType.Text:
+                    req.Content = new StringContent("\"" + payload + "\"", encoding, "application/json");
+                    break;
                 case ContentType.Html:
+                    req.Content = new StringContent(payload.ToString(), encoding, "text/html");
+                    break;
                 case ContentType.Javascript:
-                    req.Content = new StringContent(payload.ToString());
+                    req.Content = new StringContent(payload.ToString(), encoding, "text/javascript");
                     break;
                 case ContentType.Xml:
-                    req.Content = new StringContent(PayloadToXml(payload));
+                    req.Content = new StringContent(PayloadToXml(payload, encoding), encoding, "text/xml");
+                    req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
+
                     break;
                 case ContentType.Json:
-                    req.Content = new StringContent(PayloadToJson(payload));
+                    req.Content = new StringContent(PayloadToJson(payload), encoding, "application/json");
+                    break;
+                case ContentType.Binary:
+                    {
+                        var file = payload as WebApiFile;
+                        if(file == null)
+                            throw new PrepareRequestException($"'Binary' content type for wrong type pyload. Expected '{typeof(WebApiFile).FullName}' parameter");
+                        if (string.IsNullOrWhiteSpace(file.Name))
+                            throw new PrepareRequestException("File name is empty or not defined");
+                        
+                        var multipartForm = new MultipartFormDataContent();
+                        var binContent = new ByteArrayContent(file.Content);
+                        binContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                        {
+                            FileName = file.Name
+                        };
+
+                        multipartForm.Add(binContent, "file");
+
+                        req.Content = multipartForm;
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(_methodDescription.ContentType), _methodDescription.ContentType, null);
@@ -137,20 +162,28 @@ namespace RedCucumber.Wac
             }
         }
 
-        private string PayloadToXml(object payload)
+        private string PayloadToXml(object payload, Encoding encoding)
         {
             var ser = new XmlSerializer(payload.GetType());
 
-            using (StringWriter textWriter = new StringWriter())
+            using (var mem = new MemoryStream())
+            using (var textWriter = XmlWriter.Create(mem, new XmlWriterSettings
+            {
+                Encoding = encoding,
+            }))
             {
                 ser.Serialize(textWriter, payload);
-                return textWriter.ToString();
+                return Encoding.UTF8.GetString(mem.ToArray());
             }
         }
 
         private Uri CreateUri(InvokeParameters invokeParameters)
         {
-            var b = new UriBuilder(new Uri(new Uri(_baseUrl), _methodDescription.RelPath));
+            string pathSeparator = _baseUrl.Length > 0 && _baseUrl[_baseUrl.Length - 1] != '/'
+                ? "/"
+                : string.Empty;
+
+            var b = new UriBuilder(new Uri(new Uri(_baseUrl + pathSeparator), _methodDescription.RelPath));
             var query = new StringBuilder();
 
             if (_methodDescription.Parameters != null)

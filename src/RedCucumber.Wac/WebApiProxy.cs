@@ -12,7 +12,7 @@ namespace RedCucumber.Wac
     {
         private readonly WebApiDescription _webApiDescription;
         private readonly IWebApiRequestProcessor _requestProcessor;
-        private SupportedResponseProcessors _responseProcessors = new SupportedResponseProcessors();
+        private readonly SupportedResponseProcessors _responseProcessors = new SupportedResponseProcessors();
 
         public WebApiProxy(
             WebApiDescription webApiDescription,
@@ -32,7 +32,7 @@ namespace RedCucumber.Wac
             try
             {
                 var methodName = (string)msg.Properties["__MethodName"];
-                var methodSignature = (Type[])msg.Properties["__MethodSingature"];
+                var methodSignature = (Type[])msg.Properties["__MethodSignature"];
                 var args = (object[])msg.Properties["__Args"];
 
                 if (_webApiDescription.Methods != null)

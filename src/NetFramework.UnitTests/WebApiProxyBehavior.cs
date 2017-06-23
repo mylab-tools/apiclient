@@ -58,18 +58,40 @@ namespace NetFramework.UnitTests
         }
 
         [Test]
-        public void ShouldSupportBinaryMethodResult()
+        public void ShouldSupportBinaryMethodResultBinaryPayload()
         {
             //Arrange
             string payload = Guid.NewGuid().ToString();
+            byte[] binPayload = Encoding.UTF8.GetBytes(payload);
 
-            var reqProc = new StringContentRequestProcessor(payload);
+            var reqProc = new BinaryContentRequestProcessor(binPayload);
             var factory = new WebApiClientFactory<IResourceContract>("http://localhost", reqProc);
             var proxy = factory.Create();
 
             //Act
-            var strResp = proxy.GetString();
+            var binResp = proxy.GetBinary();
+            var strResp = Encoding.UTF8.GetString(binResp);
 
+            //Assert
+            Assert.That(strResp, Is.EqualTo(payload));
+        }
+
+        [Test]
+        public void ShouldSupportBinaryMethodResultWithBase64Payload()
+        {
+            //Arrange
+            string payload = Guid.NewGuid().ToString();
+            byte[] binPayload = Encoding.UTF8.GetBytes(payload);
+            string base64Payload = Convert.ToBase64String(binPayload);
+
+            var reqProc = new StringContentRequestProcessor("\"" + base64Payload + "\"");
+            var factory = new WebApiClientFactory<IResourceContract>("http://localhost", reqProc);
+            var proxy = factory.Create();
+
+            //Act
+            var binResp = proxy.GetBinary();
+            var strResp = Encoding.UTF8.GetString(binResp);
+            
             //Assert
             Assert.That(strResp, Is.EqualTo(payload));
         }

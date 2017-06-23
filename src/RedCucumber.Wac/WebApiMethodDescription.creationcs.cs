@@ -7,14 +7,14 @@ namespace RedCucumber.Wac
 {
     partial class WebApiMethodDescription
     {
-        private static void InitRelPAthAndHttpMethod(MethodInfo method,
+        private static void InitRelPathAndHttpMethod(MethodInfo method,
             WebApiMethodDescription d,
             out Wac.ContentType defaultSubmitContentType)
         {
             var srvEp = method.GetCustomAttribute<ServiceEndpointAttribute>();
             if (srvEp != null)
             {
-                d.RelPath = srvEp.Path;
+                d.RelPath = srvEp.Path ?? method.Name;
                 d.HttpMethod = srvEp.Method;
 
                 defaultSubmitContentType = ContentType.UrlEncodedForm;
@@ -65,7 +65,6 @@ namespace RedCucumber.Wac
                 {
                     switch (d.ContentType)
                     {
-                        case ContentType.FromData:
                         case ContentType.UrlEncodedForm:
                             p.Type = WebApiParameterType.FormItem;
                             break;
@@ -74,6 +73,7 @@ namespace RedCucumber.Wac
                         case ContentType.Html:
                         case ContentType.Json:
                         case ContentType.Javascript:
+                        case ContentType.Binary:
                             p.Type = WebApiParameterType.Payload;
                             break;
                         default:
@@ -107,7 +107,9 @@ namespace RedCucumber.Wac
 
             Wac.ContentType defaultSubmitContentType;
 
-            InitRelPAthAndHttpMethod(method, d, out defaultSubmitContentType);
+            InitRelPathAndHttpMethod(method, d, out defaultSubmitContentType);
+
+            ProcessSinglePostBinaryCase(method, d, ref defaultSubmitContentType);
 
             InitContentType(method, d, defaultSubmitContentType);
 
@@ -116,6 +118,18 @@ namespace RedCucumber.Wac
             CheckParametersConflict(d.Parameters);
 
             return d;
+        }
+
+        private static void ProcessSinglePostBinaryCase(MethodInfo method, WebApiMethodDescription d, ref ContentType defaultSubmitContentType)
+        {
+            if (d.ContentType == ContentType.Undefined && d.HttpMethod != HttpMethod.Get)
+            {
+                var parameters = method.GetParameters();
+                if (parameters.Length == 1 && parameters[0].ParameterType == typeof(WebApiFile))
+                {
+                    defaultSubmitContentType = ContentType.Binary;
+                }
+            }
         }
 
         public static string CreateMethodId(string methodName, IEnumerable<string> parameterNames)

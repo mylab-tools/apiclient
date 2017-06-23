@@ -24,19 +24,19 @@ namespace NetFramework.UnitTests
             [ResourceAction(HttpMethod.Put)]
             void PutResourceAction();
 
-            [ServiceEndpoint(HttpMethod.Get, "")]
+            [ServiceEndpoint(HttpMethod.Get)]
             void GetServiceEndpoint(int p);
 
-            [ServiceEndpoint(HttpMethod.Delete, "")]
+            [ServiceEndpoint(HttpMethod.Delete)]
             void DeleteServiceEndpoint();
 
-            [ServiceEndpoint(HttpMethod.Patch, "")]
+            [ServiceEndpoint(HttpMethod.Patch)]
             void PatchServiceEndpoint();
 
-            [ServiceEndpoint(HttpMethod.Post, "")]
+            [ServiceEndpoint(HttpMethod.Post)]
             void PostServiceEndpoint(int p);
 
-            [ServiceEndpoint(HttpMethod.Put, "")]
+            [ServiceEndpoint(HttpMethod.Put)]
             void PutServiceEndpoint();
 
             [ResourceAction(HttpMethod.Get), ContentType(ContentType.Xml)]
@@ -56,10 +56,7 @@ namespace NetFramework.UnitTests
 
             [ResourceAction(HttpMethod.Post), ContentType(ContentType.UrlEncodedForm)]
             void PostWithContentTypeFormUrlEncAndParameter(int p);
-
-            [ResourceAction(HttpMethod.Post), ContentType(ContentType.FromData)]
-            void PostWithContentTypeFormAndParameter(int p);
-
+            
             [ResourceAction(HttpMethod.Post), ContentType(ContentType.Html)]
             void PostWithContentTypeHtmlAndParameter(int p);
 
@@ -83,8 +80,11 @@ namespace NetFramework.UnitTests
 
             [ResourceAction(HttpMethod.Post)]
             void WithFormAndGetParams([FormItem] int p0, [FormItem] int p1, [GetParam] int p2, [GetParam] int p3);
-        }
 
+            [ResourceAction(HttpMethod.Post)]
+            void PostFile(WebApiFile file);
+        }
+            
         private MethodInfo GetMethod(string name)
         {
             return typeof(IContract).GetMethod(name);

@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFramework.UnitTests", "N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedCucumber.Wac", "RedCucumber.Wac\RedCucumber.Wac.csproj", "{BFB9F727-2184-4EC6-8FC4-D0B096A36145}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest.Server", "IntegrationTest.Server\IntegrationTest.Server.csproj", "{9FCBDEA2-2FB7-4DBF-86AA-630DF21EF586}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest.Client", "IntegrationTest.Client\IntegrationTest.Client.csproj", "{17952E14-352A-4AA5-8434-0F6EDE118AE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{BFB9F727-2184-4EC6-8FC4-D0B096A36145}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFB9F727-2184-4EC6-8FC4-D0B096A36145}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFB9F727-2184-4EC6-8FC4-D0B096A36145}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FCBDEA2-2FB7-4DBF-86AA-630DF21EF586}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FCBDEA2-2FB7-4DBF-86AA-630DF21EF586}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FCBDEA2-2FB7-4DBF-86AA-630DF21EF586}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FCBDEA2-2FB7-4DBF-86AA-630DF21EF586}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17952E14-352A-4AA5-8434-0F6EDE118AE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17952E14-352A-4AA5-8434-0F6EDE118AE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17952E14-352A-4AA5-8434-0F6EDE118AE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17952E14-352A-4AA5-8434-0F6EDE118AE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -116,7 +116,6 @@ namespace NetFramework.UnitTests
         }
 
         [Test]
-        [TestCase(nameof(IContract.PostWithContentTypeFormAndParameter), WebApiParameterType.FormItem, TestName = "'FormItem' for 'Form'")]
         [TestCase(nameof(IContract.PostWithContentTypeFormUrlEncAndParameter), WebApiParameterType.FormItem, TestName = "'FormItem' for 'Url encoded form'")]
         [TestCase(nameof(IContract.PostWithContentTypeHtmlAndParameter), WebApiParameterType.Payload, TestName = "'Payload' for 'Html'")]
         [TestCase(nameof(IContract.PostWithContentTypeJsAndParameter), WebApiParameterType.Payload, TestName = "'Payload' for 'JavaScript'")]
@@ -158,6 +157,19 @@ namespace NetFramework.UnitTests
 
             //Act, Assert
             WebApiMethodDescription.Create(m);
+        }
+
+        [Test]
+        public void ShouldDetermineContentTypeAsBinaryWhenPostFileParameter()
+        {
+            //Arrange
+            var m = GetMethod(nameof(IContract.PostFile));
+
+            //Act
+            var d = WebApiMethodDescription.Create(m);
+
+            //Assert
+            Assert.That(d.ContentType, Is.EqualTo(ContentType.Binary));
         }
     }
 }

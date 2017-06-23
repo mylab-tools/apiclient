@@ -43,11 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebApiFile.cs" />
     <Compile Include="InvokeParameters.cs" />
     <Compile Include="ResponseProcessingException.cs" />
     <Compile Include="ResponseProcessors.cs" />
     <Compile Include="IWebApiRequestProcessor.cs" />
     <Compile Include="PrepareRequestException.cs" />
+    <Compile Include="WarningHttpStatusCodeException.cs" />
     <Compile Include="WebApiException.cs" />
     <Compile Include="ContentType.cs" />
     <Compile Include="ContentTypeAttribute.cs" />

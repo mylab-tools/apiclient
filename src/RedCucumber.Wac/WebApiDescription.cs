@@ -16,11 +16,11 @@ namespace RedCucumber.Wac
             CheckContractAttributes(contractType);
             CheckForgottenMethods(contractType);
 
-            var wasAttr = contractType.GetTypeInfo().GetCustomAttribute<WebApiServiceAttribute>();
+            //var wasAttr = contractType.GetTypeInfo().GetCustomAttribute<WebApiServiceAttribute>();
 
             var desc = new WebApiDescription
             {
-                BaseUrl = wasAttr?.SubPath,
+                //BaseUrl = wasAttr?.SubPath,
                 Methods = new WebApiMethodDescriptions(
                     contractType.GetTypeInfo().FindMembers(
                             MemberTypes.Method,

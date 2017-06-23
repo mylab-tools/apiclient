@@ -11,7 +11,7 @@ namespace RedCucumber.Wac
         /// <summary>
         /// Gets endpoint path
         /// </summary>
-        public string Path { get; }
+        public string Path { get; set; }
 
         /// <summary>
         /// Gets endpoint http method
@@ -21,11 +21,9 @@ namespace RedCucumber.Wac
         /// <summary>
         /// Initializes a new instance of <see cref="ServiceEndpointAttribute"/>
         /// </summary>
-        /// <param name="path">Endpoint path relates to base path and subpath.</param>
         /// <param name="method">http method</param>
-        public ServiceEndpointAttribute(HttpMethod method, string path)
+        public ServiceEndpointAttribute(HttpMethod method)
         {
-            Path = path;
             Method = method;
         }
     }

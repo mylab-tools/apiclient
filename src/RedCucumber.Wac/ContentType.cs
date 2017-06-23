@@ -6,12 +6,12 @@
     public enum ContentType
     {
         Undefined,
-        FromData,
         UrlEncodedForm,
         Text,
         Xml,
         Html,
         Json,
-        Javascript
+        Javascript,
+        Binary
     }
 }

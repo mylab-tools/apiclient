@@ -12,13 +12,13 @@ namespace RedCucumber.Wac
     {
         private readonly IWebApiRequestProcessor _requestProcessor;
 
-        public string BasePath { get; }
+        private readonly string _basePath;
 
         public WebApiClientFactory(string basePath, IWebApiRequestProcessor requestProcessor = null)
         {
             _requestProcessor = requestProcessor ?? new WebApiRequestProcessor();
 
-            BasePath = basePath;
+            _basePath = basePath;
         }
 
         public T Create()
@@ -40,11 +40,11 @@ namespace RedCucumber.Wac
 
         private void ProcessBaseAddress(WebApiDescription desc)
         {
-            if (!string.IsNullOrWhiteSpace(BasePath))
+            if (!string.IsNullOrWhiteSpace(_basePath))
             {
                 desc.BaseUrl = !string.IsNullOrWhiteSpace(desc.BaseUrl) 
-                    ? new Uri(new Uri(BasePath), desc.BaseUrl).ToString()
-                    : BasePath;
+                    ? new Uri(new Uri(_basePath), desc.BaseUrl).ToString()
+                    : _basePath;
             }
             if (string.IsNullOrWhiteSpace(desc.BaseUrl))
                 throw new WebApiContractException("The base address is empty");

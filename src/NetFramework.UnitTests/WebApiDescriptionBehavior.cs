@@ -36,7 +36,7 @@ namespace NetFramework.UnitTests
         [WebApiResource]
         private interface IResourceContractWithWrongMarkedMethod
         {
-            [ServiceEndpoint(HttpMethod.Get, "")]
+            [ServiceEndpoint(HttpMethod.Get)]
             void WithWrongAttribute();
         }
 

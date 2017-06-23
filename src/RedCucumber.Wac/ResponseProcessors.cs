@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -30,17 +31,6 @@ namespace RedCucumber.Wac
         object GetResponse(Task<HttpResponseMessage> task, Type returnType);
     }
 
-    class VoidResponseProcessor : IResponseProcessor
-    {
-        public bool Predicate(Type returnType) => returnType == typeof(void);
-
-        public object GetResponse(Task<HttpResponseMessage> message, Type returnType)
-        {
-            message.Wait();
-            return null;
-        }
-    }
-
     class TaskResponseProcessor : IResponseProcessor
     {
         public bool Predicate(Type returnType) 
@@ -55,10 +45,27 @@ namespace RedCucumber.Wac
         
         public object GetResponse(Task<HttpResponseMessage> task, Type returnType)
         {
+            task.Wait();
+
+            int statusCodeIndex = (int)task.Result.StatusCode;
+            if (statusCodeIndex < 200 || statusCodeIndex >= 300)
+                throw new WarningHttpStatusCodeException(task.Result);
+
             return ExtractPayload(task.Result, returnType);
         }
 
         protected abstract object ExtractPayload(HttpResponseMessage taskResult, Type returnType);
+    }
+
+    class VoidResponseProcessor : PayloadBasedResponseProcessor
+    {
+        public override bool Predicate(Type returnType) => returnType == typeof(void);
+
+        /// <inheritdoc />
+        protected override object ExtractPayload(HttpResponseMessage taskResult, Type returnType)
+        {
+            return null;
+        }
     }
 
     class BinaryResponseProcessor : PayloadBasedResponseProcessor
@@ -67,7 +74,15 @@ namespace RedCucumber.Wac
         
         protected override object ExtractPayload(HttpResponseMessage taskResult, Type returnType)
         {
-            return taskResult.Content.ReadAsByteArrayAsync().Result;
+            var bin = taskResult.Content.ReadAsByteArrayAsync().Result;
+
+            if (bin.Length != 0 && bin[0] == '\"')
+            {
+                var base64Str = Encoding.UTF8.GetString(bin).Trim('\"');
+                return Convert.FromBase64String(base64Str);
+            }
+
+            return bin;
         }
     }
 
@@ -77,7 +92,7 @@ namespace RedCucumber.Wac
 
         protected override object ExtractPayload(HttpResponseMessage taskResult, Type returnType)
         {
-            return taskResult.Content.ReadAsStringAsync().Result;
+            return taskResult.Content.ReadAsStringAsync().Result.Trim('\"');
         }
     }
 
@@ -89,7 +104,10 @@ namespace RedCucumber.Wac
 
         protected override object ExtractPayload(HttpResponseMessage taskResult, Type returnType)
         {
-            var str = taskResult.Content.ReadAsStringAsync().Result.Trim();
+            var str = taskResult.Content.ReadAsStringAsync().Result.Trim(' ', '\"');
+
+            if (str == "null")
+                return null;
 
             if (str.StartsWith("<"))
                 return DeserializeFromXml(str, returnType);

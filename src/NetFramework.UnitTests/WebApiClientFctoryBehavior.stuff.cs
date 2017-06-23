@@ -12,7 +12,7 @@ namespace NetFramework.UnitTests
         [WebApiService]
         private interface IService
         {
-            [ServiceEndpoint(HttpMethod.Get, "")]
+            [ServiceEndpoint(HttpMethod.Get)]
             void Foo();
         }
 
