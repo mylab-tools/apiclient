@@ -1,15 +1,15 @@
-using RedCucumber.Wac;
+using DotAspectClient;
 
 namespace NetFramework.UnitTests
 {
     public partial class WebApiClientFctoryBehavior
     {
-        [WebApiResource]
+        [RestApi]
         private interface IResource
         {
         }
 
-        [WebApiService]
+        [WebApi]
         private interface IService
         {
             [ServiceEndpoint(HttpMethod.Get)]

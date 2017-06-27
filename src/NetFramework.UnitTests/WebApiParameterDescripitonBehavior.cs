@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using RedCucumber.Wac;
+using DotAspectClient;
 
 namespace NetFramework.UnitTests
 {

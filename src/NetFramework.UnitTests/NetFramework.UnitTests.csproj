@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Tests\NetFramework.UnitTests\WebApiDescriptionBehavior.stuff.cs" />
     <Compile Include="WebApiProxyBehavior.cs" />
     <Compile Include="WebApiDescriptionBehavior.cs" />
     <Compile Include="WebApiProxyBehavior.stuff.cs" />

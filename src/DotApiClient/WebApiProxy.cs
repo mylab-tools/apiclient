@@ -11,16 +11,16 @@ namespace DotAspectClient
         where T : class 
     {
         private readonly WebApiDescription _webApiDescription;
-        private readonly IWebApiRequestProcessor _requestProcessor;
+        private readonly WebApiClientOptions _options;
         private readonly SupportedResponseProcessors _responseProcessors = new SupportedResponseProcessors();
 
         public WebApiProxy(
             WebApiDescription webApiDescription,
-            IWebApiRequestProcessor requestProcessor)
+            WebApiClientOptions options)
             :base(typeof(T))
         {
             _webApiDescription = webApiDescription;
-            _requestProcessor = requestProcessor;
+            _options = options;
         }
 
         public override IMessage Invoke(IMessage msg)
@@ -44,13 +44,19 @@ namespace DotAspectClient
                     if (!_webApiDescription.Methods.TryGetValue(methodId, out methodDesc))
                         throw new PrepareRequestException("Method not found");
 
-                    var rFact = new WebApiRequestFactory(methodDesc, _webApiDescription.BaseUrl);
+                    var rFact = new WebApiRequestFactory(methodDesc, _webApiDescription.BaseUrl)
+                    {
+                        Options = _options
+                    };
 
                     var paramsNames = methodDesc.Parameters.Values
                         .OrderBy(p => p.Order)
                         .Select(p => p.MethodParameterName)
                         .ToArray();
-                    var task = _requestProcessor.ProcessRequest(rFact.CreateMessage(new InvokeParameters(paramsNames, args)));
+
+                    var requestMessage = rFact.CreateMessage(new InvokeParameters(paramsNames, args));
+                    var task = (_options?.RequestProcessor ?? new DefaultWebApiRequestProcessor())
+                        .ProcessRequest(requestMessage);
                     
                     foreach (var responseProcessor in _responseProcessors)
                     {

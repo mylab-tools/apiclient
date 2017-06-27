@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Reflection;
-using RedCucumber.Wac;
+using DotAspectClient;
 
 namespace NetFramework.UnitTests
 {

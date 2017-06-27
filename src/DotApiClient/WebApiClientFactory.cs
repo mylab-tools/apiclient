@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Reflection;
 
 namespace DotAspectClient
@@ -8,17 +9,18 @@ namespace DotAspectClient
     /// </summary>
     public class WebApiClientFactory : IWebApiProxyFactory
     {
-        private readonly IWebApiRequestProcessor _requestProcessor;
-
         private readonly string _basePath;
+
+        /// <summary>
+        /// Gets or sets interaction options
+        /// </summary>
+        public WebApiClientOptions Options { get; set; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="WebApiClientFactory"/>
         /// </summary>
-        public WebApiClientFactory(string basePath, IWebApiRequestProcessor requestProcessor = null)
+        public WebApiClientFactory(string basePath)
         {
-            _requestProcessor = requestProcessor ?? new DefaultWebApiRequestProcessor();
-
             _basePath = basePath;
         }
 
@@ -42,7 +44,7 @@ namespace DotAspectClient
 
             ProcessBaseAddress(desc);
 
-            return (T)new WebApiProxy<T>(desc, _requestProcessor).GetTransparentProxy();
+            return (T)new WebApiProxy<T>(desc, Options).GetTransparentProxy();
         }
 
         /// <summary>
@@ -53,6 +55,17 @@ namespace DotAspectClient
             where T : class
         {
             return new WebApiClientFactory<T>(this);
+        }
+
+        /// <summary>
+        /// Create web api proxy
+        /// </summary>
+        /// <typeparam name="T">web api contract</typeparam>
+        public static T CreateProxy<T>(string apiPath)
+            where T : class
+        {
+            var factory = new WebApiClientFactory(apiPath);
+            return factory.CreateProxy<T>();
         }
 
         private void ProcessBaseAddress(WebApiDescription desc)

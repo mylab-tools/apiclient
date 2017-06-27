@@ -18,6 +18,8 @@ namespace DotAspectClient
         private readonly WebApiMethodDescription _methodDescription;
         private readonly string _baseUrl;
 
+        public WebApiClientOptions Options { get; set; }
+
         public WebApiRequestFactory(
             WebApiMethodDescription methodDescription,
             string baseUrl)
@@ -56,6 +58,26 @@ namespace DotAspectClient
                     if (formParameters.Length != 0)
                         InitFormContent(req, formParameters,
                             invokeParameters);
+                }
+            }
+
+            if (_methodDescription.Headers != null)
+            {
+                foreach (var h in _methodDescription.Headers)
+                {
+                    var paramVal = invokeParameters[h.ParameterName];
+
+                    if(paramVal != null)
+                        req.Headers.Add(h.HeaderName, paramVal.ToString());
+                }
+            }
+
+            if (Options?.PredefinedHeaders != null)
+            {
+                foreach (var predefinedHeader in Options.PredefinedHeaders)
+                {
+                    if(predefinedHeader.Value != null)
+                        req.Headers.Add(predefinedHeader.Name, predefinedHeader.Value);
                 }
             }
 

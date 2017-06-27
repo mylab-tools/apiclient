@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
-using RedCucumber.Wac;
+using DotAspectClient;
 
 namespace NetFramework.UnitTests
 {
     [TestFixture]
-    public class WebApiDescriptionBehavior
+    public partial class WebApiDescriptionBehavior
     {
         [Test]
         public void ShouldNotAllowToUseResourceMethodAttributesInServiceContract()
@@ -31,26 +31,6 @@ namespace NetFramework.UnitTests
             {
                 WebApiDescription.Create(typeof(IContractWithForgottenMethod));
             });
-        }
-
-        [WebApiResource]
-        private interface IResourceContractWithWrongMarkedMethod
-        {
-            [ServiceEndpoint(HttpMethod.Get)]
-            void WithWrongAttribute();
-        }
-
-        [WebApiService]
-        private interface IServiceContractWithWronMarkedMethod
-        {
-            [ResourceAction(HttpMethod.Get)]
-            void WithWrongAttribute();
-        }
-
-        [WebApiResource]
-        interface IContractWithForgottenMethod
-        {
-            void Foo(int i);
         }
     }
 }

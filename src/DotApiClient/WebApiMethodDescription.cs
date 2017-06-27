@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DotAspectClient
 {
@@ -14,8 +15,10 @@ namespace DotAspectClient
         public HttpMethod HttpMethod { get; set; }
 
         public WebApiParameterDescriptions Parameters { get; set; }
-    }
 
+        public WepApiMethodHeaders Headers { get; set; }
+    }
+    
     internal class WebApiMethodDescriptions : Dictionary<string, WebApiMethodDescription>
     {
         public WebApiMethodDescriptions()
@@ -37,5 +40,25 @@ namespace DotAspectClient
         {
             Add(apiMethodDescription.MethodId, apiMethodDescription);
         }
+    }
+
+    class WepApiMethodHeaders : Collection<WebApiMethodHeader>
+    {
+        public WepApiMethodHeaders(IList<WebApiMethodHeader> src)
+            :base(src)
+        {
+            
+        }
+
+        public WepApiMethodHeaders()
+        {
+            
+        }
+    }
+
+    struct WebApiMethodHeader
+    {
+        public string ParameterName { get; set; }
+        public string HeaderName { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using RedCucumber.Wac;
-using HttpMethod = RedCucumber.Wac.HttpMethod;
+using DotAspectClient;
+using HttpMethod = DotAspectClient.HttpMethod;
 
 namespace NetFramework.UnitTests
 {
@@ -11,26 +11,26 @@ namespace NetFramework.UnitTests
         private class EmptyRequestProcessor : IWebApiRequestProcessor
         {
             /// <inheritdoc />
-            public Task<HttpResponseMessage> ProcessRequest(HttpRequestMessage message)
+            public Task<System.Net.Http.HttpResponseMessage> ProcessRequest(System.Net.Http.HttpRequestMessage message)
             {
-                return Task.FromResult<HttpResponseMessage>(null);
+                return Task.FromResult<System.Net.Http.HttpResponseMessage>(null);
             }
         }
 
-        [WebApiResource]
+        [RestApi]
         private interface IResourceContract
         {
-            [ResourceAction(HttpMethod.Get)]
+            [RestAction(HttpMethod.Get)]
             void Foo(int a, int b);
-            [ResourceAction(HttpMethod.Get)]
+            [RestAction(HttpMethod.Get)]
             Task GetProcessingTask();
-            [ResourceAction(HttpMethod.Get)]
-            Task<HttpResponseMessage> GetGenericProcessingTask();
-            [ResourceAction(HttpMethod.Get)]
+            [RestAction(HttpMethod.Get)]
+            Task<System.Net.Http.HttpResponseMessage> GetGenericProcessingTask();
+            [RestAction(HttpMethod.Get)]
             byte[] GetBinary();
-            [ResourceAction(HttpMethod.Get)]
+            [RestAction(HttpMethod.Get)]
             string GetString();
-            [ResourceAction(HttpMethod.Get)]
+            [RestAction(HttpMethod.Get)]
             PayloadStructuralObject GetObject();
         }
 
@@ -43,7 +43,7 @@ namespace NetFramework.UnitTests
                 _response = response;
             }
             /// <inheritdoc />
-            public Task<HttpResponseMessage> ProcessRequest(HttpRequestMessage message)
+            public Task<System.Net.Http.HttpResponseMessage> ProcessRequest(HttpRequestMessage message)
             {
                 var msg = new HttpResponseMessage(HttpStatusCode.OK)
                 {

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using NUnit.Framework;
-using RedCucumber.Wac;
+﻿using NUnit.Framework;
+using DotAspectClient;
 
 namespace NetFramework.UnitTests
 {
@@ -11,28 +9,19 @@ namespace NetFramework.UnitTests
         [Test]
         public void ShouldErrorWhenCreateByContractWithoutSpecialAttribute()
         {
-            //Arrange
-            var factory = new WebApiClientFactory<IContractWithoutSpecialAttributes>("");
-            //Act
-            Assert.Throws<WebApiContractException>(() => factory.Create());
+            Assert.Throws<WebApiContractException>(() => WebApiClientFactory.CreateProxy<IContractWithoutSpecialAttributes>(""));
         }
 
         [Test]
         public void ShouldNotErrorWhenCreateByServiceContract()
         {
-            //Arrange
-            var factory = new WebApiClientFactory<IService>("http://localhost");
-            //Act
-            factory.Create();
+            WebApiClientFactory.CreateProxy<IService>("http://localhost");
         }
 
         [Test]
         public void ShouldNotErrorWhenCreateByResourceContract()
         {
-            //Arrange
-            var factory = new WebApiClientFactory<IResource>("http://localhost");
-            //Act
-            factory.Create();
+            WebApiClientFactory.CreateProxy<IResource>("http://localhost");
         }
     }
 }

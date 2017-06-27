@@ -45,7 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HeaderAttribute.cs" />
     <Compile Include="IWebApiProxyFactory.cs" />
+    <Compile Include="WebApiClientOptions.cs" />
     <Compile Include="WebApiFile.cs" />
     <Compile Include="InvokeParameters.cs" />
     <Compile Include="ResponseProcessingException.cs" />

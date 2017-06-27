@@ -7,6 +7,43 @@ namespace DotAspectClient
 {
     partial class WebApiMethodDescription
     {
+        public static WebApiMethodDescription Create(MethodInfo method)
+        {
+            var d = new WebApiMethodDescription
+            {
+                MethodId = CreateMethodId(method.Name, method.GetParameters().Select(p => p.Name))
+            };
+
+            ContentType defaultSubmitContentType;
+
+            InitRelPathAndHttpMethod(method, d, out defaultSubmitContentType);
+
+            ProcessSinglePostBinaryCase(method, d, ref defaultSubmitContentType);
+
+            InitContentType(method, d, defaultSubmitContentType);
+
+            InitHeaders(method, d);
+
+            InitParameters(method, d);
+
+            CheckParametersConflict(d.Parameters);
+
+            return d;
+        }
+
+        private static void InitHeaders(MethodInfo method, WebApiMethodDescription d)
+        {
+            var parameters = method.GetParameters();
+            d.Headers = new WepApiMethodHeaders(parameters
+                    .Where(p => Attribute.IsDefined(p, typeof(HeaderAttribute)))
+                    .Select(p => new WebApiMethodHeader
+                    {
+                        ParameterName = p.Name,
+                        HeaderName = p.GetCustomAttribute<HeaderAttribute>().HeaderName
+                    })
+                    .ToList());
+        }
+
         private static void InitRelPathAndHttpMethod(MethodInfo method,
             WebApiMethodDescription d,
             out ContentType defaultSubmitContentType)
@@ -36,7 +73,7 @@ namespace DotAspectClient
 
         private static void InitContentType(MethodInfo method,
             WebApiMethodDescription d,
-           ContentType defaultSubmitContentType)
+            ContentType defaultSubmitContentType)
         {
             if (d.HttpMethod == HttpMethod.Get || d.HttpMethod == HttpMethod.Delete)
             {
@@ -52,6 +89,7 @@ namespace DotAspectClient
         private static void InitParameters(MethodInfo method, WebApiMethodDescription d)
         {
             var parameters = method.GetParameters()
+                .Where(p => d.Headers.All(h => h.ParameterName != p.Name))
                 .Select(WebApiParameterDescription.Create)
                 .ToArray();
 
@@ -93,31 +131,9 @@ namespace DotAspectClient
                 if (payloadParamsCount > 1)
                     throw new WebApiContractException("Should be one paload parameter");
 
-                if(parameters.Values.Count(p => p.Type == WebApiParameterType.FormItem) !=0)
+                if (parameters.Values.Count(p => p.Type == WebApiParameterType.FormItem) != 0)
                     throw new WebApiContractException("Shouldn't use paload parameter and one or more form parameters in the same method");
             }
-        }
-
-        public static WebApiMethodDescription Create(MethodInfo method)
-        {
-            var d = new WebApiMethodDescription
-            {
-                MethodId = CreateMethodId(method.Name, method.GetParameters().Select(p => p.Name))
-            };
-
-            ContentType defaultSubmitContentType;
-
-            InitRelPathAndHttpMethod(method, d, out defaultSubmitContentType);
-
-            ProcessSinglePostBinaryCase(method, d, ref defaultSubmitContentType);
-
-            InitContentType(method, d, defaultSubmitContentType);
-
-            InitParameters(method, d);
-
-            CheckParametersConflict(d.Parameters);
-
-            return d;
         }
 
         private static void ProcessSinglePostBinaryCase(MethodInfo method, WebApiMethodDescription d, ref ContentType defaultSubmitContentType)
