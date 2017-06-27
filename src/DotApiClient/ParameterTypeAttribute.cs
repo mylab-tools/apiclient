@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     /// <summary>
     /// Determines web api parameter type

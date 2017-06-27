@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Reflection;
-using DotAspectClient;
+using DotApiClient;
 
 namespace NetFramework.UnitTests
 {

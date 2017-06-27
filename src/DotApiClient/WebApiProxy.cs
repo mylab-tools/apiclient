@@ -5,7 +5,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
 using System.Threading.Tasks;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     class WebApiProxy<T> : RealProxy
         where T : class 

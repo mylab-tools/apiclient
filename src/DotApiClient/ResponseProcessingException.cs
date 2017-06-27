@@ -1,4 +1,4 @@
-﻿namespace DotAspectClient
+﻿namespace DotApiClient
 {
     /// <summary>
     /// Throws when response processing error occured

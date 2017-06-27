@@ -1,8 +1,8 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DotAspectClient;
-using HttpMethod = DotAspectClient.HttpMethod;
+using DotApiClient;
+using HttpMethod = DotApiClient.HttpMethod;
 
 namespace NetFramework.UnitTests
 {

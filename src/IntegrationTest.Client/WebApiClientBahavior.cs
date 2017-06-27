@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using DotAspectClient;
+using DotApiClient;
 
 namespace IntegrationTest.Client
 {

@@ -10,7 +10,7 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     class SupportedResponseProcessors : Collection<IResponseProcessor>
     {

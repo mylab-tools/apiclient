@@ -1,4 +1,4 @@
-﻿namespace DotAspectClient
+﻿namespace DotApiClient
 {
     /// <summary>
     /// Determines file for web api request

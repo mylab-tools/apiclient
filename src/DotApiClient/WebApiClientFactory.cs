@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Reflection;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     /// <summary>
     /// Creates web api client with specified base path

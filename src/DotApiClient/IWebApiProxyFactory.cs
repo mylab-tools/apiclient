@@ -1,4 +1,4 @@
-﻿namespace DotAspectClient
+﻿namespace DotApiClient
 {
     /// <summary>
     /// Creates proxy for web api

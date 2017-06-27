@@ -11,7 +11,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     class WebApiRequestFactory
     {

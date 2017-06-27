@@ -1,6 +1,6 @@
 using System;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     public class EnpointBaseAttribute : Attribute
     {

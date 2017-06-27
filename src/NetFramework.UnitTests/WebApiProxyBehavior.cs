@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using NUnit.Framework;
-using DotAspectClient;
+using DotApiClient;
 
 namespace NetFramework.UnitTests
 {

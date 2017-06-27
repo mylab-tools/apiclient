@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     /// <summary>
     /// Contians web api interaction options

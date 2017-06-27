@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     /// <summary>
     /// Throws when error found whern interface analysis 

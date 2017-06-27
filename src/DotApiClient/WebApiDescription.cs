@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     class WebApiDescription
     {

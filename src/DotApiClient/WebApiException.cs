@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     /// <summary>
     /// THrows when any wb api error occured

@@ -3,7 +3,7 @@
   <metadata>
     <!-- this name is used to locate the assembly that defines the version of nuget package -->
     <!-- if the assembly with this name is not found then the value of 'version' is used -->
-    <id>DotAspectClient</id>
+    <id>DotApiClient</id>
     <version>1.0.0</version>
     <title>.NET Web Api Client</title>
     <authors>Andrey Osintsev</authors>
@@ -29,8 +29,8 @@
     <tags></tags>
   </metadata>
   <files>
-    <file src="..\DotAspectClient\bin\Release\DotAspectClient" target="lib\net45" />
-    <file src="..\DotAspectClient\bin\Release\DotAspectClient" target="lib\net45" />
+    <file src="..\DotApiClient\bin\Release\DotApiClient" target="lib\net45" />
+    <file src="..\DotApiClient\bin\Release\DotApiClient" target="lib\net45" />
     <file src="tools\" target="tools" />
     <file src="content\" target="content" />
     <file src="build\" target="build" />

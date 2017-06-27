@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     /// <summary>
     /// Processes web api requests

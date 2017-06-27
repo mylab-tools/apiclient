@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     [AttributeUsage(AttributeTargets.Interface)]
     public class WebApiServiceAttribute : Attribute

@@ -1,4 +1,4 @@
-﻿namespace DotAspectClient
+﻿namespace DotApiClient
 {
     /// <summary>
     /// Enums HTTP methods

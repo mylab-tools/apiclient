@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     partial class WebApiMethodDescription
     {

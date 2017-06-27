@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     /// <summary>
     /// Occures when non 2xx http statud code recieved

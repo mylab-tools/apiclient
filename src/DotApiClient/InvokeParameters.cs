@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DotAspectClient
+namespace DotApiClient
 {
     class InvokeParameters : Dictionary<string, object>
     {

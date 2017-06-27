@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using DotAspectClient;
+using DotApiClient;
 
 namespace NetFramework.UnitTests
 {
