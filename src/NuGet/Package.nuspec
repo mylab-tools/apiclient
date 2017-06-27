@@ -5,7 +5,7 @@
     <!-- if the assembly with this name is not found then the value of 'version' is used -->
     <id>DotApiClient</id>
     <version>1.0.0</version>
-    <title>.NET Web Api Client</title>
+    <title>DotApiClient</title>
     <authors>Andrey Osintsev</authors>
     <owners></owners>
     <description>Allow to describe web api contract and use it like a proxy</description>
@@ -29,8 +29,8 @@
     <tags></tags>
   </metadata>
   <files>
-    <file src="..\DotApiClient\bin\Release\DotApiClient" target="lib\net45" />
-    <file src="..\DotApiClient\bin\Release\DotApiClient" target="lib\net45" />
+    <file src="..\DotApiClient\bin\Release\DotApiClient.dll" target="lib\net45" />
+    <file src="..\DotApiClient\bin\Release\DotApiClient.xml" target="lib\net45" />
     <file src="tools\" target="tools" />
     <file src="content\" target="content" />
     <file src="build\" target="build" />
