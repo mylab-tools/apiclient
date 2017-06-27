@@ -91,7 +91,7 @@ namespace RedCucumber.Wac
             if (payloadParamsCount != 0)
             {
                 if (payloadParamsCount > 1)
-                    throw new WebApiContractException("Should be one user several paload parameters in the same method");
+                    throw new WebApiContractException("Should be one paload parameter");
 
                 if(parameters.Values.Count(p => p.Type == WebApiParameterType.FormItem) !=0)
                     throw new WebApiContractException("Shouldn't use paload parameter and one or more form parameters in the same method");
