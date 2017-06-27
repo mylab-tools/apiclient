@@ -16,11 +16,11 @@ namespace DotAspectClient
             CheckContractAttributes(contractType);
             CheckForgottenMethods(contractType);
 
-            //var wasAttr = contractType.GetTypeInfo().GetCustomAttribute<WebApiServiceAttribute>();
+            var wasAttr = contractType.GetTypeInfo().GetCustomAttribute<WebApiServiceAttribute>();
 
             var desc = new WebApiDescription
             {
-                //BaseUrl = wasAttr?.SubPath,
+                BaseUrl = wasAttr?.RelPath,
                 Methods = new WebApiMethodDescriptions(
                     contractType.GetTypeInfo().FindMembers(
                             MemberTypes.Method,
@@ -49,8 +49,8 @@ namespace DotAspectClient
 
         private static void CheckContractAttributes(Type contractType)
         {
-            if (!Attribute.IsDefined(contractType, typeof(WebApiServiceAttribute)) && 
-                !Attribute.IsDefined(contractType, typeof(WebApiResourceAttribute)))
+            if (!Attribute.IsDefined(contractType, typeof(WebApiAttribute)) && 
+                !Attribute.IsDefined(contractType, typeof(RestApiAttribute)))
                 throw new WebApiContractException("Undefined contract type");
         }
 
@@ -58,11 +58,11 @@ namespace DotAspectClient
         {
             var methods = contractType.GetMethods(BindingFlags.Instance | BindingFlags.Public);
 
-            if (Attribute.IsDefined(contractType, typeof(WebApiServiceAttribute)) &&
-                methods.Any(m => Attribute.IsDefined(m, typeof(ResourceActionAttribute))))
+            if (Attribute.IsDefined(contractType, typeof(WebApiAttribute)) &&
+                methods.Any(m => Attribute.IsDefined(m, typeof(RestActionAttribute))))
                 throw new WebApiContractException();
 
-            if (Attribute.IsDefined(contractType, typeof(WebApiResourceAttribute)) &&
+            if (Attribute.IsDefined(contractType, typeof(RestApiAttribute)) &&
                 methods.Any(m => Attribute.IsDefined(m, typeof(ServiceEndpointAttribute))))
                 throw new WebApiContractException();
         }

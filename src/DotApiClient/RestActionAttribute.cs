@@ -3,10 +3,10 @@
 namespace DotAspectClient
 {
     /// <summary>
-    /// Determines resource action
+    /// Determines REST action
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class ResourceActionAttribute : EnpointBaseAttribute
+    public class RestActionAttribute : EnpointBaseAttribute
     {
         /// <summary>
         /// Gets request http method
@@ -14,9 +14,9 @@ namespace DotAspectClient
         public HttpMethod Method { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="ResourceActionAttribute"/>
+        /// Initializes a new instance of <see cref="RestActionAttribute"/>
         /// </summary>
-        public ResourceActionAttribute(HttpMethod method)
+        public RestActionAttribute(HttpMethod method)
         {
             Method = method;
         }

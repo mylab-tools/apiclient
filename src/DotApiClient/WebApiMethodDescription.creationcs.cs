@@ -9,7 +9,7 @@ namespace DotAspectClient
     {
         private static void InitRelPathAndHttpMethod(MethodInfo method,
             WebApiMethodDescription d,
-            out Wac.ContentType defaultSubmitContentType)
+            out ContentType defaultSubmitContentType)
         {
             var srvEp = method.GetCustomAttribute<ServiceEndpointAttribute>();
             if (srvEp != null)
@@ -21,7 +21,7 @@ namespace DotAspectClient
             }
             else
             {
-                var rcEp = method.GetCustomAttribute<ResourceActionAttribute>();
+                var rcEp = method.GetCustomAttribute<RestActionAttribute>();
                 if (rcEp != null)
                 {
                     d.HttpMethod = rcEp.Method;
@@ -36,7 +36,7 @@ namespace DotAspectClient
 
         private static void InitContentType(MethodInfo method,
             WebApiMethodDescription d,
-            Wac.ContentType defaultSubmitContentType)
+           ContentType defaultSubmitContentType)
         {
             if (d.HttpMethod == HttpMethod.Get || d.HttpMethod == HttpMethod.Delete)
             {
@@ -105,7 +105,7 @@ namespace DotAspectClient
                 MethodId = CreateMethodId(method.Name, method.GetParameters().Select(p => p.Name))
             };
 
-            Wac.ContentType defaultSubmitContentType;
+            ContentType defaultSubmitContentType;
 
             InitRelPathAndHttpMethod(method, d, out defaultSubmitContentType);
 

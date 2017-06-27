@@ -8,20 +8,32 @@ namespace DotAspectClient
     /// </summary>
     public interface IWebApiRequestProcessor
     {
+        /// <summary>
+        /// Processes web api requests
+        /// </summary>
         Task<HttpResponseMessage> ProcessRequest(HttpRequestMessage message);
     }
 
-    public class WebApiRequestProcessor : IWebApiRequestProcessor
+    /// <summary>
+    /// Default request processor
+    /// </summary>
+    public class DefaultWebApiRequestProcessor : IWebApiRequestProcessor
     {
         private readonly HttpClient _httpClient;
 
-        public WebApiRequestProcessor()
+        /// <summary>
+        /// Initializes a new instance of <see cref="DefaultWebApiRequestProcessor"/>
+        /// </summary>
+        public DefaultWebApiRequestProcessor()
             :this(new HttpClient())
         {
             
         }
 
-        public WebApiRequestProcessor(HttpClient httpClient)
+        /// <summary>
+        /// Initializes a new instance of <see cref="DefaultWebApiRequestProcessor"/>
+        /// </summary>
+        public DefaultWebApiRequestProcessor(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

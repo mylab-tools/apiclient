@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IWebApiProxyFactory.cs" />
     <Compile Include="WebApiFile.cs" />
     <Compile Include="InvokeParameters.cs" />
     <Compile Include="ResponseProcessingException.cs" />
@@ -60,7 +61,7 @@
     <Compile Include="NameAttribute.cs" />
     <Compile Include="ParameterTypeAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourceActionAttribute.cs" />
+    <Compile Include="RestActionAttribute.cs" />
     <Compile Include="WebApiClientFactory.cs" />
     <Compile Include="WebApiContractException.cs" />
     <Compile Include="WebApiDescription.cs" />
@@ -70,7 +71,8 @@
     <Compile Include="WebApiParameterDescription.cs" />
     <Compile Include="WebApiProxy.cs" />
     <Compile Include="WebApiRequestFactory.cs" />
-    <Compile Include="WebApiResourceAttribute.cs" />
+    <Compile Include="RestApiAttribute.cs" />
+    <Compile Include="WebApiAttribute.cs" />
     <Compile Include="WebApiServiceAttribute.cs" />
   </ItemGroup>
   <ItemGroup>

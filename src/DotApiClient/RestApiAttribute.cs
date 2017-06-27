@@ -3,10 +3,10 @@
 namespace DotAspectClient
 {
     /// <summary>
-    /// Determines reource with access through web REST api
+    /// Describes REST api service
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface)]
-    public class WebApiResourceAttribute : Attribute
+    public class RestApiAttribute : WebApiServiceAttribute
     {
     }
 }
