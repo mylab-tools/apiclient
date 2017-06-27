@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RedCucumber.Wac
+namespace DotAspectClient
 {
     /// <summary>
     /// Declares web api contract interface

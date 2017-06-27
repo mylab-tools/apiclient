@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RedCucumber.Wac
+namespace DotAspectClient
 {
     /// <summary>
     /// THrows when any wb api error occured

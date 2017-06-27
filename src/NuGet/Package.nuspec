@@ -3,9 +3,9 @@
   <metadata>
     <!-- this name is used to locate the assembly that defines the version of nuget package -->
     <!-- if the assembly with this name is not found then the value of 'version' is used -->
-    <id>RedCucumber.Wac</id>
+    <id>DotAspectClient</id>
     <version>1.0.0</version>
-    <title>Red cucumber Web Api Client</title>
+    <title>.NET Web Api Client</title>
     <authors>Andrey Osintsev</authors>
     <owners></owners>
     <description>Allow to describe web api contract and use it like a proxy</description>
@@ -29,8 +29,8 @@
     <tags></tags>
   </metadata>
   <files>
-    <file src="..\RedCucumber.Wac\bin\Release\RedCucumber.Wac.dll" target="lib\net45" />
-    <file src="..\RedCucumber.Wac\bin\Release\RedCucumber.Wac.XML" target="lib\net45" />
+    <file src="..\DotAspectClient\bin\Release\DotAspectClient" target="lib\net45" />
+    <file src="..\DotAspectClient\bin\Release\DotAspectClient" target="lib\net45" />
     <file src="tools\" target="tools" />
     <file src="content\" target="content" />
     <file src="build\" target="build" />

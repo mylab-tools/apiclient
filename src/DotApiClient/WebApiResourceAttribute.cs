@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RedCucumber.Wac
+namespace DotAspectClient
 {
     /// <summary>
     /// Determines reource with access through web REST api

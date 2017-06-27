@@ -1,6 +1,6 @@
 using System;
 
-namespace RedCucumber.Wac
+namespace DotAspectClient
 {
     public class EnpointBaseAttribute : Attribute
     {

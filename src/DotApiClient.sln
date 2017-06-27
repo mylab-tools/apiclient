@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetFramework.UnitTests", "NetFramework.UnitTests\NetFramework.UnitTests.csproj", "{ACBCF9F6-E4BD-4877-A2B5-E2A672E24FE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedCucumber.Wac", "RedCucumber.Wac\RedCucumber.Wac.csproj", "{BFB9F727-2184-4EC6-8FC4-D0B096A36145}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotApiClient", "DotApiClient\DotApiClient.csproj", "{BFB9F727-2184-4EC6-8FC4-D0B096A36145}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest.Server", "IntegrationTest.Server\IntegrationTest.Server.csproj", "{9FCBDEA2-2FB7-4DBF-86AA-630DF21EF586}"
 EndProject

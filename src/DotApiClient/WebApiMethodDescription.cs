@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RedCucumber.Wac
+namespace DotAspectClient
 {
     partial class WebApiMethodDescription
     {

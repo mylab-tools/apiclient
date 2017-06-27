@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace RedCucumber.Wac
+namespace DotAspectClient
 {
     /// <summary>
     /// Creates web api client with specified contract

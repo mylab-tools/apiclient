@@ -1,4 +1,4 @@
-﻿namespace RedCucumber.Wac
+﻿namespace DotAspectClient
 {
     /// <summary>
     /// Throws when response processing error occured

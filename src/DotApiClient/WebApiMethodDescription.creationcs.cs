@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace RedCucumber.Wac
+namespace DotAspectClient
 {
     partial class WebApiMethodDescription
     {

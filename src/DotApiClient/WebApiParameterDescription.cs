@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace RedCucumber.Wac
+namespace DotAspectClient
 {
     class WebApiParameterDescription
     {

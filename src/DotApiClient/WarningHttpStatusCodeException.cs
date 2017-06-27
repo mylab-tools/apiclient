@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 
-namespace RedCucumber.Wac
+namespace DotAspectClient
 {
     /// <summary>
     /// Occures when non 2xx http statud code recieved

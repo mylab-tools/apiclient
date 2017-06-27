@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RedCucumber.Wac
+namespace DotAspectClient
 {
     /// <summary>
     /// Declares request content type

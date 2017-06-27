@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RedCucumber.Wac
+namespace DotAspectClient
 {
     /// <summary>
     /// Throws when error found whern interface analysis 

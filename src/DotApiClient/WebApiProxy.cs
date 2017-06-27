@@ -5,7 +5,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
 using System.Threading.Tasks;
 
-namespace RedCucumber.Wac
+namespace DotAspectClient
 {
     class WebApiProxy<T> : RealProxy
         where T : class 

@@ -1,4 +1,4 @@
-﻿namespace RedCucumber.Wac
+﻿namespace DotAspectClient
 {
     /// <summary>
     /// Determines file for web api request
