@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using NUnit.Framework;
-using RedCucumber.Wac;
+using DotApiClient;
 
 namespace NetFramework.UnitTests
 {
@@ -12,7 +12,10 @@ namespace NetFramework.UnitTests
         public void ShouldCastToContract()
         {
             //Arrange
-            var proxy = new WebApiProxy<IResourceContract>(new WebApiDescription(), new EmptyRequestProcessor());
+            var proxy = new WebApiProxy<IResourceContract>(new WebApiDescription(), new WebApiClientOptions
+            {
+                RequestProcessor = new EmptyRequestProcessor()
+            });
 
             //Act
             var contract = (IResourceContract) proxy.GetTransparentProxy();
@@ -22,7 +25,10 @@ namespace NetFramework.UnitTests
         public void ShouldInvokeMethod()
         {
             //Arrange
-            var proxy = new WebApiProxy<IResourceContract>(new WebApiDescription(), new EmptyRequestProcessor());
+            var proxy = new WebApiProxy<IResourceContract>(new WebApiDescription(), new WebApiClientOptions
+                {
+                    RequestProcessor = new EmptyRequestProcessor()
+                });
 
             //Act
             var contract = (IResourceContract)proxy.GetTransparentProxy();
@@ -33,8 +39,7 @@ namespace NetFramework.UnitTests
         public void ShouldSupportTaskMethodResult()
         {
             //Arrange
-            var factory = new WebApiClientFactory<IResourceContract>("http://localhost");
-            var proxy = factory.Create();
+            var proxy = WebApiClientFactory.CreateProxy<IResourceContract>("http://localhost");
 
             //Act
             var task = proxy.GetProcessingTask();
@@ -47,8 +52,7 @@ namespace NetFramework.UnitTests
         public void ShouldSupportGenericTaskMethodResult()
         {
             //Arrange
-            var factory = new WebApiClientFactory<IResourceContract>("http://localhost");
-            var proxy = factory.Create();
+            var proxy = WebApiClientFactory.CreateProxy<IResourceContract>("http://localhost");
 
             //Act
             var task = proxy.GetGenericProcessingTask();
@@ -65,8 +69,14 @@ namespace NetFramework.UnitTests
             byte[] binPayload = Encoding.UTF8.GetBytes(payload);
 
             var reqProc = new BinaryContentRequestProcessor(binPayload);
-            var factory = new WebApiClientFactory<IResourceContract>("http://localhost", reqProc);
-            var proxy = factory.Create();
+            var factory = new WebApiClientFactory("http://localhost")
+            {
+                Options = new WebApiClientOptions
+                {
+                    RequestProcessor = reqProc
+                }
+            };
+            var proxy = factory.CreateProxy<IResourceContract>();
 
             //Act
             var binResp = proxy.GetBinary();
@@ -85,8 +95,14 @@ namespace NetFramework.UnitTests
             string base64Payload = Convert.ToBase64String(binPayload);
 
             var reqProc = new StringContentRequestProcessor("\"" + base64Payload + "\"");
-            var factory = new WebApiClientFactory<IResourceContract>("http://localhost", reqProc);
-            var proxy = factory.Create();
+            var factory = new WebApiClientFactory("http://localhost")
+            {
+                Options = new WebApiClientOptions
+                {
+                    RequestProcessor = reqProc
+                }
+            };
+            var proxy = factory.CreateProxy<IResourceContract>();
 
             //Act
             var binResp = proxy.GetBinary();
@@ -103,8 +119,14 @@ namespace NetFramework.UnitTests
             string payload = Guid.NewGuid().ToString();
 
             var reqProc = new StringContentRequestProcessor(payload);
-            var factory = new WebApiClientFactory<IResourceContract>("http://localhost", reqProc);
-            var proxy = factory.Create();
+            var factory = new WebApiClientFactory("http://localhost")
+            {
+                Options = new WebApiClientOptions
+                {
+                    RequestProcessor = reqProc
+                }
+            };
+            var proxy = factory.CreateProxy<IResourceContract>();
 
             //Act
             var strResp = proxy.GetString();
@@ -125,8 +147,14 @@ namespace NetFramework.UnitTests
                              "</root>";
 
             var reqProc = new StringContentRequestProcessor(payload);
-            var factory = new WebApiClientFactory<IResourceContract>("http://localhost", reqProc);
-            var proxy = factory.Create();
+            var factory = new WebApiClientFactory("http://localhost")
+            {
+                Options = new WebApiClientOptions
+                {
+                    RequestProcessor = reqProc
+                }
+            };
+            var proxy = factory.CreateProxy<IResourceContract>();
 
             //Act
             var resp = proxy.GetObject();
@@ -145,8 +173,14 @@ namespace NetFramework.UnitTests
                              "}";
 
             var reqProc = new StringContentRequestProcessor(payload);
-            var factory = new WebApiClientFactory<IResourceContract>("http://localhost", reqProc);
-            var proxy = factory.Create();
+            var factory = new WebApiClientFactory("http://localhost")
+            {
+                Options = new WebApiClientOptions
+                {
+                    RequestProcessor = reqProc
+                }
+            };
+            var proxy = factory.CreateProxy<IResourceContract>();
 
             //Act
             var resp = proxy.GetObject();

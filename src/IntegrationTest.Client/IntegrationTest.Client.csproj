@@ -50,7 +50,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RedCucumber.Wac\RedCucumber.Wac.csproj">
+    <ProjectReference Include="..\DotApiClient\DotApiClient.csproj">
       <Project>{BFB9F727-2184-4EC6-8FC4-D0B096A36145}</Project>
       <Name>RedCucumber.Wac</Name>
     </ProjectReference>

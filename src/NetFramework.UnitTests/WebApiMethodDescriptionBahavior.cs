@@ -1,6 +1,7 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
-using RedCucumber.Wac;
+using DotApiClient;
 
 namespace NetFramework.UnitTests
 {
@@ -170,6 +171,23 @@ namespace NetFramework.UnitTests
 
             //Assert
             Assert.That(d.ContentType, Is.EqualTo(ContentType.Binary));
+        }
+
+        [Test]
+        public void ShouldDetermineHeaderParameter()
+        {
+            //Arrange
+            var m = GetMethod(nameof(IContract.MethodWithHeader));
+
+            //Act
+            var d = WebApiMethodDescription.Create(m);
+
+            //Assert
+            Assert.That(d.Headers, Is.Not.Null);
+            Assert.That(d.Headers.Count, Is.EqualTo(1));
+            Assert.That(d.Headers[0].HeaderName, Is.EqualTo("Content-Type"));
+            Assert.That(d.Headers[0].ParameterName, Is.EqualTo("header"));
+            Assert.That(d.Parameters.Count, Is.EqualTo(0));
         }
     }
 }

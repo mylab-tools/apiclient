@@ -1,33 +1,23 @@
 ﻿using System;
-using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using RedCucumber.Wac;
-using HttpMethod = RedCucumber.Wac.HttpMethod;
+using DotApiClient;
 
 namespace IntegrationTest.Client
 {
     [TestFixture]
     public class WebApiClientBahavior
     {
-        private WebApiClientFactory<IStringResource> _stringResourceClientFactory;
-        private WebApiClientFactory<IEmptyResource> _emptyResourceClientFactory;
-        private WebApiClientFactory<IBinaryResource> _binResourceClientFactory;
         private WebApiClientFactory<IStringService> _stringServiceClientFactory;
+        private WebApiClientFactory _restPointClientFactory;
 
         [OneTimeSetUp]
         public void BeforeTestSuite()
         {
-            _stringResourceClientFactory = new WebApiClientFactory<IStringResource>(
-                "http://localhost.loc/IntegrationTest.Server/rest/StringResource");
-            _emptyResourceClientFactory = new WebApiClientFactory<IEmptyResource>(
-                "http://localhost.loc/IntegrationTest.Server/rest/EmptyResource");
-            _binResourceClientFactory= new WebApiClientFactory<IBinaryResource>(
-                "http://localhost.loc/IntegrationTest.Server/rest/BinaryResource");
-            _stringServiceClientFactory=new WebApiClientFactory<IStringService>(
-                "http://localhost.loc/IntegrationTest.Server/api/StringService");
+            _restPointClientFactory = new WebApiClientFactory("http://localhost.loc/IntegrationTest.Server/rest/");
+            var stringServiceClientFactory = new WebApiClientFactory("http://localhost.loc/IntegrationTest.Server/api/StringService");
+            _stringServiceClientFactory = stringServiceClientFactory.CreateTypedFactory<IStringService>();
         }
 
         [OneTimeTearDown]
@@ -40,7 +30,7 @@ namespace IntegrationTest.Client
         public void ShouldSupportMethodsWithVoidReturn()
         {
             //Arrange
-            var client = _emptyResourceClientFactory.Create();
+            var client = _restPointClientFactory.CreateProxy<IEmptyResource>();
 
             //Act
             client.GetRequest();
@@ -50,7 +40,7 @@ namespace IntegrationTest.Client
         public void ShouldSupportTaskMethodResult()
         {
             //Arrange
-            var client = _emptyResourceClientFactory.Create();
+            var client = _restPointClientFactory.CreateProxy<IEmptyResource>();
 
             //Act
             var task = client.GetRequestTask();
@@ -61,7 +51,7 @@ namespace IntegrationTest.Client
         public void ShouldSupportTaskMethodResultWithMessage()
         {
             //Arrange
-            var client = _stringResourceClientFactory.Create();
+            var client = _restPointClientFactory.CreateProxy<IStringResource>();
             string testString = Guid.NewGuid().ToString();
 
             //Act
@@ -77,7 +67,7 @@ namespace IntegrationTest.Client
         public void ShouldReceiveStringResult()
         {
             //Arrange
-            var client = _stringResourceClientFactory.Create();
+            var client = _restPointClientFactory.CreateProxy<IStringResource>();
             string testString = Guid.NewGuid().ToString();
 
             //Act
@@ -91,7 +81,7 @@ namespace IntegrationTest.Client
         public void ShouldReceiveBinaryPayload()
         {
             //Arrange
-            var client = _binResourceClientFactory.Create();
+            var client = _restPointClientFactory.CreateProxy<IBinaryResource>();
             string testString = Guid.NewGuid().ToString();
             var testBin = Encoding.UTF8.GetBytes(testString);
 
@@ -111,7 +101,7 @@ namespace IntegrationTest.Client
         public void ShouldUseGetParamsWhenPostMethod()
         {
             //Arrange
-            var client = _stringServiceClientFactory.Create();
+            var client = _stringServiceClientFactory.CreateProxy();
 
             //Act
             var res = client.ConcatStrings("p1", "p2", "p3");
@@ -124,7 +114,7 @@ namespace IntegrationTest.Client
         public void ShouldCorrectUseJsonSerialization()
         {
             //Arrange
-            var client = _stringServiceClientFactory.Create();
+            var client = _stringServiceClientFactory.CreateProxy();
             var sendObj = new DataObject
             {
                 Value = Guid.NewGuid().ToString()
@@ -142,7 +132,7 @@ namespace IntegrationTest.Client
         public void ShouldCorrectUseXmlSerialization()
         {
             //Arrange
-            var client = _stringServiceClientFactory.Create();
+            var client = _stringServiceClientFactory.CreateProxy ();
             var sendObj = new DataObject
             {
                 Value = Guid.NewGuid().ToString()
@@ -157,34 +147,34 @@ namespace IntegrationTest.Client
         }
     }
 
-    [WebApiResource]
+    [RestApi(RelPath = "BinaryResource")]
     interface IBinaryResource
     {
-        [ResourceAction(HttpMethod.Post)]
+        [RestAction(HttpMethod.Post)]
         byte[] GetBin(WebApiFile file);
     }
 
-    [WebApiResource]
+    [RestApi(RelPath = "EmptyResource")]
     interface IEmptyResource
     {
-        [ResourceAction(HttpMethod.Get)]
+        [RestAction(HttpMethod.Get)]
         void GetRequest();
 
-        [ResourceAction(HttpMethod.Get)]
+        [RestAction(HttpMethod.Get)]
         Task GetRequestTask();
     }
 
-    [WebApiResource]
+    [RestApi(RelPath = "StringResource")]
     interface IStringResource
     {
-        [ResourceAction(HttpMethod.Get)]
-        Task<HttpResponseMessage> GetStringTaskWithMessage(string str);
+        [RestAction(HttpMethod.Get)]
+        Task<System.Net.Http.HttpResponseMessage> GetStringTaskWithMessage(string str);
 
-        [ResourceAction(HttpMethod.Get)]
+        [RestAction(HttpMethod.Get)]
         string GetString(string str);
     }
 
-    [WebApiService]
+    [WebApi]
     interface IStringService
     {
         [ServiceEndpoint(HttpMethod.Post)]

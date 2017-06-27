@@ -2,6 +2,8 @@ Param (
 	[switch]$Publish
 )
 
+$Publish = $true;
+
 $ErrorActionPreference = "Stop"
 $global:ExitCode = 1
 

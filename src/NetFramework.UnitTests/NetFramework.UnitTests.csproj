@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Tests\NetFramework.UnitTests\WebApiDescriptionBehavior.stuff.cs" />
     <Compile Include="WebApiProxyBehavior.cs" />
     <Compile Include="WebApiDescriptionBehavior.cs" />
     <Compile Include="WebApiProxyBehavior.stuff.cs" />
@@ -60,7 +61,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RedCucumber.Wac\RedCucumber.Wac.csproj">
+    <ProjectReference Include="..\DotApiClient\DotApiClient.csproj">
       <Project>{bfb9f727-2184-4ec6-8fc4-d0b096a36145}</Project>
       <Name>RedCucumber.Wac</Name>
     </ProjectReference>
