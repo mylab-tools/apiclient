@@ -70,7 +70,7 @@ namespace DotApiClient
                         }
                     }
 
-                    if(response == null)
+                    if(response == null && methodInfo.ReturnType != typeof(void))
                         throw new ResponseProcessingException("Can't deserialize response payload");
                 }
             }
