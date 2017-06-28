@@ -1,4 +1,5 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -112,7 +113,7 @@ namespace NetFramework.UnitTests
             var p1 = "p1";
             var v1 = "v1";
 
-            var headers = new WepApiMethodHeaders
+            var headers = new []
             {
                 new WebApiMethodHeader
                 {
@@ -195,6 +196,60 @@ namespace NetFramework.UnitTests
                 Assert.Fail();
             }
 
+        }
+
+        [Test]
+        public void ShouldNotAddSlashAtTheEndOfUrlWhenMethodHasRelPath()
+        {
+            //Arrange
+            var md = new WebApiMethodDescription
+            {
+                RelPath = "items"
+            };
+
+            var reqF = new WebApiRequestFactory(md, "http://localhost/");
+
+            //Act
+            var msg = reqF.CreateMessage(new InvokeParameters());
+
+            //Assert
+            Assert.That(msg.RequestUri.AbsoluteUri.Last(), Is.Not.EqualTo('/'));
+        }
+
+        [Test]
+        public void ShouldNotAddSlashAtTheEndOfUrlWhenMethodHasntRelPath()
+        {
+            //Arrange
+            var md = new WebApiMethodDescription();
+
+            var reqF = new WebApiRequestFactory(md, "http://localhost/api");
+
+            //Act
+            var msg = reqF.CreateMessage(new InvokeParameters());
+
+            //Assert
+            Assert.That(msg.RequestUri.AbsoluteUri.Last(), Is.Not.EqualTo('/'));
+        }
+
+        [Test]
+        public void ShouldApplyRestIdUrlParameters()
+        {
+            //Arrange
+            const string paramName = "param1";
+            const string paramVal = "id-val";
+            var md = new WebApiMethodDescription
+            {
+                RelPath = $"{{{paramName}}}/items",
+                UrlPartParameters = new[] { paramName }
+            };
+
+            var reqF = new WebApiRequestFactory(md, "http://localhost/api");
+
+            //Act
+            var msg = reqF.CreateMessage(new InvokeParameters(new []{paramName}, new object[]{ paramVal }));
+
+            //Assert
+            Assert.That(msg.RequestUri.AbsoluteUri, Is.Not.EqualTo($"http://localhost/api/{paramVal}/items"));
         }
     }
 }

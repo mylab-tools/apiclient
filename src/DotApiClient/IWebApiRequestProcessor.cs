@@ -25,7 +25,7 @@ namespace DotApiClient
         /// Initializes a new instance of <see cref="DefaultWebApiRequestProcessor"/>
         /// </summary>
         public DefaultWebApiRequestProcessor()
-            :this(new HttpClient())
+            :this(CreateHttpClient())
         {
             
         }
@@ -42,6 +42,15 @@ namespace DotApiClient
         public Task<HttpResponseMessage> ProcessRequest(HttpRequestMessage message)
         {
             return _httpClient.SendAsync(message);
+        }
+
+        private static HttpClient CreateHttpClient()
+        {
+            var mh = new HttpClientHandler
+            {
+                AllowAutoRedirect = false
+            };
+            return new HttpClient(mh);
         }
     }
 }

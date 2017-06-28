@@ -17,7 +17,7 @@ namespace DotApiClient
         /// Initializes a new instance of <see cref="PayloadAttribute"/>
         /// </summary>
         /// <param name="name">overrides parameter name</param>
-        public NameAttribute(string name = null)
+        public NameAttribute(string name)
         {
             Name = name;
         }

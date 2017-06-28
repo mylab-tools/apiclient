@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="HeaderAttribute.cs" />
     <Compile Include="IWebApiProxyFactory.cs" />
+    <Compile Include="RestIdAttribute.cs" />
     <Compile Include="WebApiClientOptions.cs" />
     <Compile Include="WebApiFile.cs" />
     <Compile Include="InvokeParameters.cs" />

@@ -46,13 +46,16 @@ namespace DotApiClient
 
                     var rFact = new WebApiRequestFactory(methodDesc, _webApiDescription.BaseUrl)
                     {
-                        Options = _options
+                        Options = _options,
+                        UseTrailedSlash = _webApiDescription.UseTrailedSlash
                     };
 
-                    var paramsNames = methodDesc.Parameters.Values
-                        .OrderBy(p => p.Order)
-                        .Select(p => p.MethodParameterName)
-                        .ToArray();
+                    //var paramsNames = methodDesc.Parameters.Values
+                    //    .OrderBy(p => p.Order)
+                    //    .Select(p => p.MethodParameterName)
+                    //    .ToArray();
+
+                    var paramsNames = methodInfo.GetParameters().Select(p => p.Name).ToArray();
 
                     var requestMessage = rFact.CreateMessage(new InvokeParameters(paramsNames, args));
                     var task = (_options?.RequestProcessor ?? new DefaultWebApiRequestProcessor())

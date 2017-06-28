@@ -11,6 +11,11 @@ namespace DotApiClient
         public string RelPath { get; set; }
 
         /// <summary>
+        /// Gets or sets using traled slash
+        /// </summary>
+        public bool UseTrailedSlash { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of <see cref="WebApiServiceAttribute"/>
         /// </summary>
         protected WebApiServiceAttribute()
