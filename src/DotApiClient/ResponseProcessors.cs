@@ -52,7 +52,7 @@ namespace DotApiClient
 
             int statusCodeIndex = (int)task.Result.StatusCode;
             if (statusCodeIndex < 200 || statusCodeIndex >= 300)
-                throw new WarningHttpStatusCodeException(task.Result);
+                throw new WrongHttpStatusCodeException(task.Result);
 
             return ExtractPayload(task.Result, returnType);
         }

@@ -55,7 +55,7 @@
     <Compile Include="ResponseProcessors.cs" />
     <Compile Include="IWebApiRequestProcessor.cs" />
     <Compile Include="PrepareRequestException.cs" />
-    <Compile Include="WarningHttpStatusCodeException.cs" />
+    <Compile Include="WrongHttpStatusCodeException.cs" />
     <Compile Include="WebApiException.cs" />
     <Compile Include="ContentType.cs" />
     <Compile Include="ContentTypeAttribute.cs" />

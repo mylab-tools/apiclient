@@ -5,7 +5,7 @@ namespace DotApiClient
     /// <summary>
     /// Occures when non 2xx http statud code recieved
     /// </summary>
-    public class WarningHttpStatusCodeException : WebApiException
+    public class WrongHttpStatusCodeException : WebApiException
     {
         /// <summary>
         /// Received Http message
@@ -13,9 +13,9 @@ namespace DotApiClient
         public HttpResponseMessage HttpMessage { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="WarningHttpStatusCodeException"/>
+        /// Initializes a new instance of <see cref="WrongHttpStatusCodeException"/>
         /// </summary>
-        public WarningHttpStatusCodeException(HttpResponseMessage message)
+        public WrongHttpStatusCodeException(HttpResponseMessage message)
             :base(message.StatusCode.ToString())
         {
             HttpMessage = message;
