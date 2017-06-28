@@ -16,6 +16,9 @@ namespace DotApiClient
     {
         public SupportedResponseProcessors()
         {
+            Add(new IntResponseProcessor());
+            Add(new UintResponseProcessor());
+            Add(new DoubleResponseProcessor());
             Add(new VoidResponseProcessor());
             Add(new TaskResponseProcessor());
             Add(new StringResponseProcessor());
@@ -49,7 +52,7 @@ namespace DotApiClient
 
             int statusCodeIndex = (int)task.Result.StatusCode;
             if (statusCodeIndex < 200 || statusCodeIndex >= 300)
-                throw new WarningHttpStatusCodeException(task.Result);
+                throw new WrongHttpStatusCodeException(task.Result);
 
             return ExtractPayload(task.Result, returnType);
         }
@@ -148,6 +151,51 @@ namespace DotApiClient
             {
                 return d.Deserialize(r);
             }
+        }
+    }
+
+    abstract class PrimitiveResponseProcessor<T> : PayloadBasedResponseProcessor
+        where T : struct 
+    {
+        /// <inheritdoc />
+        public override bool Predicate(Type returnType)
+        {
+            return returnType == typeof(T);
+        }
+
+        /// <inheritdoc />
+        protected override object ExtractPayload(HttpResponseMessage taskResult, Type returnType)
+        {
+            return Deserialize(taskResult.Content.ReadAsStringAsync().Result.Trim('\"', ' '));
+        }
+
+        protected abstract T Deserialize(string str);
+    }
+
+    class UintResponseProcessor : PrimitiveResponseProcessor<uint>
+    {
+        /// <inheritdoc />
+        protected override uint Deserialize(string str)
+        {
+            return Convert.ToUInt32(str);
+        }
+    }
+
+    class IntResponseProcessor : PrimitiveResponseProcessor<int>
+    {
+        /// <inheritdoc />
+        protected override int Deserialize(string str)
+        {
+            return Convert.ToInt32(str);
+        }
+    }
+
+    class DoubleResponseProcessor : PrimitiveResponseProcessor<double>
+    {
+        /// <inheritdoc />
+        protected override double Deserialize(string str)
+        {
+            return Convert.ToDouble(str);
         }
     }
 }

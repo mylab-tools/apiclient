@@ -1,4 +1,4 @@
-using DotApiClient;
+    using DotApiClient;
 
 namespace NetFramework.UnitTests
 {

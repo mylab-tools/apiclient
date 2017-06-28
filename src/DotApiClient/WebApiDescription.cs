@@ -8,6 +8,7 @@ namespace DotApiClient
     {
         public string BaseUrl { get; set; }
         public WebApiMethodDescriptions Methods { get; set; }
+        public bool UseTrailedSlash { get; set; }
 
         public static WebApiDescription Create(Type contractType)
         {
@@ -17,6 +18,10 @@ namespace DotApiClient
             CheckForgottenMethods(contractType);
 
             var wasAttr = contractType.GetTypeInfo().GetCustomAttribute<WebApiServiceAttribute>();
+
+
+            if (wasAttr == null)
+                throw new WebApiContractException("Contract attribute not found");
 
             var desc = new WebApiDescription
             {
@@ -33,6 +38,8 @@ namespace DotApiClient
             };
 
             CheckWrongMethodAttributes(contractType);
+
+            desc.UseTrailedSlash = wasAttr.UseTrailedSlash;
 
             return desc;
         }

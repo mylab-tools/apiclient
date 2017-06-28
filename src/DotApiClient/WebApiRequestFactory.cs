@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -17,6 +16,7 @@ namespace DotApiClient
     {
         private readonly WebApiMethodDescription _methodDescription;
         private readonly string _baseUrl;
+        public bool UseTrailedSlash { get; set; }
 
         public WebApiClientOptions Options { get; set; }
 
@@ -31,12 +31,7 @@ namespace DotApiClient
         public HttpRequestMessage CreateMessage(InvokeParameters invokeParameters)
         {
             var uri = CreateUri(invokeParameters);
-            var req = new HttpRequestMessage(
-                ConvertHttpMethod(_methodDescription.HttpMethod),
-                new Uri(new Uri(_baseUrl), _methodDescription.RelPath))
-            {
-                RequestUri = uri
-            };
+            var req = new HttpRequestMessage(ConvertHttpMethod(_methodDescription.HttpMethod), uri);
 
             if (_methodDescription.HttpMethod != HttpMethod.Get &&
                 _methodDescription.Parameters != null)
@@ -199,13 +194,15 @@ namespace DotApiClient
             }
         }
 
-        private Uri CreateUri(InvokeParameters invokeParameters)
+        private string CreateUri(InvokeParameters invokeParameters)
         {
             string pathSeparator = _baseUrl.Length > 0 && _baseUrl[_baseUrl.Length - 1] != '/'
                 ? "/"
                 : string.Empty;
 
-            var b = new UriBuilder(new Uri(new Uri(_baseUrl + pathSeparator), _methodDescription.RelPath));
+            var baseUri = new Uri(new Uri(_baseUrl + pathSeparator), _methodDescription.RelPath);
+            var baseAddress = baseUri.AbsoluteUri.TrimEnd('/');
+            
             var query = new StringBuilder();
 
             if (_methodDescription.Parameters != null)
@@ -223,10 +220,35 @@ namespace DotApiClient
                 }
             }
 
-            
-            b.Query = query.ToString();
+            if (_methodDescription.UrlPartParameters != null)
+            {
+                bool urlHasTags = false;
+                foreach (var urlPartParameter in _methodDescription.UrlPartParameters)
+                {
+                    var newBaseAddress = baseAddress.Replace(
+                        "%7B" + urlPartParameter + "%7D", 
+                        invokeParameters[urlPartParameter].ToString());
 
-            return b.Uri;
+                    if (newBaseAddress != baseAddress)
+                        urlHasTags = true;
+
+                    baseAddress = newBaseAddress;
+                }
+
+                if (!urlHasTags)
+                {
+                    var firstRestIdParameter = _methodDescription.UrlPartParameters.FirstOrDefault();
+                    if (firstRestIdParameter != null)
+                    {
+                        baseAddress = baseAddress + "/" + invokeParameters[firstRestIdParameter];
+                    }
+                }
+            }
+
+            if (UseTrailedSlash)
+                baseAddress = baseAddress + "/";
+
+            return query.Length != 0  ? baseAddress + "?" + query : baseAddress;
         }
 
         System.Net.Http.HttpMethod ConvertHttpMethod(HttpMethod method)

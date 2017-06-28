@@ -87,6 +87,9 @@ namespace NetFramework.UnitTests
 
             [RestAction(HttpMethod.Post)]
             void MethodWithHeader([Header("Content-Type")]string header);
+
+            [RestAction(HttpMethod.Post)]
+            void MethodWithRestId([RestId]string id);
         }
 
         private MethodInfo GetMethod(string name)

@@ -24,6 +24,8 @@ namespace DotApiClient
 
             InitHeaders(method, d);
 
+            InitUrlParrtParameters(method, d);
+
             InitParameters(method, d);
 
             CheckParametersConflict(d.Parameters);
@@ -31,17 +33,26 @@ namespace DotApiClient
             return d;
         }
 
+        private static void InitUrlParrtParameters(MethodInfo method, WebApiMethodDescription d)
+        {
+            d.UrlPartParameters = method.GetParameters()
+                .Where(p => d.Headers.All(h => h.ParameterName != p.Name))
+                .Where(p => Attribute.IsDefined(p, typeof(RestIdAttribute)))
+                .Select(p => p.Name)
+                .ToArray();
+        }
+
         private static void InitHeaders(MethodInfo method, WebApiMethodDescription d)
         {
             var parameters = method.GetParameters();
-            d.Headers = new WepApiMethodHeaders(parameters
+            d.Headers = parameters
                     .Where(p => Attribute.IsDefined(p, typeof(HeaderAttribute)))
                     .Select(p => new WebApiMethodHeader
                     {
                         ParameterName = p.Name,
                         HeaderName = p.GetCustomAttribute<HeaderAttribute>().HeaderName
                     })
-                    .ToList());
+                    .ToArray();
         }
 
         private static void InitRelPathAndHttpMethod(MethodInfo method,
@@ -90,6 +101,7 @@ namespace DotApiClient
         {
             var parameters = method.GetParameters()
                 .Where(p => d.Headers.All(h => h.ParameterName != p.Name))
+                .Where(p => d.UrlPartParameters.All(up => up != p.Name))
                 .Select(WebApiParameterDescription.Create)
                 .ToArray();
 

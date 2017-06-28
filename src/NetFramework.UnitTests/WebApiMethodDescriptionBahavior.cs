@@ -184,10 +184,23 @@ namespace NetFramework.UnitTests
 
             //Assert
             Assert.That(d.Headers, Is.Not.Null);
-            Assert.That(d.Headers.Count, Is.EqualTo(1));
-            Assert.That(d.Headers[0].HeaderName, Is.EqualTo("Content-Type"));
-            Assert.That(d.Headers[0].ParameterName, Is.EqualTo("header"));
+            Assert.That(d.Headers.First().HeaderName, Is.EqualTo("Content-Type"));
+            Assert.That(d.Headers.First().ParameterName, Is.EqualTo("header"));
             Assert.That(d.Parameters.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ShouldDetermineMethodRestId()
+        {
+            //Arrange
+            var m = GetMethod(nameof(IContract.MethodWithRestId));
+
+            //Act
+            var d = WebApiMethodDescription.Create(m);
+
+            //Assert
+            Assert.That(d.UrlPartParameters, Is.Not.Null);
+            Assert.That(d.UrlPartParameters.First(), Is.EqualTo("id"));
         }
     }
 }

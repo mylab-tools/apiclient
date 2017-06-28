@@ -16,7 +16,9 @@ namespace DotApiClient
 
         public WebApiParameterDescriptions Parameters { get; set; }
 
-        public WepApiMethodHeaders Headers { get; set; }
+        public IEnumerable<WebApiMethodHeader> Headers { get; set; }
+
+        public IEnumerable<string> UrlPartParameters { get; set; }
     }
     
     internal class WebApiMethodDescriptions : Dictionary<string, WebApiMethodDescription>
@@ -39,20 +41,6 @@ namespace DotApiClient
         public void Add(WebApiMethodDescription apiMethodDescription)
         {
             Add(apiMethodDescription.MethodId, apiMethodDescription);
-        }
-    }
-
-    class WepApiMethodHeaders : Collection<WebApiMethodHeader>
-    {
-        public WepApiMethodHeaders(IList<WebApiMethodHeader> src)
-            :base(src)
-        {
-            
-        }
-
-        public WepApiMethodHeaders()
-        {
-            
         }
     }
 
