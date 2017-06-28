@@ -249,7 +249,28 @@ namespace NetFramework.UnitTests
             var msg = reqF.CreateMessage(new InvokeParameters(new []{paramName}, new object[]{ paramVal }));
 
             //Assert
-            Assert.That(msg.RequestUri.AbsoluteUri, Is.Not.EqualTo($"http://localhost/api/{paramVal}/items"));
+            Assert.That(msg.RequestUri.AbsoluteUri, Is.EqualTo($"http://localhost/api/{paramVal}/items"));
+        }
+
+        [Test]
+        public void ShouldAddFirstRestIdUrlParameterAtTheEndWhenNoTagsInMethodPath()
+        {
+            //Arrange
+            const string paramName = "param1";
+            const string paramVal = "id-val";
+            var md = new WebApiMethodDescription
+            {
+                RelPath = "path",
+                UrlPartParameters = new[] { paramName }
+            };
+
+            var reqF = new WebApiRequestFactory(md, "http://localhost/api");
+
+            //Act
+            var msg = reqF.CreateMessage(new InvokeParameters(new[] { paramName }, new object[] { paramVal }));
+
+            //Assert
+            Assert.That(msg.RequestUri.AbsoluteUri, Is.EqualTo($"http://localhost/api/path/{paramVal}"));
         }
     }
 }

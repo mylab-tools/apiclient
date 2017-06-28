@@ -220,18 +220,33 @@ namespace DotApiClient
                 }
             }
 
-            if (UseTrailedSlash)
-                baseAddress = baseAddress + "/";
-
             if (_methodDescription.UrlPartParameters != null)
             {
+                bool urlHasTags = false;
                 foreach (var urlPartParameter in _methodDescription.UrlPartParameters)
                 {
-                    baseAddress = baseAddress.Replace(
-                        "{" + urlPartParameter + "}", 
+                    var newBaseAddress = baseAddress.Replace(
+                        "%7B" + urlPartParameter + "%7D", 
                         invokeParameters[urlPartParameter].ToString());
+
+                    if (newBaseAddress != baseAddress)
+                        urlHasTags = true;
+
+                    baseAddress = newBaseAddress;
+                }
+
+                if (!urlHasTags)
+                {
+                    var firstRestIdParameter = _methodDescription.UrlPartParameters.FirstOrDefault();
+                    if (firstRestIdParameter != null)
+                    {
+                        baseAddress = baseAddress + "/" + invokeParameters[firstRestIdParameter];
+                    }
                 }
             }
+
+            if (UseTrailedSlash)
+                baseAddress = baseAddress + "/";
 
             return query.Length != 0  ? baseAddress + "?" + query : baseAddress;
         }
