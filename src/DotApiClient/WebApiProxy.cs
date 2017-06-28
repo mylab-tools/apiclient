@@ -69,6 +69,9 @@ namespace DotApiClient
                             break;
                         }
                     }
+
+                    if(response == null)
+                        throw new ResponseProcessingException("Can't deserialize response payload");
                 }
             }
             catch (Exception ex)
