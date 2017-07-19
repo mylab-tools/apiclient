@@ -1,9 +1,8 @@
-﻿using System.Data.SqlClient;
-using System.IO;
+﻿using System.IO;
 using System.Web;
 using System.Web.Http;
 
-namespace IntegrationTest.Server.Controllers.api
+namespace IntegrationTest.Server.Controllers.Rest
 {
     public class BinaryResourceController : ApiController
     {

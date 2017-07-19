@@ -145,6 +145,27 @@ namespace IntegrationTest.Client
             Assert.That(gotObj, Is.Not.Null);
             Assert.That(gotObj.Value, Is.EqualTo(sendObj.Value));
         }
+
+        [Test]
+        public void ShouldUnderstandArrayResult()
+        {
+            //Arrange
+            var stringArray = new string[]
+            {
+                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToString()
+            };
+
+            var client = _stringServiceClientFactory.CreateProxy();
+
+            //Act
+            var gotArr = client.GetStringArray(stringArray);
+
+            //Assert
+            Assert.That(gotArr, Is.Not.Null);
+            CollectionAssert.AreEqual(stringArray, gotArr);
+        }
     }
 
     [RestApi(RelPath = "BinaryResource")]
@@ -188,6 +209,10 @@ namespace IntegrationTest.Client
         [ServiceEndpoint(HttpMethod.Post)]
         [ContentType(ContentType.Xml)]
         DataObject GetXmlBack(DataObject obj);
+
+        [ServiceEndpoint(HttpMethod.Post)]
+        [ContentType(ContentType.Json)]
+        string[] GetStringArray(string[] stringArr);
     }
 
     public class DataObject

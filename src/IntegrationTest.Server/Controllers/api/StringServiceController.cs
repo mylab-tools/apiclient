@@ -5,7 +5,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using System.Xml.Serialization;
 
-namespace IntegrationTest.Server.Controllers.api
+namespace IntegrationTest.Server.Controllers.Api
 {
     public class StringServiceController : ApiController
     {
@@ -19,6 +19,12 @@ namespace IntegrationTest.Server.Controllers.api
         public IHttpActionResult GetJsonBack([FromBody]DataObject dataObject)
         {
             return Json(dataObject);
+        }
+
+        [HttpPost]
+        public IHttpActionResult GetStringArray([FromBody] string[] stringArray)
+        {
+            return Json(stringArray);
         }
 
         [HttpPost]
