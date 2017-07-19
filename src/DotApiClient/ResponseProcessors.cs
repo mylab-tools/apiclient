@@ -115,7 +115,7 @@ namespace DotApiClient
             if (str.StartsWith("<"))
                 return DeserializeFromXml(str, returnType);
 
-            if (str.StartsWith("{"))
+            if (str.StartsWith("{") || str.StartsWith("["))
                 return DeserializeFromJson(str, returnType);
 
             throw new ResponseProcessingException("Unexpexted response pyload content. Only XML and JSON supported for structural object.");

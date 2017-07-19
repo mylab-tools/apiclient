@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace IntegrationTest.Server.Controllers.api
+namespace IntegrationTest.Server.Controllers.Rest
 {
     public class EmptyResourceController : ApiController
     {

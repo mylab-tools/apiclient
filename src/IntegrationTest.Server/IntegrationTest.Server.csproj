@@ -147,10 +147,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\rest\BinaryResourceController.cs" />
-    <Compile Include="Controllers\rest\EmptyResourceController.cs" />
-    <Compile Include="Controllers\rest\StringResourceController.cs" />
-    <Compile Include="Controllers\api\StringServiceController.cs" />
+    <Compile Include="Controllers\Rest\BinaryResourceController.cs" />
+    <Compile Include="Controllers\Rest\EmptyResourceController.cs" />
+    <Compile Include="Controllers\Rest\StringResourceController.cs" />
+    <Compile Include="Controllers\Api\StringServiceController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
