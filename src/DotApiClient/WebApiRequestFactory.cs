@@ -209,7 +209,7 @@ namespace DotApiClient
             {
                 foreach (var p in _methodDescription.Parameters.Values)
                 {
-                    if (p.Type == WebApiParameterType.Get)
+                    if (p.Type == WebApiParameterType.Url)
                     {
                         if (query.Length != 0)
                             query.Append("&");

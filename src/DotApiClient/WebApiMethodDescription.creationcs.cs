@@ -109,7 +109,7 @@ namespace DotApiClient
             {
                 if (d.HttpMethod == HttpMethod.Get)
                 {
-                    p.Type = WebApiParameterType.Get;
+                    p.Type = WebApiParameterType.Url;
                 }
                 else
                 {

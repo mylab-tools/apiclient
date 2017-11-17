@@ -16,6 +16,7 @@ namespace DotApiClient
     {
         public SupportedResponseProcessors()
         {
+            Add(new BoolResponseProcessor());
             Add(new IntResponseProcessor());
             Add(new UintResponseProcessor());
             Add(new DoubleResponseProcessor());
@@ -196,6 +197,15 @@ namespace DotApiClient
         protected override double Deserialize(string str)
         {
             return Convert.ToDouble(str);
+        }
+    }
+
+    class BoolResponseProcessor : PrimitiveResponseProcessor<bool>
+    {
+        /// <inheritdoc />
+        protected override bool Deserialize(string str)
+        {
+            return Convert.ToBoolean(str);
         }
     }
 }
