@@ -49,14 +49,14 @@ namespace DotApiClient
     }
 
     /// <summary>
-    /// Determines parameter as a GET-parameter in URL 
+    /// Determines parameter as a URL-parameter
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class GetParamAttribute : ParameterTypeAttribute
+    public class UrlParamAttribute : ParameterTypeAttribute
     {
         /// <inheritdoc />
-        public GetParamAttribute() 
-            :base(WebApiParameterType.Get)
+        public UrlParamAttribute() 
+            :base(WebApiParameterType.Url)
         {
         }
     }

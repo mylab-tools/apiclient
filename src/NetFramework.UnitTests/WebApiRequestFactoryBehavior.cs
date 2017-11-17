@@ -46,13 +46,13 @@ namespace NetFramework.UnitTests
                         {
                             Name = p1,
                             MethodParameterName = p1,
-                            Type = WebApiParameterType.Get
+                            Type = WebApiParameterType.Url
                         },
                         new WebApiParameterDescription
                         {
                             Name = p2,
                             MethodParameterName = p2,
-                            Type = WebApiParameterType.Get
+                            Type = WebApiParameterType.Url
                         }
                     })
             };
@@ -89,7 +89,7 @@ namespace NetFramework.UnitTests
                         {
                             Name = p1,
                             MethodParameterName = p1,
-                            Type = WebApiParameterType.Get
+                            Type = WebApiParameterType.Url
                         },                    })
             };
             var reqFact = new WebApiRequestFactory(md, "http://localhost");

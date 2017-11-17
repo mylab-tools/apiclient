@@ -85,9 +85,9 @@ namespace NetFramework.UnitTests
 
 
         [Test]
-        [TestCase(nameof(IContract.GetResourceAction), WebApiParameterType.Get, TestName = "'Get' for resource GET")]
+        [TestCase(nameof(IContract.GetResourceAction), WebApiParameterType.Url, TestName = "'Url' for resource GET")]
         [TestCase(nameof(IContract.PostResourceAction), WebApiParameterType.Payload, TestName = "'Payload' for resource POST")]
-        [TestCase(nameof(IContract.GetServiceEndpoint), WebApiParameterType.Get, TestName = "'Get' for service GET")]
+        [TestCase(nameof(IContract.GetServiceEndpoint), WebApiParameterType.Url, TestName = "'Url' for service GET")]
         [TestCase(nameof(IContract.PostServiceEndpoint), WebApiParameterType.FormItem, TestName = "'Payload' for service POST")]
         public void ShouldDetermineTypeForUntypedParamtersWithoutContentSpecification(string methodName, WebApiParameterType expectedType)
         {
@@ -113,7 +113,7 @@ namespace NetFramework.UnitTests
             var p = description.Parameters["p"];
 
             //Assert
-            Assert.That(p.Type, Is.EqualTo(WebApiParameterType.Get));
+            Assert.That(p.Type, Is.EqualTo(WebApiParameterType.Url));
         }
 
         [Test]

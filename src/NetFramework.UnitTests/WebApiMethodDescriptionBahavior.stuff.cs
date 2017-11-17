@@ -77,10 +77,10 @@ namespace NetFramework.UnitTests
             void WithPayloadAndFormParams([Payload] int p1, [FormItem] int p2);
 
             [RestAction(HttpMethod.Post)]
-            void WithPayloadAndGetParams([Payload] int p1, [GetParam] int p2, [GetParam] int p3);
+            void WithPayloadAndGetParams([Payload] int p1, [UrlParam] int p2, [UrlParam] int p3);
 
             [RestAction(HttpMethod.Post)]
-            void WithFormAndGetParams([FormItem] int p0, [FormItem] int p1, [GetParam] int p2, [GetParam] int p3);
+            void WithFormAndGetParams([FormItem] int p0, [FormItem] int p1, [UrlParam] int p2, [UrlParam] int p3);
 
             [RestAction(HttpMethod.Post)]
             void PostFile(WebApiFile file);

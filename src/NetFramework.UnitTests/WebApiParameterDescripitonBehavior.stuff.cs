@@ -11,7 +11,7 @@ namespace NetFramework.UnitTests
             void Foo([Name("param")] int p);
 
             void PayloadParam([Payload] int p);
-            void GetParam([GetParam] int p);
+            void GetParam([UrlParam] int p);
             void FormItemParam([FormItem] int p);
         }
 

@@ -218,7 +218,7 @@ namespace IntegrationTest.Client
     {
         [ServiceEndpoint(HttpMethod.Post)]
         [ContentType(ContentType.Text)]
-        string ConcatStrings(string main, [GetParam]string add1, [GetParam]string add2);
+        string ConcatStrings(string main, [UrlParam]string add1, [UrlParam]string add2);
 
         [ServiceEndpoint(HttpMethod.Post)]
         [ContentType(ContentType.Json)]

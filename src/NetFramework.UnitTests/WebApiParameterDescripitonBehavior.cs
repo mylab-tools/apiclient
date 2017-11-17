@@ -21,7 +21,7 @@ namespace NetFramework.UnitTests
 
         [Test]
         [TestCase(nameof(IContract.PayloadParam), WebApiParameterType.Payload, TestName = "Payload")]
-        [TestCase(nameof(IContract.GetParam), WebApiParameterType.Get, TestName = "Get")]
+        [TestCase(nameof(IContract.GetParam), WebApiParameterType.Url, TestName = "Url")]
         [TestCase(nameof(IContract.FormItemParam), WebApiParameterType.FormItem, TestName = "FormItem")]
         public void ShouldDetermineParamterType(string methodName, WebApiParameterType expectedType)
         {

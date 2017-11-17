@@ -29,7 +29,7 @@ namespace DotApiClient
     public enum WebApiParameterType
     {
         Undefined,
-        Get,
+        Url,
         Payload,
         FormItem
     }
