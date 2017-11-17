@@ -10,14 +10,19 @@ namespace IntegrationTest.Client
     public class WebApiClientBahavior
     {
         private WebApiClientFactory<IStringService> _stringServiceClientFactory;
+        private WebApiClientFactory<IBoolService> _boolServiceClientFactory;
         private WebApiClientFactory _restPointClientFactory;
 
         [OneTimeSetUp]
         public void BeforeTestSuite()
         {
             _restPointClientFactory = new WebApiClientFactory("http://localhost.loc/IntegrationTest.Server/rest/");
+            
             var stringServiceClientFactory = new WebApiClientFactory("http://localhost.loc/IntegrationTest.Server/api/StringService");
             _stringServiceClientFactory = stringServiceClientFactory.CreateTypedFactory<IStringService>();
+
+            var boolServiceClientFactory = new WebApiClientFactory("http://localhost.loc/IntegrationTest.Server/api/BoolService");
+            _boolServiceClientFactory = boolServiceClientFactory.CreateTypedFactory<IBoolService>();
         }
 
         [OneTimeTearDown]
@@ -166,6 +171,19 @@ namespace IntegrationTest.Client
             Assert.That(gotArr, Is.Not.Null);
             CollectionAssert.AreEqual(stringArray, gotArr);
         }
+
+        [Test]
+        public void ShouldParceBoolResponse()
+        {
+            //Arrange
+            var client = _boolServiceClientFactory.CreateProxy();
+
+            //Act
+            var res = client.GetTrue();
+
+            //Assert
+            Assert.That(res, Is.True);
+        }
     }
 
     [RestApi(RelPath = "BinaryResource")]
@@ -213,6 +231,13 @@ namespace IntegrationTest.Client
         [ServiceEndpoint(HttpMethod.Post)]
         [ContentType(ContentType.Json)]
         string[] GetStringArray(string[] stringArr);
+    }
+
+    [WebApi]
+    interface IBoolService
+    {
+        [ServiceEndpoint(HttpMethod.Get)]
+        bool GetTrue();
     }
 
     public class DataObject
