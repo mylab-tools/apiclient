@@ -120,7 +120,8 @@ namespace DotApiClient
                     req.Content = new FormUrlEncodedContent(PayloadToForm(payload));
                     break;
                 case ContentType.Text:
-                    req.Content = new StringContent("\"" + payload + "\"", encoding, "application/json");
+                    //req.Content = new StringContent("\"" + payload + "\"", encoding, "application/json");
+                    req.Content = new StringContent(payload.ToString(), encoding, "text/plain");
                     break;
                 case ContentType.Html:
                     req.Content = new StringContent(payload.ToString(), encoding, "text/html");
@@ -138,22 +139,34 @@ namespace DotApiClient
                     break;
                 case ContentType.Binary:
                     {
-                        var file = payload as WebApiFile;
-                        if(file == null)
-                            throw new PrepareRequestException($"'Binary' content type for wrong type pyload. Expected '{typeof(WebApiFile).FullName}' parameter");
-                        if (string.IsNullOrWhiteSpace(file.Name))
-                            throw new PrepareRequestException("File name is empty or not defined");
-                        
-                        var multipartForm = new MultipartFormDataContent();
-                        var binContent = new ByteArrayContent(file.Content);
-                        binContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                        if (payload is WebApiFile file)
                         {
-                            FileName = file.Name
-                        };
+                            if (string.IsNullOrWhiteSpace(file.Name))
+                                throw new PrepareRequestException("File name is empty or not defined");
 
-                        multipartForm.Add(binContent, "file");
+                            var multipartForm = new MultipartFormDataContent();
+                            var binContent = new ByteArrayContent(file.Content);
+                            binContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                            {
+                                FileName = file.Name
+                            };
 
-                        req.Content = multipartForm;
+                            multipartForm.Add(binContent, "file");
+
+                            req.Content = multipartForm;
+
+                            break;
+                        }
+
+                        if (payload is byte[] bin)
+                        {
+                            req.Content = new ByteArrayContent(bin);
+                            req.Content.Headers.Add("Content-Type", "application/octet-stream");
+                            
+                            break;
+                        }
+
+                        throw new PrepareRequestException($"'Binary' content type for wrong type pyload. Expected '{typeof(WebApiFile).FullName}' or '{typeof(byte[]).FullName}' parameter");
                     }
                     break;
                 default:

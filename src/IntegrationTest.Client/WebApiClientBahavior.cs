@@ -9,6 +9,7 @@ namespace IntegrationTest.Client
     [TestFixture]
     public class WebApiClientBahavior
     {
+        private WebApiClientFactory<IBinaryService> _binaryServiceClientFactory;
         private WebApiClientFactory<IStringService> _stringServiceClientFactory;
         private WebApiClientFactory<IBoolService> _boolServiceClientFactory;
         private WebApiClientFactory _restPointClientFactory;
@@ -23,6 +24,9 @@ namespace IntegrationTest.Client
 
             var boolServiceClientFactory = new WebApiClientFactory("http://localhost.loc/IntegrationTest.Server/api/BoolService");
             _boolServiceClientFactory = boolServiceClientFactory.CreateTypedFactory<IBoolService>();
+
+            var binaryServiceClientFactory = new WebApiClientFactory("http://localhost.loc/IntegrationTest.Server/api/BinaryService");
+            _binaryServiceClientFactory = binaryServiceClientFactory.CreateTypedFactory<IBinaryService>();
         }
 
         [OneTimeTearDown]
@@ -83,19 +87,49 @@ namespace IntegrationTest.Client
         }
 
         [Test]
-        public void ShouldReceiveBinaryPayload()
+        public void ShouldPostString()
         {
             //Arrange
-            var client = _restPointClientFactory.CreateProxy<IBinaryResource>();
+            var client = _restPointClientFactory.CreateProxy<IStringResource>();
+            string testString = Guid.NewGuid().ToString();
+
+            //Act
+            var responseString = client.PostString(testString);
+
+            //Assert
+            Assert.That(responseString, Is.EqualTo(testString));
+        }
+
+        [Test]
+        public void ShouldSendFileAsBinaryPayload()
+        {
+            //Arrange
+            var client = _binaryServiceClientFactory.CreateProxy();
             string testString = Guid.NewGuid().ToString();
             var testBin = Encoding.UTF8.GetBytes(testString);
 
             //Act
-            var responseBin = client.GetBin(new WebApiFile
+            var responseBin = client.PostFile(new WebApiFile
             {
                 Content = testBin,
                 Name = "Filename"
             });
+            var responseStr = Encoding.UTF8.GetString(responseBin);
+
+            //Assert
+            Assert.That(responseStr, Is.EqualTo(testString));
+        }
+
+        [Test]
+        public void ShouldSendByteArrayAsBinaryPayload()
+        {
+            //Arrange
+            var client = _binaryServiceClientFactory.CreateProxy();
+            string testString = Guid.NewGuid().ToString();
+            var testBin = Encoding.UTF8.GetBytes(testString);
+
+            //Act
+            var responseBin = client.PostArray(testBin);
             var responseStr = Encoding.UTF8.GetString(responseBin);
 
             //Assert
@@ -186,11 +220,14 @@ namespace IntegrationTest.Client
         }
     }
 
-    [RestApi(RelPath = "BinaryResource")]
-    interface IBinaryResource
+    [WebApi(RelPath = "BinaryResource")]
+    interface IBinaryService
     {
-        [RestAction(HttpMethod.Post)]
-        byte[] GetBin(WebApiFile file);
+        [ServiceEndpoint(HttpMethod.Post)]
+        byte[] PostFile(WebApiFile file);
+        [ServiceEndpoint(HttpMethod.Post)]
+        //[ContentType(ContentType.Binary)]
+        byte[] PostArray(byte[] arr);
     }
 
     [RestApi(RelPath = "EmptyResource")]
@@ -211,6 +248,10 @@ namespace IntegrationTest.Client
 
         [RestAction(HttpMethod.Get)]
         string GetString(string str);
+
+        [RestAction(HttpMethod.Post)]
+        //[ContentType(ContentType.Text)]
+        string PostString(string str);
     }
 
     [WebApi]

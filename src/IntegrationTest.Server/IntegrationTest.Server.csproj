@@ -149,13 +149,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Api\BoolServiceController.cs" />
-    <Compile Include="Controllers\Rest\BinaryResourceController.cs" />
+    <Compile Include="Controllers\Api\BinaryResourceController.cs" />
     <Compile Include="Controllers\Rest\EmptyResourceController.cs" />
     <Compile Include="Controllers\Rest\StringResourceController.cs" />
     <Compile Include="Controllers\Api\StringServiceController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="PlainTextFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
