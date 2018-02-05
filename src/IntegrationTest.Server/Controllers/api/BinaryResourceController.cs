@@ -2,12 +2,12 @@
 using System.Web;
 using System.Web.Http;
 
-namespace IntegrationTest.Server.Controllers.Rest
+namespace IntegrationTest.Server.Controllers.Api
 {
     public class BinaryResourceController : ApiController
     {
         [HttpPost]
-        public IHttpActionResult Post()
+        public IHttpActionResult PostFile()
         {
             var files = HttpContext.Current.Request.Files;
             
@@ -15,6 +15,13 @@ namespace IntegrationTest.Server.Controllers.Rest
             {
                 return Ok(sr.ReadBytes(files[0].ContentLength));
             }
+        }
+
+        [HttpPost]
+        public IHttpActionResult PostArray()
+        {
+            var arr = Request.Content.ReadAsByteArrayAsync().Result;
+            return Ok(arr);
         }
     }
 }
