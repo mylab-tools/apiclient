@@ -17,7 +17,7 @@ namespace IntegrationTest.Server.Controllers.Rest
         }
 
         [HttpPost]
-        public IHttpActionResult Post(string str)
+        public IHttpActionResult Post([FromBody]string str)
         {
             return Ok(str);
         }

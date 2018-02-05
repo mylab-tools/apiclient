@@ -87,6 +87,20 @@ namespace IntegrationTest.Client
         }
 
         [Test]
+        public void ShouldPostString()
+        {
+            //Arrange
+            var client = _restPointClientFactory.CreateProxy<IStringResource>();
+            string testString = Guid.NewGuid().ToString();
+
+            //Act
+            var responseString = client.PostString(testString);
+
+            //Assert
+            Assert.That(responseString, Is.EqualTo(testString));
+        }
+
+        [Test]
         public void ShouldSendFileAsBinaryPayload()
         {
             //Arrange
@@ -212,7 +226,7 @@ namespace IntegrationTest.Client
         [ServiceEndpoint(HttpMethod.Post)]
         byte[] PostFile(WebApiFile file);
         [ServiceEndpoint(HttpMethod.Post)]
-        [ContentType(ContentType.Binary)]
+        //[ContentType(ContentType.Binary)]
         byte[] PostArray(byte[] arr);
     }
 
@@ -234,6 +248,10 @@ namespace IntegrationTest.Client
 
         [RestAction(HttpMethod.Get)]
         string GetString(string str);
+
+        [RestAction(HttpMethod.Post)]
+        //[ContentType(ContentType.Text)]
+        string PostString(string str);
     }
 
     [WebApi]

@@ -120,7 +120,8 @@ namespace DotApiClient
                     req.Content = new FormUrlEncodedContent(PayloadToForm(payload));
                     break;
                 case ContentType.Text:
-                    req.Content = new StringContent("\"" + payload + "\"", encoding, "application/json");
+                    //req.Content = new StringContent("\"" + payload + "\"", encoding, "application/json");
+                    req.Content = new StringContent(payload.ToString(), encoding, "text/plain");
                     break;
                 case ContentType.Html:
                     req.Content = new StringContent(payload.ToString(), encoding, "text/html");

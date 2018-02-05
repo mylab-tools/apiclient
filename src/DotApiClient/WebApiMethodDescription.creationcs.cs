@@ -19,6 +19,7 @@ namespace DotApiClient
             InitRelPathAndHttpMethod(method, d, out defaultSubmitContentType);
 
             ProcessSinglePostBinaryCase(method, d, ref defaultSubmitContentType);
+            ProcessSingleStringCase(method, d, ref defaultSubmitContentType);
 
             InitContentType(method, d, defaultSubmitContentType);
 
@@ -153,9 +154,22 @@ namespace DotApiClient
             if (d.ContentType == ContentType.Undefined && d.HttpMethod != HttpMethod.Get)
             {
                 var parameters = method.GetParameters();
-                if (parameters.Length == 1 && parameters[0].ParameterType == typeof(WebApiFile))
+                if (parameters.Length == 1 && 
+                    (parameters[0].ParameterType == typeof(WebApiFile) || parameters[0].ParameterType == typeof(byte[])))
                 {
                     defaultSubmitContentType = ContentType.Binary;
+                }
+            }
+        }
+
+        private static void ProcessSingleStringCase(MethodInfo method, WebApiMethodDescription d, ref ContentType defaultSubmitContentType)
+        {
+            if (d.ContentType == ContentType.Undefined && d.HttpMethod != HttpMethod.Get)
+            {
+                var parameters = method.GetParameters();
+                if (parameters.Length == 1 && parameters[0].ParameterType == typeof(string))
+                {
+                    defaultSubmitContentType = ContentType.Text;
                 }
             }
         }
