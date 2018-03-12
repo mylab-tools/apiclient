@@ -48,6 +48,7 @@
     <Compile Include="WebApiProxyBehavior.cs" />
     <Compile Include="WebApiDescriptionBehavior.cs" />
     <Compile Include="WebApiProxyBehavior.stuff.cs" />
+    <Compile Include="EIS-224-EisCallBehavior.cs" />
     <Compile Include="WebApiRequestFactoryBehavior.cs" />
     <Compile Include="WebApiClientFctoryBehavior.stuff.cs" />
     <Compile Include="WebApiMethodDescriptionBahavior.stuff.cs" />
@@ -65,6 +66,9 @@
       <Project>{bfb9f727-2184-4ec6-8fc4-d0b096a36145}</Project>
       <Name>RedCucumber.Wac</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
