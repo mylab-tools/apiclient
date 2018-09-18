@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Reflection;
+using Xunit;
 
 namespace MyLab.ApiClient.UnitTests
 {
@@ -9,10 +10,7 @@ namespace MyLab.ApiClient.UnitTests
         {
             //Arrange
             var strategy = new FakeClientProxyStrategy();
-
             var apiDesc = ApiClientDescription.Get(typeof(ITestApiContract));
-            var postMethodToken = typeof(ITestApiContract).GetMethod(nameof(ITestApiContract.Post)).MetadataToken;
-            var postMethodDesc = apiDesc.GetMethod(postMethodToken);
 
             var proxy = ClientProxy<ITestApiContract>.CreateProxy(apiDesc, strategy);
 
@@ -21,7 +19,7 @@ namespace MyLab.ApiClient.UnitTests
 
             //Assert
             Assert.NotNull(strategy.GotDescription);
-            Assert.Equal(postMethodDesc, strategy.GotDescription);
+            Assert.Equal(apiDesc, strategy.GotDescription);
             Assert.NotNull(strategy.Args);
             Assert.Single(strategy.Args);
             Assert.Equal("foo", strategy.Args[0]);
@@ -29,13 +27,13 @@ namespace MyLab.ApiClient.UnitTests
 
         class FakeClientProxyStrategy : IClientProxyStrategy
         {
-            public MethodDescription GotDescription { get; private set; }
+            public ApiClientDescription GotDescription { get; private set; }
 
             public object[] Args { get; private set; }
 
-            public object Invoke(MethodDescription methodDescription, object[] args)
+            public object Invoke(MethodInfo method, ApiClientDescription description, object[] args)
             {
-                GotDescription = methodDescription;
+                GotDescription = description;
                 Args = args;
 
                 return null;

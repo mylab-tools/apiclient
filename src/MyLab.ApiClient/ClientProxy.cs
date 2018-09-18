@@ -20,8 +20,7 @@ namespace MyLab.ApiClient
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
-            var mDesc = _clientDescription.GetMethod(targetMethod.MetadataToken);
-            return _strategy.Invoke(mDesc, args);
+            return _strategy.Invoke(targetMethod, _clientDescription, args);
         }
 
         internal static T CreateProxy(ApiClientDescription clientDescription, IClientProxyStrategy strategy)

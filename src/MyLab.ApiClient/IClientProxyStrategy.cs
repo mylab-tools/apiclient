@@ -1,7 +1,9 @@
-﻿namespace MyLab.ApiClient
+﻿using System.Reflection;
+
+namespace MyLab.ApiClient
 {
     interface IClientProxyStrategy
     {
-        object Invoke(MethodDescription methodDescription, object[] args);
+        object Invoke(MethodInfo method, ApiClientDescription description, object[] args);
     }
 }
