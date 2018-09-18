@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading;
 
 namespace MyLab.ApiClient
 {
@@ -9,22 +10,27 @@ namespace MyLab.ApiClient
 
         public string Name { get; }
 
-        public ParamDescription(string name, ApiParamPlace place)
+        public bool IsCancellationToken { get; }
+
+        public ParamDescription(string name, ApiParamPlace place, bool isCancellationToken)
         {
             Name = name;
             Place = place;
+            IsCancellationToken = isCancellationToken;
         }
 
         public static ParamDescription Get(ParameterInfo parameterInfo)
         {
             var attr = parameterInfo.GetCustomAttribute<ApiParamAttribute>();
-            if (attr == null)
+            bool isCancellationToken = parameterInfo.ParameterType == typeof(CancellationToken);
+
+
+            if (attr == null && !isCancellationToken)
                 throw new ApiDescriptionException($"Parameter should be marked by {typeof(ApiParamAttribute).FullName}");
 
-            return new ParamDescription(
-                attr.Name ?? parameterInfo.Name,
-                attr.Place
-                );
+            return isCancellationToken
+                ? new ParamDescription(parameterInfo.Name, ApiParamPlace.Undefined, true)
+                : new ParamDescription(attr.Name ?? parameterInfo.Name, attr.Place, false);
         }
     }
 }

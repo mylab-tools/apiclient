@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -56,6 +57,19 @@ namespace MyLab.ApiClient.UnitTests
             Assert.Equal(ApiParamPlace.Query, p.Place);
         }
 
+        [Fact]
+        public void ShouldPassCancellationTokenParameterWithoutAttribute()
+        {
+            //Arrange
+            var contract = typeof(IContractWithCancellation);
+
+            //Act
+            ApiClientDescription.Get(contract);
+
+            //Assert
+            
+        }
+
         [Theory]
         [InlineData(typeof(ISimpleInterface))]
         [InlineData(typeof(IMethodWithoutAttribute))]
@@ -89,6 +103,16 @@ namespace MyLab.ApiClient.UnitTests
         interface ISimpleInterface
         {
             
+        }
+
+        [Api("/foo")]
+        interface IContractWithCancellation
+        {
+            [ApiPost(RelPath = "/bar")]
+            Task PostWithCancel(
+                [ApiParam(ApiParamPlace.Query, Name = "baz")] string parameter,
+                CancellationToken cancellationToken
+            );
         }
     }
 }
