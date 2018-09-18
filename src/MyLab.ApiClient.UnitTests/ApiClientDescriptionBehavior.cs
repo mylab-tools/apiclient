@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace MyLab.ApiClient.UnitTests
@@ -57,23 +58,30 @@ namespace MyLab.ApiClient.UnitTests
 
         [Theory]
         [InlineData(typeof(ISimpleInterface))]
-        [InlineData(typeof(IContractWithBadMethod))]
-        [InlineData(typeof(IContractWithBadParameter))]
-        public void ShouldRejectWhenAttributeIsAbsent(Type contractType)
+        [InlineData(typeof(IMethodWithoutAttribute))]
+        [InlineData(typeof(IParameterWithoutAttribute))]
+        [InlineData(typeof(ISyncMethod))]
+        public void ShouldRejectWhen(Type contractType)
         {
             //Act
             Assert.Throws<ApiDescriptionException>(() => ApiClientDescription.Get(contractType));
         }
 
         [Api("/foo")]
-        interface IContractWithBadParameter
+        interface IParameterWithoutAttribute
         {
             [ApiPost(RelPath = "/bar")]
-            void BadMethod(string p);
+            Task BadMethod(string p);
         }
 
         [Api("/foo")]
-        interface IContractWithBadMethod
+        interface IMethodWithoutAttribute
+        {
+            Task BadMethod();
+        }
+
+        [Api("/foo")]
+        interface ISyncMethod
         {
             void BadMethod();
         }

@@ -1,10 +1,12 @@
-﻿namespace MyLab.ApiClient.UnitTests
+﻿using System.Threading.Tasks;
+
+namespace MyLab.ApiClient.UnitTests
 {
     [Api("/foo")]
     interface ITestApiContract
     {
         [ApiPost(RelPath = "/bar")]
-        void Post(
+        Task Post(
             [ApiParam(ApiParamPlace.Query, Name = "baz")] string parameter
         );
     }

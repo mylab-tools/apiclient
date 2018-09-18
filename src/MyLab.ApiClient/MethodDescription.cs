@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace MyLab.ApiClient
 {
@@ -26,6 +27,8 @@ namespace MyLab.ApiClient
             var mAttr = method.GetCustomAttribute<ApiMethodAttribute>();
             if(mAttr == null)
                 throw new ApiDescriptionException($"Method should be marked by {typeof(ApiMethodAttribute).FullName}");
+            if(!typeof(Task).IsAssignableFrom(method.ReturnType))
+                throw new ApiDescriptionException("Method should be asynchronously: return Task or Task<>");
 
             var parameters = method.GetParameters().Select(ParamDescription.Get);
 

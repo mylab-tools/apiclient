@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace MyLab.ApiClient.UnitTests
@@ -30,23 +31,23 @@ namespace MyLab.ApiClient.UnitTests
         interface IContract
         {
             [ApiPost]
-            void WithoutPath();
+            Task WithoutPath();
 
             [ApiPost(RelPath = "bar")]
-            void WithPath();
+            Task WithPath();
 
             [ApiPost(RelPath = "bar/{index}")]
-            void WithPathArg([ApiParam(ApiParamPlace.Path)]int index);
+            Task WithPathArg([ApiParam(ApiParamPlace.Path)]int index);
 
             [ApiPost(RelPath = "bar")]
-            void WithQueryArg([ApiParam(ApiParamPlace.Query)]int index);
+            Task WithQueryArg([ApiParam(ApiParamPlace.Query)]int index);
         }
 
         [Api]
         interface IContractWithoutRelPath
         {
             [ApiPost(RelPath = "foo")]
-            void WithPath();
+            Task WithPath();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace MyLab.ApiClient.UnitTests
@@ -6,7 +7,7 @@ namespace MyLab.ApiClient.UnitTests
     public class ClientProxyBehavior
     {
         [Fact]
-        public void ShouldInvokeStrategy()
+        public async Task ShouldInvokeStrategy()
         {
             //Arrange
             var strategy = new FakeClientProxyStrategy();
@@ -15,7 +16,7 @@ namespace MyLab.ApiClient.UnitTests
             var proxy = ClientProxy<ITestApiContract>.CreateProxy(apiDesc, strategy);
 
             //Act
-            proxy.Post("foo");
+            await proxy.Post("foo");
 
             //Assert
             Assert.NotNull(strategy.GotDescription);
@@ -33,10 +34,11 @@ namespace MyLab.ApiClient.UnitTests
 
             public object Invoke(MethodInfo method, ApiClientDescription description, object[] args)
             {
-                GotDescription = description;
-                Args = args;
-
-                return null;
+                return Task.Run(() =>
+                {
+                    GotDescription = description;
+                    Args = args;
+                });
             }
         }
     }
