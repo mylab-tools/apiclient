@@ -9,23 +9,16 @@ namespace MyLab.ApiClient
     class MethodDescription
     {
         public HttpMethod HttpMethod { get; }
-
         public string RelPath { get; set; }
 
-        private readonly Dictionary<string, ParamDescription> _params;
+        public IReadOnlyList<ParamDescription> Params { get; private set; }
 
-        public MethodDescription(HttpMethod httpMethod, IDictionary<string, ParamDescription> paramDescriptions)
+        public MethodDescription(HttpMethod httpMethod, IEnumerable<ParamDescription> paramDescriptions)
         {
             HttpMethod = httpMethod;
-            _params = new Dictionary<string, ParamDescription>(paramDescriptions);
-        }
 
-        public ParamDescription GetParameter(string paramName)
-        {
-            if (!_params.TryGetValue(paramName, out var md))
-                throw new ApiDescriptionException("Method description not found");
-
-            return md;
+            var ps = new List<ParamDescription>(paramDescriptions);
+            Params = ps.AsReadOnly();
         }
 
         public static MethodDescription Get(MethodInfo method)
@@ -34,9 +27,7 @@ namespace MyLab.ApiClient
             if(mAttr == null)
                 throw new ApiDescriptionException($"Method should be marked by {typeof(ApiMethodAttribute).FullName}");
 
-            var parameters = method.GetParameters()
-                .Select(p => new { Name= p.Name, Desc = ParamDescription.Get(p)})
-                .ToDictionary(p => p.Name, p => p.Desc);
+            var parameters = method.GetParameters().Select(ParamDescription.Get);
 
             return  new MethodDescription(mAttr.HttpMethod, parameters)
             {

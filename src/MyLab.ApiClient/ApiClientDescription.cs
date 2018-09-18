@@ -10,11 +10,11 @@ namespace MyLab.ApiClient
     {
         readonly Dictionary<int, MethodDescription> _methods;
 
-        public string RelAddress { get; }
+        public string RelPath { get; }
 
-        public ApiClientDescription(string relAddress, IDictionary<int, MethodDescription> methods)
+        public ApiClientDescription(string relPath, IDictionary<int, MethodDescription> methods)
         {
-            RelAddress = relAddress;
+            RelPath = relPath;
             _methods= new Dictionary<int, MethodDescription>(methods);
         }
 

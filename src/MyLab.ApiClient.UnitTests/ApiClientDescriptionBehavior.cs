@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using Xunit;
 
@@ -10,21 +11,21 @@ namespace MyLab.ApiClient.UnitTests
         public void ShouldGetContractDescription()
         {
             //Arrange
-            var contract = typeof(IApiContract);
+            var contract = typeof(ITestApiContract);
 
             //Act
             var desc = ApiClientDescription.Get(contract);
 
             //Assert
-            Assert.Equal("/foo", desc.RelAddress);
+            Assert.Equal("/foo", desc.RelPath);
         }
 
         [Fact]
         public void ShouldGetMethodsDescription()
         {
             //Arrange
-            var contract = typeof(IApiContract);
-            var postMethodToken = contract.GetMethod(nameof(IApiContract.Post)).MetadataToken;
+            var contract = typeof(ITestApiContract);
+            var postMethodToken = contract.GetMethod(nameof(ITestApiContract.Post)).MetadataToken;
 
             //Act
             var desc = ApiClientDescription.Get(contract);
@@ -40,17 +41,17 @@ namespace MyLab.ApiClient.UnitTests
         public void ShouldGetMethodParametersDescription()
         {
             //Arrange
-            var contract = typeof(IApiContract);
-            var postMethodToken = contract.GetMethod(nameof(IApiContract.Post)).MetadataToken;
+            var contract = typeof(ITestApiContract);
+            var postMethodToken = contract.GetMethod(nameof(ITestApiContract.Post)).MetadataToken;
 
             //Act
             var desc = ApiClientDescription.Get(contract);
 
             //Assert
             var m = desc.GetMethod(postMethodToken);
-            var p = m.GetParameter("parameter");
+            var p = m.Params.FirstOrDefault(param => param.Name == "baz");
 
-            Assert.Equal("baz", p.Name);
+            Assert.NotNull(p);
             Assert.Equal(ApiParamPlace.Query, p.Place);
         }
 
@@ -80,15 +81,6 @@ namespace MyLab.ApiClient.UnitTests
         interface ISimpleInterface
         {
             
-        }
-
-        [Api("/foo")]
-        interface IApiContract
-        {
-            [ApiPost(RelPath = "/bar")]
-            void Post(
-                [ApiParam(ApiParamPlace.Query, Name = "baz")] string parameter
-                );
         }
     }
 }
