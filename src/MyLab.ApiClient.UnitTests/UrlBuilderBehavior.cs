@@ -1,81 +1,29 @@
-﻿using Xunit;
+﻿using System;
+using Xunit;
 
 namespace MyLab.ApiClient.UnitTests
 {
     public class UrlBuilderBehavior
     {
-        [Fact]
-        public void ShouldCreateUrlWithContractRelPath()
+        [Theory]
+        [InlineData(typeof(IContract), nameof(IContract.WithoutPath), "foo")]
+        [InlineData(typeof(IContractWithoutRelPath), nameof(IContractWithoutRelPath.WithPath), "foo")]
+        [InlineData(typeof(IContract), nameof(IContract.WithPath), "foo/bar")]
+        [InlineData(typeof(IContract), nameof(IContract.WithPathArg), "foo/bar/10")]
+        [InlineData(typeof(IContract), nameof(IContract.WithQueryArg), "foo/bar?index=10")]
+        public void ShouldCreateUrlWith(Type contract, string methodName, string expectedUrl)
         {
             //Arrange
-            var urlBuilder = GetBuilder<IContract>(nameof(IContract.WithoutPath));
-
-            //Act
-            var url = urlBuilder.Build(new object[0]);
-
-            //Assert
-            Assert.Equal("foo", url);
-        }
-
-        [Fact]
-        public void ShouldCreateUrlWithMethodRelPath()
-        {
-            //Arrange
-            var urlBuilder = GetBuilder<IContractWithoutRelPath>(nameof(IContractWithoutRelPath.WithPath));
-
-            //Act
-            var url = urlBuilder.Build(new object[0]);
-
-            //Assert
-            Assert.Equal("foo", url);
-        }
-
-        [Fact]
-        public void ShouldCreateUrlWithCombinedRelPaths()
-        {
-            //Arrange
-            var urlBuilder = GetBuilder<IContract>(nameof(IContract.WithPath));
-
-            //Act
-            var url = urlBuilder.Build(new object[0]);
-
-            //Assert
-            Assert.Equal("foo/bar", url);
-        }
-
-        [Fact]
-        public void ShouldCreateUrlWithPathArg()
-        {
-            //Arrange
-            var urlBuilder = GetBuilder<IContract>(nameof(IContract.WithPathArg));
-
-            //Act
-            var url = urlBuilder.Build(new object[]{ 10 });
-
-            //Assert
-            Assert.Equal("foo/bar/10", url);
-        }
-
-        [Fact]
-        public void ShouldCreateUrlWithQueryArg()
-        {
-            //Arrange
-            var urlBuilder = GetBuilder<IContract>(nameof(IContract.WithQueryArg));
-
-            //Act
-            var url = urlBuilder.Build(new object[] { 10 });
-
-            //Assert
-            Assert.Equal("foo/bar?index=10", url);
-        }
-
-        UrlBuilder GetBuilder<TContract>(string methodName)
-        {
-            var contract = typeof(TContract);
             var desc = ApiClientDescription.Get(contract);
 
             var methodToken = contract.GetMethod(methodName).MetadataToken;
-            return UrlBuilder.GetForMethod(desc, methodToken);
+            var urlBuilder = UrlBuilder.GetForMethod(desc, methodToken);
+
+            //Act
+            var url = urlBuilder.Build(new object[]{10});
+
+            //Assert
+            Assert.Equal(expectedUrl, url);
         }
 
         [Api("foo")]
