@@ -37,10 +37,10 @@ namespace MyLab.ApiClient.UnitTests
             Task WithPath();
 
             [ApiPost(RelPath = "bar/{index}")]
-            Task WithPathArg([ApiParam(ApiParamPlace.Path)]int index);
+            Task WithPathArg([PathParam]int index);
 
             [ApiPost(RelPath = "bar")]
-            Task WithQueryArg([ApiParam(ApiParamPlace.Query)]int index);
+            Task WithQueryArg([QueryParam]int index);
         }
 
         [Api]

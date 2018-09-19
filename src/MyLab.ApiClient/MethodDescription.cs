@@ -11,12 +11,14 @@ namespace MyLab.ApiClient
     {
         public HttpMethod HttpMethod { get; }
         public string RelPath { get; set; }
+        public Type ReturnType { get; }
 
-        public IReadOnlyList<ParamDescription> Params { get; private set; }
+        public IEnumerable<ParamDescription> Params { get; }
 
-        public MethodDescription(HttpMethod httpMethod, IEnumerable<ParamDescription> paramDescriptions)
+        public MethodDescription(HttpMethod httpMethod, Type returnType, IEnumerable<ParamDescription> paramDescriptions)
         {
             HttpMethod = httpMethod;
+            ReturnType = returnType;
 
             var ps = new List<ParamDescription>(paramDescriptions);
             Params = ps.AsReadOnly();
@@ -27,12 +29,25 @@ namespace MyLab.ApiClient
             var mAttr = method.GetCustomAttribute<ApiMethodAttribute>();
             if(mAttr == null)
                 throw new ApiDescriptionException($"Method should be marked by {typeof(ApiMethodAttribute).FullName}");
-            if(!typeof(Task).IsAssignableFrom(method.ReturnType))
-                throw new ApiDescriptionException("Method should be asynchronously: return Task or Task<>");
+            if(!typeof(Task).IsAssignableFrom(method.ReturnType) && 
+               method.ReturnType != typeof(WebApiInvocation) &&  
+               !(method.ReturnType.IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(WebApiInvocation<>)))
+                    throw new ApiDescriptionException("Method should be asynchronously (returns Task or Task<>) or returns invocation (WebApiInvocation or WebApiInvocation<>)");
 
-            var parameters = method.GetParameters().Select(ParamDescription.Get);
+            var parameters = method.GetParameters()
+                .Select(ParamDescription.Get)
+                .ToArray();
+            
+            int bodyCount = parameters.Count(p => p.Place == ApiParamPlace.Body);
 
-            return  new MethodDescription(mAttr.HttpMethod, parameters)
+            if(bodyCount > 1)
+                throw new ApiDescriptionException("Too many Body parameters. Only single one supported");
+
+            var returnType = method.ReturnType == typeof(Task)
+                ? typeof(void)
+                : method.ReturnType.GenericTypeArguments[0];
+
+            return  new MethodDescription(mAttr.HttpMethod, returnType, parameters)
             {
                 RelPath = mAttr.RelPath
             };

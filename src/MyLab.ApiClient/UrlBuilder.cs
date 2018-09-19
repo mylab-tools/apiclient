@@ -42,12 +42,11 @@ namespace MyLab.ApiClient
 
         private void AddPathArgs(StringBuilder b, object[] args)
         {
-            for (int i = 0; i < _methodDescription.Params.Count; i++)
+            foreach (var p in _methodDescription.Params)
             {
-                var p = _methodDescription.Params[i];
-                if(p.Place != ApiParamPlace.Path) continue;
+                if (p.Place != ApiParamPlace.Path) continue;
 
-                b = b.Replace("{" + p.Name + "}", args[i].ToString());
+                b = b.Replace("{" + p.Name + "}", args[p.Position].ToString());
             }
         }
 

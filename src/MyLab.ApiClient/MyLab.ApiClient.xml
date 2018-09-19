@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MyLab.ApiClient</name>
+    </assembly>
+    <members>
+        <member name="T:MyLab.ApiClient.ApiAttribute">
+            <summary>
+            Determines a WEB API abstraction
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ApiAttribute.RelPath">
+            <summary>
+            Related resource path
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ApiClient`1">
+            <summary>
+            Web API client factory
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiClient`1.Create">
+            <summary>
+            Creates web api client by default
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ApiClientBuilder`1">
+            <summary>
+            Web API client builder
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ApiDescriptionException">
+            <summary>
+            Throws when wrong api description extracting
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiDescriptionException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiDescriptionException"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiDescriptionException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiDescriptionException"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ApiMethodAttribute">
+            <summary>
+            Determines WEB API method
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ApiMethodAttribute.HttpMethod">
+            <summary>
+            Gets HTTP method
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ApiMethodAttribute.RelPath">
+            <summary>
+            Related path
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ApiGetAttribute">
+            <summary>
+            Determines API GET method
+            </summary> 
+        </member>
+        <member name="T:MyLab.ApiClient.ApiPostAttribute">
+            <summary>W
+            Determines API POST method
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ApiPutAttribute">
+            <summary>
+            Determines API PUT method
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ApiHeadAttribute">
+            <summary>
+            Determines API HEAD method
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ApiDeleteAttribute">
+            <summary>
+            Determines API DELETE method
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ApiParamPlace">
+            <summary>
+            Determines parameter place
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.ApiParamPlace.Body">
+            <summary>
+            Request body
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.ApiParamPlace.Query">
+            <summary>
+            Part of URL query
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.ApiParamPlace.Path">
+            <summary>
+            Part of URL path
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.ApiParamPlace.Header">
+            <summary>
+            HTTP header
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ClientProxy`1">
+            <summary>
+            Dispatches proxy invocations
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.BaseParamAttribute.Place">
+            <summary>
+            Gets where a parameter will placing
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.BaseParamAttribute.Name">
+            <summary>
+            Overrides parameter name
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.QueryParamAttribute">
+            <summary>
+            Describes Query WEB API parameter
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.PathParamAttribute">
+            <summary>
+            Describes Path WEB API parameter
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.HeaderAttribute">
+            <summary>
+            Describes Header 
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ReqBodyAttribute">
+            <summary>
+            Describes request Body
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.BinaryBodyAttribute">
+            <summary>
+            Determines binary body parameter
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.JsonBodyAttribute">
+            <summary>
+            Determines json body parameter
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.TextBodyAttribute">
+            <summary>
+            Determines text body parameter
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.XmlBodyAttribute">
+            <summary>
+            Determines XML body parameter
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ResponseProcessingException">
+            <summary>
+            Error when processing response
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessingException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ResponseProcessingException"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.VoidResponseProcessor.GetResponse(System.Net.Http.HttpResponseMessage,System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.PrimitiveResponseProcessor`1.Predicate(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.PrimitiveResponseProcessor`1.GetResponse(System.Net.Http.HttpResponseMessage,System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.UintResponseProcessor.Deserialize(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.IntResponseProcessor.Deserialize(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.DoubleResponseProcessor.Deserialize(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.BoolResponseProcessor.Deserialize(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.WrongResponseException">
+            <summary>
+            Throws when non-successful response was received
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.WrongResponseException.StatusCode">
+            <summary>
+            Gets response status code
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.WrongResponseException.Request">
+            <summary>
+            Gets request message
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.WrongResponseException.Response">
+            <summary>
+            Gets response message
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.WrongResponseException.#ctor(System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.WrongResponseException"/>
+            </summary>
+        </member>
+    </members>
+</doc>

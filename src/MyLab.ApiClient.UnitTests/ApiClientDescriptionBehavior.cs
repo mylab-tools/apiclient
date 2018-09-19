@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -63,11 +64,20 @@ namespace MyLab.ApiClient.UnitTests
             //Arrange
             var contract = typeof(IContractWithCancellation);
 
-            //Act
+            //Act & Assert
             ApiClientDescription.Get(contract);
+        }
+        
+        
+        [Fact]
+        public void ShouldRejectContentParametersConflicts()
+        {
+            //Arrange
+            var contract = typeof(IContractWithParameterConflicts);
+            var m = contract.GetMethod(nameof(IContractWithParameterConflicts.MultiBody));
 
-            //Assert
-            
+            //Act & Assert
+            Assert.Throws<ApiDescriptionException>(() => MethodDescription.Get(m));
         }
 
         [Theory]
@@ -79,6 +89,17 @@ namespace MyLab.ApiClient.UnitTests
         {
             //Act
             Assert.Throws<ApiDescriptionException>(() => ApiClientDescription.Get(contractType));
+        }
+
+        [Fact]
+        public void ShouldRejectNotBinaryParameterWithBinBodyAttr()
+        {
+            //Arrange
+            var contract = typeof(IContractWithBadBinaryParameter);
+            var m = contract.GetMethod(nameof(IContractWithBadBinaryParameter.BadMethod));
+
+            //Act & Assert
+            Assert.Throws<ApiDescriptionException>(() => MethodDescription.Get(m));
         }
 
         [Api("/foo")]
@@ -97,7 +118,7 @@ namespace MyLab.ApiClient.UnitTests
         [Api("/foo")]
         interface ISyncMethod
         {
-            void BadMethod();
+            Task BadMethod();
         }
 
         interface ISimpleInterface
@@ -110,9 +131,26 @@ namespace MyLab.ApiClient.UnitTests
         {
             [ApiPost(RelPath = "/bar")]
             Task PostWithCancel(
-                [ApiParam(ApiParamPlace.Query, Name = "baz")] string parameter,
+                [QueryParam(Name = "baz")] string parameter,
                 CancellationToken cancellationToken
             );
+        }
+
+        [Api("/foo")]
+        interface IContractWithParameterConflicts
+        {
+            [ApiPost]
+            Task MultiBody(
+                [TextBody] string p1,
+                [TextBody] string p2
+                );
+        }
+
+        [Api("/foo")]
+        interface IContractWithBadBinaryParameter
+        {
+            [ApiPost]
+            Task BadMethod([BinaryBody] string p);
         }
     }
 }

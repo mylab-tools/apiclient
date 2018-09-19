@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Net.Http;
+using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -31,14 +33,27 @@ namespace MyLab.ApiClient.UnitTests
             public ApiClientDescription GotDescription { get; private set; }
 
             public object[] Args { get; private set; }
+            
 
-            public object Invoke(MethodInfo method, ApiClientDescription description, object[] args)
+            public WebApiInvocation GetInvocation(MethodInfo method, ApiClientDescription description, object[] args)
             {
-                return Task.Run(() =>
-                {
-                    GotDescription = description;
-                    Args = args;
-                });
+                GotDescription = description;
+                Args = args;
+
+                return new WebApiInvocation(null, new FakeHttpRequestInvoker());
+            }
+
+            public WebApiInvocation<TResult> GetInvocation<TResult>(MethodInfo method, ApiClientDescription description, object[] args)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
+
+        class FakeHttpRequestInvoker : IHttpRequestInvoker
+        {
+            public async Task<HttpResponseMessage> Send(HttpRequestMessage requestMessage, CancellationToken cancellationToken)
+            {
+                return await Task.FromResult(new HttpResponseMessage());
             }
         }
     }

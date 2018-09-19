@@ -7,7 +7,7 @@ namespace MyLab.ApiClient.UnitTests
     {
         [ApiPost(RelPath = "/bar")]
         Task Post(
-            [ApiParam(ApiParamPlace.Query, Name = "baz")] string parameter
+            [QueryParam(Name = "baz")] string parameter
         );
     }
 }
