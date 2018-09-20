@@ -29,7 +29,7 @@
             Web API client factory
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClient`1.Create">
+        <member name="M:MyLab.ApiClient.ApiClient`1.Create(System.String)">
             <summary>
             Creates web api client by default
             </summary>
@@ -122,6 +122,16 @@
         <member name="T:MyLab.ApiClient.ClientProxy`1">
             <summary>
             Dispatches proxy invocations
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.IHttpClientProvider">
+            <summary>
+            Http client provider
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.IHttpClientProvider.Provide">
+            <summary>
+            Provides <see cref="T:System.Net.Http.HttpClient"/>
             </summary>
         </member>
         <member name="P:MyLab.ApiClient.BaseParamAttribute.Place">

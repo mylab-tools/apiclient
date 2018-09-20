@@ -25,19 +25,25 @@ namespace MyLab.ApiClient
             return this;
         }
 
-        public TContract Create()
+        internal TContract Create(IHttpClientProvider httpClientProvider)
         {
-            var httpInvoker = new HttpRequestInvoker(new HttpOptions
-            {
-                Headers = new ReadOnlyDictionary<string, string>(_headers),
-                Timeout = Timeout,
-                BasePath = BasePath
-            });
+            var httpInvoker = new HttpRequestInvoker(httpClientProvider);
 
             var clientStrategy = new WebClientProxyStrategy(httpInvoker);
             var description = ApiClientDescription.Get(typeof(TContract));
 
             return ClientProxy<TContract>.CreateProxy(description, clientStrategy);
+        }
+
+        public TContract Create()
+        {
+            var httpClientProvider = new DefaultHttpClientProvider(BasePath)
+            {
+                Timeout = Timeout,
+                Headers = _headers
+            };
+
+            return Create(httpClientProvider);
         }
     }
 }

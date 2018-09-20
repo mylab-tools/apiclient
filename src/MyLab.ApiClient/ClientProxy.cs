@@ -16,9 +16,6 @@ namespace MyLab.ApiClient
                 .GetMethods()
                 .Single(m => m.Name == nameof(IClientProxyStrategy.GetInvocation) && m.IsGenericMethod);
 
-        private static readonly MethodInfo GenericWebApiInvocationInvokeMethod =
-            typeof(WebApiInvocation<>).GetMethod("Invoke");
-
         private ApiClientDescription _clientDescription;
         private IClientProxyStrategy _strategy;
 
@@ -53,13 +50,17 @@ namespace MyLab.ApiClient
             }
 
             var genericInvocation = CreateGenericInvocation(targetMethod, args, mDesc);
-            return GenericWebApiInvocationInvokeMethod.Invoke(genericInvocation,
-                new object[] {cancellationToken});
+
+            var invokeMethod = typeof(WebApiInvocation<>)
+                .MakeGenericType(mDesc.ReturnType)
+                .GetMethod("Invoke");
+            
+            return invokeMethod.Invoke(genericInvocation, new object[] {cancellationToken});
         }
 
         private object CreateGenericInvocation(MethodInfo targetMethod, object[] args, MethodDescription mDesc)
         {
-            var genericParam = mDesc.ReturnType.GenericTypeArguments[0];
+            var genericParam = mDesc.ReturnType;
             var getInvocationMethod = ClientProxyGetInvocationGenericMethod.MakeGenericMethod(genericParam);
             return getInvocationMethod.Invoke(_strategy, new object[] {targetMethod, _clientDescription, args});
         }

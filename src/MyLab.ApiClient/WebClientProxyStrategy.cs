@@ -21,7 +21,6 @@ namespace MyLab.ApiClient
             object[] args)
         {
             var methodDesc = description.GetMethod(method.MetadataToken);
-            //var cancellationToken = GetCancellationToken(methodDesc, args);
             var urlBuilder = new UrlBuilder(description.RelPath, methodDesc);
             var url = urlBuilder.Build(args);
 
@@ -40,7 +39,6 @@ namespace MyLab.ApiClient
             object[] args)
         {
             var methodDesc = description.GetMethod(method.MetadataToken);
-            //var cancellationToken = GetCancellationToken(methodDesc, args);
             var urlBuilder = new UrlBuilder(description.RelPath, methodDesc);
             var url = urlBuilder.Build(args);
 
@@ -53,29 +51,12 @@ namespace MyLab.ApiClient
             return new WebApiInvocation<TResult>(msg, _httpRequestInvoker);
         }
 
-        private void CheckForRightStatus(HttpRequestMessage req, HttpResponseMessage resp)
-        {
-            if (!resp.IsSuccessStatusCode)
-            {
-                throw new WrongResponseException(req, resp);
-            }
-        }
-
         private HttpContent CreateContent(MethodDescription methodDesc, object[] args)
         {
             var bodyParam = methodDesc.Params.FirstOrDefault(p => p.Place == ApiParamPlace.Body);
             if (bodyParam == null) return null;
 
             return HttpContentTools.CreateContent(args[bodyParam.Position], bodyParam.MimeType);
-        }
-
-        CancellationToken GetCancellationToken(MethodDescription methodDescription, object[] args)
-        {
-            var cancelParam = methodDescription.Params.FirstOrDefault(p => p.IsCancellationToken);
-            
-            return cancelParam != null 
-                ? (CancellationToken)args[cancelParam.Position]
-                : CancellationToken.None;
         }
     }
 }

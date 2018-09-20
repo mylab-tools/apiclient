@@ -9,9 +9,12 @@
         /// <summary>
         /// Creates web api client by default
         /// </summary>
-        public static TContract Create()
+        public static TContract Create(string basePath)
         {
-            return new ApiClientBuilder<TContract>().Create();
+            return new ApiClientBuilder<TContract>
+            {
+                BasePath = basePath
+            }.Create();
         }
     }
 }
