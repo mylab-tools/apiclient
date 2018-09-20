@@ -39,6 +39,31 @@
             Web API client builder
             </summary>
         </member>
+        <member name="P:MyLab.ApiClient.ApiClientBuilder`1.Headers">
+            <summary>
+            Default headers for all requests
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ApiClientBuilder`1.Timeout">
+            <summary>
+            Connection timeout
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ApiClientBuilder`1.BaseUrl">
+            <summary>
+            Base service URL
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiClientBuilder`1.AddHeader(System.String,System.String)">
+            <summary>
+            Adds default header for all requests
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiClientBuilder`1.Create">
+            <summary>
+            Creates a client
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ApiDescriptionException">
             <summary>
             Throws when wrong api description extracting

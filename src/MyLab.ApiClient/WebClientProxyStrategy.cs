@@ -10,6 +10,8 @@ namespace MyLab.ApiClient
     {
         private readonly IHttpRequestInvoker _httpRequestInvoker;
 
+        public IHttpMessagesListener HttpMessagesListener { get; set; }
+
         public WebClientProxyStrategy(IHttpRequestInvoker httpRequestInvoker)
         {
             _httpRequestInvoker = httpRequestInvoker;
@@ -30,7 +32,10 @@ namespace MyLab.ApiClient
 
             msg.Content = msgContent;
 
-            return new WebApiInvocation(msg, _httpRequestInvoker);
+            return new WebApiInvocation(msg, _httpRequestInvoker)
+            {
+                HttpMessagesListener = HttpMessagesListener
+            };
         }
 
         public WebApiInvocation<TResult> GetInvocation<TResult>(
@@ -48,7 +53,10 @@ namespace MyLab.ApiClient
 
             msg.Content = msgContent;
 
-            return new WebApiInvocation<TResult>(msg, _httpRequestInvoker);
+            return new WebApiInvocation<TResult>(msg, _httpRequestInvoker)
+            {
+                HttpMessagesListener = HttpMessagesListener
+            };
         }
 
         private HttpContent CreateContent(MethodDescription methodDesc, object[] args)

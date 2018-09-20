@@ -33,15 +33,15 @@ namespace MyLab.ApiClient
                 case "application/octet-stream":
                     {
                         var content = new ByteArrayContent((byte[])val);
-                        content.Headers.Add("Content-Type", "application/octet-stream");
+                        content.Headers.Add("Content-Type", mimeType);
                         return content;
                     }
                 case "application/json":
-                    return new StringContent(PayloadToJson(val));
+                    return new StringContent(PayloadToJson(val), encoding, mimeType);
                 case "application/xml":
-                    return new StringContent(PayloadToXml(val, encoding));
+                    return new StringContent(PayloadToXml(val, encoding), encoding, mimeType);
                 default:
-                    return new StringContent(val.ToString());
+                    return new StringContent(val.ToString(), encoding, mimeType);
             }
         }
 

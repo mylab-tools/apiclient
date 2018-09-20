@@ -13,7 +13,7 @@
         {
             return new ApiClientBuilder<TContract>
             {
-                BasePath = basePath
+                BaseUrl = basePath
             }.Create();
         }
     }

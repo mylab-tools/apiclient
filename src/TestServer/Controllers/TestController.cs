@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.IO;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace TestServer.Controllers
 {
@@ -24,36 +30,49 @@ namespace TestServer.Controllers
             return Ok(id);
         }
 
-        //// GET api/values
-        //[HttpGet]
-        //public ActionResult<IEnumerable<string>> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
+        [HttpGet("foo/bar/q")]
+        public ActionResult<string> GetWithQuery(string id)
+        {
+            return Ok(id);
+        }
 
-        //// GET api/values/5
-        //[HttpGet("{id}")]
-        //public ActionResult<string> Get(int id)
-        //{
-        //    return "value";
-        //}
+        [HttpPost("post/bin")]
+        public ActionResult<byte[]> PostBinary()
+        {
+            string strContent;
+            using (var reader = new StreamReader(Request.Body))
+                strContent = reader.ReadToEnd();
 
-        //// POST api/values
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
+            var response = Encoding.UTF8.GetBytes(strContent);
+            return Ok(response);
+        }
 
-        //// PUT api/values/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
+        [HttpPost("post/xml-object")]
+        public ContentResult PostXmlObj()
+        {
+            string strData;
 
-        //// DELETE api/values/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+            using (var reader = new StreamReader(Request.Body))
+                strData = reader.ReadToEnd();
+
+            return new ContentResult
+            {
+                Content = strData,
+                ContentType = "application/xml",
+                StatusCode = 200
+            };
+        }
+
+        [HttpPost("post/json-object")]
+        public ActionResult<TestObject> PostJsonObj([FromBody]TestObject arg)
+        {
+            return Ok(arg);
+        }
+    }
+
+    public class TestObject
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 }

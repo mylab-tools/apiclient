@@ -26,7 +26,7 @@ namespace MyLab.ApiClient
         /// Initializes a new instance of <see cref="WrongResponseException"/>
         /// </summary>
         public WrongResponseException(HttpRequestMessage request, HttpResponseMessage response)
-            : base("Wrong response code was received")
+            : base($"Wrong response code was received ({(int)response.StatusCode} {response.StatusCode})")
         {
             StatusCode = response.StatusCode;
             Request = request;

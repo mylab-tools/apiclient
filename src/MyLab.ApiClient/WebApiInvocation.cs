@@ -14,6 +14,8 @@ namespace MyLab.ApiClient
 
         public TResult Result { get; private set; }
 
+        public IHttpMessagesListener HttpMessagesListener { get; set; }
+
         public WebApiInvocation(HttpRequestMessage request, IHttpRequestInvoker requestInvoker)
         {
             _requestInvoker = requestInvoker;
@@ -23,6 +25,8 @@ namespace MyLab.ApiClient
         public async Task<TResult> Invoke(CancellationToken cancellationToken)
         {
             Response = await _requestInvoker.Send(Request, cancellationToken);
+            HttpMessagesListener?.Notify(Request, Response);
+
             RightStatusChecker.Check(Request, Response);
 
             Result = (TResult) HttpContentTools.ExtractResult(Response, typeof(TResult));
@@ -38,6 +42,8 @@ namespace MyLab.ApiClient
 
         public HttpResponseMessage Response { get; private set; }
 
+        public IHttpMessagesListener HttpMessagesListener { get; set; }
+
         public WebApiInvocation(HttpRequestMessage request, IHttpRequestInvoker requestInvoker)
         {
             _requestInvoker = requestInvoker;
@@ -47,6 +53,8 @@ namespace MyLab.ApiClient
         public async Task Invoke(CancellationToken cancellationToken)
         {
             Response = await _requestInvoker.Send(Request, cancellationToken);
+            HttpMessagesListener?.Notify(Request, Response);
+
             RightStatusChecker.Check(Request, Response);
         }
     }
