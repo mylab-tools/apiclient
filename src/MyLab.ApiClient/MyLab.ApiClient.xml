@@ -149,6 +149,11 @@
             Dispatches proxy invocations
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.HttpRequestMessageTools">
+            <summary>
+            Extensions for <see cref="T:System.Net.Http.HttpRequestMessage"/>
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.IHttpClientProvider">
             <summary>
             Http client provider
@@ -157,6 +162,16 @@
         <member name="M:MyLab.ApiClient.IHttpClientProvider.Provide">
             <summary>
             Provides <see cref="T:System.Net.Http.HttpClient"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.IHttpRequestInvoker">
+            <summary>
+            Represent object which send/process HTTP request and return HTTP response
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.IHttpRequestInvoker.Send(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            Sends HTTP request
             </summary>
         </member>
         <member name="P:MyLab.ApiClient.BaseParamAttribute.Place">
@@ -189,14 +204,42 @@
             Describes request Body
             </summary>
         </member>
+        <member name="P:MyLab.ApiClient.ReqBodyAttribute.MimeType">
+            <summary>
+            Gets request content MIME-type
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ReqBodyAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ReqBodyAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ReqBodyAttribute.Validate(System.Type)">
+            <summary>
+            Validates parameter type
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.BinaryBodyAttribute">
             <summary>
             Determines binary body parameter
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.BinaryBodyAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.BinaryBodyAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.BinaryBodyAttribute.Validate(System.Type)">
+            <inheritdoc />
+        </member>
         <member name="T:MyLab.ApiClient.JsonBodyAttribute">
             <summary>
             Determines json body parameter
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonBodyAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.JsonBodyAttribute"/>
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.TextBodyAttribute">
@@ -204,9 +247,29 @@
             Determines text body parameter
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.TextBodyAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.TextBodyAttribute"/>
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.XmlBodyAttribute">
             <summary>
             Determines XML body parameter
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.XmlBodyAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.XmlBodyAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.FormBodyAttribute">
+            <summary>
+            Determines FORM body parameter
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.FormBodyAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.FormBodyAttribute"/>
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.ResponseProcessingException">
@@ -239,6 +302,71 @@
         </member>
         <member name="M:MyLab.ApiClient.BoolResponseProcessor.Deserialize(System.String)">
             <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.WebApiCall`1">
+            <summary>
+            Provides model for web api call
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.WebApiCall`1.Request">
+            <summary>
+            HTTP request
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.WebApiCall`1.Response">
+            <summary>
+            HTTP response
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.WebApiCall`1.Result">
+            <summary>
+            Result payload
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.WebApiCall`1.#ctor(System.Net.Http.HttpRequestMessage,MyLab.ApiClient.IHttpRequestInvoker)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.WebApiCall"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.WebApiCall`1.Invoke">
+            <summary>
+            Invokes HTTP call
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.WebApiCall`1.Invoke(System.Threading.CancellationToken)">
+            <summary>
+            Invokes HTTP call
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.WebApiCall">
+            <summary>
+            Provides model for web api call
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.WebApiCall.Request">
+            <summary>
+            HTTP request
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.WebApiCall.Response">
+            <summary>
+            HTTP response
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.WebApiCall.#ctor(System.Net.Http.HttpRequestMessage,MyLab.ApiClient.IHttpRequestInvoker)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.WebApiCall"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.WebApiCall.Invoke">
+            <summary>
+            Invokes HTTP call
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.WebApiCall.Invoke(System.Threading.CancellationToken)">
+            <summary>
+            Invokes HTTP call
+            </summary>
         </member>
         <member name="T:MyLab.ApiClient.WrongResponseException">
             <summary>

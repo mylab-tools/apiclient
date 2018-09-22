@@ -35,15 +35,15 @@ namespace MyLab.ApiClient.UnitTests
             public object[] Args { get; private set; }
             
 
-            public WebApiInvocation GetInvocation(MethodInfo method, ApiClientDescription description, object[] args)
+            public WebApiCall GetCall(MethodInfo method, ApiClientDescription description, object[] args)
             {
                 GotDescription = description;
                 Args = args;
 
-                return new WebApiInvocation(null, new FakeHttpRequestInvoker());
+                return new WebApiCall(null, new FakeHttpRequestInvoker());
             }
 
-            public WebApiInvocation<TResult> GetInvocation<TResult>(MethodInfo method, ApiClientDescription description, object[] args)
+            public WebApiCall<TResult> GetCall<TResult>(MethodInfo method, ApiClientDescription description, object[] args)
             {
                 throw new System.NotImplementedException();
             }

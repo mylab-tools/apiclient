@@ -30,9 +30,9 @@ namespace MyLab.ApiClient
             if(mAttr == null)
                 throw new ApiDescriptionException($"Method should be marked by {typeof(ApiMethodAttribute).FullName}");
             if(!typeof(Task).IsAssignableFrom(method.ReturnType) && 
-               method.ReturnType != typeof(WebApiInvocation) &&  
-               !(method.ReturnType.IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(WebApiInvocation<>)))
-                    throw new ApiDescriptionException("Method should be asynchronously (returns Task or Task<>) or returns invocation (WebApiInvocation or WebApiInvocation<>)");
+               method.ReturnType != typeof(WebApiCall) &&  
+               !(method.ReturnType.IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(WebApiCall<>)))
+                    throw new ApiDescriptionException("Method should be asynchronously (returns Task or Task<>) or returns invocation (WebApiCall or WebApiCall<>)");
 
             var parameters = method.GetParameters()
                 .Select(ParamDescription.Get)

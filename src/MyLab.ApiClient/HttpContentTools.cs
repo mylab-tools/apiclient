@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
@@ -40,9 +41,18 @@ namespace MyLab.ApiClient
                     return new StringContent(PayloadToJson(val), encoding, mimeType);
                 case "application/xml":
                     return new StringContent(PayloadToXml(val, encoding), encoding, mimeType);
+                case "application/x-www-form-urlencoded":
+                    return new FormUrlEncodedContent(ObjectToForm(val));
                 default:
                     return new StringContent(val.ToString(), encoding, mimeType);
             }
+        }
+
+        private static IEnumerable<KeyValuePair<string, string>> ObjectToForm(object val)
+        {
+            return val.GetType()
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .ToDictionary(p => p.Name, p => p.GetValue(val).ToString());
         }
 
         private static string PayloadToJson(object payload)

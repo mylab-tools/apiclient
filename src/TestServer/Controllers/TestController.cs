@@ -68,6 +68,12 @@ namespace TestServer.Controllers
         {
             return Ok(arg);
         }
+
+        [HttpPost("post/form-object")]
+        public ActionResult<TestObject> PostFormObj([FromForm]TestObject arg)
+        {
+            return Ok(arg);
+        }
     }
 
     public class TestObject

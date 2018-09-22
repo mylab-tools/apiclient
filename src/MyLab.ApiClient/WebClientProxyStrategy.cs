@@ -17,7 +17,7 @@ namespace MyLab.ApiClient
             _httpRequestInvoker = httpRequestInvoker;
         }
         
-        public WebApiInvocation GetInvocation(
+        public WebApiCall GetCall(
             MethodInfo method, 
             ApiClientDescription description, 
             object[] args)
@@ -32,13 +32,13 @@ namespace MyLab.ApiClient
 
             msg.Content = msgContent;
 
-            return new WebApiInvocation(msg, _httpRequestInvoker)
+            return new WebApiCall(msg, _httpRequestInvoker)
             {
                 HttpMessagesListener = HttpMessagesListener
             };
         }
 
-        public WebApiInvocation<TResult> GetInvocation<TResult>(
+        public WebApiCall<TResult> GetCall<TResult>(
             MethodInfo method,
             ApiClientDescription description,
             object[] args)
@@ -53,7 +53,7 @@ namespace MyLab.ApiClient
 
             msg.Content = msgContent;
 
-            return new WebApiInvocation<TResult>(msg, _httpRequestInvoker)
+            return new WebApiCall<TResult>(msg, _httpRequestInvoker)
             {
                 HttpMessagesListener = HttpMessagesListener
             };

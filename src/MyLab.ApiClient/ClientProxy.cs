@@ -14,7 +14,7 @@ namespace MyLab.ApiClient
         private static readonly MethodInfo ClientProxyGetInvocationGenericMethod =
             typeof(IClientProxyStrategy)
                 .GetMethods()
-                .Single(m => m.Name == nameof(IClientProxyStrategy.GetInvocation) && m.IsGenericMethod);
+                .Single(m => m.Name == nameof(IClientProxyStrategy.GetCall) && m.IsGenericMethod);
 
         private ApiClientDescription _clientDescription;
         private IClientProxyStrategy _strategy;
@@ -33,29 +33,30 @@ namespace MyLab.ApiClient
             if (mDesc.ReturnType == typeof(void))
             {
                 return _strategy
-                    .GetInvocation(targetMethod, _clientDescription, args)
+                    .GetCall(targetMethod, _clientDescription, args)
                     .Invoke(cancellationToken);
             }
 
-            if (mDesc.ReturnType == typeof(WebApiInvocation))
+            if (mDesc.ReturnType == typeof(WebApiCall))
             {
                 return _strategy
-                    .GetInvocation(targetMethod, _clientDescription, args);
+                    .GetCall(targetMethod, _clientDescription, args);
             }
 
-            if (mDesc.ReturnType.IsGenericType &&
-                mDesc.ReturnType.GetGenericTypeDefinition() == typeof(WebApiInvocation<>))
+            if (targetMethod.ReturnType.IsGenericType &&
+                targetMethod.ReturnType.GetGenericTypeDefinition() == typeof(WebApiCall<>))
             {
                 return CreateGenericInvocation(targetMethod, args, mDesc);
             }
 
-            var genericInvocation = CreateGenericInvocation(targetMethod, args, mDesc);
+            var genericCall = CreateGenericInvocation(targetMethod, args, mDesc);
 
-            var invokeMethod = typeof(WebApiInvocation<>)
+            var invokeMethod = typeof(WebApiCall<>)
                 .MakeGenericType(mDesc.ReturnType)
-                .GetMethod("Invoke");
+                .GetMethods()
+                .First(m => m.Name == "Invoke" && m.GetParameters().Length == 1);
             
-            return invokeMethod.Invoke(genericInvocation, new object[] {cancellationToken});
+            return invokeMethod.Invoke(genericCall, new object[] {cancellationToken});
         }
 
         private object CreateGenericInvocation(MethodInfo targetMethod, object[] args, MethodDescription mDesc)

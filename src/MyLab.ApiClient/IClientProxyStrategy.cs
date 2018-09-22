@@ -5,8 +5,8 @@ namespace MyLab.ApiClient
 {
     interface IClientProxyStrategy
     {
-        WebApiInvocation GetInvocation(MethodInfo method, ApiClientDescription description, object[] args);
+        WebApiCall GetCall(MethodInfo method, ApiClientDescription description, object[] args);
 
-        WebApiInvocation<TResult> GetInvocation<TResult>(MethodInfo method, ApiClientDescription description, object[] args);
+        WebApiCall<TResult> GetCall<TResult>(MethodInfo method, ApiClientDescription description, object[] args);
     }
 }
