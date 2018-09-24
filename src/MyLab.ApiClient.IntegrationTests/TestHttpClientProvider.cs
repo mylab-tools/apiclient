@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace MyLab.ApiClient.IntegrationTests
@@ -8,6 +9,8 @@ namespace MyLab.ApiClient.IntegrationTests
     {
         private readonly WebApplicationFactory<T> _factory;
 
+        public Dictionary<string, string> Headers { get; set; }
+
         public TestHttpClientProvider(WebApplicationFactory<T> factory)
         {
             _factory = factory;
@@ -15,7 +18,17 @@ namespace MyLab.ApiClient.IntegrationTests
 
         public HttpClient Provide()
         {
-            return _factory.CreateClient();
+            var c =  _factory.CreateClient();
+
+            if (Headers != null)
+            {
+                foreach (var header in Headers)
+                {
+                    c.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
+            }
+
+            return c;
         }
     }
 }

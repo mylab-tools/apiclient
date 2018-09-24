@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -167,11 +168,58 @@ namespace MyLab.ApiClient.IntegrationTests
             Assert.Equal(obj.Value, gotObj.Value);
         }
 
-        IServer CreateClient()
+        [Fact]
+        public async Task ShouldPassHeaderFromParameter()
+        {
+            //Arrange
+            var client = CreateClient();
+
+            //Act
+            var header = await client.PostHeaderDirect("foo");
+
+            //Assert
+            Assert.Equal("foo", header);
+        }
+
+        [Fact]
+        public async Task ShouldPassHeaderFromParameterWithRenaming()
+        {
+            //Arrange
+            var client = CreateClient();
+
+            //Act
+            var header = await client.PostHeaderDirectWithParameterRenaming("foo");
+
+            //Assert
+            Assert.Equal("foo", header);
+        }
+
+        [Fact]
+        public async Task ShouldPassHeaderWithFactory()
+        {
+            //Arrange
+            var client = CreateClient(new KeyValuePair<string, string>("superheader", "foo"));
+
+            //Act
+            var header = await client.PostHeaderWithFactory();
+
+            //Assert
+            Assert.Equal("foo", header);
+        }
+
+        IServer CreateClient(KeyValuePair<string, string>? additionalHeader = null)
         {
             var b = new ApiClientBuilder<IServer>();
+            var headers = new Dictionary<string, string>();
+
+            if(additionalHeader != null)
+                headers.Add(additionalHeader.Value.Key, additionalHeader.Value.Value);
+
             return b.Create(
-                new TestHttpClientProvider<Startup>(_factory), 
+                new TestHttpClientProvider<Startup>(_factory)
+                {
+                    Headers = headers
+                }, 
                 new TestConsoleWriterHttpMessageListener(_output));
         }
     }

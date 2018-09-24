@@ -32,5 +32,14 @@ namespace MyLab.ApiClient.IntegrationTests
 
         [ApiPost(RelPath = "post/json-object")]
         WebApiCall<TestObject> GetObjUsingCall([JsonBody]TestObject testObject);
+
+        [ApiPost(RelPath = "post/header")]
+        Task<string> PostHeaderDirect([Header]string superheader);
+
+        [ApiPost(RelPath = "post/header")]
+        Task<string> PostHeaderDirectWithParameterRenaming([Header(Name = "superheader")]string header);
+
+        [ApiPost(RelPath = "post/header")]
+        Task<string> PostHeaderWithFactory();
     }
 }

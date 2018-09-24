@@ -29,14 +29,19 @@ namespace MyLab.ApiClient.IntegrationTests
                     _output.WriteLine(header.Key + ": " + string.Join(", ", header.Value));
 
             _output.WriteLine("");
-            try
+
+            if (request.Content != null)
             {
-                _output.WriteLine(request.Content.ReadAsStringAsync().Result);
+                try
+                {
+                    _output.WriteLine(request.Content.ReadAsStringAsync().Result);
+                }
+                catch (Exception e)
+                {
+                    _output.WriteLine("Error: " + e.Message);
+                }
             }
-            catch (Exception e)
-            {
-                _output.WriteLine("Error: " + e.Message);
-            }
+
             _output.WriteLine("");
             _output.WriteLine("========================================");
             _output.WriteLine("HTTP Response:");

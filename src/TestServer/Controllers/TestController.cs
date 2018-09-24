@@ -63,6 +63,12 @@ namespace TestServer.Controllers
             };
         }
 
+        [HttpPost("post/header")]
+        public ActionResult<string> PostHeader()
+        {
+            return Ok(Request.Headers["superheader"][0]);
+        }
+
         [HttpPost("post/json-object")]
         public ActionResult<TestObject> PostJsonObj([FromBody]TestObject arg)
         {

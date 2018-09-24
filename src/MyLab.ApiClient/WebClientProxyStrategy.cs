@@ -29,6 +29,7 @@ namespace MyLab.ApiClient
             var msg = new HttpRequestMessage(methodDesc.HttpMethod, url);
 
             var msgContent = CreateContent(methodDesc, args);
+            AddHeaders(msg, methodDesc, args);
 
             msg.Content = msgContent;
 
@@ -50,6 +51,7 @@ namespace MyLab.ApiClient
             var msg = new HttpRequestMessage(methodDesc.HttpMethod, url);
 
             var msgContent = CreateContent(methodDesc, args);
+            AddHeaders(msg, methodDesc, args);
 
             msg.Content = msgContent;
 
@@ -65,6 +67,16 @@ namespace MyLab.ApiClient
             if (bodyParam == null) return null;
 
             return HttpContentTools.CreateContent(args[bodyParam.Position], bodyParam.MimeType);
+        }
+
+        private void AddHeaders(HttpRequestMessage msg, MethodDescription methodDesc, object[] args)
+        {
+            var headers = methodDesc.Params.Where(p => p.Place == ApiParamPlace.Header);
+
+            foreach (var header in headers)
+            {
+                msg.Headers.Add(header.Name, args[header.Position].ToString());
+            }
         }
     }
 }
