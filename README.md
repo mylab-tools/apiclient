@@ -1,4 +1,5 @@
 # MyLab.ApiClient
+For .NET Core 2.1+
 
 Provides abilities to make client for `WEB API` based on contracts.
 
@@ -12,3 +13,11 @@ To make `WEB API` client you should:
 * mark input parameters as part of requests
 
 ## Service Contract
+
+## Methods
+
+## The Return
+
+## Method Parameters
+
+## Factoring
