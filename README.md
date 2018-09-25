@@ -13,11 +13,22 @@ To make `WEB API` client you should:
 * mark input parameters as part of requests
 
 ## Service Contract
-
+```C#
+throw new NotImplementedException();
+```
 ## Methods
-
+```C#
+throw new NotImplementedException();
+```
 ## The Return
-
+```C#
+throw new NotImplementedException();
+```
 ## Method Parameters
-
+```C#
+throw new NotImplementedException();
+```
 ## Factoring
+```C#
+throw new NotImplementedException();
+```
