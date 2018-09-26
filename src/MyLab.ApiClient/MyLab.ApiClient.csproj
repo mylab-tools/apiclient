@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>(c) Andrey Osintsev, 2018 &lt;ozzy.ext@gmail.com&gt;</Copyright>
+    <Authors>Andrey Osintsev</Authors>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ozzy-ext/mylab-oas</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ozzy-ext/mylab-oas.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>oas, oas3</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
