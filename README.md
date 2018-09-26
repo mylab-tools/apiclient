@@ -36,9 +36,38 @@ public interface IOrderService
 ```
 
 ## Methods
+
+All contract methods should be asynchronous. 
+
+A сщтекфсе method should be marked by `ApiMethodAttribute`. That attribute defines HTTP method and related method path if defined. Also there are several inherited attributes fro most popular HTTP methods:
+
 ```C#
-throw new NotImplementedException();
+[Api]
+public interface IOrderService
+{
+    [ApiMethod(HttpMethod.Get, RelPath="orders")]
+    Task GetOrders1();
+    
+    [ApiGet(RelPath="orders")]
+    Task GetOrders2();
+    
+    [ApiGet]
+    Task GetOrders3();
+    
+    [ApiPost]
+    Task PostOrders();
+    
+    [ApiPut]
+    Task PutOrders();
+    
+    [ApiHead]
+    Task HeadOrders();
+    
+    [ApiDelete]
+    Task DeleteOrders();
+}
 ```
+
 ## The Return
 ```C#
 throw new NotImplementedException();
