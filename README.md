@@ -13,9 +13,28 @@ To make `WEB API` client you should:
 * mark input parameters as part of requests
 
 ## Service Contract
+
+Deplare service contract to descripbe servce specification details.
+
+Use `ApiAttribute` to mark an interface that represent a service contract:
+
 ```C#
-throw new NotImplementedException();
+[Api]
+public interface IOrderService
+{
+    //...
+}
 ```
+There is ability to specify common path for all API methods releted of base path:
+
+```C#
+[Api("orders/v1")]
+public interface IOrderService
+{
+    //...
+}
+```
+
 ## Methods
 ```C#
 throw new NotImplementedException();
