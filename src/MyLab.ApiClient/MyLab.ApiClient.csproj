@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>(c) Andrey Osintsev, 2018 &lt;ozzy.ext@gmail.com&gt;</Copyright>
+    <Authors>Andrey Osintsev</Authors>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ozzy-ext/mylab-oas</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ozzy-ext/mylab-oas.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>oas, oas3</PackageTags>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <Version>2.0.0</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>D:\Projects\my\mylab-apiclient\src\MyLab.ApiClient\MyLab.ApiClient.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\Projects\my\mylab-apiclient\src\MyLab.ApiClient\MyLab.ApiClient.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+</Project>
