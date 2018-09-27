@@ -69,9 +69,33 @@ public interface IOrderService
 ```
 
 ## The Return
+
+A `WEB API` can return both positive or negative response. Positive response is an `HTTP` response with code between `200` and `299` and may contain a response payload. A negative response has another code also may contin payload which describe a status.
+
+There is default behaviour when response has `2xx` code. A method returns the expected result in this case. In other case the `WrongResponseException` will be thrown.
+
+To declare method response payload type that type should be specified as generaic parameter of `Task<>` at return parameter definition as follow:
+
 ```C#
-throw new NotImplementedException();
+[Api]
+public interface IOrderService
+{
+    [ApiGet]
+    Task<string> GetString();
+    
+    [ApiGet]
+    Task<DataContract> GetObject();
+    
+    [ApiGet]
+    Task<byte[]> GetObject();
+}
 ```
+
+There are many types are supported:
+* primitive: `string`, `bool`, `int`, `uint`, `double`
+* object/struct: only if payload is `XML` or `JSON`
+* binary: only if payload is `base64` string
+
 ## Method Parameters
 ```C#
 throw new NotImplementedException();
