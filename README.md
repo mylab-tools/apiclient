@@ -87,7 +87,7 @@ public interface IOrderService
     Task<DataContract> GetObject();
     
     [ApiGet]
-    Task<byte[]> GetObject();
+    Task<byte[]> GetBinary();
 }
 ```
 
