@@ -20,7 +20,7 @@ Use `ApiAttribute` to mark an interface that represent a service contract:
 
 ```C#
 [Api]
-public interface IOrderService
+public interface IService
 {
     //...
 }
@@ -29,7 +29,7 @@ There is ability to specify common path for all API methods releted of base path
 
 ```C#
 [Api("orders/v1")]
-public interface IOrderService
+public interface IService
 {
     //...
 }
@@ -43,7 +43,7 @@ A сщтекфсе method should be marked by `ApiMethodAttribute`. That attribu
 
 ```C#
 [Api]
-public interface IOrderService
+public interface IService
 {
     [ApiMethod(HttpMethod.Get, RelPath="orders")]
     Task GetOrders1();
@@ -70,22 +70,29 @@ public interface IOrderService
 
 ## The Return
 
-A `WEB API` can return both positive or negative response. Positive response is an `HTTP` response with code between `200` and `299` and may contain a response payload. A negative response has another code also may contin payload which describe a status.
+### Common
 
-There is default behaviour when response has `2xx` code. A method returns the expected result in this case. In other case the `WrongResponseException` will be thrown.
+A `WEB API` can return both positive or negative response. Positive response is an `HTTP` response with code between `200` and 300 and may contain a response payload. A negative response has another code also may contain payload which describe a status.
 
-To declare method response payload type that type should be specified as generaic parameter of `Task<>` at return parameter definition as follow:
+There is default behavior when response has `2xx` code. A method returns the expected result in this case. In other case the `WrongResponseException` will be thrown.
+
+###Payload
+
+To declare method response payload type that type should be specified as generic parameter of `Task<>` at return parameter definition as follow:
 
 ```C#
 [Api]
-public interface IOrderService
+public interface IService
 {
+    //Returns primitve
     [ApiGet]
     Task<string> GetString();
     
+    //Returns object
     [ApiGet]
     Task<DataContract> GetObject();
     
+    //Returns binary
     [ApiGet]
     Task<byte[]> GetBinary();
 }
@@ -94,7 +101,39 @@ public interface IOrderService
 There are many types are supported:
 * primitive: `string`, `bool`, `int`, `uint`, `double`
 * object/struct: only if payload is `XML` or `JSON`
-* binary: only if payload is `base64` string
+* binary: any payload content
+
+###The Void
+
+When response has no payload then a simple `Task` return type should be used.
+
+```C#
+[Api]
+public interface IService
+{   
+    [ApiGet]
+    Task Get();
+}
+```
+
+This method complete successfully if service response will be `2xx`. The  `WrongResponseException` will be thrown when meet another code.
+
+### CodeResult
+
+Use `CodeResult` result type when all possible api method results are combination of `HTTP` status code and text message as response payload.
+
+```C#
+[Api]
+public interface IService
+{   
+    [ApiGet]
+    Task<CoreResult> Get();
+}
+```
+
+This method always complete successfully even the response code is no `2xx`. 
+
+
 
 ## Method Parameters
 ```C#
