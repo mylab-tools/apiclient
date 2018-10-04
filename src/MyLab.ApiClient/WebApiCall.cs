@@ -54,10 +54,11 @@ namespace MyLab.ApiClient
             Response = await _requestInvoker.Send(Request, cancellationToken);
             HttpMessagesListener?.Notify(requestClone, Response);
 
-            RightStatusChecker.Check(Request, Response);
+            if(typeof(TResult) != typeof(CodeResult)) 
+                RightStatusChecker.Check(Request, Response);
 
-            Result = (TResult) HttpContentTools.ExtractResult(Response, typeof(TResult));
-            return await Task.FromResult(Result);
+            Result = (TResult) await HttpContentTools.ExtractResult(Response, typeof(TResult));
+            return Result;
         }
     }
 

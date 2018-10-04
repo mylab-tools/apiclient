@@ -207,6 +207,23 @@ namespace MyLab.ApiClient.IntegrationTests
             Assert.Equal("foo", header);
         }
 
+        [Theory]
+        [InlineData(200, "OK")]
+        [InlineData(400, "BadRequest")]
+        [InlineData(500, "InternalServerError")]
+        public async Task ShouldGetCodeResult(int code, string msg)
+        {
+            //Arrange
+            var client = CreateClient();
+
+            //Act
+            var codeResult = await client.GetCode(code, msg);
+
+            //Assert
+            Assert.Equal(code, (int)codeResult.StatusCode);
+            Assert.Equal(msg, codeResult.Message);
+        }
+
         IServer CreateClient(KeyValuePair<string, string>? additionalHeader = null)
         {
             var b = new ApiClientBuilder<IServer>();

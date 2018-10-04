@@ -41,5 +41,8 @@ namespace MyLab.ApiClient.IntegrationTests
 
         [ApiPost(RelPath = "post/header")]
         Task<string> PostHeaderWithFactory();
+
+        [ApiGet(RelPath = "get/code")]
+        Task<CodeResult> GetCode([QueryParam]int code, [QueryParam]string msg);
     }
 }
