@@ -9,13 +9,9 @@ namespace MyLab.ApiClient
     /// </summary>
     public class WebApiCall<TResult>
     {
+        private readonly HttpRequestMessage _request;
         private readonly IHttpRequestInvoker _requestInvoker;
-
-        /// <summary>
-        /// HTTP request
-        /// </summary>
-        public HttpRequestMessage Request { get; }
-
+        
         /// <summary>
         /// HTTP response
         /// </summary>
@@ -33,8 +29,16 @@ namespace MyLab.ApiClient
         /// </summary>
         public WebApiCall(HttpRequestMessage request, IHttpRequestInvoker requestInvoker)
         {
+            _request = request;
             _requestInvoker = requestInvoker;
-            Request = request;
+        }
+
+        /// <summary>
+        /// Creates request clone. Also clones the content.
+        /// </summary>
+        public async Task<HttpRequestMessage> GetRequestClone()
+        {
+            return await HttpRequestMessageTools.Clone(_request);
         }
 
         /// <summary>
@@ -50,12 +54,12 @@ namespace MyLab.ApiClient
         /// </summary>
         public async Task<TResult> Invoke(CancellationToken cancellationToken)
         {
-            var requestClone = await HttpRequestMessageTools.Clone(Request);
-            Response = await _requestInvoker.Send(Request, cancellationToken);
-            HttpMessagesListener?.Notify(requestClone, Response);
+            Response = await _requestInvoker.Send(await GetRequestClone(), cancellationToken);
+
+            HttpMessagesListener?.Notify(await GetRequestClone(), Response);
 
             if(typeof(TResult) != typeof(CodeResult)) 
-                RightStatusChecker.Check(Request, Response);
+                await RightStatusChecker.Check(GetRequestClone, Response);
 
             Result = (TResult) await HttpContentTools.ExtractResult(Response, typeof(TResult));
             return Result;
@@ -67,12 +71,8 @@ namespace MyLab.ApiClient
     /// </summary>
     public class WebApiCall
     {
+        private readonly HttpRequestMessage _request;
         private readonly IHttpRequestInvoker _requestInvoker;
-
-        /// <summary>
-        /// HTTP request
-        /// </summary>
-        public HttpRequestMessage Request { get; }
 
         /// <summary>
         /// HTTP response
@@ -87,7 +87,15 @@ namespace MyLab.ApiClient
         public WebApiCall(HttpRequestMessage request, IHttpRequestInvoker requestInvoker)
         {
             _requestInvoker = requestInvoker;
-            Request = request;
+            _request = request;
+        }
+
+        /// <summary>
+        /// Creates request clone. Also clones the content.
+        /// </summary>
+        public async Task<HttpRequestMessage> GetRequestClone()
+        {
+            return await HttpRequestMessageTools.Clone(_request);
         }
 
         /// <summary>
@@ -103,11 +111,10 @@ namespace MyLab.ApiClient
         /// </summary>
         public async Task Invoke(CancellationToken cancellationToken)
         {
-            var requestClone = await HttpRequestMessageTools.Clone(Request);
-            Response = await _requestInvoker.Send(Request, cancellationToken);
-            HttpMessagesListener?.Notify(requestClone, Response);
+            Response = await _requestInvoker.Send(await GetRequestClone(), cancellationToken);
+            HttpMessagesListener?.Notify(await GetRequestClone(), Response);
 
-            RightStatusChecker.Check(Request, Response);
+            await RightStatusChecker.Check(GetRequestClone, Response);
         }
     }
 }
