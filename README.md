@@ -133,7 +133,42 @@ public interface IService
 
 This method always complete successfully even the response code is no `2xx`. 
 
+### WebApiCall
 
+To full control an api call invocation the `WebApiCall` result type should be used. In this case the method should be synchronous. It because the method has factory role - it just create `WebApiCall` object with prepared `HttpRequestMessage` inside. An HTTP request will be sent when the `WebApiCall.Invoke()` method will be called.
+
+```C#
+[Api]
+public interface IService
+{   
+    [ApiGet]
+    WebApiCall Get();
+}
+```
+
+`WebApiCall` provides access to `HTTP` request and response.  
+
+```C#
+HttpRequestMessage request = call.GetRequestClone();
+HttpResponseMethod response = call.Response;
+```
+
+Specify generic result type to declare api method return type as using simple asynchronous case with `Task<>`. 
+
+```C#
+[Api]
+public interface IService
+{   
+    [ApiGet]
+    WebApiCall<Something> GetSomething();
+}
+```
+
+In this case the `WebApiCall<>` also provides result value. 
+
+```C#
+Something result = call.Result;
+```
 
 ## Method Parameters
 ```C#
