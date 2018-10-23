@@ -25,6 +25,7 @@ namespace MyLab.ApiClient
             Add(new VoidResponseProcessor());
             Add(new StringResponseProcessor());
             Add(new BinaryResponseProcessor());
+            Add(new CodeResultResponseProcessor());
             Add(new StructuredObjectResponseProcessor());
         }
     }
@@ -33,7 +34,18 @@ namespace MyLab.ApiClient
     {
         bool Predicate(Type returnType);
 
-        object GetResponse(HttpResponseMessage response, Type returnType);
+        Task<object> GetResponse(HttpResponseMessage response, Type returnType);
+    }
+
+    class CodeResultResponseProcessor : IResponseProcessor
+    {
+        public bool Predicate(Type returnType) => returnType == typeof(CodeResult);
+
+        /// <inheritdoc />
+        public async Task<object> GetResponse(HttpResponseMessage taskResult, Type returnType)
+        {
+            return await CodeResult.CreateFromHttpMessage(taskResult);
+        }
     }
 
     class VoidResponseProcessor : IResponseProcessor
@@ -41,9 +53,9 @@ namespace MyLab.ApiClient
         public bool Predicate(Type returnType) => returnType == typeof(void);
 
         /// <inheritdoc />
-        public object GetResponse(HttpResponseMessage taskResult, Type returnType)
+        public async Task<object> GetResponse(HttpResponseMessage taskResult, Type returnType)
         {
-            return null;
+            return await Task.FromResult((object)null);
         }
     }
 
@@ -51,9 +63,9 @@ namespace MyLab.ApiClient
     {
         public bool Predicate(Type returnType) => returnType == typeof(byte[]);
 
-        public object GetResponse(HttpResponseMessage taskResult, Type returnType)
+        public async Task<object> GetResponse(HttpResponseMessage taskResult, Type returnType)
         {
-            var bin = taskResult.Content.ReadAsByteArrayAsync().Result;
+            var bin = await taskResult.Content.ReadAsByteArrayAsync();
 
             if (bin.Length != 0 && bin[0] == '\"')
             {
@@ -69,9 +81,10 @@ namespace MyLab.ApiClient
     {
         public bool Predicate(Type returnType) => returnType == typeof(string);
 
-        public object GetResponse(HttpResponseMessage taskResult, Type returnType)
+        public async Task<object> GetResponse(HttpResponseMessage taskResult, Type returnType)
         {
-            return taskResult.Content.ReadAsStringAsync().Result.Trim('\"');
+            var res = await taskResult.Content.ReadAsStringAsync();
+            return res.Trim('\"');
         }
     }
 
@@ -81,9 +94,10 @@ namespace MyLab.ApiClient
             (returnType.IsClass && !returnType.IsAbstract) ||
             (returnType.IsValueType && !returnType.IsPrimitive);
 
-        public object GetResponse(HttpResponseMessage taskResult, Type returnType)
+        public async Task<object> GetResponse(HttpResponseMessage taskResult, Type returnType)
         {
-            var str = taskResult.Content.ReadAsStringAsync().Result.Trim(' ', '\"');
+            var content = await taskResult.Content.ReadAsStringAsync();
+            var str = content.Trim(' ', '\"');
 
             if (str == "null")
                 return null;
@@ -140,9 +154,10 @@ namespace MyLab.ApiClient
         }
 
         /// <inheritdoc />
-        public object GetResponse(HttpResponseMessage taskResult, Type returnType)
+        public async Task<object> GetResponse(HttpResponseMessage taskResult, Type returnType)
         {
-            return Deserialize(taskResult.Content.ReadAsStringAsync().Result.Trim('\"', ' '));
+            var content = await taskResult.Content.ReadAsStringAsync();
+            return Deserialize(content.Trim('\"', ' '));
         }
 
         protected abstract T Deserialize(string str);

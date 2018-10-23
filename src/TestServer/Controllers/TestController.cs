@@ -80,6 +80,12 @@ namespace TestServer.Controllers
         {
             return Ok(arg);
         }
+
+        [HttpGet("get/code")]
+        public ActionResult GetCode(int code, string msg)
+        {
+            return StatusCode(code, msg);
+        }
     }
 
     public class TestObject

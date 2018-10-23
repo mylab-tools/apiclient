@@ -149,6 +149,26 @@
             Dispatches proxy invocations
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.CodeResult">
+            <summary>
+            Represent simple code result
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.CodeResult.StatusCode">
+            <summary>
+            Http status code
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.CodeResult.Message">
+            <summary>
+            Got message
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.CodeResult.#ctor(System.Net.HttpStatusCode,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.CodeResult"/>
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.HttpRequestMessageTools">
             <summary>
             Extensions for <see cref="T:System.Net.Http.HttpRequestMessage"/>
@@ -282,6 +302,9 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.ResponseProcessingException"/>
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.CodeResultResponseProcessor.GetResponse(System.Net.Http.HttpResponseMessage,System.Type)">
+            <inheritdoc />
+        </member>
         <member name="M:MyLab.ApiClient.VoidResponseProcessor.GetResponse(System.Net.Http.HttpResponseMessage,System.Type)">
             <inheritdoc />
         </member>
@@ -308,11 +331,6 @@
             Provides model for web api call
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.WebApiCall`1.Request">
-            <summary>
-            HTTP request
-            </summary>
-        </member>
         <member name="P:MyLab.ApiClient.WebApiCall`1.Response">
             <summary>
             HTTP response
@@ -326,6 +344,11 @@
         <member name="M:MyLab.ApiClient.WebApiCall`1.#ctor(System.Net.Http.HttpRequestMessage,MyLab.ApiClient.IHttpRequestInvoker)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.WebApiCall"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.WebApiCall`1.GetRequestClone">
+            <summary>
+            Creates request clone. Also clones the content.
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.WebApiCall`1.Invoke">
@@ -343,11 +366,6 @@
             Provides model for web api call
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.WebApiCall.Request">
-            <summary>
-            HTTP request
-            </summary>
-        </member>
         <member name="P:MyLab.ApiClient.WebApiCall.Response">
             <summary>
             HTTP response
@@ -356,6 +374,11 @@
         <member name="M:MyLab.ApiClient.WebApiCall.#ctor(System.Net.Http.HttpRequestMessage,MyLab.ApiClient.IHttpRequestInvoker)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.WebApiCall"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.WebApiCall.GetRequestClone">
+            <summary>
+            Creates request clone. Also clones the content.
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.WebApiCall.Invoke">

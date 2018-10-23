@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -13,14 +14,14 @@ namespace MyLab.ApiClient
 {
     static class HttpContentTools
     {
-        public static object ExtractResult(HttpResponseMessage resp, Type methodReturnType)
+        public static async Task<object> ExtractResult(HttpResponseMessage resp, Type methodReturnType)
         {
             var proc = SupportedResponseProcessors.Instance.FirstOrDefault(p => p.Predicate(methodReturnType));
             if (proc == null)
                 throw new ResponseProcessingException(
                     $"Response processor not found for return type '{methodReturnType.FullName}'");
 
-            return proc.GetResponse(resp, methodReturnType);
+            return await proc.GetResponse(resp, methodReturnType);
         }
 
         public static HttpContent CreateContent(object val, string mimeType)
