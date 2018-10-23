@@ -40,7 +40,7 @@ namespace MyLab.ApiClient.UnitTests
                 GotDescription = description;
                 Args = args;
 
-                return new WebApiCall(null, new FakeHttpRequestInvoker());
+                return new WebApiCall(new HttpRequestMessage(), new FakeHttpRequestInvoker());
             }
 
             public WebApiCall<TResult> GetCall<TResult>(MethodInfo method, ApiClientDescription description, object[] args)

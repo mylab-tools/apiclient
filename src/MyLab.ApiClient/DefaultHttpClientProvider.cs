@@ -20,7 +20,10 @@ namespace MyLab.ApiClient
 
             _httpClient = new Lazy<HttpClient>(() =>
             {
-                var c = new HttpClient();
+                var c = new HttpClient()
+                {
+                    BaseAddress = new Uri(BasePath)
+                };
 
                 if (Timeout != default(TimeSpan))
                     c.Timeout = Timeout;
