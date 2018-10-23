@@ -171,9 +171,13 @@ Something result = call.Result;
 ```
 
 ## Method Parameters
-```C#
-throw new NotImplementedException();
-```
+The input method parameters uses to specify `HTTP` request parameters. There are several place in request can be used:
+
+* part of URL path 
+* URL query parameter
+* payload
+* header
+
 ## Factoring
 ```C#
 throw new NotImplementedException();
