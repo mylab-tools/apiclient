@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -7,6 +8,7 @@ using TestServer;
 using TestServer.Controllers;
 using Xunit;
 using Xunit.Abstractions;
+using MyLab.ApiClient.Testing;
 
 namespace MyLab.ApiClient.IntegrationTests
 {
@@ -25,7 +27,7 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldRouteToRootMethod()
         {
             //Arrange
-            var client = CreateClient();
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
 
             //Act
             string res = await client.RootGet();
@@ -38,7 +40,7 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldRouteToMethodWithPath()
         {
             //Arrange
-            var client = CreateClient();
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
 
             //Act
             string res = await client.GetWithPath();
@@ -51,7 +53,7 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldRouteToMethodWithParametrizedPath()
         {
             //Arrange
-            var client = CreateClient();
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
             var id = Guid.NewGuid().ToString();
 
             //Act
@@ -65,7 +67,7 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldPassQueryParameter()
         {
             //Arrange
-            var client = CreateClient();
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
             var id = Guid.NewGuid().ToString();
 
             //Act
@@ -79,7 +81,7 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldPassAndGetBinaryData()
         {
             //Arrange
-            var client = CreateClient();
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
             var value = Guid.NewGuid().ToString();
             var bin = Encoding.UTF8.GetBytes(value);
 
@@ -95,7 +97,7 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldPassAndGetObjectAsXml()
         {
             //Arrange
-            var client = CreateClient();
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
             var obj = new TestObject
             {
                 Value = Guid.NewGuid().ToString(),
@@ -114,7 +116,7 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldPassAndGetObjectAsJson()
         {
             //Arrange
-            var client = CreateClient();
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
             var obj = new TestObject
             {
                 Value = Guid.NewGuid().ToString(),
@@ -133,7 +135,7 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldPassObjectAsForm()
         {
             //Arrange
-            var client = CreateClient();
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
             var obj = new TestObject
             {
                 Value = Guid.NewGuid().ToString(),
@@ -152,7 +154,7 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldSupportDeferredCall()
         {
             //Arrange
-            var client = CreateClient();
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
             var obj = new TestObject
             {
                 Value = Guid.NewGuid().ToString(),
@@ -172,7 +174,7 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldPassHeaderFromParameter()
         {
             //Arrange
-            var client = CreateClient();
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
 
             //Act
             var header = await client.PostHeaderDirect("foo");
@@ -185,7 +187,7 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldPassHeaderFromParameterWithRenaming()
         {
             //Arrange
-            var client = CreateClient();
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
 
             //Act
             var header = await client.PostHeaderDirectWithParameterRenaming("foo");
@@ -198,7 +200,8 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldPassHeaderWithFactory()
         {
             //Arrange
-            var client = CreateClient(new KeyValuePair<string, string>("superheader", "foo"));
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output, 
+                Enumerable.Repeat("superheader", 1).ToDictionary(s => s, s => "foo"));
 
             //Act
             var header = await client.PostHeaderWithFactory();
@@ -214,7 +217,7 @@ namespace MyLab.ApiClient.IntegrationTests
         public async Task ShouldGetCodeResult(int code, string msg)
         {
             //Arrange
-            var client = CreateClient();
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
 
             //Act
             var codeResult = await client.GetCode(code, msg);
@@ -222,22 +225,6 @@ namespace MyLab.ApiClient.IntegrationTests
             //Assert
             Assert.Equal(code, (int)codeResult.StatusCode);
             Assert.Equal(msg, codeResult.Message);
-        }
-
-        IServer CreateClient(KeyValuePair<string, string>? additionalHeader = null)
-        {
-            var b = new ApiClientBuilder<IServer>();
-            var headers = new Dictionary<string, string>();
-
-            if(additionalHeader != null)
-                headers.Add(additionalHeader.Value.Key, additionalHeader.Value.Value);
-
-            return b.Create(
-                new TestHttpClientProvider<Startup>(_factory)
-                {
-                    Headers = headers
-                }, 
-                new TestConsoleWriterHttpMessageListener(_output));
         }
     }
 }

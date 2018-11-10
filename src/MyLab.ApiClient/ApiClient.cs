@@ -1,4 +1,7 @@
-﻿namespace MyLab.ApiClient
+﻿using System;
+using System.Collections.Generic;
+
+namespace MyLab.ApiClient
 {
     /// <summary>
     /// Web API client factory
@@ -7,14 +10,46 @@
         where TContract : class 
     {
         /// <summary>
-        /// Creates web api client by default
+        /// Api client factory
         /// </summary>
-        public static TContract Create(string basePath)
+        public static readonly ApiClient<TContract> Factory = new ApiClient<TContract>();
+
+        ApiClient()
         {
-            return new ApiClientBuilder<TContract>
+            
+        }
+
+        /// <summary>
+        /// Creates web api client 
+        /// </summary>
+        public TContract Create(IHttpClientProvider httpClientProvider, IHttpMessagesListener httpMessagesListener = null)
+        {
+            var httpInvoker = new HttpRequestInvoker(httpClientProvider);
+
+            var clientStrategy = new WebClientProxyStrategy(httpInvoker)
             {
-                BaseUrl = basePath
-            }.Create();
+                HttpMessagesListener = httpMessagesListener
+            };
+            var description = ApiClientDescription.Get(typeof(TContract));
+
+            return ClientProxy<TContract>.CreateProxy(description, clientStrategy);
+        }
+
+        /// <summary>
+        /// Creates web api client 
+        /// </summary>
+        public TContract Create(string baseUrl, TimeSpan? timeout = null, IDictionary<string, string> headers = null)
+        {
+            var httpClientProvider = new DefaultHttpClientProvider(baseUrl)
+            {
+                Timeout = timeout.GetValueOrDefault(),
+                Headers = headers == null 
+                    ? null
+                    : new Dictionary<string, string>(headers)
+
+            };
+
+            return Create(httpClientProvider);
         }
     }
 }

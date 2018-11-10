@@ -2,8 +2,14 @@
 
 namespace MyLab.ApiClient
 {
-    interface IHttpMessagesListener
+    /// <summary>
+    /// Declares http message listener
+    /// </summary>
+    public interface IHttpMessagesListener
     {
+        /// <summary>
+        /// Call to notify
+        /// </summary>
         void Notify(HttpRequestMessage request, HttpResponseMessage response);
     }
 }
