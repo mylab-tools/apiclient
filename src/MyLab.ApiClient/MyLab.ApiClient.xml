@@ -29,39 +29,19 @@
             Web API client factory
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClient`1.Create(System.String)">
+        <member name="F:MyLab.ApiClient.ApiClient`1.Factory">
             <summary>
-            Creates web api client by default
+            Api client factory
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.ApiClientBuilder`1">
+        <member name="M:MyLab.ApiClient.ApiClient`1.Create(MyLab.ApiClient.IHttpClientProvider,MyLab.ApiClient.IHttpMessagesListener)">
             <summary>
-            Web API client builder
+            Creates web api client 
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.ApiClientBuilder`1.Headers">
+        <member name="M:MyLab.ApiClient.ApiClient`1.Create(System.String,System.Nullable{System.TimeSpan},System.Collections.Generic.IDictionary{System.String,System.String})">
             <summary>
-            Default headers for all requests
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiClientBuilder`1.Timeout">
-            <summary>
-            Connection timeout
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiClientBuilder`1.BaseUrl">
-            <summary>
-            Base service URL
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiClientBuilder`1.AddHeader(System.String,System.String)">
-            <summary>
-            Adds default header for all requests
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiClientBuilder`1.Create">
-            <summary>
-            Creates a client
+            Creates web api client 
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.ApiDescriptionException">
@@ -182,6 +162,16 @@
         <member name="M:MyLab.ApiClient.IHttpClientProvider.Provide">
             <summary>
             Provides <see cref="T:System.Net.Http.HttpClient"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.IHttpMessagesListener">
+            <summary>
+            Declares http message listener
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.IHttpMessagesListener.Notify(System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Call to notify
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.IHttpRequestInvoker">
