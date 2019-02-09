@@ -23,6 +23,13 @@ namespace MyLab.ApiClient.IntegrationTests
 
         [ApiPost(RelPath = "post/xml-object")]
         Task<TestObject> PostXmlObj([XmlBody]TestObject testObject);
+        
+        [ApiPost(RelPath = "post/bin-xml")]
+        Task<byte[]> PostBinaryXml([XmlBody]byte[] binXml);
+
+        [ApiPost(RelPath = "post/str-xml")]
+        Task<string> PostStringXml([XmlBody]string strXml);
+
 
         [ApiPost(RelPath = "post/json-object")]
         Task<TestObject> PostJsonObj([JsonBody]TestObject testObject);
