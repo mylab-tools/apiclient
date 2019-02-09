@@ -58,6 +58,12 @@ namespace MyLab.ApiClient
 
         private static string PayloadToJson(object payload)
         {
+            if (payload is string strPayload)
+                return strPayload;
+
+            if (payload is byte[] binPayload)
+                return Encoding.UTF8.GetString(binPayload);
+            
             var jsonS = new JsonSerializer();
 
             using (StringWriter textWriter = new StringWriter())
@@ -69,6 +75,12 @@ namespace MyLab.ApiClient
 
         private static string PayloadToXml(object payload, Encoding encoding)
         {
+            if (payload is string strPayload)
+                return strPayload;
+
+            if (payload is byte[] binPayload)
+                return Encoding.UTF8.GetString(binPayload);
+            
             var ser = new XmlSerializer(payload.GetType());
 
             using (var mem = new MemoryStream())

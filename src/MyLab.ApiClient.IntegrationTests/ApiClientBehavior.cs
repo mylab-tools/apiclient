@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc.Testing;
 using TestServer;
 using TestServer.Controllers;
@@ -108,6 +110,72 @@ namespace MyLab.ApiClient.IntegrationTests
             var gotObj = await client.PostXmlObj(obj);
 
             //Assert
+            Assert.Equal(obj.Key, gotObj.Key);
+            Assert.Equal(obj.Value, gotObj.Value);
+        }
+        
+        [Fact]
+        public async Task ShouldPassAndGetXmlAsBinary()
+        {
+            //Arrange
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
+            var serializer = new XmlSerializer(typeof(TestObject));
+            var obj = new TestObject
+            {
+                Value = Guid.NewGuid().ToString(),
+                Key = Guid.NewGuid().ToString()
+            };
+            byte[] serialized;
+
+            using (var mem = new MemoryStream())
+            {
+                serializer.Serialize(mem, obj);
+                serialized = mem.ToArray();
+            }
+
+            //Act
+            var response = await client.PostBinaryXml(serialized);
+            
+            //Assert
+
+            TestObject gotObj;
+            using (var mem = new MemoryStream(response))
+            {
+                gotObj = (TestObject) serializer.Deserialize(mem);
+            }
+            
+            Assert.Equal(obj.Key, gotObj.Key);
+            Assert.Equal(obj.Value, gotObj.Value);
+        }
+        
+        [Fact]
+        public async Task ShouldPassAndGetXmlAsString()
+        {
+            //Arrange
+            var client = ApiClient<IServer>.Factory.Create(_factory, _output);
+            var serializer = new XmlSerializer(typeof(TestObject));
+            var obj = new TestObject
+            {
+                Value = Guid.NewGuid().ToString(),
+                Key = Guid.NewGuid().ToString()
+            };
+            
+            var serialized = new StringBuilder();
+            using (var writer = new StringWriter(serialized))
+            {
+                serializer.Serialize(writer, obj);
+            }
+            
+            //Act
+            var response = await client.PostStringXml(serialized.ToString());
+
+            //Assert
+            TestObject gotObj;
+            using (var reader = new StringReader(response))
+            {
+                gotObj = (TestObject) serializer.Deserialize(reader);
+            }
+            
             Assert.Equal(obj.Key, gotObj.Key);
             Assert.Equal(obj.Value, gotObj.Value);
         }

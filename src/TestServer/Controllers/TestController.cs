@@ -62,6 +62,38 @@ namespace TestServer.Controllers
                 StatusCode = 200
             };
         }
+        
+        [HttpPost("post/bin-xml")]
+        public ContentResult PostBinaryXml()
+        {
+            string strData;
+
+            using (var reader = new StreamReader(Request.Body))
+                strData = reader.ReadToEnd();
+
+            return new ContentResult
+            {
+                Content = strData,
+                ContentType = "application/xml",
+                StatusCode = 200
+            };
+        }
+        
+        [HttpPost("post/str-xml")]
+        public ContentResult PostStringXml()
+        {
+            string strData;
+
+            using (var reader = new StreamReader(Request.Body))
+                strData = reader.ReadToEnd();
+
+            return new ContentResult
+            {
+                Content = strData,
+                ContentType = "application/xml",
+                StatusCode = 200
+            };
+        }
 
         [HttpPost("post/header")]
         public ActionResult<string> PostHeader()
