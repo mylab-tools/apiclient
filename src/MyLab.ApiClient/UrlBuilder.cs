@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Web;
 
 namespace MyLab.ApiClient
 {
@@ -52,13 +54,19 @@ namespace MyLab.ApiClient
 
         private void AddQueryArgs(StringBuilder b, object[] args)
         {
-            var queryArgs = _methodDescription.Params
-                .Where(p => p.Place == ApiParamPlace.Query)
-                .Select((d, i) => d.Name + "=" + args[i])
-                .ToArray();
+            var queryArgs = new StringBuilder();
+
+            foreach (var p in _methodDescription.Params)
+            {
+                if (p.Place != ApiParamPlace.Query) continue;
+
+                if (queryArgs.Length != 0)
+                    queryArgs.Append("&");
+                queryArgs.Append(p.Name + "=" + HttpUtility.HtmlEncode(args[p.Position]));
+            }
 
             if (queryArgs.Length != 0)
-                b.Append("?" + string.Join("&", queryArgs));
+                b.Append("?" + queryArgs);
         }
 
         private void AddPath(StringBuilder b)
