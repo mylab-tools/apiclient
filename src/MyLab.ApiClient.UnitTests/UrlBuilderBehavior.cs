@@ -27,6 +27,23 @@ namespace MyLab.ApiClient.UnitTests
             Assert.Equal(expectedUrl, url);
         }
 
+        [Fact]
+        public void ShouldCreateUrlWithQueryAndPath()
+        {
+            //Arrange
+            var contract = typeof(IContract);
+            var desc = ApiClientDescription.Get(contract);
+
+            var methodToken = contract.GetMethod(nameof(IContract.WithQueryAndPathArg)).MetadataToken;
+            var urlBuilder = UrlBuilder.GetForMethod(desc, methodToken);
+
+            //Act
+            var url = urlBuilder.Build(new object[] { 2881, 2 });
+
+            //Assert
+            Assert.Equal("foo/v1/docs/2881/signature-validation-result?mode=2", url);
+        }
+
         [Api("foo")]
         interface IContract
         {
@@ -41,6 +58,9 @@ namespace MyLab.ApiClient.UnitTests
 
             [ApiPost(RelPath = "bar")]
             Task WithQueryArg([QueryParam]int index);
+
+            [ApiPost(RelPath = "v1/docs/{id}/signature-validation-result")]
+            Task WithQueryAndPathArg([PathParam] int id, [QueryParam]int mode);
         }
 
         [Api]
