@@ -19,6 +19,9 @@ namespace MyLab.ApiClient
         /// </summary>
         public string RelPath { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="ApiMethodAttribute"/>
+        /// </summary>
         public ApiMethodAttribute(HttpMethod httpMethod)
         {
             HttpMethod = httpMethod;
@@ -30,6 +33,18 @@ namespace MyLab.ApiClient
     /// </summary> 
     public class ApiGetAttribute : ApiMethodAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="ApiGetAttribute"/>
+        /// </summary>
+        public ApiGetAttribute(string repPath)
+            :this()
+        {
+            RelPath = RelPath;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ApiGetAttribute"/>
+        /// </summary>
         public ApiGetAttribute() : base(HttpMethod.Get)
         {
         }
@@ -40,6 +55,18 @@ namespace MyLab.ApiClient
     /// </summary>
     public class ApiPostAttribute : ApiMethodAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="ApiPostAttribute"/>
+        /// </summary>
+        public ApiPostAttribute(string repPath)
+            :this()
+        {
+            RelPath = RelPath;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ApiPostAttribute"/>
+        /// </summary>
         public ApiPostAttribute() : base(HttpMethod.Post)
         {
         }
@@ -50,6 +77,18 @@ namespace MyLab.ApiClient
     /// </summary>
     public class ApiPutAttribute : ApiMethodAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="ApiPutAttribute"/>
+        /// </summary>
+        public ApiPutAttribute(string repPath)
+            :this()
+        {
+            RelPath = RelPath;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ApiPutAttribute"/>
+        /// </summary>
         public ApiPutAttribute() : base(HttpMethod.Put)
         {
         }
@@ -60,6 +99,18 @@ namespace MyLab.ApiClient
     /// </summary>
     public class ApiHeadAttribute : ApiMethodAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="ApiHeadAttribute"/>
+        /// </summary>
+        public ApiHeadAttribute(string repPath)
+            :this()
+        {
+            RelPath = RelPath;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ApiHeadAttribute"/>
+        /// </summary>
         public ApiHeadAttribute() : base(HttpMethod.Head)
         {
         }
@@ -70,6 +121,18 @@ namespace MyLab.ApiClient
     /// </summary>
     public class ApiDeleteAttribute : ApiMethodAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="ApiDeleteAttribute"/>
+        /// </summary>
+        public ApiDeleteAttribute(string repPath)
+            :this()
+        {
+            RelPath = RelPath;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ApiDeleteAttribute"/>
+        /// </summary>
         public ApiDeleteAttribute() : base(HttpMethod.Delete)
         {
         }
