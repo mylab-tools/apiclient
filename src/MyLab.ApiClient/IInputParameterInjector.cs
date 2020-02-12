@@ -15,7 +15,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="PathParameterInjector"/>
         /// </summary>
-        public PathParameterInjector(IInputParameterFormatter formatter)
+        public PathParameterInjector()
         {
             
         }
@@ -26,7 +26,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="QueryParameterInjector"/>
         /// </summary>
-        public QueryParameterInjector(IInputParameterFormatter formatter)
+        public QueryParameterInjector()
         {
             
         }
@@ -39,7 +39,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="HeaderParameterInjector"/>
         /// </summary>
-        public HeaderParameterInjector(string headerName, IInputParameterFormatter formatter)
+        public HeaderParameterInjector(string headerName)
         {
             if (string.IsNullOrWhiteSpace(headerName))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(headerName));
@@ -52,7 +52,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="BodyParameterInjector"/>
         /// </summary>
-        public BodyParameterInjector(IInputParameterFormatter formatter)
+        public BodyParameterInjector()
         {
             
         }

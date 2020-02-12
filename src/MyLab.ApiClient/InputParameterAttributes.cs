@@ -5,16 +5,20 @@ namespace MyLab.ApiClient
     /// <summary>
     /// The base class for input parameter attributes
     /// </summary>
-    public class InputParameterAttribute : ApiMarkupAttribute
+    public class ApiInputParameterAttribute : ApiMarkupAttribute
     {
+        public IInputParameterFormatter Formatter { get; }
         public IInputParameterInjector Injector { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="InputParameterAttribute"/>
+        /// Initializes a new instance of <see cref="ApiInputParameterAttribute"/>
         /// </summary>
-        protected InputParameterAttribute(IInputParameterInjector injector)
+        protected ApiInputParameterAttribute(
+            IInputParameterInjector injector,
+            IInputParameterFormatter formatter)
         {
             Injector = injector;
+            Formatter = formatter;
         }
     }
 
@@ -22,13 +26,13 @@ namespace MyLab.ApiClient
     /// Define parameter place in end-point URL path
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class PathAttribute : InputParameterAttribute
+    public class PathAttribute : ApiInputParameterAttribute
     {
         /// <summary>
         /// Initializes a new instance of <see cref="PathAttribute"/>
         /// </summary>
         public PathAttribute()
-            :base(new PathParameterInjector(new StringParameterFormatter()))
+            :base(new PathParameterInjector(), new StringParameterFormatter())
         {
             
         }
@@ -38,13 +42,13 @@ namespace MyLab.ApiClient
     /// Define parameter place in end-point URL query
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class QueryAttribute : InputParameterAttribute
+    public class QueryAttribute : ApiInputParameterAttribute
     {
         /// <summary>
         /// Initializes a new instance of <see cref="QueryAttribute"/>
         /// </summary>
         public QueryAttribute()
-            : base(new QueryParameterInjector(new UrlFormParameterFormatter()))
+            : base(new QueryParameterInjector(),new UrlFormParameterFormatter())
         {
 
         }
@@ -54,7 +58,7 @@ namespace MyLab.ApiClient
     /// Define parameter place in request header
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class HeaderAttribute : InputParameterAttribute
+    public class HeaderAttribute : ApiInputParameterAttribute
     {
         /// <summary>
         /// Initializes a new instance of <see cref="HeaderAttribute"/>
@@ -68,7 +72,7 @@ namespace MyLab.ApiClient
         /// Initializes a new instance of <see cref="HeaderAttribute"/>
         /// </summary>
         protected HeaderAttribute(string headerName, IInputParameterFormatter formatter)
-            : base(new HeaderParameterInjector(headerName, formatter))
+            : base(new HeaderParameterInjector(headerName), formatter)
         {
         }
     }
@@ -101,13 +105,13 @@ namespace MyLab.ApiClient
     /// Define parameter place in request body
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class BodyAttribute : InputParameterAttribute
+    public class BodyAttribute : ApiInputParameterAttribute
     {
         /// <summary>
         /// Initializes a new instance of <see cref="BodyAttribute"/>
         /// </summary>
         protected BodyAttribute(IInputParameterFormatter formatter)
-            : base(new BodyParameterInjector(formatter))
+            : base(new BodyParameterInjector(), formatter)
         {
 
         }
@@ -122,7 +126,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="AttributeTargets"/>
         /// </summary>
-        protected JsonBodyAttribute()
+        public JsonBodyAttribute()
             : base(new JsonParameterFormatter())
         {
         }
@@ -137,7 +141,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="XmlBodyAttribute"/>
         /// </summary>
-        protected XmlBodyAttribute()
+        public XmlBodyAttribute()
             : base(new XmlParameterFormatter())
         {
         }
@@ -152,7 +156,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="StringBodyAttribute"/>
         /// </summary>
-        protected StringBodyAttribute()
+        public StringBodyAttribute()
             : base(new StringParameterFormatter())
         {
         }
