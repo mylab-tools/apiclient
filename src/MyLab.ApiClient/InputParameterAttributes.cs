@@ -28,7 +28,7 @@ namespace MyLab.ApiClient
         /// Initializes a new instance of <see cref="PathAttribute"/>
         /// </summary>
         public PathAttribute()
-            :base(new PathParameterInjector())
+            :base(new PathParameterInjector(new StringParameterFormatter()))
         {
             
         }
@@ -44,7 +44,7 @@ namespace MyLab.ApiClient
         /// Initializes a new instance of <see cref="QueryAttribute"/>
         /// </summary>
         public QueryAttribute()
-            : base(new QueryParameterInjector())
+            : base(new QueryParameterInjector(new UrlFormParameterFormatter()))
         {
 
         }
@@ -60,7 +60,39 @@ namespace MyLab.ApiClient
         /// Initializes a new instance of <see cref="HeaderAttribute"/>
         /// </summary>
         public HeaderAttribute(string headerName)
-            : base(new HeaderParameterInjector(headerName))
+            : this(headerName, new StringParameterFormatter())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="HeaderAttribute"/>
+        /// </summary>
+        protected HeaderAttribute(string headerName, IInputParameterFormatter formatter)
+            : base(new HeaderParameterInjector(headerName, formatter))
+        {
+        }
+    }
+
+    /// <summary>
+    /// Define parameter place in request header with JSON format
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class JsonHeaderAttribute : HeaderAttribute
+    {
+        public JsonHeaderAttribute(string headerName) 
+            : base(headerName, new JsonParameterFormatter())
+        {
+        }
+    }
+
+    /// <summary>
+    /// Define parameter place in request header with XML format
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class XmlHeaderAttribute : HeaderAttribute
+    {
+        public XmlHeaderAttribute(string headerName)
+            : base(headerName, new XmlParameterFormatter())
         {
         }
     }
@@ -74,10 +106,55 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="BodyAttribute"/>
         /// </summary>
-        public BodyAttribute()
-            : base(new BodyParameterInjector())
+        protected BodyAttribute(IInputParameterFormatter formatter)
+            : base(new BodyParameterInjector(formatter))
         {
 
+        }
+    }
+
+    /// <summary>
+    /// Define parameter place in request body with JSON format
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class JsonBodyAttribute : BodyAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of <see cref="AttributeTargets"/>
+        /// </summary>
+        protected JsonBodyAttribute()
+            : base(new JsonParameterFormatter())
+        {
+        }
+    }
+
+    /// <summary>
+    /// Define parameter place in request body with XML format
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class XmlBodyAttribute : BodyAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of <see cref="XmlBodyAttribute"/>
+        /// </summary>
+        protected XmlBodyAttribute()
+            : base(new XmlParameterFormatter())
+        {
+        }
+    }
+
+    /// <summary>
+    /// Define parameter place in request body with XML format
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class StringBodyAttribute : BodyAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of <see cref="StringBodyAttribute"/>
+        /// </summary>
+        protected StringBodyAttribute()
+            : base(new StringParameterFormatter())
+        {
         }
     }
 }
