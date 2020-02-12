@@ -36,7 +36,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="GetAttribute"/>
         /// </summary>
-        public GetAttribute(string url)
+        public GetAttribute(string url = null)
             :base(url, "GET")
         {
         }

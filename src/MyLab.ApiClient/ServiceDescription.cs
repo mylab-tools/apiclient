@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -6,8 +7,14 @@ namespace MyLab.ApiClient
 {
     class ServiceDescription<TContract>
     {
-        public string Url { get; private set; }
-        public IReadOnlyDictionary<int, MethodDescription> Methods { get; private set; }
+        public string Url { get; }
+        public IReadOnlyDictionary<int, MethodDescription> Methods { get; }
+        
+        ServiceDescription(string url, IDictionary<int, MethodDescription> methods)
+        {
+            Url = url;
+            Methods = new Dictionary<int, MethodDescription>(methods);
+        }
         
         public static ServiceDescription<TContract> Create()
         {
@@ -20,26 +27,27 @@ namespace MyLab.ApiClient
             if(serviceAttr == null)
                 throw new ApiContractException($"An API contract must be marked with attribute '{typeof(ApiAttribute).FullName}'");
 
-            return new ServiceDescription<TContract>
-            {
-                Url = serviceAttr.Url,
-                Methods = t
+            return new ServiceDescription<TContract>(
+                serviceAttr.Url,
+                t
                     .GetMethods()
-                    .ToDictionary(m => m.MetadataToken, MethodDescription.Create)
-            };
+                    .ToDictionary(m => m.MetadataToken, MethodDescription.Create));
         }
     }
 
     class MethodDescription
     {
-        public string Url { get; private set; }
-        public string HttpMethod { get; private set; }
+        public string Url { get; }
+        public string HttpMethod { get; }
         
-        public IReadOnlyDictionary<string, InputParameterDescription> Parameters { get; private set; }
+        public IReadOnlyList<InputParameterDescription> Parameters { get; }
         
-        private MethodDescription()
+        MethodDescription(string url, string httpMethod,
+            IEnumerable<InputParameterDescription> parameters)
         {
-            
+            Url = url;
+            HttpMethod = httpMethod;
+            Parameters = parameters.ToArray();
         }
 
         public static MethodDescription Create(MethodInfo method)
@@ -48,26 +56,24 @@ namespace MyLab.ApiClient
             if(ma == null)
                 throw new ApiContractException($"An API method must be marked with one of inheritors of '{typeof(ApiContractException).FullName}'");
             
-            return new MethodDescription
-            {
-                Url = ma.Url,
-                HttpMethod = ma.HttpMethod,
-                Parameters = method
+            return new MethodDescription(ma.Url, ma.HttpMethod,
+                method
                     .GetParameters()
-                    .ToDictionary(p => p.Name, InputParameterDescription.Create)
-            };
+                    .Select(InputParameterDescription.Create)
+            );
         }
     }
 
     class InputParameterDescription
     {
-        public IInputParameterFormatter Formatter { get; private set; }
-        
-        public IInputParameterInjector Injector { get; private set; }
-        
-        InputParameterDescription()
+        public string Name { get; }
+        public IInputParameterFormatter Formatter { get; }
+        public IInputParameterInjector Injector { get; }
+        private InputParameterDescription(string name, IInputParameterInjector injector, IInputParameterFormatter formatter)
         {
-            
+            Name = name;
+            Injector = injector;
+            Formatter = formatter;
         }
 
         public static InputParameterDescription Create(ParameterInfo p)
@@ -76,11 +82,7 @@ namespace MyLab.ApiClient
             if(pa == null)
                 throw new ApiContractException($"An API method parameter must be marked with one of inheritors of '{typeof(ApiInputParameterAttribute)}'");
             
-            return new InputParameterDescription
-            {
-                Injector = pa.Injector,
-                Formatter = pa.Formatter
-            };
+            return new InputParameterDescription(p.Name, pa.Injector,pa.Formatter);
         }
     }
 }
