@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MyLab.ApiClient.Testing\MyLab.ApiClient.Testing.csproj" />
-    <ProjectReference Include="..\MyLab.ApiClient\MyLab.ApiClient.csproj" />
+    <ProjectReference Include="..\MyLab.ApiClient_old\MyLab.ApiClient_old.csproj" />
     <ProjectReference Include="..\TestServer\TestServer.csproj" />
   </ItemGroup>
 

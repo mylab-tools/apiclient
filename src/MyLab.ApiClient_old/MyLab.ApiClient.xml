@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>MyLab.ApiClient</name>
+        <name>MyLab.ApiClient_old</name>
     </assembly>
     <members>
         <member name="T:MyLab.ApiClient.ApiAttribute">
@@ -74,14 +74,39 @@
             Related path
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.ApiMethodAttribute.#ctor(System.Net.Http.HttpMethod)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiMethodAttribute"/>
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ApiGetAttribute">
             <summary>
             Determines API GET method
             </summary> 
         </member>
+        <member name="M:MyLab.ApiClient.ApiGetAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiGetAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiGetAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiGetAttribute"/>
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ApiPostAttribute">
             <summary>W
             Determines API POST method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiPostAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiPostAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiPostAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiPostAttribute"/>
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.ApiPutAttribute">
@@ -89,14 +114,44 @@
             Determines API PUT method
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.ApiPutAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiPutAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiPutAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiPutAttribute"/>
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ApiHeadAttribute">
             <summary>
             Determines API HEAD method
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.ApiHeadAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiHeadAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiHeadAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiHeadAttribute"/>
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ApiDeleteAttribute">
             <summary>
             Determines API DELETE method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiDeleteAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiDeleteAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiDeleteAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiDeleteAttribute"/>
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.ApiParamPlace">

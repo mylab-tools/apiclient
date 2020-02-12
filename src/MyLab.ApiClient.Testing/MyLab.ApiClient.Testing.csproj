@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyLab.ApiClient\MyLab.ApiClient.csproj" />
+    <ProjectReference Include="..\MyLab.ApiClient_old\MyLab.ApiClient_old.csproj" />
   </ItemGroup>
 
 </Project>
