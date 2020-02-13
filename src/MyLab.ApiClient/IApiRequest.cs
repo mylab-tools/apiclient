@@ -3,7 +3,7 @@ namespace MyLab.ApiClient
     /// <summary>
     /// Provides ability to call web api service
     /// </summary>
-    public interface IApiCallExpression
+    public interface IApiRequest
     {
         void Call();
     }
@@ -11,7 +11,7 @@ namespace MyLab.ApiClient
     /// <summary>
     /// Provides ability to call web api service
     /// </summary>
-    public interface IApiCallExpression<TRes>
+    public interface IApiRequest<TRes>
     {
         TRes Call();
     }

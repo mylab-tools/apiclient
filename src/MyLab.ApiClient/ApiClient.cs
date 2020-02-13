@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
@@ -15,66 +16,54 @@ namespace MyLab.ApiClient
     /// <typeparam name="TContract">API contract</typeparam>
     public class ApiClient<TContract>
     {
-        private ServiceDescription<TContract> _description;
+        private readonly ServiceDescription<TContract> _description;
+        private readonly IHttpClientProvider _httpClientProvider;
 
-        private IHttpClientFactory _httpClientFactory;
-
-        private ApiClient(ServiceDescription<TContract> description, IHttpClientFactory httpClientFactory)
+        private ApiClient(ServiceDescription<TContract> description, IHttpClientProvider httpClientProvider)
         {
-            _description = description;
-            _httpClientFactory = httpClientFactory;
-        }
-
-        /// <summary>
-        /// Creates API client based on http client factory with default service name
-        /// </summary>
-        public static ApiClient<TContract> Create(IHttpClientFactory clientFactory)
-        {
-            return Create(clientFactory, Options.DefaultName);
+            _description = description ?? throw new ArgumentNullException(nameof(description));
+            _httpClientProvider = httpClientProvider ?? throw new ArgumentNullException(nameof(httpClientProvider));
         }
         
         /// <summary>
         /// Creates API client based on http client factory with specified service name
         /// </summary>
-        public static ApiClient<TContract> Create(IHttpClientFactory clientFactory, string serviceName)
+        public static ApiClient<TContract> Create(IHttpClientProvider httpClientProvider)
         {
-            if (clientFactory == null) throw new ArgumentNullException(nameof(clientFactory));
-            if (serviceName == null) throw new ArgumentNullException(nameof(serviceName));
-
             return new ApiClient<TContract>(
                 ServiceDescription<TContract>.Create(),
-                clientFactory);
+                httpClientProvider);
         }
 
-        public IApiCallExpression Expression(Expression<Action<TContract>> serviceCallExpr)
+        public IApiRequest Request(Expression<Action<TContract>> serviceCallExpr)
         {
             if(!(serviceCallExpr.Body is MethodCallExpression mExpr))
                 throw new NotSupportedException("Only method calls are supported");
             
             var exprParams = GetParametersForExpression(mExpr);
             
-            return new ApiCallExpressionWithoutReturnValue(
+            return new ApiRequestWithoutReturnValue(
                 _description.Url, 
                 exprParams.MethodDescription,
-                exprParams.Parameters,
-                _httpClientFactory);
+                exprParams.Appliers,
+                _httpClientProvider);
         }
 
-        public IApiCallExpression<TRes> Expression<TRes>(Expression<Func<TContract, TRes>> serviceCallExpr)
+        public IApiRequest<TRes> Request<TRes>(Expression<Func<TContract, TRes>> serviceCallExpr)
         {
             if(!(serviceCallExpr.Body is MethodCallExpression mExpr))
                 throw new NotSupportedException("Only method calls are supported");
             
             var exprParams = GetParametersForExpression(mExpr);
             
-            return new ApiCallExpressionWithReturnValue<TRes>(
+            return new ApiRequestWithReturnValue<TRes>(
                 _description.Url, 
                 exprParams.MethodDescription,
-                exprParams.Parameters,
-                _httpClientFactory);
+                exprParams.Appliers,
+                _httpClientProvider);
         }
 
-        (MethodDescription MethodDescription, IEnumerable<ApiCallParameter> Parameters) GetParametersForExpression(MethodCallExpression serviceCallExpr)
+        (MethodDescription MethodDescription, IEnumerable<IParameterApplier> Appliers) GetParametersForExpression(MethodCallExpression serviceCallExpr)
         {
             if(!(serviceCallExpr is MethodCallExpression mExpr))
                 throw new NotSupportedException("Only method calls are supported");
@@ -83,15 +72,28 @@ namespace MyLab.ApiClient
 
             var args = mExpr.Arguments;
             
-            if(args.Count != mDesc.Parameters.Count)
-                throw new ApiClientException("Parameters number mismatch");
+            if(args.Count != mDesc.Parameters.UrlParams.Count+ mDesc.Parameters.ContentParams.Count+ mDesc.Parameters.HeaderParams.Count)
+                throw new ApiClientException("ParamAppliers number mismatch");
             
-            var callParams = new List<ApiCallParameter>();
+            var callParams = new List<IParameterApplier>();
 
-            for (int i = 0; i < args.Count; i++)
-            {
-                callParams.Add(new ApiCallParameter(mDesc.Parameters[i], args[i]));
-            }
+            callParams.AddRange(mDesc.Parameters.UrlParams.Select(d => 
+                new UrlParameterApplier(
+                    d, 
+                    new DefaultApiRequestParameterValueProvider(args[d.Position])
+                    )));
+
+            callParams.AddRange(mDesc.Parameters.HeaderParams.Select(d =>
+                new HeaderParameterApplier(
+                    d,
+                    new DefaultApiRequestParameterValueProvider(args[d.Position])
+                )));
+
+            callParams.AddRange(mDesc.Parameters.ContentParams.Select(d =>
+                new ContentParameterApplier(
+                    d,
+                    new DefaultApiRequestParameterValueProvider(args[d.Position])
+                )));
 
             return (mDesc, callParams);
         }

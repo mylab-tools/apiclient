@@ -12,22 +12,22 @@ namespace UnitTests
         public void ShouldFailWhenExpressionIsNotMethodCall()
         {
             //Arrange
-            var httpClFactory = new Mock<IHttpClientFactory>().Object;
-            var client = ApiClient<IContract>.Create(httpClFactory);
+            var httpClientProvider = new Mock<IHttpClientProvider>().Object;
+            var client = ApiClient<IContract>.Create(httpClientProvider);
             
             //Act & Assert
-            Assert.Throws<NotSupportedException>(() => client.Expression(c => c.Foo() > 2));
+            Assert.Throws<NotSupportedException>(() => client.Request(c => c.Foo() > 2));
         }
         
         [Fact]
         public void ShouldPassWhenExpressionIsMethodCall()
         {
             //Arrange
-            var httpClFactory = new Mock<IHttpClientFactory>().Object;
-            var client = ApiClient<IContract>.Create(httpClFactory);
+            var httpClientProvider = new Mock<IHttpClientProvider>().Object;
+            var client = ApiClient<IContract>.Create(httpClientProvider);
             
             //Act & Assert
-            client.Expression(c => c.Foo());
+            client.Request(c => c.Foo());
         }
 
         [Api]

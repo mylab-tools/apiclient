@@ -1,3 +1,4 @@
+using System.Net.Http;
 using MyLab.ApiClient;
 using Xunit;
 
@@ -25,7 +26,7 @@ namespace UnitTests
             var d = MethodDescription.Create(mi);
             
             //Assert
-            Assert.Equal("GET", d.HttpMethod);
+            Assert.Equal(HttpMethod.Get, d.HttpMethod);
             Assert.Equal("/foo", d.Url);
         }
 

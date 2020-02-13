@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 
 namespace MyLab.ApiClient
 {
@@ -15,12 +16,12 @@ namespace MyLab.ApiClient
         /// <summary>
         /// HTTP method
         /// </summary>
-        public string HttpMethod { get; }
+        public HttpMethod HttpMethod { get; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="ApiMethodAttribute"/>
         /// </summary>
-        protected ApiMethodAttribute(string url, string httpMethod)
+        protected ApiMethodAttribute(string url, HttpMethod httpMethod)
         {
             Url = url;
             HttpMethod = httpMethod;
@@ -37,7 +38,7 @@ namespace MyLab.ApiClient
         /// Initializes a new instance of <see cref="GetAttribute"/>
         /// </summary>
         public GetAttribute(string url = null)
-            :base(url, "GET")
+            :base(url, HttpMethod.Get)
         {
         }
     }
@@ -52,7 +53,7 @@ namespace MyLab.ApiClient
         /// Initializes a new instance of <see cref="HeadAttribute"/>
         /// </summary>
         public HeadAttribute(string url)
-            : base(url, "HEAD")
+            : base(url, HttpMethod.Head)
         {
         }
     }
@@ -67,7 +68,7 @@ namespace MyLab.ApiClient
         /// Initializes a new instance of <see cref="PostAttribute"/>
         /// </summary>
         public PostAttribute(string url)
-            : base(url, "POST")
+            : base(url, HttpMethod.Post)
         {
         }
     }
@@ -82,7 +83,7 @@ namespace MyLab.ApiClient
         /// Initializes a new instance of <see cref="PutAttribute"/>
         /// </summary>
         public PutAttribute(string url)
-            : base(url, "PUT")
+            : base(url, HttpMethod.Put)
         {
         }
     }
@@ -97,22 +98,7 @@ namespace MyLab.ApiClient
         /// Initializes a new instance of <see cref="DeleteAttribute"/>
         /// </summary>
         public DeleteAttribute(string url)
-            : base(url, "DELETE")
-        {
-        }
-    }
-
-    /// <summary>
-    /// PATCH HTTP method
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method)]
-    public class PatchAttribute : ApiMethodAttribute
-    {
-        /// <summary>
-        /// Initializes a new instance of <see cref="PatchAttribute"/>
-        /// </summary>
-        public PatchAttribute(string url)
-            : base(url, "PATCH")
+            : base(url, HttpMethod.Delete)
         {
         }
     }
