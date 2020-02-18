@@ -45,7 +45,6 @@ namespace MyLab.ApiClient
         }
 
         public ApiRequest<TRes> Request<TRes>(Expression<Func<TContract, TRes>> serviceCallExpr)
-            where TRes : class
         {
             if(!(serviceCallExpr.Body is MethodCallExpression mExpr))
                 throw new NotSupportedException("Only method calls are supported");

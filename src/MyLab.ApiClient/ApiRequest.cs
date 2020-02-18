@@ -11,9 +11,7 @@ namespace MyLab.ApiClient
     /// <summary>
     /// Provides abilities to tune and send request
     /// </summary>
-    /// <typeparam name="TContent"></typeparam>
-    public class ApiRequest<TContent>
-     where TContent : class
+    public class ApiRequest<TRes>
     {
         /// <summary>
         /// Gets request modifiers collection
@@ -47,7 +45,7 @@ namespace MyLab.ApiClient
             ExpectedCodes.AddRange(_methodDescription.ExpectedStatusCodes);
         }
 
-        protected ApiRequest(ApiRequest<TContent> origin)
+        protected ApiRequest(ApiRequest<TRes> origin)
             :this(origin._baseUrl, origin._methodDescription, origin._paramAppliers, origin._httpClientProvider)
         {
             RequestModifiers.AddRange(origin.RequestModifiers);
@@ -56,9 +54,16 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Clones an object
         /// </summary>
-        public ApiRequest<TContent> Clone()
+        public ApiRequest<TRes> Clone()
         {
-            return new ApiRequest<TContent>(this);
+            return new ApiRequest<TRes>(this);
+        }
+
+        public async Task<TRes> Send(CancellationToken cancellationToken)
+        {
+            var resp = await SendRequestAsync(cancellationToken);
+
+            return await ResponseProcessing.DeserializeContent<TRes>(resp.Content);
         }
 
         private async Task<HttpResponseMessage> SendRequestAsync(CancellationToken cancellationToken)
