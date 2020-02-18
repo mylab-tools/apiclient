@@ -1,46 +1,77 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MyLab.ApiClient
 {
-    class ApiRequestBase
+    /// <summary>
+    /// Provides abilities to tune and send request
+    /// </summary>
+    /// <typeparam name="TContent"></typeparam>
+    public class ApiRequest<TContent>
+     where TContent : class
     {
+        /// <summary>
+        /// Gets request modifiers collection
+        /// </summary>
         public List<IRequestMessageModifier> RequestModifiers { get; }
             = new List<IRequestMessageModifier>();
 
-        protected string BaseUrl { get; }
-        protected MethodDescription MethodDescription { get; }
-        protected IHttpClientProvider HttpClientProvider { get; }
-        protected IReadOnlyList<IParameterApplier> ParamAppliers { get; }
+        /// <summary>
+        /// Contains expected response http status codes
+        /// </summary>
+        public List<HttpStatusCode> ExpectedCodes { get; }
+            = new List<HttpStatusCode>();
 
-        protected ApiRequestBase(
+        private readonly string _baseUrl;
+        private readonly MethodDescription _methodDescription;
+        private readonly IHttpClientProvider _httpClientProvider;
+        private readonly IReadOnlyList<IParameterApplier> _paramAppliers;
+
+        internal ApiRequest(
             string baseUrl,
             MethodDescription methodDescription, 
             IEnumerable<IParameterApplier> paramAppliers,
             IHttpClientProvider httpClientProvider)
         {
             if (paramAppliers == null) throw new ArgumentNullException(nameof(paramAppliers));
-            BaseUrl = baseUrl;
-            MethodDescription = methodDescription ?? throw new ArgumentNullException(nameof(methodDescription));
-            HttpClientProvider = httpClientProvider ?? throw new ArgumentNullException(nameof(httpClientProvider));
-            ParamAppliers = paramAppliers.ToList().AsReadOnly();
+            _baseUrl = baseUrl;
+            _methodDescription = methodDescription ?? throw new ArgumentNullException(nameof(methodDescription));
+            _httpClientProvider = httpClientProvider ?? throw new ArgumentNullException(nameof(httpClientProvider));
+            _paramAppliers = paramAppliers.ToList().AsReadOnly();
+
+            ExpectedCodes.AddRange(_methodDescription.ExpectedStatusCodes);
         }
 
-        protected async Task<HttpResponseMessage> SendRequestAsync(CancellationToken cancellationToken)
+        protected ApiRequest(ApiRequest<TContent> origin)
+            :this(origin._baseUrl, origin._methodDescription, origin._paramAppliers, origin._httpClientProvider)
         {
-            var cl = HttpClientProvider.Provide();
+            RequestModifiers.AddRange(origin.RequestModifiers);
+        }
+
+        /// <summary>
+        /// Clones an object
+        /// </summary>
+        public ApiRequest<TContent> Clone()
+        {
+            return new ApiRequest<TContent>(this);
+        }
+
+        private async Task<HttpResponseMessage> SendRequestAsync(CancellationToken cancellationToken)
+        {
+            var cl = _httpClientProvider.Provide();
 
             var reqMsg = new HttpRequestMessage
             {
-                Method = MethodDescription.HttpMethod,
+                Method = _methodDescription.HttpMethod,
             };
 
 
-            ApplyInputParameters(reqMsg);
+            ApplyParameters(reqMsg);
 
             ApplyModifiers(reqMsg);
 
@@ -51,9 +82,12 @@ namespace MyLab.ApiClient
             return response;
         }
 
-        private void ApplyInputParameters(HttpRequestMessage reqMsg)
+        private void ApplyParameters(HttpRequestMessage reqMsg)
         {
-            
+            foreach (var pApplier in _paramAppliers)
+            {
+                pApplier.Apply(reqMsg);
+            }
         }
 
         private void ApplyModifiers(HttpRequestMessage reqMsg)
@@ -73,41 +107,11 @@ namespace MyLab.ApiClient
 
         private void CheckResponseCode(HttpResponseMessage response)
         {
-            throw new NotImplementedException();
-        }
-    }
-
-    class ApiRequestWithReturnValue<TValue> : ApiRequestBase, IApiRequest<TValue>
-    {
-        public ApiRequestWithReturnValue(
-            string baseUrl, 
-            MethodDescription methodDescription, 
-            IEnumerable<IParameterApplier> paramAppliers,
-            IHttpClientProvider httpClientProvider) 
-            : base(baseUrl, methodDescription, paramAppliers, httpClientProvider)
-        {
-        }
-        
-        public TValue Call()
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-    
-    class ApiRequestWithoutReturnValue : ApiRequestBase, IApiRequest
-    {
-        public ApiRequestWithoutReturnValue(
-            string baseUrl, 
-            MethodDescription methodDescription, 
-            IEnumerable<IParameterApplier> paramAppliers,
-            IHttpClientProvider httpClientProvider) 
-            : base(baseUrl, methodDescription, paramAppliers, httpClientProvider)
-        {
-        }
-
-        public void Call()
-        {
-            throw new System.NotImplementedException();
+            if (response.StatusCode != HttpStatusCode.OK &&
+                !ExpectedCodes.Contains(response.StatusCode))
+            {
+                throw new ResponseCodeException(response.StatusCode, response.ReasonPhrase);
+            }
         }
     }
 }

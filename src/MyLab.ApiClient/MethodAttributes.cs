@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 
 namespace MyLab.ApiClient
@@ -100,6 +101,26 @@ namespace MyLab.ApiClient
         public DeleteAttribute(string url)
             : base(url, HttpMethod.Delete)
         {
+        }
+    }
+
+    /// <summary>
+    /// Determines expected response HTTP code
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    public class ExpectedCodeAttribute : ApiMarkupAttribute
+    {
+        /// <summary>
+        /// Expected response HTTP code
+        /// </summary>
+        public HttpStatusCode ExpectedCode { get; }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ExpectedCodeAttribute"/>
+        /// </summary>
+        public ExpectedCodeAttribute(HttpStatusCode expectedCode)
+        {
+            ExpectedCode = expectedCode;
         }
     }
 }

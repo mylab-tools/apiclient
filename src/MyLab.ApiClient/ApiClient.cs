@@ -1,12 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Net;
-using System.Net.Http;
-using System.Reflection;
-using Microsoft.Extensions.Options;
 
 namespace MyLab.ApiClient
 {
@@ -35,28 +30,29 @@ namespace MyLab.ApiClient
                 httpClientProvider);
         }
 
-        public IApiRequest Request(Expression<Action<TContract>> serviceCallExpr)
+        public ApiRequest<string> Request(Expression<Action<TContract>> serviceCallExpr)
         {
             if(!(serviceCallExpr.Body is MethodCallExpression mExpr))
                 throw new NotSupportedException("Only method calls are supported");
             
             var exprParams = GetParametersForExpression(mExpr);
             
-            return new ApiRequestWithoutReturnValue(
+            return new ApiRequest<string>(
                 _description.Url, 
                 exprParams.MethodDescription,
                 exprParams.Appliers,
                 _httpClientProvider);
         }
 
-        public IApiRequest<TRes> Request<TRes>(Expression<Func<TContract, TRes>> serviceCallExpr)
+        public ApiRequest<TRes> Request<TRes>(Expression<Func<TContract, TRes>> serviceCallExpr)
+            where TRes : class
         {
             if(!(serviceCallExpr.Body is MethodCallExpression mExpr))
                 throw new NotSupportedException("Only method calls are supported");
             
             var exprParams = GetParametersForExpression(mExpr);
             
-            return new ApiRequestWithReturnValue<TRes>(
+            return new ApiRequest<TRes>(
                 _description.Url, 
                 exprParams.MethodDescription,
                 exprParams.Appliers,
