@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -70,9 +71,12 @@ namespace MyLab.ApiClient
         {
             var cl = _httpClientProvider.Provide();
 
+            var addr = new Uri(_baseUrl.TrimEnd('/') + "/" +  _methodDescription.Url, UriKind.RelativeOrAbsolute);
+
             var reqMsg = new HttpRequestMessage
             {
                 Method = _methodDescription.HttpMethod,
+                RequestUri = addr
             };
 
 
@@ -82,7 +86,7 @@ namespace MyLab.ApiClient
 
             var response = await cl.SendAsync(reqMsg, cancellationToken);
 
-            CheckResponseCode(response);
+            await CheckResponseCode(response);
 
             return response;
         }
@@ -110,12 +114,29 @@ namespace MyLab.ApiClient
             }
         }
 
-        private void CheckResponseCode(HttpResponseMessage response)
+        private async Task CheckResponseCode(HttpResponseMessage response)
         {
             if (response.StatusCode != HttpStatusCode.OK &&
                 !ExpectedCodes.Contains(response.StatusCode))
             {
-                throw new ResponseCodeException(response.StatusCode, response.ReasonPhrase);
+                var contentString = await GetMessageFromResponseContent(response.Content);
+                string msg = !string.IsNullOrWhiteSpace(contentString) 
+                    ? contentString
+                    : response.ReasonPhrase;
+                throw new ResponseCodeException(response.StatusCode, msg);
+            }
+        }
+
+        private async Task<string> GetMessageFromResponseContent(HttpContent responseContent)
+        {
+            var contentStream = await responseContent.ReadAsStreamAsync();
+
+            using (var rdr = new StreamReader(contentStream))
+            {
+                var buff = new char[1024];
+                var read = await rdr.ReadBlockAsync(buff, 0, 1024);
+
+                return new string(buff, 0, read);
             }
         }
     }
