@@ -25,26 +25,23 @@ namespace UnitTests
             //Assert
             Assert.Equal(expectedUrl, modifiedUrl.AbsoluteUri);
         }
-    }
 
-    public class UrlQueryInjectorBehavior
-    {
         [Theory]
-        [InlineData("id", "http://foo.com/orders?user=010&order-id=id")]
-        [InlineData("", "http://foo.com/orders?user=010&order-id=")]
-        [InlineData(null, "http://foo.com/orders?user=010&order-id=")]
-        [InlineData("a>b", "http://foo.com/orders?user=010&order-id=a%3Eb")]
-        public void ShouldInjectParameterToQuery(string paramVal, string expectedUrl)
+        [InlineData("id", "orders/id/description")]
+        [InlineData("", "orders/description")]
+        [InlineData(null, "orders/description")]
+        [InlineData("a>b", "orders/a%3Eb/description")]
+        public void ShouldInjectParameterToPathWithRelative(string paramVal, string expectedUrl)
         {
             //Arrange
-            var injector = new UrlQueryInjector();
-            var originUrl = new Uri("http://foo.com/orders?user=010");
+            var injector = new UrlPathInjector();
+            var originUrl = new Uri("orders/{order-id}/description", UriKind.Relative);
 
             //Act
             var modifiedUrl = injector.Modify(originUrl, "order-id", paramVal);
 
             //Assert
-            Assert.Equal(expectedUrl, modifiedUrl.AbsoluteUri);
+            Assert.Equal(expectedUrl, modifiedUrl.OriginalString);
         }
     }
 }

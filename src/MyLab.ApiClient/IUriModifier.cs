@@ -22,21 +22,32 @@ namespace MyLab.ApiClient
             var strVal = value?.ToString() ?? string.Empty;
             var tag = "{" + paramName + "}";
 
-            var b =new UriBuilder(origin);
-            var decodedPath = HttpUtility.UrlDecode(b.Path);
+            var decodedPath = HttpUtility.UrlDecode(origin.IsAbsoluteUri
+                ? origin.PathAndQuery
+                : origin.OriginalString);
+            string resultPath;
 
             if (!string.IsNullOrWhiteSpace(strVal))
             {
-                b.Path = decodedPath.Replace(tag, strVal);
+                resultPath = decodedPath.Replace(tag, Uri.EscapeDataString(strVal));
             }
             else
             {
-                b.Path = decodedPath
+                resultPath = decodedPath
                     .Replace($"{tag}/", string.Empty)
                     .Replace($"{tag}", string.Empty);
             }
 
-            return b.Uri;
+            if (origin.IsAbsoluteUri)
+            {
+                var b = new UriBuilder(origin.Scheme, origin.Host, origin.Port, resultPath);
+
+                return b.Uri;
+            }
+            else
+            {
+                return new Uri(resultPath, UriKind.Relative);
+            }
         }
     }
 
@@ -44,14 +55,23 @@ namespace MyLab.ApiClient
     {
         public Uri Modify(Uri origin, string paramName, object value)
         {
-            var strVal = value?.ToString() ?? string.Empty;
+            var strVal = Uri.EscapeDataString(value?.ToString() ?? string.Empty);
 
-            var b = new UriBuilder(origin);
-            var querySeparator = string.IsNullOrEmpty(b.Query) ? string.Empty : "&";
+            var uriStr = origin.OriginalString;
+            var queryStart = uriStr.IndexOf("?", StringComparison.InvariantCulture);
 
-            b.Query += $"{querySeparator}{paramName}={strVal}";
+            var originQuery = queryStart != -1
+                ? uriStr.Substring(queryStart + 1)
+                : string.Empty;
 
-            return b.Uri;
+            var querySeparator = string.IsNullOrEmpty(originQuery) ? string.Empty : "&";
+            var query = originQuery + $"{querySeparator}{paramName}={strVal}";
+
+            
+            var uriWithoutQuery = queryStart >= 0 ? uriStr.Remove(queryStart) : uriStr;
+
+            var queryBegin = string.IsNullOrWhiteSpace(query) ? string.Empty : "?";
+            return new Uri($"{uriWithoutQuery}{queryBegin}{query}", UriKind.RelativeOrAbsolute);
         }
     }
 }

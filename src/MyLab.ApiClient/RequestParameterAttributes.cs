@@ -60,14 +60,14 @@ namespace MyLab.ApiClient
     /// Determines api request parameter which place in header
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class HeaderParameterAttribute : ApiParameterAttribute
+    public class HeaderAttribute : ApiParameterAttribute
     {
         public string Name { get; }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="HeaderParameterAttribute"/>
+        /// Initializes a new instance of <see cref="HeaderAttribute"/>
         /// </summary>
-        public HeaderParameterAttribute(string name = null)
+        public HeaderAttribute(string name = null)
         {
             Name = name;
         }
@@ -117,17 +117,19 @@ namespace MyLab.ApiClient
         }
     }
 
-    /// <summary>
-    /// Determines request parameter which place in content with XML format
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter)]
-    public class UrlFormContentAttribute : ContentParameterAttribute
-    {
-        /// <summary>
-        /// Initializes a new instance of <see cref="UrlFormContentAttribute"/>
-        /// </summary>
-        public UrlFormContentAttribute() : base(new UrlFormHttpContentFactory())
-        {
-        }
-    }
+
+    //TODO: Fix serializer
+    ///// <summary>
+    ///// Determines request parameter which place in content with XML format
+    ///// </summary>
+    //[AttributeUsage(AttributeTargets.Parameter)]
+    //public class FormContentAttribute : ContentParameterAttribute
+    //{
+    //    /// <summary>
+    //    /// Initializes a new instance of <see cref="FormContentAttribute"/>
+    //    /// </summary>
+    //    public FormContentAttribute() : base(new UrlFormHttpContentFactory())
+    //    {
+    //    }
+    //}
 }

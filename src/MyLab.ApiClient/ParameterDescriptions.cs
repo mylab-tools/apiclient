@@ -38,7 +38,7 @@ namespace MyLab.ApiClient
 
                 if (attr is UrlParameterAttribute urlA)
                     urlParams.Add(new UrlRequestParameterDescription(i, urlA.Name ?? p.Name, urlA.UrlModifier));
-                else if (attr is HeaderParameterAttribute hdrA)
+                else if (attr is HeaderAttribute hdrA)
                     headerParams.Add(new HeaderRequestParameterDescription(i, hdrA.Name ?? p.Name));
                 else if (attr is ContentParameterAttribute contA)
                     contentParams.Add(new ContentRequestParameterDescription(i, contA.HttpContentFactory));
