@@ -7,9 +7,10 @@
     <PackageProjectUrl>https://github.com/ozzy-ext-mylab/apiclient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ozzy-ext-mylab/apiclient.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>2.0.0.2002</AssemblyVersion>
-    <FileVersion>2.0.0.2002</FileVersion>
+    <AssemblyVersion>2.0.0.2102</AssemblyVersion>
+    <FileVersion>2.0.0.2102</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
