@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.IO;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using TestServer.Models;
 
 namespace TestServer.Controllers
@@ -50,7 +52,7 @@ namespace TestServer.Controllers
         }
 
         [HttpPost("ping/body/form")]
-        public IActionResult PingForm([FromBody]TestModel model)
+        public IActionResult PingForm([FromForm]TestModel model)
         {
             return Ok(model.TestValue);
         }

@@ -1,5 +1,10 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.Reflection;
+using System.Text;
+using System.Web;
 
 namespace MyLab.ApiClient
 {
@@ -40,10 +45,30 @@ namespace MyLab.ApiClient
         }
     }
 
-    class UrlFormHttpContentFactory : ObjectBasedHttpContentFactory
+    class UrlFormHttpContentFactory : IHttpContentFactory
     {
-        public UrlFormHttpContentFactory() : base(new FormUrlEncodedMediaTypeFormatter())
+        public HttpContent Create(object source)
         {
+            string content = string.Empty;
+
+            if (source != null)
+            {
+                var queryBuilder = new StringBuilder();
+                var props = source.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+                foreach (var prop in props)
+                {
+                    var val = prop.GetValue(source);
+                    queryBuilder.Append($"&{prop.Name}={Uri.EscapeDataString(val.ToString())}");
+                }
+
+                content = queryBuilder.ToString().TrimStart('&');
+            }
+
+            var httpContent = new StringContent(content);
+            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+
+            return httpContent;
         }
     }
 }

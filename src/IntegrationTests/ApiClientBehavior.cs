@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Net;
+using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using MyLab.ApiClient;
@@ -117,9 +119,7 @@ namespace IntegrationTests
             Expression<Func<ITestServer, string>> expr2 = s => s.PingPath("foo");
             Expression<Func<ITestServer, string>> expr3 = s => s.PingHeader("foo");
             Expression<Func<ITestServer, string>> expr4 = s => s.PingObj(testModel);
-            
-            //TODO: Fix serializer
-            //Expression<Func<ITestServer, string>> expr5 = s => s.PingForm(testModel);
+            Expression<Func<ITestServer, string>> expr5 = s => s.PingForm(testModel);
 
             return new List<object[]>
             {
@@ -127,7 +127,7 @@ namespace IntegrationTests
                 new object[] {expr2},
                 new object[] {expr3},
                 new object[] {expr4},
-                //new object[] {expr5}
+                new object[] {expr5}
             };
         }
     }
@@ -160,7 +160,7 @@ namespace IntegrationTests
         [Post("ping/body/obj")]
         string PingObj([JsonContent] TestModel model);
 
-        //[Post("ping/body/form")]
-        //string PingForm([FormContent] TestModel model);
+        [Post("ping/body/form")]
+        string PingForm([FormContent] TestModel model);
     }
 }

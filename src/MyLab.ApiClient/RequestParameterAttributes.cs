@@ -117,19 +117,17 @@ namespace MyLab.ApiClient
         }
     }
 
-
-    //TODO: Fix serializer
-    ///// <summary>
-    ///// Determines request parameter which place in content with XML format
-    ///// </summary>
-    //[AttributeUsage(AttributeTargets.Parameter)]
-    //public class FormContentAttribute : ContentParameterAttribute
-    //{
-    //    /// <summary>
-    //    /// Initializes a new instance of <see cref="FormContentAttribute"/>
-    //    /// </summary>
-    //    public FormContentAttribute() : base(new UrlFormHttpContentFactory())
-    //    {
-    //    }
-    //}
+    /// <summary>
+    /// Determines request parameter which place in content with XML format
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class FormContentAttribute : ContentParameterAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of <see cref="FormContentAttribute"/>
+        /// </summary>
+        public FormContentAttribute() : base(new UrlFormHttpContentFactory())
+        {
+        }
+    }
 }
