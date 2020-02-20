@@ -16,6 +16,14 @@ namespace MyLab.ApiClient
         HttpContent Create(object source);
     }
 
+    class StringHttpContentFactory : IHttpContentFactory
+    {
+        public HttpContent Create(object source)
+        {
+            return new StringContent(source?.ToString() ?? string.Empty);
+        }
+    }
+
     class ObjectBasedHttpContentFactory : IHttpContentFactory
     {
         private readonly MediaTypeFormatter _mediaTypeFormatter;

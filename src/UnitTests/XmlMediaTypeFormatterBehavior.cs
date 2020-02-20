@@ -20,7 +20,8 @@ namespace UnitTests
             var testData = new TestModel {TestValue = "foo"};
             var content = new ObjectContent<TestModel>(testData, new XmlMediaTypeFormatter
             {
-                UseXmlSerializer = true
+                UseXmlSerializer = true,
+                
             });
             var ser = new XmlSerializer(typeof(TestModel));
 

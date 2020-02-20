@@ -127,6 +127,7 @@ namespace IntegrationTests
             Expression<Func<ITestServer, string>> expr4 = s => s.PingXmlObj(testModel);
             Expression<Func<ITestServer, string>> expr5 = s => s.PingJsonObj(testModel);
             Expression<Func<ITestServer, string>> expr6 = s => s.PingForm(testModel);
+            Expression<Func<ITestServer, string>> expr7 = s => s.PingText("foo");
 
             return new List<object[]>
             {
@@ -135,7 +136,8 @@ namespace IntegrationTests
                 new object[] {expr3},
                 new object[] {expr4},
                 new object[] {expr5},
-                new object[] {expr6}
+                new object[] {expr6},
+                new object[] {expr7},
             };
         }
     }
@@ -173,5 +175,8 @@ namespace IntegrationTests
 
         [Post("ping/body/form")]
         string PingForm([FormContent] TestModel model);
+
+        [Post("ping/body/text")]
+        string PingText([StringContent] string msg);
     }
 }

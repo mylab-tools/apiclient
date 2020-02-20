@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -79,6 +80,11 @@ namespace TestServer.Controllers
             return Ok(model.TestValue);
         }
 
-
+        [HttpPost("ping/body/text")]
+        public async Task<IActionResult> PingForm()
+        {
+            var rdr = new StreamReader(Request.Body);
+            return Ok(await rdr.ReadToEndAsync());
+        }
     }
 }
