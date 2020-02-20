@@ -1,128 +1,90 @@
-﻿using System.IO;
-using System.Net.Http;
+﻿using System;
+using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using TestServer.Models;
 
 namespace TestServer.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("test")]
     public class TestController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<string> RootGet()
+        [HttpGet("400")]
+        public IActionResult Get400()
         {
-            return Ok("RootGet");
+            return BadRequest("This is a message");
         }
 
-        [HttpGet("foo/bar")]
-        public ActionResult<string> GetWithPath()
+        [HttpGet("data/xml")]
+        public IActionResult GetXmlData()
         {
-            return Ok("GetWithPath");
+            return Ok("<Root><TestValue>foo</TestValue></Root>");
         }
 
-        [HttpGet("foo/bar/{id}")]
-        public ActionResult<string> GetWithParametrizedPath(string id)
+        [HttpGet("data/json")]
+        public IActionResult GetJsonData()
         {
-            return Ok(id);
+            return Ok("{\"TestValue\":\"foo\"}");
         }
 
-        [HttpGet("foo/bar/q")]
-        public ActionResult<string> GetWithQuery(string id)
+        [HttpPost("ping/query")]
+        public IActionResult PingQuery([FromQuery]string msg)
         {
-            return Ok(id);
+            return Ok(msg);
         }
 
-        [HttpPost("post/bin")]
-        public ActionResult<byte[]> PostBinary()
+        [HttpPost("ping/{msg}/path")]
+        public IActionResult PingPath([FromRoute]string msg)
         {
-            string strContent;
-            using (var reader = new StreamReader(Request.Body))
-                strContent = reader.ReadToEnd();
-
-            var response = Encoding.UTF8.GetBytes(strContent);
-            return Ok(response);
+            return Ok(msg);
         }
 
-        [HttpPost("post/xml-object")]
-        public ContentResult PostXmlObj()
+        [HttpPost("ping/header")]
+        public IActionResult PingHeader([FromHeader(Name = "Message")]string msg)
         {
-            string strData;
+            return Ok(msg);
+        }
 
-            using (var reader = new StreamReader(Request.Body))
-                strData = reader.ReadToEnd();
+        [HttpPost("ping/body/obj/xml")]
+        public async Task<IActionResult> PingObjXml()
+        {
+            var reader = new StreamReader(Request.Body);
+            var strContent = await reader.ReadToEndAsync();
 
-            return new ContentResult
+            var ser = new XmlSerializer(typeof(TestModel));
+            using var strReader = new StringReader(strContent);
+            var rdr = XmlReader.Create(strReader, new XmlReaderSettings
             {
-                Content = strData,
-                ContentType = "application/xml",
-                StatusCode = 200
-            };
+                IgnoreProcessingInstructions = true
+            });
+            var model =(TestModel) ser.Deserialize(rdr);
+
+            return Ok(model.TestValue);
         }
-        
-        [HttpPost("post/bin-xml")]
-        public ContentResult PostBinaryXml()
+
+        [HttpPost("ping/body/obj/json")]
+        public IActionResult PingObjJson([FromBody]TestModel model)
         {
-            string strData;
-
-            using (var reader = new StreamReader(Request.Body))
-                strData = reader.ReadToEnd();
-
-            return new ContentResult
-            {
-                Content = strData,
-                ContentType = "application/xml",
-                StatusCode = 200
-            };
+            return Ok(model.TestValue);
         }
-        
-        [HttpPost("post/str-xml")]
-        public ContentResult PostStringXml()
+
+        [HttpPost("ping/body/form")]
+        public IActionResult PingForm([FromForm]TestModel model)
         {
-            string strData;
-
-            using (var reader = new StreamReader(Request.Body))
-                strData = reader.ReadToEnd();
-
-            return new ContentResult
-            {
-                Content = strData,
-                ContentType = "application/xml",
-                StatusCode = 200
-            };
+            return Ok(model.TestValue);
         }
 
-        [HttpPost("post/header")]
-        public ActionResult<string> PostHeader()
+        [HttpPost("ping/body/text")]
+        public async Task<IActionResult> PingForm()
         {
-            return Ok(Request.Headers["superheader"][0]);
+            var rdr = new StreamReader(Request.Body);
+            return Ok(await rdr.ReadToEndAsync());
         }
-
-        [HttpPost("post/json-object")]
-        public ActionResult<TestObject> PostJsonObj([FromBody]TestObject arg)
-        {
-            return Ok(arg);
-        }
-
-        [HttpPost("post/form-object")]
-        public ActionResult<TestObject> PostFormObj([FromForm]TestObject arg)
-        {
-            return Ok(arg);
-        }
-
-        [HttpGet("get/code")]
-        public ActionResult GetCode(int code, string msg)
-        {
-            return StatusCode(code, msg);
-        }
-    }
-
-    public class TestObject
-    {
-        public string Key { get; set; }
-        public string Value { get; set; }
     }
 }

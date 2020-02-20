@@ -1,56 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace MyLab.ApiClient
 {
     class MethodDescription
     {
+        public string Url { get; }
         public HttpMethod HttpMethod { get; }
-        public string RelPath { get; set; }
-        public Type ReturnType { get; }
 
-        public IEnumerable<ParamDescription> Params { get; }
-
-        public MethodDescription(HttpMethod httpMethod, Type returnType, IEnumerable<ParamDescription> paramDescriptions)
+        public IReadOnlyList<HttpStatusCode> ExpectedStatusCodes { get; }
+        
+        public RequestParametersDescriptions Parameters { get; }
+        
+        public MethodDescription(string url, HttpMethod httpMethod,
+            IEnumerable<HttpStatusCode> expectedCodes,
+            RequestParametersDescriptions parameters)
         {
+            Url = url;
             HttpMethod = httpMethod;
-            ReturnType = returnType;
-
-            var ps = new List<ParamDescription>(paramDescriptions);
-            Params = ps.AsReadOnly();
+            Parameters = parameters;
+            ExpectedStatusCodes= new List<HttpStatusCode>(expectedCodes);
         }
 
-        public static MethodDescription Get(MethodInfo method)
+        public static MethodDescription Create(MethodInfo method)
         {
-            var mAttr = method.GetCustomAttribute<ApiMethodAttribute>();
-            if(mAttr == null)
-                throw new ApiDescriptionException($"Method should be marked by {typeof(ApiMethodAttribute).FullName}");
-            if(!typeof(Task).IsAssignableFrom(method.ReturnType) && 
-               method.ReturnType != typeof(WebApiCall) &&  
-               !(method.ReturnType.IsGenericType && method.ReturnType.GetGenericTypeDefinition() == typeof(WebApiCall<>)))
-                    throw new ApiDescriptionException("Method should be asynchronously (returns Task or Task<>) or returns invocation (WebApiCall or WebApiCall<>)");
-
-            var parameters = method.GetParameters()
-                .Select(ParamDescription.Get)
-                .ToArray();
+            var ma = method.GetCustomAttribute<ApiMethodAttribute>();
+            if(ma == null)
+                throw new ApiContractException($"An API method must be marked with one of inheritors of '{typeof(ApiContractException).FullName}'");
             
-            int bodyCount = parameters.Count(p => p.Place == ApiParamPlace.Body);
-
-            if(bodyCount > 1)
-                throw new ApiDescriptionException("Too many Body parameters. Only single one supported");
-
-            var returnType = method.ReturnType == typeof(Task)
-                ? typeof(void)
-                : method.ReturnType.GenericTypeArguments[0];
-
-            return  new MethodDescription(mAttr.HttpMethod, returnType, parameters)
-            {
-                RelPath = mAttr.RelPath
-            };
+            return new MethodDescription(ma.Url, ma.HttpMethod,
+                method
+                    .GetCustomAttributes<ExpectedCodeAttribute>()
+                    .Select(a => a.ExpectedCode),
+                RequestParametersDescriptions.Create(method));
         }
     }
 }
