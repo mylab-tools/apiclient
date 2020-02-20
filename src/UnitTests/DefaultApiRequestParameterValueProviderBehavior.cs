@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using MyLab.ApiClient;
 using Xunit;
-using Expression = System.Linq.Expressions.Expression;
 
 namespace UnitTests
 {

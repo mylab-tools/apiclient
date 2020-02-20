@@ -67,6 +67,8 @@ namespace MyLab.ApiClient
         {
             var resp = await SendRequestAsync(cancellationToken);
 
+            await IsStatusCodeUnexpected(resp.Response, true);
+
             return await ResponseProcessing.DeserializeContent<TRes>(resp.Response.Content);
         }
 
@@ -81,6 +83,7 @@ namespace MyLab.ApiClient
             var msgDumper = new HttpMessageDumper();
             var reqDump = await msgDumper.Dump(resp.Request);
             var respDump = await msgDumper.Dump(resp.Response);
+            var isUnexpectedStatusCode = await IsStatusCodeUnexpected(resp.Response, false);
 
             return new CallDetails<TRes>
             {
@@ -89,6 +92,8 @@ namespace MyLab.ApiClient
                 ResponseContent = respContent,
                 RequestDump = reqDump,
                 ResponseDump = respDump,
+                StatusCode = resp.Response.StatusCode,
+                IsUnexpectedStatusCode = isUnexpectedStatusCode
             };
         }
 
@@ -109,8 +114,6 @@ namespace MyLab.ApiClient
             ApplyModifiers(reqMsg);
 
             var response = await cl.SendAsync(reqMsg, cancellationToken);
-
-            await CheckResponseCode(response);
 
             return (response, reqMsg);
         }
@@ -138,7 +141,7 @@ namespace MyLab.ApiClient
             }
         }
 
-        private async Task CheckResponseCode(HttpResponseMessage response)
+        private async Task<bool> IsStatusCodeUnexpected(HttpResponseMessage response, bool throwIfTrue)
         {
             if (response.StatusCode != HttpStatusCode.OK &&
                 !ExpectedCodes.Contains(response.StatusCode))
@@ -147,8 +150,16 @@ namespace MyLab.ApiClient
                 string msg = !string.IsNullOrWhiteSpace(contentString) 
                     ? contentString
                     : response.ReasonPhrase;
-                throw new ResponseCodeException(response.StatusCode, msg);
+
+                if(throwIfTrue)
+                    throw new ResponseCodeException(response.StatusCode, msg);
+                else
+                {
+                    return true;
+                }
             }
+
+            return false;
         }
 
         private async Task<string> GetMessageFromResponseContent(HttpContent responseContent)

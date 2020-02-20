@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,6 +36,14 @@ namespace MyLab.ApiClient
         /// Expected response content
         /// </summary>
         public T ResponseContent { get; set; }
+        /// <summary>
+        /// HTTP status code
+        /// </summary>
+        public HttpStatusCode StatusCode { get; set; }
+        /// <summary>
+        /// Gets true if status code is unexpected
+        /// </summary>
+        public bool IsUnexpectedStatusCode { get; set; }
         /// <summary>
         /// Text request dump
         /// </summary>

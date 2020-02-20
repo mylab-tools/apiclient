@@ -105,10 +105,16 @@ namespace IntegrationTests
             //Act
             var resp = await _client
                 .Call(serviceCallExpr)
-                .GetResult();
+                .GetDetailed();
+
+            _output.WriteLine("====== Request ======");
+            _output.WriteLine(resp.RequestDump);
+            _output.WriteLine("====== Response ======");
+            _output.WriteLine(resp.ResponseDump);
 
             //Assert
-            Assert.Equal("foo", resp);
+            Assert.False(resp.IsUnexpectedStatusCode);
+            Assert.Equal("foo", resp.ResponseContent);
         }
 
         public static IEnumerable<object[]> GetSendParametersTests()
@@ -118,8 +124,9 @@ namespace IntegrationTests
             Expression<Func<ITestServer, string>> expr1 = s => s.PingQuery("foo");
             Expression<Func<ITestServer, string>> expr2 = s => s.PingPath("foo");
             Expression<Func<ITestServer, string>> expr3 = s => s.PingHeader("foo");
-            Expression<Func<ITestServer, string>> expr4 = s => s.PingObj(testModel);
-            Expression<Func<ITestServer, string>> expr5 = s => s.PingForm(testModel);
+            Expression<Func<ITestServer, string>> expr4 = s => s.PingXmlObj(testModel);
+            Expression<Func<ITestServer, string>> expr5 = s => s.PingJsonObj(testModel);
+            Expression<Func<ITestServer, string>> expr6 = s => s.PingForm(testModel);
 
             return new List<object[]>
             {
@@ -127,7 +134,8 @@ namespace IntegrationTests
                 new object[] {expr2},
                 new object[] {expr3},
                 new object[] {expr4},
-                new object[] {expr5}
+                new object[] {expr5},
+                new object[] {expr6}
             };
         }
     }
@@ -157,8 +165,11 @@ namespace IntegrationTests
         [Post("ping/header")]
         string PingHeader([Header("Message")] string msg);
 
-        [Post("ping/body/obj")]
-        string PingObj([JsonContent] TestModel model);
+        [Post("ping/body/obj/xml")]
+        string PingXmlObj([XmlContent] TestModel model);
+
+        [Post("ping/body/obj/json")]
+        string PingJsonObj([JsonContent] TestModel model);
 
         [Post("ping/body/form")]
         string PingForm([FormContent] TestModel model);

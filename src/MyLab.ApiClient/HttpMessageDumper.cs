@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -31,6 +32,9 @@ namespace MyLab.ApiClient
         {
             var b = new StringBuilder();
 
+            b.AppendLine($"{(int)msg.StatusCode} {msg.ReasonPhrase}");
+            b.AppendLine();
+
             await Dump(b, msg.Headers, msg.Content, MaxResponseBodySize);
 
             return b.ToString();
@@ -46,33 +50,47 @@ namespace MyLab.ApiClient
             if (rha.Length != 0)
             {
                 foreach (var header in rha)
-                    dumpBuilder.AppendLine($"{header.Key}: {string.Join(", ", header.Value)}");
+                {
+                    var hvs = header.Value.Select(
+                        v => string.IsNullOrWhiteSpace(v)
+                            ? "<empty>"
+                            : v );
+                    dumpBuilder.AppendLine(
+                        $"{header.Key}: {string.Join(", ", hvs)}");
+                }
             }
 
-            var cha = content.Headers.ToArray();
-            if (cha.Length != 0)
+            if (content != null)
             {
-                foreach (var header in cha)
-                    dumpBuilder.AppendLine($"{header.Key}: {string.Join(", ", header.Value)}");
+                var cha = content.Headers.ToArray();
+                if (cha.Length != 0)
+                {
+                    foreach (var header in cha)
+                        dumpBuilder.AppendLine($"{header.Key}: {string.Join(", ", header.Value)}");
+                }
+
+                var buff = new byte[bodyLimit];
+                var strm = await content.ReadAsStreamAsync();
+                strm.Seek(0, SeekOrigin.Begin);
+                int readCount = await strm.ReadAsync(buff, 0, buff.Length);
+                bool contentIsTooLarge = strm.ReadByte() != -1;
+
+                var encodingFromRequest =
+                    content.Headers?.ContentEncoding?.FirstOrDefault();
+                var encoding = encodingFromRequest != null
+                    ? Encoding.GetEncoding(encodingFromRequest)
+                    : Encoding.UTF8;
+
+                var strContent = encoding.GetString(buff, 0, readCount);
+
+                if (strContent.Length != 0)
+                {
+                    dumpBuilder.AppendLine();
+                    dumpBuilder.AppendLine($"{strContent}");
+                    if (contentIsTooLarge)
+                        dumpBuilder.AppendLine(ContentIsTooLargeText);
+                }
             }
-
-            var buff = new byte[bodyLimit];
-            var strm = await content.ReadAsStreamAsync();
-            int readCount = await strm.ReadAsync(buff, 0, buff.Length);
-            bool contentIsTooLarge = strm.ReadByte() != -1;
-
-            var encodingFromRequest = 
-                content.Headers?.ContentEncoding?.FirstOrDefault();
-            var encoding = encodingFromRequest != null
-                ? Encoding.GetEncoding(encodingFromRequest)
-                : Encoding.UTF8;
-
-            var strContent = encoding.GetString(buff, 0, readCount);
-
-            dumpBuilder.AppendLine();
-            dumpBuilder.AppendLine($"{strContent}");
-            if (contentIsTooLarge)
-                dumpBuilder.AppendLine(ContentIsTooLargeText);
 
             return dumpBuilder.ToString();
         }

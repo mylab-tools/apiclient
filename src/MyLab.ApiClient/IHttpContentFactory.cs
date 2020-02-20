@@ -40,7 +40,7 @@ namespace MyLab.ApiClient
 
     class XmlHttpContentFactory : ObjectBasedHttpContentFactory
     {
-        public XmlHttpContentFactory() : base(new XmlMediaTypeFormatter())
+        public XmlHttpContentFactory() : base(new XmlMediaTypeFormatter{UseXmlSerializer = true})
         {
         }
     }

@@ -1,5 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TestServer.Models;
 
@@ -45,8 +50,25 @@ namespace TestServer.Controllers
             return Ok(msg);
         }
 
-        [HttpPost("ping/body/obj")]
-        public IActionResult PingObj([FromBody]TestModel model)
+        [HttpPost("ping/body/obj/xml")]
+        public async Task<IActionResult> PingObjXml()
+        {
+            var reader = new StreamReader(Request.Body);
+            var strContent = await reader.ReadToEndAsync();
+
+            var ser = new XmlSerializer(typeof(TestModel));
+            using var strReader = new StringReader(strContent);
+            var rdr = XmlReader.Create(strReader, new XmlReaderSettings
+            {
+                IgnoreProcessingInstructions = true
+            });
+            var model =(TestModel) ser.Deserialize(rdr);
+
+            return Ok(model.TestValue);
+        }
+
+        [HttpPost("ping/body/obj/json")]
+        public IActionResult PingObjJson([FromBody]TestModel model)
         {
             return Ok(model.TestValue);
         }
