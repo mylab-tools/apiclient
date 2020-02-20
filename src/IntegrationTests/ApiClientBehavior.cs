@@ -36,10 +36,14 @@ namespace IntegrationTests
             //Arrange
 
             //Act & Assert
-            await Assert.ThrowsAsync<ResponseCodeException>(() =>
+            try
             {
-                return _client.Call(s => s.GetUnexpected404()).GetResult();
-            });
+                await _client.Call(s => s.GetUnexpected404()).GetResult();
+            }
+            catch (ResponseCodeException e) when (e.StatusCode == HttpStatusCode.BadRequest)
+            {
+                //Pass
+            }
         }
 
         [Fact]
