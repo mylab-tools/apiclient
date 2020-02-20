@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
@@ -22,10 +23,11 @@ namespace MyLab.ApiClient
             Add(new IntResponseProcessor());
             Add(new UintResponseProcessor());
             Add(new DoubleResponseProcessor());
-            Add(new VoidResponseProcessor());
             Add(new StringResponseProcessor());
+            Add(new TimeSpanResponseProcessor());
+            Add(new DateTimeResponseProcessor());
+            Add(new GuidResponseProcessor());
             Add(new BinaryResponseProcessor());
-            Add(new CodeResultResponseProcessor());
             Add(new StructuredObjectResponseProcessor());
         }
     }
@@ -34,18 +36,7 @@ namespace MyLab.ApiClient
     {
         bool Predicate(Type returnType);
 
-        Task<object> GetResponse(HttpResponseMessage response, Type returnType);
-    }
-
-    class CodeResultResponseProcessor : IResponseProcessor
-    {
-        public bool Predicate(Type returnType) => returnType == typeof(CodeResult);
-
-        /// <inheritdoc />
-        public async Task<object> GetResponse(HttpResponseMessage taskResult, Type returnType)
-        {
-            return await CodeResult.CreateFromHttpMessage(taskResult);
-        }
+        Task<object> GetResponse(HttpContent content, Type returnType);
     }
 
     class VoidResponseProcessor : IResponseProcessor
@@ -53,7 +44,7 @@ namespace MyLab.ApiClient
         public bool Predicate(Type returnType) => returnType == typeof(void);
 
         /// <inheritdoc />
-        public async Task<object> GetResponse(HttpResponseMessage taskResult, Type returnType)
+        public async Task<object> GetResponse(HttpContent content, Type returnType)
         {
             return await Task.FromResult((object)null);
         }
@@ -63,9 +54,9 @@ namespace MyLab.ApiClient
     {
         public bool Predicate(Type returnType) => returnType == typeof(byte[]);
 
-        public async Task<object> GetResponse(HttpResponseMessage taskResult, Type returnType)
+        public async Task<object> GetResponse(HttpContent content, Type returnType)
         {
-            var bin = await taskResult.Content.ReadAsByteArrayAsync();
+            var bin = await content.ReadAsByteArrayAsync();
 
             if (bin.Length != 0 && bin[0] == '\"')
             {
@@ -81,9 +72,9 @@ namespace MyLab.ApiClient
     {
         public bool Predicate(Type returnType) => returnType == typeof(string);
 
-        public async Task<object> GetResponse(HttpResponseMessage taskResult, Type returnType)
+        public async Task<object> GetResponse(HttpContent content, Type returnType)
         {
-            var res = await taskResult.Content.ReadAsStringAsync();
+            var res = await content.ReadAsStringAsync();
             return res.Trim('\"');
         }
     }
@@ -94,10 +85,10 @@ namespace MyLab.ApiClient
             (returnType.IsClass && !returnType.IsAbstract) ||
             (returnType.IsValueType && !returnType.IsPrimitive);
 
-        public async Task<object> GetResponse(HttpResponseMessage taskResult, Type returnType)
+        public async Task<object> GetResponse(HttpContent content, Type returnType)
         {
-            var content = await taskResult.Content.ReadAsStringAsync();
-            var str = content.Trim(' ', '\"');
+            var contentStr = await content.ReadAsStringAsync();
+            var str = contentStr.Trim(' ', '\"');
 
             if (str == "null")
                 return null;
@@ -108,7 +99,7 @@ namespace MyLab.ApiClient
             if (str.StartsWith("{") || str.StartsWith("["))
                 return DeserializeFromJson(str, returnType);
 
-            throw new ResponseProcessingException("Unexpected response payload content. Only XML and JSON are supported for structural object.");
+            throw new ApiClientException("Unexpected response payload content. Only XML and JSON are supported for structural object.");
         }
 
         private object DeserializeFromJson(string str, Type returnType)
@@ -154,10 +145,10 @@ namespace MyLab.ApiClient
         }
 
         /// <inheritdoc />
-        public async Task<object> GetResponse(HttpResponseMessage taskResult, Type returnType)
+        public async Task<object> GetResponse(HttpContent content, Type returnType)
         {
-            var content = await taskResult.Content.ReadAsStringAsync();
-            return Deserialize(content.Trim('\"', ' '));
+            var contentStr = await content.ReadAsStringAsync();
+            return Deserialize(contentStr.Trim('\"', ' '));
         }
 
         protected abstract T Deserialize(string str);
@@ -186,7 +177,7 @@ namespace MyLab.ApiClient
         /// <inheritdoc />
         protected override double Deserialize(string str)
         {
-            return Convert.ToDouble(str);
+            return Convert.ToDouble(str.Replace(",","."), CultureInfo.InvariantCulture);
         }
     }
 
@@ -196,6 +187,33 @@ namespace MyLab.ApiClient
         protected override bool Deserialize(string str)
         {
             return Convert.ToBoolean(str);
+        }
+    }
+
+    class TimeSpanResponseProcessor : PrimitiveResponseProcessor<TimeSpan>
+    {
+        /// <inheritdoc />
+        protected override TimeSpan Deserialize(string str)
+        {
+            return TimeSpan.Parse(str);
+        }
+    }
+
+    class DateTimeResponseProcessor : PrimitiveResponseProcessor<DateTime>
+    {
+        /// <inheritdoc />
+        protected override DateTime Deserialize(string str)
+        {
+            return DateTime.Parse(str, CultureInfo.InvariantCulture);
+        }
+    }
+
+    class GuidResponseProcessor : PrimitiveResponseProcessor<Guid>
+    {
+        /// <inheritdoc />
+        protected override Guid Deserialize(string str)
+        {
+            return Guid.Parse(str);
         }
     }
 }

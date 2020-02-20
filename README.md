@@ -1,22 +1,75 @@
 # MyLab.ApiClient
-For .NET Core 2.1+
+```
+Поддерживаемые платформы: .NET Standard 2.0+, .NET Framework 4.6.1+, .NET Core 2.0+
+```
 
-Provides abilities to make client for `WEB API` based on contracts.
+[TOC]
 
-To make `WEB API` client you should:
-* declare service contract as interface
-* mark interface as `API`
-* declare methods which will be mapped to `API` methods
-* mark methods as `WEB API` methods
-* specify return types for methods
-* specify input parameters for methods
-* mark input parameters as part of requests
+## Обзор
 
-## Service Contract
+`MyLab.ApiClient` предоставляет возможность создавать клиенты для `WEB API` на основе контрактов.
 
-Deplare service contract to descripbe servce specification details.
+Чтобы описать `WEB API` контракт, следует:
 
-Use `ApiAttribute` to mark an interface that represent a service contract:
+* объявить контракт сервиса как интерфейс
+* пометить интерфейс атрибутом `ApiAttribute`
+* объявить методы, которые будут соответствовать конечным точкам сервиса
+* пометить соответствующими атрибутами (`ApiMethodAttribute` или наследниками)
+* указать у методов типы возвращаемых параметров в соответствии с содержанием, которое возвращает сервис
+* указать у методов аргументы, соответствующие передаваемым в запросе данным
+* пометить аргументы соответствующими атрибутами, указывающими на расположение и формат этих данных (наследники `ApiParameterAttribute`)
+
+Описание контракта сервиса:
+
+```C#
+[Api("api")]
+public interface IServiceContract
+{   
+    [Post("orders")]
+    int CreateOrder([JsonContent] Order order);
+}
+```
+
+Описание контракта данных (не требует дополнительной разметки):
+
+```C#
+public class Order
+{
+	public string Foo { get; set; }
+}
+```
+
+Контроллер сервера:
+
+```C#
+[ApiController]
+[Route("api")]
+public class OrderController : ControllerBase
+{
+    [HttpPost("orders")]
+    public IActionResult CreateOrder([FromBody]Order order)
+    {
+        //...
+        return Ok(newOrderId);
+    }
+}
+```
+
+Использование:
+
+```C#
+HttpClient httpClient = ...
+var s = ApiClient<ITestServer>.Create(new SingleHttpClientProvider(httpClient));
+
+var order = new Order{ Foo ="bar" }
+int newOrderId = await _client.Call(s => s.CreateOrder(order)).GetResult();
+```
+
+## Контракт сервиса
+
+Чтобы начать описание сервиса, объявите его контракт в виде интерфейса.
+
+Используйте `ApiAttribute` чтобы отметить интерфейс-контракт сервиса:
 
 ```C#
 [Api]
@@ -25,7 +78,7 @@ public interface IService
     //...
 }
 ```
-There is ability to specify common path for all API methods releted of base path:
+В этом атрибуте можно указать базовый путь к сервису, который будет использоваться как базовый для формирования полного адреса запроса с учётом относительных путей конечных точек (методов):
 
 ```C#
 [Api("orders/v1")]
@@ -35,150 +88,368 @@ public interface IService
 }
 ```
 
-## Methods
+## Методы
 
-All contract methods should be asynchronous. 
+### Разметка
 
-A сщтекфсе method should be marked by `ApiMethodAttribute`. That attribute defines HTTP method and related method path if defined. Also there are several inherited attributes fro most popular HTTP methods:
-
-```C#
-[Api]
-public interface IService
-{
-    [ApiMethod(HttpMethod.Get, RelPath="orders")]
-    Task GetOrders1();
-    
-    [ApiGet(RelPath="orders")]
-    Task GetOrders2();
-    
-    [ApiGet]
-    Task GetOrders3();
-    
-    [ApiPost]
-    Task PostOrders();
-    
-    [ApiPut]
-    Task PutOrders();
-    
-    [ApiHead]
-    Task HeadOrders();
-    
-    [ApiDelete]
-    Task DeleteOrders();
-}
-```
-
-## The Return
-
-### Common
-
-A `WEB API` can return both positive or negative response. Positive response is an `HTTP` response with code between `200` and 300 and may contain a response payload. A negative response has another code also may contain payload which describe a status.
-
-There is default behavior when response has `2xx` code. A method returns the expected result in this case. In other case the `WrongResponseException` will be thrown.
-
-###Payload
-
-To declare method response payload type that type should be specified as generic parameter of `Task<>` at return parameter definition as follow:
+Метод контракта должен быть помечен атрибутом `ApiMethodAttribute` или его наследником. Здесь определяется относительный путь и `HTTP`-метод. Также у `ApiMethodAttribute`  есть ряд наследников для осовных случаев:
 
 ```C#
 [Api]
 public interface IService
 {
-    //Returns primitve
-    [ApiGet]
-    Task<string> GetString();
+    [ApiMethod("orders", HttpMethod.Get)]
+    void GetOrders1();
     
-    //Returns object
-    [ApiGet]
-    Task<DataContract> GetObject();
+    [Get("orders")]
+    void GetOrders2();
     
-    //Returns binary
-    [ApiGet]
-    Task<byte[]> GetBinary();
+    [Get]
+    void GetOrders3();
+    
+    [Post]
+    void PostOrders();
+    
+    [Put]
+    void PutOrders();
+    
+    [Head]
+    void HeadOrders();
+    
+    [Delete]
+    void DeleteOrders();
 }
 ```
 
-There are many types are supported:
-* primitive: `string`, `bool`, `int`, `uint`, `double`
-* object/struct: only if payload is `XML` or `JSON`
-* binary: any payload content
+### Аргументы
 
-###The Void
+Аргументы метода определяют данные передаваемые в запросе. Для определения места расположения и формата передаваемых данных, используйте наследников атрибута `ApiParameterAttribute`.
 
-When response has no payload then a simple `Task` return type should be used.
+#### PathAttribute
+
+Аргумент - часть пути
+
+```C#
+[Api("company-services/api")]
+public interface IService
+{   
+    [Get("orders/{id}")]
+    void Get([Path]string id);
+}
+
+//Result path with id=2: 
+//		`/company-services/api/orders/2`
+```
+
+#### QueryAttribute
+
+Аргумент - часть запроса в URL.
+
+```C#
+[Api("company-services/api")]
+public interface IService
+{   
+    [Get("orders")]
+    WebApiCall Get([Query]string id);
+}
+
+//Result path with id=2: 
+//		`/company-services/api/orders?id=2`
+```
+
+#### HeaderAttribute
+
+Аргумент - заголовок
+
+```C#
+[Api("company-services/api")]
+public interface IService
+{   
+    [Get("orders")]
+    WebApiCall Get([Header("X-Identifier")]string id);
+}
+
+//Result header with id=2: 
+//		`X-Identifier: 2`
+```
+
+#### StringContentAttribute
+
+Аргумент - содержательная часть запроса в строковой форме
+
+```C#
+[Api("company-services/api")]
+public interface IService
+{   
+    [Post("orders")]
+    void Create([StringContent] int orderId);
+}
+
+//Result content with Id=2: 2
+```
+
+#### JsonContentAttribute
+
+Аргумент - содержательная часть запроса в формате `JSON`
+
+```C#
+[Api("company-services/api")]
+public interface IService
+{   
+    [Post("orders")]
+    void Create([JsonContent] Order order);
+}
+
+public class Order
+{
+	public string Id { get; set; }
+}
+
+//Result content with Id=2: 
+//		{"Id":"2"}
+```
+
+#### XmlContentAttribute
+
+Аргумент - содержательная часть запроса в формате `XML`
+
+```C#
+[Api("company-services/api")]
+public interface IService
+{   
+    [Post("orders")]
+    void Create([XmlContent] Order order);
+}
+
+public class Order
+{
+	public string Id { get; set; }
+}
+
+//Result content with Id=2: 
+//		<Order><Id>2</Id></Order>
+```
+
+#### FormContentAttribute
+
+Аргумент - содержательная часть запроса в формат `URL encoded form`
+
+```C#
+[Api("company-services/api")]
+public interface IService
+{   
+    [Post("orders")]
+    void Create([FormContent] Order order);
+}
+
+public class Order
+{
+	public string Id { get; set; }
+    public string Number { get; set; }
+}
+
+//Result content with Id=2 and Number=foo: 
+//		Id=2&Number=foo
+```
+
+## Результат
+
+### Статус-код
+
+`WEB API` может вернуть как успешный ответ, так и ответ с шибкой. Положительным ответом считаются ответы со статус-кодом `2xx`, а `4xx` и `5xx` - ошибочными. (`3xx` при разработке API обычно не используются) 
+
+Часто при проектировании `WEB API` ответы 2хх, как и 4хх наделяют особым смыслом. Поэтому важно проверять, что статус-код входит в определённое подмножество установленных возможных статус-кодов.
+
+Для этого в `MyLab.ApiCLient` есть атрибут `ExpectedCodeAttribute`. Отметьте на целевом методе статус-коды, которые ожидаются в ответ на вызов сервера:
 
 ```C#
 [Api]
 public interface IService
-{   
-    [ApiGet]
-    Task Get();
+{
+    [ExpectedCode(HttpStatusCode.BadRequest)]
+    [Get("orders/count")]
+    int GetOrdersCount();
 }
 ```
 
-This method complete successfully if service response will be `2xx`. The  `WrongResponseException` will be thrown when meet another code.
+Алгоритм проверки статус-кода выглядит следующим образом:
 
-### CodeResult
+* если код == 200 - успех
+* если код есть в списке, определённом атрибутами `ExpectedCodeAttribute` - успех
+* ошибка `ResponseCodeException`
 
-Use `CodeResult` result type when all possible api method results are combination of `HTTP` status code and text message as response payload.
+### Содержание ответа
+
+Тип содержания определяется типом возвращаемым значением соответствующего метода. Поддерживаются следующие типы:
+
+* `void` - если важен только статус-код ответа 
+* примитивы: `string`, `bool`, `int`, `uint`, `double`
+* типы значений: `DateTime`, `TimeSpan`, `Guid`
+* объекты/структуры: только если содержательная часть ответа в формате `XML`, `JSON`или `url-encoded-form`
+
+## Вызов
+
+### Результат
+
+На следующем примере показан вызов сервиса с получением результата:
 
 ```C#
 [Api]
 public interface IService
-{   
-    [ApiGet]
-    Task<CoreResult> Get();
+{
+    [Post("orders")]
+    int CreateOrder(Order order);
 }
+
+//....
+
+var orderId = await service.Call(s => s.CreateOrder(order)).GetResult();
 ```
 
-This method always complete successfully even the response code is no `2xx`. 
-
-### WebApiCall
-
-To full control an api call invocation the `WebApiCall` result type should be used. In this case the method should be synchronous. It because the method has factory role - it just create `WebApiCall` object with prepared `HttpRequestMessage` inside. An HTTP request will be sent when the `WebApiCall.Invoke()` method will be called.
+Вызов сервиса без получения результата:
 
 ```C#
 [Api]
 public interface IService
-{   
-    [ApiGet]
-    WebApiCall Get();
+{
+    [Post("orders")]
+    void CreateOrder(Order order);
+}
+
+//....
+
+await service.Call(s => s.CreateOrder(order)).GetResult();
+```
+
+При получении непредвиденного статус-кода, кроме `200 (OK)`, метод `GetResult` выдаёт исключение `ResponseCodeException`. Это можно использовать следующим образом:
+
+```C#
+try
+{
+    await service.Call(s => s.CreateOrder(order)).GetResult();
+}
+catch(ResponseCodeException e) when (e.StatusCode == HttpStatusCode.BadRequest)
+{
+    //when status code = 400 
+}
+catch(ResponseCodeException e) when (e.StatusCode == HttpStatusCode.Forbidden)
+{
+    //when status code = 403
 }
 ```
 
-`WebApiCall` provides access to `HTTP` request and response.  
+### Детализация
+
+Детализация по вызову представляет собой объект, содержащий всё необходимое для составления представления о выполненном запросе и полученном ответе:
 
 ```C#
-HttpRequestMessage request = call.GetRequestClone();
-HttpResponseMethod response = call.Response;
+/// <summary>
+/// Contains detailed service call information
+/// </summary>
+public class CallDetails<T>
+{
+    /// <summary>
+    /// Expected response content
+    /// </summary>
+    public T ResponseContent { get; set; }
+    /// <summary>
+    /// HTTP status code
+    /// </summary>
+    public HttpStatusCode StatusCode { get; set; }
+    /// <summary>
+    /// Gets true if status code is unexpected
+    /// </summary>
+    public bool IsUnexpectedStatusCode { get; set; }
+    /// <summary>
+    /// Text request dump
+    /// </summary>
+    public string RequestDump { get; set; }
+    /// <summary>
+    /// Text response dump
+    /// </summary>
+    public string ResponseDump { get; set; }
+    /// <summary>
+    /// Response object
+    /// </summary>
+    public HttpResponseMessage ResponseMessage { get; set; }
+    /// <summary>
+    /// Request object
+    /// </summary>
+    public HttpRequestMessage RequestMessage { get; set; }
+}
 ```
 
-Specify generic result type to declare api method return type as using simple asynchronous case with `Task<>`. 
+На следующем примере показан вызов сервиса с получением детализированного результата:
 
 ```C#
 [Api]
 public interface IService
-{   
-    [ApiGet]
-    WebApiCall<Something> GetSomething();
+{
+    [Post("orders")]
+    int CreateOrder(Order order);
+}
+
+//....
+
+var response = await service.Call(s => s.CreateOrder(order)).GetDetailed();
+```
+
+Вызов сервиса без получения результата:
+
+```C#
+[Api]
+public interface IService
+{
+    [Post("orders")]
+    void CreateOrder(Order order);
+}
+
+//....
+
+var response = await service.Call(s => s.CreateOrder(order)).GetDetailed();
+```
+
+В случае, когда метод контракта сервиса не имеет возвращаемого значения, метод `GetDetailed` возвращает объект детализации со строковым содержимым ответа: `CallDetails<string>`.
+
+При получении непредвиденного статус-кода, кроме `200 (OK)`, метод `GetDetailed` не выбрасывает исключение, а устанавливает свойства объекта детализации `IsUnexpectedStatusCode` в `true`.
+
+```C#
+var response = await service.Call(s => s.CreateOrder(order)).GetResult();
+
+if (response.IsUnexpectedStatusCode)
+{
+    switch (response.StatusCode)
+    {
+        case HttpStatusCode.BadRequest:
+            //when status code = 400
+            break;
+        case HttpStatusCode.Forbidden:
+            //when status code = 403
+            break;
+        default:
+            throw new ArgumentOutOfRangeException();
+    }
 }
 ```
 
-In this case the `WebApiCall<>` also provides result value. 
+Пример дампа запроса из детализации:
 
-```C#
-Something result = call.Result;
+```
+POST http://localhost/test/ping/body/obj/json
+
+Cookie: <empty>
+Content-Type: application/json; charset=utf-8
+
+{"TestValue":"foo"}
 ```
 
-## Method Parameters
-The input method parameters uses to specify `HTTP` request parameters. There are several place in request can be used:
+Пример дампа ответа из детализации:
 
-* part of URL path 
-* URL query parameter
-* payload
-* header
-
-## Factoring
-```C#
-throw new NotImplementedException();
 ```
+200 OK
+
+Content-Type: text/plain; charset=utf-8
+
+foo
+```
+
