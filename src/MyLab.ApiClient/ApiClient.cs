@@ -30,7 +30,7 @@ namespace MyLab.ApiClient
                 httpClientProvider);
         }
 
-        public ApiRequest<string> Request(Expression<Action<TContract>> serviceCallExpr)
+        public ApiRequest<string> Call(Expression<Action<TContract>> serviceCallExpr)
         {
             if(!(serviceCallExpr.Body is MethodCallExpression mExpr))
                 throw new NotSupportedException("Only method calls are supported");
@@ -44,7 +44,7 @@ namespace MyLab.ApiClient
                 _httpClientProvider);
         }
 
-        public ApiRequest<TRes> Request<TRes>(Expression<Func<TContract, TRes>> serviceCallExpr)
+        public ApiRequest<TRes> Call<TRes>(Expression<Func<TContract, TRes>> serviceCallExpr)
         {
             if(!(serviceCallExpr.Body is MethodCallExpression mExpr))
                 throw new NotSupportedException("Only method calls are supported");

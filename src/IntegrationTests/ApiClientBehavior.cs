@@ -38,7 +38,7 @@ namespace IntegrationTests
             //Act & Assert
             await Assert.ThrowsAsync<ResponseCodeException>(() =>
             {
-                return _client.Request(s => s.GetUnexpected404()).Send();
+                return _client.Call(s => s.GetUnexpected404()).GetResult();
             });
         }
 
@@ -48,7 +48,7 @@ namespace IntegrationTests
             //Arrange
 
             //Act & Assert
-            await _client.Request(s => s.GetExpected404()).Send();
+            await _client.Call(s => s.GetExpected404()).GetResult();
         }
 
         [Fact]
@@ -58,8 +58,8 @@ namespace IntegrationTests
 
             //Act
             var resp = await _client
-                .Request(s => s.GetExpected404())
-                .Send();
+                .Call(s => s.GetExpected404())
+                .GetResult();
 
             //Assert
             Assert.Equal("This is a message", resp);
@@ -73,8 +73,8 @@ namespace IntegrationTests
 
             //Act
             var resp = await _client
-                .Request(s => s.GetXmlObj())
-                .Send();
+                .Call(s => s.GetXmlObj())
+                .GetResult();
 
             //Assert
             Assert.Equal("foo", resp.TestValue);
@@ -88,8 +88,8 @@ namespace IntegrationTests
 
             //Act
             var resp = await _client
-                .Request(s => s.GetJsonObj())
-                .Send();
+                .Call(s => s.GetJsonObj())
+                .GetResult();
 
             //Assert
             Assert.Equal("foo", resp.TestValue);
@@ -104,8 +104,8 @@ namespace IntegrationTests
 
             //Act
             var resp = await _client
-                .Request(serviceCallExpr)
-                .Send();
+                .Call(serviceCallExpr)
+                .GetResult();
 
             //Assert
             Assert.Equal("foo", resp);

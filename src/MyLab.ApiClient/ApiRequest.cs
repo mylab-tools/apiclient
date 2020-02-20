@@ -60,14 +60,39 @@ namespace MyLab.ApiClient
             return new ApiRequest<TRes>(this);
         }
 
-        public async Task<TRes> Send(CancellationToken cancellationToken)
+        /// <summary>
+        /// Send request and return serialized response
+        /// </summary>
+        public async Task<TRes> GetResult(CancellationToken cancellationToken)
         {
             var resp = await SendRequestAsync(cancellationToken);
 
-            return await ResponseProcessing.DeserializeContent<TRes>(resp.Content);
+            return await ResponseProcessing.DeserializeContent<TRes>(resp.Response.Content);
         }
 
-        private async Task<HttpResponseMessage> SendRequestAsync(CancellationToken cancellationToken)
+        /// <summary>
+        /// Send request and return detailed information about operation
+        /// </summary>
+        public async Task<CallDetails<TRes>> GetDetailed(CancellationToken cancellationToken)
+        {
+            var resp = await SendRequestAsync(cancellationToken);
+            var respContent = await ResponseProcessing.DeserializeContent<TRes>(resp.Response.Content);
+
+            var msgDumper = new HttpMessageDumper();
+            var reqDump = await msgDumper.Dump(resp.Request);
+            var respDump = await msgDumper.Dump(resp.Response);
+
+            return new CallDetails<TRes>
+            {
+                RequestMessage = resp.Request,
+                ResponseMessage = resp.Response,
+                ResponseContent = respContent,
+                RequestDump = reqDump,
+                ResponseDump = respDump,
+            };
+        }
+
+        async Task<(HttpResponseMessage Response, HttpRequestMessage Request)> SendRequestAsync(CancellationToken cancellationToken)
         {
             var cl = _httpClientProvider.Provide();
 
@@ -79,7 +104,6 @@ namespace MyLab.ApiClient
                 RequestUri = addr
             };
 
-
             ApplyParameters(reqMsg);
 
             ApplyModifiers(reqMsg);
@@ -88,7 +112,7 @@ namespace MyLab.ApiClient
 
             await CheckResponseCode(response);
 
-            return response;
+            return (response, reqMsg);
         }
 
         private void ApplyParameters(HttpRequestMessage reqMsg)
