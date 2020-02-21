@@ -1,10 +1,8 @@
 # MyLab.ApiClient
+[![NuGet Version and Downloads count](https://buildstats.info/nuget/MyLab.ApiClient)](https://www.nuget.org/packages/MyLab.ApiClient)
 ```
 Поддерживаемые платформы: .NET Standard 2.0+, .NET Framework 4.6.1+, .NET Core 2.0+
 ```
-
-[TOC]
-
 ## Обзор
 
 `MyLab.ApiClient` предоставляет возможность создавать клиенты для `WEB API` на основе контрактов.
