@@ -65,12 +65,12 @@ namespace MyLab.ApiClient
     {
         public bool Predicate(Expression expression)
         {
-            return expression.NodeType == ExpressionType.Constant;
+            return expression == null || expression.NodeType == ExpressionType.Constant;
         }
 
         public object GetValue(Expression expression)
         {
-            return ((ConstantExpression) expression).Value;
+            return ((ConstantExpression) expression)?.Value;
         }
     }
 

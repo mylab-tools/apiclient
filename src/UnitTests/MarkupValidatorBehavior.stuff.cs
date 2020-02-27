@@ -98,5 +98,12 @@ namespace UnitTests
             [Post("test")]
             void Post([Query] int a1, [JsonContent] int a2, [Header("a3")] int a3, [StringContent] int a4);
         }
+
+        [Api("api")]
+        private interface IContractWithWrongBinParam
+        {
+            [Post("test")]
+            void Post([BinContent] int a1);
+        }
     }
 }

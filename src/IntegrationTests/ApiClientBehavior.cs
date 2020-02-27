@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http.Formatting;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using MyLab.ApiClient;
@@ -132,6 +133,7 @@ namespace IntegrationTests
             Expression<Func<ITestServer, string>> expr5 = s => s.PingJsonObj(testModel);
             Expression<Func<ITestServer, string>> expr6 = s => s.PingForm(testModel);
             Expression<Func<ITestServer, string>> expr7 = s => s.PingText("foo");
+            Expression<Func<ITestServer, string>> expr8 = s => s.PingBin(Encoding.UTF8.GetBytes("foo"));
 
             return new List<object[]>
             {
@@ -142,6 +144,7 @@ namespace IntegrationTests
                 new object[] {expr5},
                 new object[] {expr6},
                 new object[] {expr7},
+                new object[] {expr8},
             };
         }
     }
@@ -182,5 +185,8 @@ namespace IntegrationTests
 
         [Post("ping/body/text")]
         string PingText([StringContent] string msg);
+
+        [Post("ping/body/bin")]
+        string PingBin([BinContent] byte[] msg);
     }
 }

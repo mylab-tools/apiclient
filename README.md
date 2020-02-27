@@ -90,7 +90,7 @@ public interface IService
 
 ### Разметка
 
-Метод контракта должен быть помечен атрибутом `ApiMethodAttribute` или его наследником. Здесь определяется относительный путь и `HTTP`-метод. Также у `ApiMethodAttribute`  есть ряд наследников для осовных случаев:
+Метод контракта должен быть помечен атрибутом `ApiMethodAttribute` или его наследником. Здесь определяется относительный путь и `HTTP`-метод. Также у `ApiMethodAttribute`  есть ряд наследников для основных случаев:
 
 ```C#
 [Api]
@@ -249,6 +249,21 @@ public class Order
 //Result content with Id=2 and Number=foo: 
 //		Id=2&Number=foo
 ```
+
+#### BinContentAttribute
+
+Аргумент - содержательная часть запроса в бинарном формате
+
+```C#
+[Api("company-services/api")]
+public interface IService
+{   
+    [Post("orders")]
+    void Create([BinContent] byte[] orderData);
+}
+```
+
+Аргумент должен быть типа `byte[]`.
 
 ## Результат
 
