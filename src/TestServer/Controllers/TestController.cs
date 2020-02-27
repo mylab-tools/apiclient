@@ -86,5 +86,12 @@ namespace TestServer.Controllers
             var rdr = new StreamReader(Request.Body);
             return Ok(await rdr.ReadToEndAsync());
         }
+
+        [HttpPost("ping/body/bin")]
+        public async Task<IActionResult> PingBin()
+        {
+            var rdr = new StreamReader(Request.Body, Encoding.UTF8);
+            return Ok(await rdr.ReadToEndAsync());
+        }
     }
 }

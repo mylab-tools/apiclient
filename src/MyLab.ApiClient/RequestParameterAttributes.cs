@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace MyLab.ApiClient
 {
@@ -13,6 +14,11 @@ namespace MyLab.ApiClient
         protected ApiParameterAttribute()
         {
             
+        }
+
+        public virtual MarkupValidationIssuer ValidateParameter(ParameterInfo p)
+        {
+            return null;
         }
     }
 
@@ -142,6 +148,34 @@ namespace MyLab.ApiClient
         /// </summary>
         public FormContentAttribute() : base(new UrlFormHttpContentFactory())
         {
+        }
+    }
+
+    /// <summary>
+    /// Determines request parameter which place in content with binary format
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class BinContentAttribute : ContentParameterAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of <see cref="BinContentAttribute"/>
+        /// </summary>
+        public BinContentAttribute() : base(new BinaryHttpContentFactory())
+        {
+        }
+
+        public override MarkupValidationIssuer ValidateParameter(ParameterInfo p)
+        {
+            base.ValidateParameter(p);
+
+            if (!(p.ParameterType == typeof(byte[])))
+                return new MarkupValidationIssuer
+                {
+                    Reason = $"Only '{typeof(byte[]).FullName}' supported as binary argument",
+                    Critical = true
+                };
+
+            return null;
         }
     }
 }

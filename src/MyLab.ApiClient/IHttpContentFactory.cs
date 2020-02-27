@@ -53,6 +53,23 @@ namespace MyLab.ApiClient
         }
     }
 
+    class BinaryHttpContentFactory : IHttpContentFactory
+    {
+        public HttpContent Create(object source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            if(source is byte[] binSource)
+            {
+                return new ByteArrayContent(binSource);
+            }
+            else
+            {
+                throw new NotSupportedException($"Only '{typeof(byte[]).FullName}' supported as binary argument");
+            }
+        }
+    }
+
     class UrlFormHttpContentFactory : IHttpContentFactory
     {
         public HttpContent Create(object source)

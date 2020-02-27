@@ -200,6 +200,14 @@ namespace MyLab.ApiClient
                     Parameter = pi
                 });
 
+            var attrValIssue = pAttrs.FirstOrDefault()?.ValidateParameter(pi);
+            if (attrValIssue != null)
+            {
+                attrValIssue.Method = method;
+                attrValIssue.Parameter = pi;
+                attrValIssue.ServiceContract = type;
+                issues.Add(attrValIssue);
+            }
         }
     }
 

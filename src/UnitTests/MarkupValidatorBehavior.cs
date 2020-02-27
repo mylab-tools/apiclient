@@ -28,6 +28,7 @@ namespace UnitTests
         [InlineData(typeof(IContractWithSeveralContentParams))]
         [InlineData(typeof(IContractWithWrongUrl))]
         [InlineData(typeof(IContractWithoutApiAttr))]
+        [InlineData(typeof(IContractWithWrongBinParam))]
         public void ShouldDetectCriticalWrongContract(Type contractType)
         {
             //Arrange
