@@ -1,10 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Web;
+using System.Xml;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace MyLab.ApiClient
 {
@@ -24,32 +28,53 @@ namespace MyLab.ApiClient
         }
     }
 
-    class ObjectBasedHttpContentFactory : IHttpContentFactory
+    class JsonHttpContentFactory : IHttpContentFactory
     {
-        private readonly MediaTypeFormatter _mediaTypeFormatter;
-
-        protected ObjectBasedHttpContentFactory(MediaTypeFormatter mediaTypeFormatter)
-        {
-            _mediaTypeFormatter = mediaTypeFormatter;
-        }
-
         public HttpContent Create(object source)
         {
-            return new ObjectContent(source.GetType(), source, _mediaTypeFormatter);
+            return new StringContent(JsonConvert.SerializeObject(source))
+            {
+                Headers = { ContentType = new MediaTypeHeaderValue("application/json") }
+            };
         }
     }
 
-    class JsonHttpContentFactory : ObjectBasedHttpContentFactory
+    class XmlHttpContentFactory : IHttpContentFactory
     {
-        public JsonHttpContentFactory() : base(new JsonMediaTypeFormatter())
-        {   
-        }
-    }
-
-    class XmlHttpContentFactory : ObjectBasedHttpContentFactory
-    {
-        public XmlHttpContentFactory() : base(new XmlMediaTypeFormatter{UseXmlSerializer = true})
+        public HttpContent Create(object source)
         {
+            string strContent = null;
+
+            if (source != null)
+            {
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
+
+                var ser = new XmlSerializer(source.GetType());
+                var settings = new XmlWriterSettings
+                {
+                    OmitXmlDeclaration = true,
+                    Encoding = new UTF8Encoding(false)
+                };
+                using (var mem = new MemoryStream())
+                using (var wrtr = XmlWriter.Create(mem, settings))
+                {
+
+                    ser.Serialize(wrtr, source, ns);
+                    wrtr.Flush();
+                    
+                    strContent = Encoding.UTF8.GetString(mem.ToArray());
+                }
+            }
+            else
+            {
+                strContent = string.Empty;
+            }
+
+            return new StringContent(strContent)
+            {
+                Headers = { ContentType = new MediaTypeHeaderValue("application/xml") }
+            };
         }
     }
 
