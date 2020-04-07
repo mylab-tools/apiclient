@@ -32,10 +32,12 @@ namespace UnitTests
 
             Expression<Func<string>> getFunc = () => GetFoo();
 
+
             return new List<object[]>
             {
                 new object[]{ getConst },
                 new object[]{ getVar },
+                new object[]{ getFunc },
                 new object[]{ getFunc },
             };
         }
