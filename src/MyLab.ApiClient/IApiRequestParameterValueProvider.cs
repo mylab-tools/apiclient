@@ -41,6 +41,8 @@ namespace MyLab.ApiClient
             new ConstantExpressionValueProvider(),
             new MemberExpressionValueProvider(),
             new CallExpressionValueProvider(), 
+            new NewExpressionValueProvider(), 
+            new MemberInitExpressionValueProvider()
         };
 
         public static object GetValue(Expression expression)
@@ -123,4 +125,54 @@ namespace MyLab.ApiClient
         }
     }
 
+    class NewExpressionValueProvider : IExpressionValueProvider
+    {
+        public bool Predicate(Expression expression)
+        {
+            return expression.NodeType == ExpressionType.New;
+        }
+
+        public object GetValue(Expression expression)
+        {
+            var ne = (NewExpression)expression;
+
+            return ne.Constructor.Invoke(ne.Arguments.Select(ExpressionValueProvidingTools.GetValue).ToArray());
+        }
+    }
+
+    class MemberInitExpressionValueProvider : IExpressionValueProvider
+    {
+        public bool Predicate(Expression expression)
+        {
+            return expression.NodeType == ExpressionType.MemberInit;
+        }
+
+        public object GetValue(Expression expression)
+        {
+            var mi = (MemberInitExpression)expression;
+
+            var obj = ExpressionValueProvidingTools.GetValue(mi.NewExpression);
+            foreach (var memberBinding in mi.Bindings)
+            {
+                if (memberBinding.BindingType != MemberBindingType.Assignment)
+                    throw new NotSupportedException($"Member binding type '{memberBinding.BindingType}' not supported");
+                var ma = (MemberAssignment)memberBinding;
+                var memberValue = ExpressionValueProvidingTools.GetValue(ma.Expression);
+
+                switch (memberBinding.Member.MemberType)
+                {
+                    case MemberTypes.Field:
+                        ((FieldInfo)memberBinding.Member).SetValue(obj, memberValue);
+                        break;
+                    case MemberTypes.Property:
+                        ((PropertyInfo)memberBinding.Member).SetValue(obj, memberValue);
+                        break;
+                    default:
+                        throw new NotSupportedException($"Member type '{memberBinding.Member.MemberType}' not supported");
+                }
+            }
+
+            return obj;
+        }
+    }
 }
