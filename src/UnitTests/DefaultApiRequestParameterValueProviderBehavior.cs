@@ -13,7 +13,7 @@ namespace UnitTests
         public void ShouldProvideParameterValue(LambdaExpression expr)
         {
             //Arrange
-            var provider = new DefaultApiRequestParameterValueProvider(expr.Body);
+            var provider = new ExpressionBasedApiRequestParameterValueProvider(expr.Body);
 
             //Act
             var value = provider.GetValue();

@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
 namespace MyLab.ApiClient
 {
-    class ServiceDescription<TContract>
+    class ServiceDescription
     {
         public string Url { get; }
         public IReadOnlyDictionary<int, MethodDescription> Methods { get; }
@@ -16,9 +17,9 @@ namespace MyLab.ApiClient
             Methods = new Dictionary<int, MethodDescription>(methods);
         }
         
-        public static ServiceDescription<TContract> Create()
+        public static ServiceDescription Create(Type contractType)
         {
-            var t = typeof(TContract);
+            var t = contractType;
 
             if(!t.IsInterface)
                 throw new ApiContractException($"Only interface contracts are supported. Actual type: '{t.FullName}'");
@@ -27,7 +28,7 @@ namespace MyLab.ApiClient
             if(serviceAttr == null)
                 throw new ApiContractException($"An API contract must be marked with attribute '{typeof(ApiAttribute).FullName}'");
 
-            return new ServiceDescription<TContract>(
+            return new ServiceDescription(
                 serviceAttr.Url,
                 t
                     .GetMethods()

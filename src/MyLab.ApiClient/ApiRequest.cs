@@ -28,26 +28,26 @@ namespace MyLab.ApiClient
 
         private readonly string _baseUrl;
         private readonly MethodDescription _methodDescription;
-        private readonly IHttpClientProvider _httpClientProvider;
+        private readonly HttpClient _httpClient;
         private readonly IReadOnlyList<IParameterApplier> _paramAppliers;
 
         internal ApiRequest(
             string baseUrl,
             MethodDescription methodDescription, 
             IEnumerable<IParameterApplier> paramAppliers,
-            IHttpClientProvider httpClientProvider)
+            HttpClient httpClient)
         {
             if (paramAppliers == null) throw new ArgumentNullException(nameof(paramAppliers));
             _baseUrl = baseUrl;
             _methodDescription = methodDescription ?? throw new ArgumentNullException(nameof(methodDescription));
-            _httpClientProvider = httpClientProvider ?? throw new ArgumentNullException(nameof(httpClientProvider));
+            _httpClient = httpClient;
             _paramAppliers = paramAppliers.ToList().AsReadOnly();
 
             ExpectedCodes.AddRange(_methodDescription.ExpectedStatusCodes);
         }
 
         protected ApiRequest(ApiRequest<TRes> origin)
-            :this(origin._baseUrl, origin._methodDescription, origin._paramAppliers, origin._httpClientProvider)
+            :this(origin._baseUrl, origin._methodDescription, origin._paramAppliers, origin._httpClient)
         {
             RequestModifiers.AddRange(origin.RequestModifiers);
         }
@@ -99,8 +99,6 @@ namespace MyLab.ApiClient
 
         async Task<(HttpResponseMessage Response, HttpRequestMessage Request)> SendRequestAsync(CancellationToken cancellationToken)
         {
-            var cl = _httpClientProvider.Provide();
-
             var addr = new Uri(_baseUrl.TrimEnd('/') + "/" +  _methodDescription.Url, UriKind.RelativeOrAbsolute);
 
             var reqMsg = new HttpRequestMessage
@@ -113,7 +111,7 @@ namespace MyLab.ApiClient
 
             ApplyModifiers(reqMsg);
 
-            var response = await cl.SendAsync(reqMsg, cancellationToken);
+            var response = await _httpClient.SendAsync(reqMsg, cancellationToken);
 
             return (response, reqMsg);
         }
