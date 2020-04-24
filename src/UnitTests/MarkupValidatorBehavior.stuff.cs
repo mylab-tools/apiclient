@@ -1,4 +1,5 @@
-﻿using MyLab.ApiClient;
+﻿using System.Threading.Tasks;
+using MyLab.ApiClient;
 using Xunit.Abstractions;
 
 namespace UnitTests
@@ -42,68 +43,68 @@ namespace UnitTests
         private interface IRightContract
         {
             [Post("test")]
-            void Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
+            Task Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
         }
 
         private interface IContractWithoutApiAttr
         {
             [Post("test")]
-            void Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
+            Task Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
         }
 
         [Api("")]
         private interface IContractWithEmptyUrl
         {
             [Post("test")]
-            void Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
+            Task Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
         }
 
         [Api("http://http://")]
         private interface IContractWithWrongUrl
         {
             [Post("test")]
-            void Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
+            Task Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
         }
 
         [Api("api")]
         private interface IContractWithMethodWithoutAttr
         {
-            void Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
+            Task Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
         }
 
         [Api("api")]
         private interface IContractWithMethodWithEmptyUrl
         {
             [Post("")]
-            void Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
+            Task Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
         }
 
         [Api("api")]
         private interface IContractWithMethodWithWrongUrl
         {
             [Post("http://http://")]
-            void Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
+            Task Post([Query] int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
         }
 
         [Api("api")]
         private interface IContractWithParameterWithoutAttr
         {
             [Post("test")]
-            void Post(int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
+            Task Post(int a1, [Path] int a2, [Header("a3")] int a3, [StringContent] int a4);
         }
 
         [Api("api")]
         private interface IContractWithSeveralContentParams
         {
             [Post("test")]
-            void Post([Query] int a1, [JsonContent] int a2, [Header("a3")] int a3, [StringContent] int a4);
+            Task Post([Query] int a1, [JsonContent] int a2, [Header("a3")] int a3, [StringContent] int a4);
         }
 
         [Api("api")]
         private interface IContractWithWrongBinParam
         {
             [Post("test")]
-            void Post([BinContent] int a1);
+            Task Post([BinContent] int a1);
         }
     }
 }

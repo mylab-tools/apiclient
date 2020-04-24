@@ -25,12 +25,12 @@ namespace IntegrationTests
             _output = output;
 
             var clientProvider = new TestHttpClientProvider(webApplicationFactory);
-            _client = ApiClient<ITestServer>.Create(clientProvider);
+            _client = new ApiClient<ITestServer>(clientProvider);
         }
 
         [Theory]
         [MemberData(nameof(GetSendParametersTests))]
-        public async Task ShouldSendParameters(Expression<Func<ITestServer, string>> serviceCallExpr)
+        public async Task ShouldSendParameters(Expression<Func<ITestServer, Task<string>>> serviceCallExpr)
         {
             //Arrange
 
@@ -54,14 +54,14 @@ namespace IntegrationTests
         {
             var testModel = new TestModel {TestValue = "foo"};
 
-            Expression<Func<ITestServer, string>> expr1 = s => s.EchoQuery("foo");
-            Expression<Func<ITestServer, string>> expr2 = s => s.EchoPath("foo");
-            Expression<Func<ITestServer, string>> expr3 = s => s.EchoHeader("foo");
-            Expression<Func<ITestServer, string>> expr4 = s => s.EchoXmlObj(testModel);
-            Expression<Func<ITestServer, string>> expr5 = s => s.EchoJsonObj(testModel);
-            Expression<Func<ITestServer, string>> expr6 = s => s.EchoForm(testModel);
-            Expression<Func<ITestServer, string>> expr7 = s => s.EchoText("foo");
-            Expression<Func<ITestServer, string>> expr8 = s => s.EchoBin(Encoding.UTF8.GetBytes("foo"));
+            Expression<Func<ITestServer, Task<string>>> expr1 = s => s.EchoQuery("foo");
+            Expression<Func<ITestServer, Task<string>>> expr2 = s => s.EchoPath("foo");
+            Expression<Func<ITestServer, Task<string>>> expr3 = s => s.EchoHeader("foo");
+            Expression<Func<ITestServer, Task<string>>> expr4 = s => s.EchoXmlObj(testModel);
+            Expression<Func<ITestServer, Task<string>>> expr5 = s => s.EchoJsonObj(testModel);
+            Expression<Func<ITestServer, Task<string>>> expr6 = s => s.EchoForm(testModel);
+            Expression<Func<ITestServer, Task<string>>> expr7 = s => s.EchoText("foo");
+            Expression<Func<ITestServer, Task<string>>> expr8 = s => s.EchoBin(Encoding.UTF8.GetBytes("foo"));
 
             return new List<object[]>
             {
@@ -80,28 +80,28 @@ namespace IntegrationTests
         public interface ITestServer
         {
             [Post("echo/query")]
-            string EchoQuery([Query]string msg);
+            Task<string> EchoQuery([Query]string msg);
 
             [Post("echo/{msg}/path")]
-            string EchoPath([Path] string msg);
+            Task<string> EchoPath([Path] string msg);
 
             [Post("echo/header")]
-            string EchoHeader([Header("Message")] string msg);
+            Task<string> EchoHeader([Header("Message")] string msg);
 
             [Post("echo/body/obj/xml")]
-            string EchoXmlObj([XmlContent] TestModel model);
+            Task<string> EchoXmlObj([XmlContent] TestModel model);
 
             [Post("echo/body/obj/json")]
-            string EchoJsonObj([JsonContent] TestModel model);
+            Task<string> EchoJsonObj([JsonContent] TestModel model);
 
             [Post("echo/body/form")]
-            string EchoForm([FormContent] TestModel model);
+            Task<string> EchoForm([FormContent] TestModel model);
 
             [Post("echo/body/text")]
-            string EchoText([StringContent] string msg);
+            Task<string> EchoText([StringContent] string msg);
 
             [Post("echo/body/bin")]
-            string EchoBin([BinContent] byte[] msg);
+            Task<string> EchoBin([BinContent] byte[] msg);
         }
     }
 }

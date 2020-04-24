@@ -7,7 +7,6 @@ namespace MyLab.ApiClient
     /// <summary>
     /// Specifies <see cref="HttpClient"/> provider
     /// </summary>
-    [Obsolete]
     public interface IHttpClientProvider
     {
         /// <summary>
@@ -16,7 +15,6 @@ namespace MyLab.ApiClient
         HttpClient Provide();
     }
 
-    [Obsolete]
     public class FactoryHttpClientProvider : IHttpClientProvider
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -45,7 +43,6 @@ namespace MyLab.ApiClient
         }
     }
 
-    [Obsolete]
     public class SingleHttpClientProvider : IHttpClientProvider
     {
         private readonly HttpClient _client;

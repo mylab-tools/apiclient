@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestServer", "TestServer\Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{37D60C3E-F6EE-4FDE-B947-739C20620A80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLab.ApiClient", "MyLab.ApiClient\MyLab.ApiClient.csproj", "{039F37B5-6AF5-4BA7-954F-124566CB92DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLab.ApiClient", "MyLab.ApiClient\MyLab.ApiClient.csproj", "{039F37B5-6AF5-4BA7-954F-124566CB92DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

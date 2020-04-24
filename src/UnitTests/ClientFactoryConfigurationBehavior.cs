@@ -16,9 +16,9 @@ namespace UnitTests
             
             services.AddApiClients(new ApiClientsOptions
             {
-                List = new Dictionary<string, ApiClientOptionsDescription>
+                List = new Dictionary<string, ApiConnectionOptions>
                 {
-                    { "foo", new ApiClientOptionsDescription{Url = "http://test.com"}}
+                    { "foo", new ApiConnectionOptions{Url = "http://test.com"}}
                 }
             });
 

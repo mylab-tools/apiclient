@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace MyLab.ApiClient
 {
@@ -12,41 +13,22 @@ namespace MyLab.ApiClient
     {
         private readonly ApiRequestFactory<TContract> _reqFactory;
 
-        private ApiClient(ServiceDescription description, HttpClient httpClient)
-        {
-            _reqFactory = new ApiRequestFactory<TContract>(description, httpClient);
-        }
-
-        [Obsolete]
         /// <summary>
-        /// Creates API client based on http client factory with specified service name
+        /// Initializes a new instance of <see cref="ApiClient"/>
         /// </summary>
-        public static ApiClient<TContract> Create(IHttpClientProvider httpClientProvider)
-
+        public ApiClient(IHttpClientProvider httpClientProvider)
         {
-            return new ApiClient<TContract>(
-                ServiceDescription.Create(typeof(TContract)),
-                httpClientProvider.Provide());
+            _reqFactory = new ApiRequestFactory<TContract>(httpClientProvider);
         }
 
-        /// <summary>
-        /// Creates API client based on http client factory with specified service name
-        /// </summary>
-        public static ApiClient<TContract> Create(HttpClient httpClient)
-        {
-            return new ApiClient<TContract>(
-                ServiceDescription.Create(typeof(TContract)),
-                httpClient);
-        }
-
-        public ApiRequest<string> Call(Expression<Action<TContract>> serviceCallExpr)
+        public ApiRequest<string> Call(Expression<Func<TContract, Task>> serviceCallExpr)
         {
             return _reqFactory.Create(serviceCallExpr);
         }
 
-        public ApiRequest<TRes> Call<TRes>(Expression<Func<TContract, TRes>> serviceCallExpr)
+        public ApiRequest<TRes> Call<TRes>(Expression<Func<TContract, Task<TRes>>> serviceCallExpr)
         {
-            return _reqFactory.Create<TRes>(serviceCallExpr);
+            return _reqFactory.Create(serviceCallExpr);
         }
     }
 }

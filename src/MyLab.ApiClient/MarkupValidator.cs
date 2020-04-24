@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace MyLab.ApiClient
 {
@@ -85,7 +86,14 @@ namespace MyLab.ApiClient
                     ServiceContract = type,
                     Method = method
                 });
-            
+            if(method.ReturnType != typeof(Task) && (!method.ReturnType.IsGenericType || method.ReturnType.GetGenericTypeDefinition() != typeof(Task<>)))
+                issues.Add(new MarkupValidationIssuer
+                {
+                    Reason = "A service method must be async",
+                    Critical = true,
+                    ServiceContract = type,
+                    Method = method
+                });
             var mAttrs = method
                 .GetCustomAttributes<ApiMethodAttribute>()
                 .ToArray();

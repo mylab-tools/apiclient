@@ -4,10 +4,10 @@ namespace MyLab.ApiClient
 {
     public class ApiClientsOptions
     {
-        public Dictionary<string, ApiClientOptionsDescription> List { get; set; }
+        public Dictionary<string, ApiConnectionOptions> List { get; set; }
     }
 
-    public class ApiClientOptionsDescription
+    public class ApiConnectionOptions
     {
         public string Url { get; set; }
     }

@@ -23,7 +23,7 @@ namespace IntegrationTests
             _output = output;
 
             var clientProvider = new TestHttpClientProvider(webApplicationFactory);
-            _client = ApiClient<ITestServer>.Create(clientProvider);
+            _client = new ApiClient<ITestServer>(clientProvider);
         }
 
         [Fact]
@@ -63,10 +63,10 @@ namespace IntegrationTests
         {
 
             [Get("data/xml")]
-            TestModel GetXmlObj();
+            Task<TestModel> GetXmlObj();
 
             [Get("data/json")]
-            TestModel GetJsonObj();
+            Task<TestModel> GetJsonObj();
         }
     }
 }

@@ -23,7 +23,7 @@ namespace IntegrationTests
             _output = output;
 
             var clientProvider = new TestHttpClientProvider(webApplicationFactory);
-            _client = ApiClient<ITestServer>.Create(clientProvider);
+            _client = new ApiClient<ITestServer>(clientProvider);
         }
 
         [Fact]
@@ -72,11 +72,11 @@ namespace IntegrationTests
         public interface ITestServer
         {
             [Get("400")]
-            void GetUnexpected404();
+            Task GetUnexpected404();
 
             [ExpectedCode(HttpStatusCode.BadRequest)]
             [Get("400")]
-            void GetExpected404();
+            Task GetExpected404();
         }
     }
 }
