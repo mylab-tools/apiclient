@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using MyLab.ApiClient;
 using Xunit;
 
-namespace IntegrationTests
+namespace UnitTests
 {
     public class ClientFactoryConfigurationBehavior
     {
@@ -13,7 +14,13 @@ namespace IntegrationTests
             //Arrange
             var services = new ServiceCollection();
             
-            //services.AddApiClients();
+            services.AddApiClients(new ApiClientsOptions
+            {
+                List = new Dictionary<string, ApiClientOptionsDescription>
+                {
+                    { "foo", new ApiClientOptionsDescription{Url = "http://test.com"}}
+                }
+            });
 
             var serviceProvider = services.BuildServiceProvider();
             var srv = ActivatorUtilities.CreateInstance<TestService>(serviceProvider);
@@ -23,7 +30,7 @@ namespace IntegrationTests
 
             //Assert
             Assert.NotNull(httpClient);
-            Assert.Equal("http://test.com", httpClient.BaseAddress.OriginalString);
+            Assert.Equal("http://test.com", httpClient.BaseAddress?.OriginalString);
         }
 
         class TestService
