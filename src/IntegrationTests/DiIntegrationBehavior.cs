@@ -17,9 +17,6 @@ namespace IntegrationTests
         private readonly WebApplicationFactory<Startup> _webApplicationFactory;
         private readonly ITestOutputHelper _output;
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="RespContentApiClientBehavior"/>
-        /// </summary>
         public DiIntegrationBehavior(WebApplicationFactory<Startup> webApplicationFactory, ITestOutputHelper output)
         {
             _webApplicationFactory = webApplicationFactory;

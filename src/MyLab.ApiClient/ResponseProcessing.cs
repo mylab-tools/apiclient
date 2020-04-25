@@ -12,6 +12,13 @@ namespace MyLab.ApiClient
     {
         public static async Task<object> DeserializeContent(Type targetType, HttpContent httpContent)
         {
+            if (targetType == typeof(void))
+                return null;
+            if (httpContent.Headers.ContentLength.HasValue && httpContent.Headers.ContentLength.Value == 0)
+            {
+                return targetType.IsValueType ? Activator.CreateInstance(targetType) : null;
+            }
+
             var proc = SupportedResponseProcessors.Instance.FirstOrDefault(p => p.Predicate(targetType));
             if (proc == null)
                 throw new ApiClientException(

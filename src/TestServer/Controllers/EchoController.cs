@@ -11,5 +11,11 @@ namespace TestServer.Controllers
         {
             return Ok(msg);
         }
+
+        [HttpGet("empty")]
+        public IActionResult Get()
+        {
+            return Ok();
+        }
     }
 }
