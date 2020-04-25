@@ -1,8 +1,11 @@
 # MyLab.ApiClient
 [![NuGet Version and Downloads count](https://buildstats.info/nuget/MyLab.ApiClient)](https://www.nuget.org/packages/MyLab.ApiClient)
+
 ```
-Поддерживаемые платформы: .NET Standard 2.0+, .NET Framework 4.6.1+, .NET Core 2.0+
+Поддерживаемые платформы: .NET Core 3.1+
 ```
+Ознакомьтесь с последними изменениями в [журнале изменений](/changelog.md).
+
 ## Обзор
 
 `MyLab.ApiClient` предоставляет возможность создавать клиенты для `WEB API` на основе контрактов.
@@ -11,7 +14,7 @@
 
 * объявить контракт сервиса как интерфейс
 * пометить интерфейс атрибутом `ApiAttribute`
-* объявить методы, которые будут соответствовать конечным точкам сервиса
+* объявить асинхронные методы, которые будут соответствовать конечным точкам сервиса
 * пометить соответствующими атрибутами (`ApiMethodAttribute` или наследниками)
 * указать у методов типы возвращаемых параметров в соответствии с содержанием, которое возвращает сервис
 * указать у методов аргументы, соответствующие передаваемым в запросе данным
@@ -24,7 +27,7 @@
 public interface IServiceContract
 {   
     [Post("orders")]
-    int CreateOrder([JsonContent] Order order);
+    Task<int> CreateOrder([JsonContent] Order order);
 }
 ```
 
@@ -88,6 +91,10 @@ public interface IService
 
 ## Методы
 
+### Асинхронные методы
+
+Все методы контракта `API` должны быть асинхронными, т.е. возвращать `Task` или `Task<>`.
+
 ### Разметка
 
 Метод контракта должен быть помечен атрибутом `ApiMethodAttribute` или его наследником. Здесь определяется относительный путь и `HTTP`-метод. Также у `ApiMethodAttribute`  есть ряд наследников для основных случаев:
@@ -97,25 +104,25 @@ public interface IService
 public interface IService
 {
     [ApiMethod("orders", HttpMethod.Get)]
-    void GetOrders1();
+    Task GetOrders1();
     
     [Get("orders")]
-    void GetOrders2();
+    Task GetOrders2();
     
     [Get]
-    void GetOrders3();
+    Task GetOrders3();
     
     [Post]
-    void PostOrders();
+    Task PostOrders();
     
     [Put]
-    void PutOrders();
+    Task PutOrders();
     
     [Head]
-    void HeadOrders();
+    Task HeadOrders();
     
     [Delete]
-    void DeleteOrders();
+    Task DeleteOrders();
 }
 ```
 
@@ -132,7 +139,7 @@ public interface IService
 public interface IService
 {   
     [Get("orders/{id}")]
-    void Get([Path]string id);
+    Task Get([Path]string id);
 }
 
 //Result path with id=2: 
@@ -148,7 +155,7 @@ public interface IService
 public interface IService
 {   
     [Get("orders")]
-    WebApiCall Get([Query]string id);
+    Task Get([Query]string id);
 }
 
 //Result path with id=2: 
@@ -164,7 +171,7 @@ public interface IService
 public interface IService
 {   
     [Get("orders")]
-    WebApiCall Get([Header("X-Identifier")]string id);
+    Task Get([Header("X-Identifier")]string id);
 }
 
 //Result header with id=2: 
@@ -180,7 +187,7 @@ public interface IService
 public interface IService
 {   
     [Post("orders")]
-    void Create([StringContent] int orderId);
+    Task Create([StringContent] int orderId);
 }
 
 //Result content with Id=2: 2
@@ -195,7 +202,7 @@ public interface IService
 public interface IService
 {   
     [Post("orders")]
-    void Create([JsonContent] Order order);
+    Task Create([JsonContent] Order order);
 }
 
 public class Order
@@ -216,7 +223,7 @@ public class Order
 public interface IService
 {   
     [Post("orders")]
-    void Create([XmlContent] Order order);
+    Task Create([XmlContent] Order order);
 }
 
 public class Order
@@ -237,7 +244,7 @@ public class Order
 public interface IService
 {   
     [Post("orders")]
-    void Create([FormContent] Order order);
+    Task Create([FormContent] Order order);
 }
 
 public class Order
@@ -259,7 +266,7 @@ public class Order
 public interface IService
 {   
     [Post("orders")]
-    void Create([BinContent] byte[] orderData);
+    Task Create([BinContent] byte[] orderData);
 }
 ```
 
@@ -281,7 +288,7 @@ public interface IService
 {
     [ExpectedCode(HttpStatusCode.BadRequest)]
     [Get("orders/count")]
-    int GetOrdersCount();
+    Task<int> GetOrdersCount();
 }
 ```
 
@@ -300,6 +307,11 @@ public interface IService
 * типы значений: `DateTime`, `TimeSpan`, `Guid`
 * объекты/структуры: только если содержательная часть ответа в формате `XML`, `JSON`или `url-encoded-form`
 
+В случае, если содержательная часть ответа отсутствует, метод будет возвращать значения по умолчанию:
+
+- `null` для ссылочных типов;
+- `default()` - для типов значений.
+
 ## Вызов
 
 ### Результат
@@ -311,7 +323,7 @@ public interface IService
 public interface IService
 {
     [Post("orders")]
-    int CreateOrder(Order order);
+    Task<int> CreateOrder(Order order);
 }
 
 //....
@@ -326,7 +338,7 @@ var orderId = await service.Call(s => s.CreateOrder(order)).GetResult();
 public interface IService
 {
     [Post("orders")]
-    void CreateOrder(Order order);
+    Task CreateOrder(Order order);
 }
 
 //....
@@ -399,7 +411,7 @@ public class CallDetails<T>
 public interface IService
 {
     [Post("orders")]
-    int CreateOrder(Order order);
+    Task<int> CreateOrder(Order order);
 }
 
 //....
@@ -414,7 +426,7 @@ var response = await service.Call(s => s.CreateOrder(order)).GetDetailed();
 public interface IService
 {
     [Post("orders")]
-    void CreateOrder(Order order);
+    Task CreateOrder(Order order);
 }
 
 //....
@@ -466,3 +478,200 @@ Content-Type: text/plain; charset=utf-8
 foo
 ```
 
+## DI инъекция
+
+### Обзор
+
+Особенности DI инъекции:
+
+* определение настроек подключения к удалённым API через конфигурацию;
+* регистрация контрактов API на этапе конфигурирования сервисов в `Startup.ConfigureServices`;
+* сопоставление зарегистрированных контрактов и конфигураций;
+* получение клиентов в целевых объектах в качестве зависимостей двумя способами.
+
+Данный механизм основан на использовании [фабрики HttpClient](https://docs.microsoft.com/ru-ru/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests)-ов. 
+
+### Конфигурирование
+
+Целью загрузки конфигурации является создание именованных фабрик http-клиентов в соответствии параметрам из конфигурации.
+
+На примере ниже представлены способы определения конфигураций подключений к API:
+
+```C#
+public class Startup
+{
+    public Startup(IConfiguration configuration)
+    {
+    	Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // Simple case - using default section name "Api"
+    	services.AddApiClients(null, Configuration);
+        
+        // Or specify custom section name
+        services.AddApiClients(null, Configuration, "MyApiSectionName");
+
+        // Or create options directly in code
+        services.AddApiClients(null, new ApiClientsOptions
+            {
+                List = new Dictionary<string, ApiConnectionOptions>
+                {
+                    { "foo", new ApiConnectionOptions{Url = "http://test.com"}}
+                }
+            });
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+    	...
+    }
+}
+```
+
+Объектная модель конфигурации:
+
+```C#
+/// <summary>
+/// Contains api clients infrastructure options
+/// </summary>
+public class ApiClientsOptions
+{
+    /// <summary>
+    /// List of api connections options
+    /// </summary>
+    public Dictionary<string, ApiConnectionOptions> List { get; set; }
+}
+
+/// <summary>
+/// Contains api connection options
+/// </summary>
+public class ApiConnectionOptions
+{
+    /// <summary>
+    /// API base url
+    /// </summary>
+    public string Url { get; set; }
+}
+```
+
+Пример файла конфигурации:
+
+```json
+{
+  "Api": {
+    "List": {
+      "foo": { "Url": "http://foo-test.com" },
+      "bar": { "Url": "http://bar-test.com" }
+    }
+  }
+}
+```
+
+### Сопоставление контрактов 
+
+Для сопоставления контракта API и настроек конфигурации используется ключ контракта, указываемый в атрибуте `ApiAttribute` в поле `Key`. 
+
+Пример контракта `API` с указанным кодом контракта:
+
+```c#
+ [Api("echo", Key = "foo")]
+ interface ITestServer
+ {
+     [Get]
+     Task<string> Echo([JsonContent]string msg);
+ }
+```
+
+Конфигурационный файл с сопоставленной записью:
+
+```json
+{
+  "Api": {
+    "List": {
+      "foo": { "Url": "http://foo-test.com" }, //<--- here it is 
+      "bar": { "Url": "http://bar-test.com" }
+    }
+  }
+}
+```
+
+### Инъекция IHttpClientFactory
+
+Инъекция `IHttpClientFactory` в объект-потребитель позволяет создавать объекты `ApiClient<>` для дальнейшей работы с `API` через методы `Call` с передачей `Expressions`-выражений вызова методов контракта `API`. 
+
+Это может быть полезно, например, если в дальнейшем нужно получить детали вызова метода API.
+
+Ниже приведён пример класса-потребителя с использованием инъекции `IHttpClientFactory`:
+
+```C#
+class TestServiceForHttpClientFactory
+{
+    private readonly ApiClient<ITestServer> _server;
+
+    public TestServiceForHttpClientFactory(IHttpClientFactory httpClientFactory)
+    {
+        _server = httpClientFactory.CreateApiClient<ITestServer>();
+    }
+
+    public async Task<string> TestMethod(string msg, ITestOutputHelper log)
+    {
+        var resp = await _server.Call(s => s.Echo(msg)).GetDetailed();
+
+        log.WriteLine("Resquest dump:");
+        log.WriteLine(resp.RequestDump);
+        log.WriteLine("Response dump:");
+        log.WriteLine(resp.ResponseDump);
+
+        return resp.ResponseContent;
+    }
+}
+```
+
+Для создания клиента таким образом, у контракта `API`  должен быть определён ключ контракта в атрибуте `ApiAttribute` и должна быть загружена конфигурация с соответствующим ключом.
+
+### Инъекция прозрачного прокси 
+
+Инъекция прозрачного прокси в объект-потребитель позволяет использовать контракт `API` так же, как любой другой сервис, добавляемый через DI контейнер. Кроме того, это значительно упрощает тестирование класса-потребителя и избавляет от лишнего погружения в детали реализации зависимости.
+
+Для обеспечения инъекции прозрачных прокси контрактов API необходимо зарегистрировать эти контракты следующим образом:
+
+```C#
+public void ConfigureServices(IServiceCollection services)
+{
+    // Simple case - using default section name "Api"
+    services.AddApiClients(
+        registrar => 
+        {
+            registrar.RegisterContract<ITestServer>();
+        }, Configuration);
+}
+```
+
+Для регистрации контракта таким образом, у контракта `API`  должен быть определён ключ контракта в атрибуте `ApiAttribute` и должна быть загружена конфигурация с соответствующим ключом.
+
+Ниже приведён пример использования инъекции прозрачного прокси:
+
+```C#
+class TestServiceForProxy
+{
+    private readonly ITestServer _server;
+
+    public TestServiceForProxy(ITestServer server)
+    {
+    	_server = server;
+    }
+
+    public Task<string> TestMethod(string msg)
+    {
+    	return _server.Echo(msg);
+    }
+}
+```
+
+
+
+ 
