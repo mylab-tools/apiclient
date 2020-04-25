@@ -19,7 +19,7 @@ namespace UnitTests
             var services = new ServiceCollection();
             
             services.AddApiClients(
-                registrar => { },
+                null,
                 new ApiClientsOptions
             {
                 List = new Dictionary<string, ApiConnectionOptions>
@@ -50,7 +50,7 @@ namespace UnitTests
 
             var services = new ServiceCollection();
 
-            services.AddApiClients(registrar => { }, config);
+            services.AddApiClients(null, config);
 
             var serviceProvider = services.BuildServiceProvider();
             var srv = ActivatorUtilities.CreateInstance<TestService>(serviceProvider);

@@ -30,7 +30,7 @@ namespace IntegrationTests
             var services = new ServiceCollection();
 
             services.AddApiClients(
-                registrar => {},
+                null,
                 new WebApplicationFactoryHttpClientFactory<Startup>(_webApplicationFactory)
             );
 

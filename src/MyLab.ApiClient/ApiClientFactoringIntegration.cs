@@ -22,7 +22,6 @@ namespace MyLab.ApiClient
             string sectionName = DefaultConfigSectionName)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
-            if (contractRegistration == null) throw new ArgumentNullException(nameof(contractRegistration));
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (sectionName == null) throw new ArgumentNullException(nameof(sectionName));
 
@@ -42,13 +41,15 @@ namespace MyLab.ApiClient
             ApiClientsOptions options)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
-            if (contractRegistration == null) throw new ArgumentNullException(nameof(contractRegistration));
             if (options == null) throw new ArgumentNullException(nameof(options));
 
             HttpClientRegistrar.Register(services, options);
 
-            var contractRegistrar = new DefaultApiContractRegistrar(services);
-            contractRegistration(contractRegistrar);
+            if (contractRegistration != null)
+            {
+                var contractRegistrar = new DefaultApiContractRegistrar(services);
+                contractRegistration(contractRegistrar);
+            }
 
             return services;
         }
@@ -62,13 +63,15 @@ namespace MyLab.ApiClient
             IHttpClientFactory clientFactory)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
-            if (contractRegistration == null) throw new ArgumentNullException(nameof(contractRegistration));
             if (clientFactory == null) throw new ArgumentNullException(nameof(clientFactory));
 
             services.AddSingleton(clientFactory);
 
-            var contractRegistrar = new DefaultApiContractRegistrar(services);
-            contractRegistration(contractRegistrar);
+            if (contractRegistration != null)
+            {
+                var contractRegistrar = new DefaultApiContractRegistrar(services);
+                contractRegistration(contractRegistrar);
+            }
 
             return services;
         }
