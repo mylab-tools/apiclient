@@ -14,7 +14,9 @@ namespace UnitTests
             //Arrange
             var services = new ServiceCollection();
             
-            services.AddApiClients(new ApiClientsOptions
+            services.AddApiClients(
+                registrar => { },
+                new ApiClientsOptions
             {
                 List = new Dictionary<string, ApiConnectionOptions>
                 {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,10 +17,12 @@ namespace MyLab.ApiClient
         /// </summary>
         public static IServiceCollection AddApiClients(
             this IServiceCollection services,
+            Action<IApiContractRegistrar> contractRegistration,
             IConfiguration configuration,
             string sectionName = DefaultConfigSectionName)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
+            if (contractRegistration == null) throw new ArgumentNullException(nameof(contractRegistration));
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (sectionName == null) throw new ArgumentNullException(nameof(sectionName));
 
@@ -27,7 +30,7 @@ namespace MyLab.ApiClient
                 .GetSection(sectionName)
                 .Get<ApiClientsOptions>();
             
-            return AddApiClients(services, options);
+            return AddApiClients(services, contractRegistration, options);
         }
 
         /// <summary>
@@ -35,12 +38,37 @@ namespace MyLab.ApiClient
         /// </summary>
         public static IServiceCollection AddApiClients(
             this IServiceCollection services,
+            Action<IApiContractRegistrar> contractRegistration,
             ApiClientsOptions options)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
+            if (contractRegistration == null) throw new ArgumentNullException(nameof(contractRegistration));
             if (options == null) throw new ArgumentNullException(nameof(options));
 
             HttpClientRegistrar.Register(services, options);
+
+            var contractRegistrar = new DefaultApiContractRegistrar(services);
+            contractRegistration(contractRegistrar);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Integrates ApiClient factoring
+        /// </summary>
+        public static IServiceCollection AddApiClients(
+            this IServiceCollection services,
+            Action<IApiContractRegistrar> contractRegistration,
+            IHttpClientFactory clientFactory)
+        {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (contractRegistration == null) throw new ArgumentNullException(nameof(contractRegistration));
+            if (clientFactory == null) throw new ArgumentNullException(nameof(clientFactory));
+
+            services.AddSingleton(clientFactory);
+
+            var contractRegistrar = new DefaultApiContractRegistrar(services);
+            contractRegistration(contractRegistrar);
 
             return services;
         }
