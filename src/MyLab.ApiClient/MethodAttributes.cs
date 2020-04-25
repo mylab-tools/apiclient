@@ -53,7 +53,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="HeadAttribute"/>
         /// </summary>
-        public HeadAttribute(string url)
+        public HeadAttribute(string url = null)
             : base(url, HttpMethod.Head)
         {
         }
@@ -68,7 +68,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="PostAttribute"/>
         /// </summary>
-        public PostAttribute(string url)
+        public PostAttribute(string url = null)
             : base(url, HttpMethod.Post)
         {
         }
@@ -83,7 +83,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="PutAttribute"/>
         /// </summary>
-        public PutAttribute(string url)
+        public PutAttribute(string url = null)
             : base(url, HttpMethod.Put)
         {
         }
@@ -98,7 +98,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Initializes a new instance of <see cref="DeleteAttribute"/>
         /// </summary>
-        public DeleteAttribute(string url)
+        public DeleteAttribute(string url = null)
             : base(url, HttpMethod.Delete)
         {
         }

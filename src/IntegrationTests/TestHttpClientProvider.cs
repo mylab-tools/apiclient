@@ -1,18 +1,20 @@
 using System.Net.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using MyLab.ApiClient;
 using TestServer;
 
 namespace IntegrationTests
 {
-    class TestHttpClientProvider : IHttpClientProvider
+    class TestHttpClientProvider<TStartup> : IHttpClientProvider
+        where TStartup : class
     {
-        private readonly WebApplicationFactory<Startup> _applicationFactory;
+        private readonly WebApplicationFactory<TStartup> _applicationFactory;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="TestHttpClientProvider"/>
+        /// Initializes a new instance of <see cref="TestHttpClientProvider{T}"/>
         /// </summary>
-        public TestHttpClientProvider(WebApplicationFactory<Startup> applicationFactory)
+        public TestHttpClientProvider(WebApplicationFactory<TStartup> applicationFactory)
         {
             _applicationFactory = applicationFactory;
         }

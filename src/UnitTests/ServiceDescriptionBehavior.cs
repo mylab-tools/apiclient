@@ -9,14 +9,14 @@ namespace UnitTests
         [Fact]
         public void ShouldFailIfApiAttributeIsAbsent()
         {
-            Assert.Throws<ApiContractException>(ServiceDescription<IContractWithoutApiAttr>.Create);
+            Assert.Throws<ApiContractException>(() => ServiceDescription.Create(typeof(IContractWithoutApiAttr)));
         }
 
         [Fact]
         public void ShouldDetermineBaseUrl()
         {
             //Act
-            var desc = ServiceDescription<IContract>.Create();
+            var desc = ServiceDescription.Create(typeof(IContract));
             
             //Assert
             Assert.Equal("http://foo", desc.Url);

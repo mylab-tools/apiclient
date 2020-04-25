@@ -29,13 +29,15 @@ namespace MyLab.ApiClient
         private readonly string _baseUrl;
         private readonly MethodDescription _methodDescription;
         private readonly IHttpClientProvider _httpClientProvider;
+        private readonly Type _returnType;
         private readonly IReadOnlyList<IParameterApplier> _paramAppliers;
 
         internal ApiRequest(
             string baseUrl,
             MethodDescription methodDescription, 
             IEnumerable<IParameterApplier> paramAppliers,
-            IHttpClientProvider httpClientProvider)
+            IHttpClientProvider httpClientProvider,
+            Type returnType = null)
         {
             if (paramAppliers == null) throw new ArgumentNullException(nameof(paramAppliers));
             _baseUrl = baseUrl;
@@ -43,11 +45,15 @@ namespace MyLab.ApiClient
             _httpClientProvider = httpClientProvider ?? throw new ArgumentNullException(nameof(httpClientProvider));
             _paramAppliers = paramAppliers.ToList().AsReadOnly();
 
+            _returnType = returnType ?? typeof(TRes);
+            if (!typeof(TRes).IsAssignableFrom(_returnType))
+                throw new InvalidOperationException($"Specified return type '{_returnType.FullName}' must be assignable to method return type '{typeof(TRes).FullName}'");
+
             ExpectedCodes.AddRange(_methodDescription.ExpectedStatusCodes);
         }
 
         protected ApiRequest(ApiRequest<TRes> origin)
-            :this(origin._baseUrl, origin._methodDescription, origin._paramAppliers, origin._httpClientProvider)
+            :this(origin._baseUrl, origin._methodDescription, origin._paramAppliers, origin._httpClientProvider, origin._returnType)
         {
             RequestModifiers.AddRange(origin.RequestModifiers);
         }
@@ -69,7 +75,7 @@ namespace MyLab.ApiClient
 
             await IsStatusCodeUnexpected(resp.Response, true);
 
-            return await ResponseProcessing.DeserializeContent<TRes>(resp.Response.Content);
+            return (TRes) await ResponseProcessing.DeserializeContent(_returnType, resp.Response.Content);
         }
 
         /// <summary>
@@ -78,7 +84,7 @@ namespace MyLab.ApiClient
         public async Task<CallDetails<TRes>> GetDetailed(CancellationToken cancellationToken)
         {
             var resp = await SendRequestAsync(cancellationToken);
-            var respContent = await ResponseProcessing.DeserializeContent<TRes>(resp.Response.Content);
+            var respContent = await ResponseProcessing.DeserializeContent(_returnType, resp.Response.Content);
 
             var msgDumper = new HttpMessageDumper();
             var reqDump = await msgDumper.Dump(resp.Request);
@@ -89,7 +95,7 @@ namespace MyLab.ApiClient
             {
                 RequestMessage = resp.Request,
                 ResponseMessage = resp.Response,
-                ResponseContent = respContent,
+                ResponseContent = (TRes) respContent,
                 RequestDump = reqDump,
                 ResponseDump = respDump,
                 StatusCode = resp.Response.StatusCode,
@@ -99,8 +105,6 @@ namespace MyLab.ApiClient
 
         async Task<(HttpResponseMessage Response, HttpRequestMessage Request)> SendRequestAsync(CancellationToken cancellationToken)
         {
-            var cl = _httpClientProvider.Provide();
-
             var addr = new Uri(_baseUrl.TrimEnd('/') + "/" +  _methodDescription.Url, UriKind.RelativeOrAbsolute);
 
             var reqMsg = new HttpRequestMessage
@@ -113,7 +117,7 @@ namespace MyLab.ApiClient
 
             ApplyModifiers(reqMsg);
 
-            var response = await cl.SendAsync(reqMsg, cancellationToken);
+            var response = await _httpClientProvider.Provide().SendAsync(reqMsg, cancellationToken);
 
             return (response, reqMsg);
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Moq;
 using MyLab.ApiClient;
 using Xunit;
@@ -13,10 +14,10 @@ namespace UnitTests
         {
             //Arrange
             var httpClientProvider = new Mock<IHttpClientProvider>().Object;
-            var client = ApiClient<IContract>.Create(httpClientProvider);
+            var client = new ApiClient<IContract>(httpClientProvider);
             
             //Act & Assert
-            Assert.Throws<NotSupportedException>(() => client.Call(c => c.Foo() > 2));
+            Assert.Throws<NotSupportedException>(() => client.Call(c => Task.CompletedTask));
         }
         
         [Fact]
@@ -24,7 +25,7 @@ namespace UnitTests
         {
             //Arrange
             var httpClientProvider = new Mock<IHttpClientProvider>().Object;
-            var client = ApiClient<IContract>.Create(httpClientProvider);
+            var client = new ApiClient<IContract>(httpClientProvider);
             
             //Act & Assert
             client.Call(c => c.Foo());
@@ -34,7 +35,7 @@ namespace UnitTests
         interface IContract
         {
             [Get]
-            int Foo();
+            Task<int> Foo();
         }
     }
 }

@@ -10,7 +10,21 @@ namespace MyLab.ApiClient
         object GetValue();
     }
 
-    class DefaultApiRequestParameterValueProvider : IApiRequestParameterValueProvider
+    class SimpleApiRequestParameterValueProvider : IApiRequestParameterValueProvider
+    {
+        private readonly object _value;
+
+        public SimpleApiRequestParameterValueProvider(object value)
+        {
+            _value = value;
+        }
+        public object GetValue()
+        {
+            return _value;
+        }
+    }
+
+    class ExpressionBasedApiRequestParameterValueProvider : IApiRequestParameterValueProvider
     {
         private readonly Expression _valueProviderExpression;
 
@@ -21,9 +35,9 @@ namespace MyLab.ApiClient
         };
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DefaultApiRequestParameterValueProvider"/>
+        /// Initializes a new instance of <see cref="ExpressionBasedApiRequestParameterValueProvider"/>
         /// </summary>
-        public DefaultApiRequestParameterValueProvider(Expression valueProviderExpression)
+        public ExpressionBasedApiRequestParameterValueProvider(Expression valueProviderExpression)
         {
             _valueProviderExpression = valueProviderExpression;
         }
