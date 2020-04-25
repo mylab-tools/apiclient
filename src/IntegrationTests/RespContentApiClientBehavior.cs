@@ -13,7 +13,7 @@ namespace IntegrationTests
     public class RespContentApiClientBehavior : IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly ITestOutputHelper _output;
-        private readonly ApiClient<ITestServer> _client;
+        private TestHttpClientProvider _clientProvider;
 
         /// <summary>
         /// Initializes a new instance of <see cref="RespContentApiClientBehavior"/>
@@ -21,20 +21,17 @@ namespace IntegrationTests
         public RespContentApiClientBehavior(WebApplicationFactory<Startup> webApplicationFactory, ITestOutputHelper output)
         {
             _output = output;
-
-            var clientProvider = new TestHttpClientProvider(webApplicationFactory);
-            _client = new ApiClient<ITestServer>(clientProvider);
+           _clientProvider = new TestHttpClientProvider(webApplicationFactory);
         }
 
         [Fact]
-        [Category("Response content")]
         public async Task ShouldProvideXmlResponse()
         {
             //Arrange
-
+            var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act
-            var resp = await _client
+            var resp = await client
                 .Call(s => s.GetXmlObj())
                 .GetResult();
 
@@ -43,16 +40,41 @@ namespace IntegrationTests
         }
 
         [Fact]
-        [Category("Response content")]
         public async Task ShouldProvideJsonResponse()
         {
             //Arrange
-
+            var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act
-            var resp = await _client
+            var resp = await client
                 .Call(s => s.GetJsonObj())
                 .GetResult();
+
+            //Assert
+            Assert.Equal("foo", resp.TestValue);
+        }
+
+        [Fact]
+        public async Task ShouldProvideXmlResponseWithProxy()
+        {
+            //Arrange
+            var client = ApiProxy<ITestServer>.Create(_clientProvider);
+
+            //Act
+            var resp = await client.GetXmlObj();
+
+            //Assert
+            Assert.Equal("foo", resp.TestValue);
+        }
+
+        [Fact]
+        public async Task ShouldProvideJsonResponseWithProxy()
+        {
+            //Arrange
+            var client = ApiProxy<ITestServer>.Create(_clientProvider);
+
+            //Act
+            var resp = await client.GetJsonObj();
 
             //Assert
             Assert.Equal("foo", resp.TestValue);

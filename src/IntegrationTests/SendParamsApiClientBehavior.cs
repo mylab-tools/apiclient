@@ -15,7 +15,7 @@ namespace IntegrationTests
     public class SendParamsApiClientBehavior : IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly ITestOutputHelper _output;
-        private readonly ApiClient<ITestServer> _client;
+        private readonly TestHttpClientProvider _clientProvider;
 
         /// <summary>
         /// Initializes a new instance of <see cref="SendParamsApiClientBehavior"/>
@@ -24,8 +24,7 @@ namespace IntegrationTests
         {
             _output = output;
 
-            var clientProvider = new TestHttpClientProvider(webApplicationFactory);
-            _client = new ApiClient<ITestServer>(clientProvider);
+            _clientProvider = new TestHttpClientProvider(webApplicationFactory);
         }
 
         [Theory]
@@ -33,10 +32,10 @@ namespace IntegrationTests
         public async Task ShouldSendParameters(Expression<Func<ITestServer, Task<string>>> serviceCallExpr)
         {
             //Arrange
-
+            var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act
-            var resp = await _client
+            var resp = await client
                 .Call(serviceCallExpr)
                 .GetDetailed();
 

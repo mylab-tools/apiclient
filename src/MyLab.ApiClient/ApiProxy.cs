@@ -12,22 +12,22 @@ namespace MyLab.ApiClient
         private ApiRequestFactory _apiRequestFactory;
         private GenericCallTaskFactory _callTaskFactory;
 
-        public static TContract Create(HttpClient httpClient)
+        public static TContract Create(IHttpClientProvider httpClientProvider)
         {
-            if (httpClient == null) throw new ArgumentNullException(nameof(httpClient));
+            if (httpClientProvider == null) throw new ArgumentNullException(nameof(httpClientProvider));
 
             object proxy = Create<TContract, ApiProxy<TContract>>();
             
-            ((ApiProxy<TContract>)proxy).Initialize(httpClient);
+            ((ApiProxy<TContract>)proxy).Initialize(httpClientProvider);
 
             return (TContract)proxy;
         }
 
-        private void Initialize(HttpClient httpClient)
+        private void Initialize(IHttpClientProvider httpClientProvider)
         {
             var contractType = typeof(TContract);
 
-            _apiRequestFactory = new ApiRequestFactory(contractType, httpClient);
+            _apiRequestFactory = new ApiRequestFactory(contractType, httpClientProvider);
             _callTaskFactory = new GenericCallTaskFactory(_apiRequestFactory);
         }
 

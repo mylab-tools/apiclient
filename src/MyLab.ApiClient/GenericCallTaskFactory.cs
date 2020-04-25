@@ -9,7 +9,6 @@ namespace MyLab.ApiClient
     class GenericCallTaskFactory
     {
         private static readonly MethodInfo CreateGenericTaskMethod;
-        private static readonly MethodInfo ApiRequestGetResultMethod;
 
         private readonly ApiRequestFactory _apiRequestFactory;
 
@@ -21,8 +20,6 @@ namespace MyLab.ApiClient
                     m.Name == nameof(ApiRequestFactory.Create) &&
                     m.IsGenericMethod &&
                     m.GetGenericArguments().Length == 1);
-
-            ApiRequestGetResultMethod = typeof(ApiRequest<>).GetMethod("GetResult");
         }
 
         public GenericCallTaskFactory(ApiRequestFactory apiRequestFactory)
@@ -32,14 +29,18 @@ namespace MyLab.ApiClient
 
         public object Create(MethodInfo method, object[] args, Type taskResultType)
         {
-            var genericMethod = CreateGenericTaskMethod.MakeGenericMethod(taskResultType);
-            var apiRequest = genericMethod.Invoke(_apiRequestFactory, new object[]
+            var createTaskMethod = CreateGenericTaskMethod.MakeGenericMethod(taskResultType);
+            var apiRequest = createTaskMethod.Invoke(_apiRequestFactory, new object[]
             {
                 method,
                 args
             });
 
-            return ApiRequestGetResultMethod.Invoke(apiRequest, new object[]
+            var getResultMethod = apiRequest.GetType().GetMethod("GetResult");
+            if(getResultMethod == null)
+                throw new InvalidOperationException($"Cant find method 'GetResult' in type '{apiRequest.GetType().FullName}'");
+
+            return getResultMethod.Invoke(apiRequest, new object[]
             {
                 CancellationToken.None
             });

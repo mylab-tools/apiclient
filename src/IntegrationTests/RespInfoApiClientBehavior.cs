@@ -13,7 +13,7 @@ namespace IntegrationTests
     public class RespInfoApiClientBehavior : IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly ITestOutputHelper _output;
-        private readonly ApiClient<ITestServer> _client;
+        private readonly TestHttpClientProvider _clientProvider;
 
         /// <summary>
         /// Initializes a new instance of <see cref="RespInfoApiClientBehavior"/>
@@ -22,20 +22,19 @@ namespace IntegrationTests
         {
             _output = output;
 
-            var clientProvider = new TestHttpClientProvider(webApplicationFactory);
-            _client = new ApiClient<ITestServer>(clientProvider);
+            _clientProvider = new TestHttpClientProvider(webApplicationFactory);
         }
 
         [Fact]
-        [Category("Response info")]
         public async Task ShouldThrowWhenUnexpectedStatusCode()
         {
             //Arrange
+            var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act & Assert
             try
             {
-                await _client.Call(s => s.GetUnexpected404()).GetResult();
+                await client.Call(s => s.GetUnexpected404()).GetResult();
             }
             catch (ResponseCodeException e) when (e.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -44,28 +43,55 @@ namespace IntegrationTests
         }
 
         [Fact]
-        [Category("Response info")]
         public async Task ShouldPassWhenExpectedStatusCode()
         {
             //Arrange
+            var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act & Assert
-            await _client.Call(s => s.GetExpected404()).GetResult();
+            await client.Call(s => s.GetExpected404()).GetResult();
         }
 
         [Fact]
-        [Category("Response info")]
         public async Task ShouldProvideStatusMessage()
         {
             //Arrange
+            var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act
-            var resp = await _client
+            var resp = await client
                 .Call(s => s.GetExpected404())
                 .GetResult();
 
             //Assert
             Assert.Equal("This is a message", resp);
+        }
+
+        [Fact]
+        public async Task ShouldThrowWhenUnexpectedStatusCodeWithProxy()
+        {
+            //Arrange
+            var client = ApiProxy<ITestServer>.Create(_clientProvider);
+
+            //Act & Assert
+            try
+            {
+                await client.GetUnexpected404();
+            }
+            catch (ResponseCodeException e) when (e.StatusCode == HttpStatusCode.BadRequest)
+            {
+                //Pass
+            }
+        }
+
+        [Fact]
+        public async Task ShouldPassWhenExpectedStatusCodeWithProxy()
+        {
+            //Arrange
+            var client = ApiProxy<ITestServer>.Create(_clientProvider);
+
+            //Act & Assert
+            await client.GetExpected404();
         }
 
         [Api("resp-info")]
