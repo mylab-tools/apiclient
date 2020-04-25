@@ -31,9 +31,13 @@ namespace MyLab.ApiClient
         public void RegisterContract<TContract>()
             where TContract : class
         {
-            var validationIssues = MarkupValidator.Validate(typeof(TContract));
-            if (validationIssues != null)
-                throw new ApiContractValidationException(validationIssues);
+            var validationResult = new ApiContractValidator
+            {
+                ContractKeyMustBeSpecified = true
+            }.Validate(typeof(TContract));
+
+            if (!validationResult.Success)
+                throw new ApiContractValidationException(validationResult);
 
             _services.AddScoped(serviceProvider =>
             {

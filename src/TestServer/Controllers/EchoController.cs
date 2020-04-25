@@ -7,7 +7,7 @@ namespace TestServer.Controllers
     public class EchoController : ControllerBase
     {
         [HttpGet]
-        public IActionResult Get(string msg)
+        public IActionResult Get([FromBody]string msg)
         {
             return Ok(msg);
         }

@@ -8,16 +8,15 @@ namespace MyLab.ApiClient
     /// </summary>
     public class ApiContractValidationException : ApiContractException
     {
-        public ReadOnlyCollection<MarkupValidationIssuer> ValidationIssues { get; }
+        public ApiContractValidationResult ValidationResult { get; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="ApiContractValidationException"/>
         /// </summary>
-        public ApiContractValidationException(IEnumerable<MarkupValidationIssuer> validationIssuer) 
+        public ApiContractValidationException(ApiContractValidationResult validationResult) 
             : base("Invalid service api contract")
         {
-            ValidationIssues = new ReadOnlyCollection<MarkupValidationIssuer>(
-                new List<MarkupValidationIssuer>(validationIssuer));
+            ValidationResult = validationResult;
         }
     }
 }

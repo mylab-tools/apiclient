@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -13,48 +14,72 @@ namespace IntegrationTests
 {
     public class DiIntegrationBehavior : IClassFixture<WebApplicationFactory<Startup>>
     {
+        private readonly WebApplicationFactory<Startup> _webApplicationFactory;
         private readonly ITestOutputHelper _output;
-        private readonly TestHttpClientProvider _clientProvider;
 
         /// <summary>
         /// Initializes a new instance of <see cref="RespContentApiClientBehavior"/>
         /// </summary>
         public DiIntegrationBehavior(WebApplicationFactory<Startup> webApplicationFactory, ITestOutputHelper output)
         {
+            _webApplicationFactory = webApplicationFactory;
             _output = output;
-            _clientProvider = new TestHttpClientProvider(webApplicationFactory);
         }
 
         [Fact]
         public async Task ShouldIntegrateProxy()
         {
-            ////Arrange
-            //var services = new ServiceCollection();
+            //Arrange
+            var services = new ServiceCollection();
 
-            //services.AddApiClients(
-            //    registrar =>
-            //    {
-            //        registrar.RegisterContract<ITestServer>();
-            //    },
-            //    );
+            try
+            {
+                services.AddApiClients(
+                    registrar =>
+                    {
+                        registrar.RegisterContract<ITestServer>();
+                    },
+                    new WebApplicationFactoryHttpClientFactory<Startup>(_webApplicationFactory)
+                );
+            }
+            catch (ApiContractValidationException e)
+            {
+                _output.WriteLine(e.ValidationResult.ToString());
+                throw;
+            }
+            
+            var serviceProvider = services.BuildServiceProvider();
+            var srv = ActivatorUtilities.CreateInstance<TestServiceForProxy>(serviceProvider);
 
-            //var serviceProvider = services.BuildServiceProvider();
-            //var srv = ActivatorUtilities.CreateInstance<TestService>(serviceProvider);
+            //Act
+            var resMsg = await srv.TestMethod("foo");
 
-            ////Act
-            //var httpClient = srv.CreateHttpClient();
-
-            ////Assert
-            //Assert.NotNull(httpClient);
-            //Assert.Equal("http://test.com", httpClient.BaseAddress?.OriginalString);
+            //Assert
+            Assert.NotNull(resMsg);
+            Assert.Equal("foo", resMsg);
 
         }
 
-        [Api("echo")]
-        public interface ITestServer
+        [Api("echo", Key = "No matter for this test")]
+        interface ITestServer
         {
             [Get]
-            Task<string> Echo([FromBody]string msg);
+            Task<string> Echo([JsonContent]string msg);
+        }
+
+        class TestServiceForProxy
+        {
+            private readonly ITestServer _server;
+
+            public TestServiceForProxy(ITestServer server)
+            {
+                _server = server;
+            }
+
+            public Task<string> TestMethod(string msg)
+            {
+                return _server.Echo(msg);
+            }
         }
     }
 }

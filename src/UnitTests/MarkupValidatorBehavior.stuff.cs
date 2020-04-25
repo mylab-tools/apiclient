@@ -16,29 +16,6 @@ namespace UnitTests
             _output = output;
         }
 
-        private void WriteLog(MarkupValidationIssuer[] valRes)
-        {
-            _output.WriteLine("===== Validation Result =====");
-
-            if (valRes.Length == 0)
-            {
-                _output.WriteLine("<empty>");
-            }
-            else
-            {
-                foreach (var i in valRes)
-                {
-                    _output.WriteLine("");
-                    _output.WriteLine(i.Reason + (i.Critical ? " (critical)" : " (warning)"));
-                    _output.WriteLine("\t" + i.ServiceContract.FullName);
-                    if (i.Method != null)
-                        _output.WriteLine("\t\t" + i.Method.Name);
-                    if (i.Parameter != null)
-                        _output.WriteLine("\t\t" + i.Parameter.Name);
-                }
-            }
-        }
-
         [Api("api")]
         private interface IRightContract
         {

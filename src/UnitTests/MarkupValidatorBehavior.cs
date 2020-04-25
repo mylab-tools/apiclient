@@ -15,7 +15,7 @@ namespace UnitTests
             
 
             //Act
-            var valRes = MarkupValidator.Validate(typeof(IRightContract));
+            var valRes = new ApiContractValidator().Validate(typeof(IRightContract));
             
             //Assert
             Assert.Empty(valRes);
@@ -35,9 +35,9 @@ namespace UnitTests
 
 
             //Act
-            var valRes = MarkupValidator.Validate(contractType).ToArray();
+            var valRes = new ApiContractValidator().Validate(contractType);
 
-            WriteLog(valRes);
+            _output.WriteLine(valRes.ToString());
 
             //Assert
             Assert.Contains(valRes, iss => iss.Critical);
@@ -52,9 +52,9 @@ namespace UnitTests
 
 
             //Act
-            var valRes = MarkupValidator.Validate(contractType).ToArray();
+            var valRes = new ApiContractValidator().Validate(contractType);
 
-            WriteLog(valRes);
+            _output.WriteLine(valRes.ToString());
 
             //Assert
             Assert.True(valRes.All(iss => !iss.Critical));

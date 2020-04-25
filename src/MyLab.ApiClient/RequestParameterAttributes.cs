@@ -16,7 +16,7 @@ namespace MyLab.ApiClient
             
         }
 
-        public virtual MarkupValidationIssuer ValidateParameter(ParameterInfo p)
+        public virtual ApiContractValidationIssuer ValidateParameter(ParameterInfo p)
         {
             return null;
         }
@@ -164,12 +164,12 @@ namespace MyLab.ApiClient
         {
         }
 
-        public override MarkupValidationIssuer ValidateParameter(ParameterInfo p)
+        public override ApiContractValidationIssuer ValidateParameter(ParameterInfo p)
         {
             base.ValidateParameter(p);
 
             if (!(p.ParameterType == typeof(byte[])))
-                return new MarkupValidationIssuer
+                return new ApiContractValidationIssuer
                 {
                     Reason = $"Only '{typeof(byte[]).FullName}' supported as binary argument",
                     Critical = true
