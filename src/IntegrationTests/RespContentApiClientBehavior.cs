@@ -13,7 +13,7 @@ namespace IntegrationTests
     public class RespContentApiClientBehavior : IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly ITestOutputHelper _output;
-        private readonly TestHttpClientProvider<Startup> _clientProvider;
+        private readonly IHttpClientProvider _clientProvider;
 
         /// <summary>
         /// Initializes a new instance of <see cref="RespContentApiClientBehavior"/>
@@ -21,7 +21,7 @@ namespace IntegrationTests
         public RespContentApiClientBehavior(WebApplicationFactory<Startup> webApplicationFactory, ITestOutputHelper output)
         {
             _output = output;
-           _clientProvider = new TestHttpClientProvider<Startup>(webApplicationFactory);
+           _clientProvider = new DelegateHttpClientProvider(webApplicationFactory.CreateClient);
         }
 
         [Fact]

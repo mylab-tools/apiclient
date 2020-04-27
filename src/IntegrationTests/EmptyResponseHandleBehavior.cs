@@ -15,7 +15,7 @@ namespace IntegrationTests
 
         public EmptyResponseHandleBehavior(WebApplicationFactory<Startup> webApplicationFactory, ITestOutputHelper output)
         {
-            _clientProvider = new TestHttpClientProvider<Startup>(webApplicationFactory);
+            _clientProvider = new DelegateHttpClientProvider(webApplicationFactory.CreateClient);
             _output = output;
         }
 
