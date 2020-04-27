@@ -15,7 +15,7 @@ namespace IntegrationTests
     public class SendParamsApiClientBehavior : IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly ITestOutputHelper _output;
-        private readonly TestHttpClientProvider<Startup> _clientProvider;
+        private readonly IHttpClientProvider _clientProvider;
 
         /// <summary>
         /// Initializes a new instance of <see cref="SendParamsApiClientBehavior"/>
@@ -24,7 +24,7 @@ namespace IntegrationTests
         {
             _output = output;
 
-            _clientProvider = new TestHttpClientProvider<Startup>(webApplicationFactory);
+            _clientProvider = new DelegateHttpClientProvider(webApplicationFactory.CreateClient);
         }
 
         [Theory]

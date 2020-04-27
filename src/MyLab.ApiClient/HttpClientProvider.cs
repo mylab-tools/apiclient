@@ -60,4 +60,22 @@ namespace MyLab.ApiClient
             return _client;
         }
     }
+
+    public class DelegateHttpClientProvider : IHttpClientProvider
+    {
+        private readonly Func<HttpClient> _factoryMethod;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="DelegateHttpClientProvider"/>
+        /// </summary>
+        public DelegateHttpClientProvider(Func<HttpClient> factoryMethod)
+        {
+            _factoryMethod = factoryMethod ?? throw new ArgumentNullException(nameof(factoryMethod));
+        }
+
+        public HttpClient Provide()
+        {
+            return _factoryMethod();
+        }
+    }
 }
