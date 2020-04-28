@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.categories" Version="2.0.4" />
@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyLab.ApiClient.Test\MyLab.ApiClient.Test.csproj" />
     <ProjectReference Include="..\MyLab.ApiClient\MyLab.ApiClient.csproj" />
     <ProjectReference Include="..\TestServer\TestServer.csproj" />
   </ItemGroup>
