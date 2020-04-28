@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using MyLab.ApiClient;
+using MyLab.ApiClient.Test;
 using TestServer;
 using TestServer.Models;
 using Xunit;
@@ -12,19 +13,14 @@ using Xunit.Abstractions;
 
 namespace IntegrationTests
 {
-    public class SendParamsApiClientBehavior : IClassFixture<WebApplicationFactory<Startup>>
+    public class SendParamsApiClientBehavior : ApiClientTest<Startup, SendParamsApiClientBehavior.ITestServer>
     {
-        private readonly ITestOutputHelper _output;
-        private readonly IHttpClientProvider _clientProvider;
-
         /// <summary>
         /// Initializes a new instance of <see cref="SendParamsApiClientBehavior"/>
         /// </summary>
-        public SendParamsApiClientBehavior(WebApplicationFactory<Startup> webApplicationFactory, ITestOutputHelper output)
+        public SendParamsApiClientBehavior(ITestOutputHelper output)
+            :base(output)
         {
-            _output = output;
-
-            _clientProvider = new DelegateHttpClientProvider(webApplicationFactory.CreateClient);
         }
 
         [Theory]
@@ -32,17 +28,9 @@ namespace IntegrationTests
         public async Task ShouldSendParameters(Expression<Func<ITestServer, Task<string>>> serviceCallExpr)
         {
             //Arrange
-            var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act
-            var resp = await client
-                .Call(serviceCallExpr)
-                .GetDetailed();
-
-            _output.WriteLine("====== Request ======");
-            _output.WriteLine(resp.RequestDump);
-            _output.WriteLine("====== Response ======");
-            _output.WriteLine(resp.ResponseDump);
+            var resp = await TestCall(serviceCallExpr);
 
             //Assert
             Assert.False(resp.IsUnexpectedStatusCode);
