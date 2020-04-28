@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
@@ -29,6 +30,7 @@ namespace MyLab.ApiClient
             Add(new GuidResponseProcessor());
             Add(new BinaryResponseProcessor());
             Add(new StructuredObjectResponseProcessor());
+            Add(new EnumerableResponseProcessor());
         }
     }
 
@@ -79,59 +81,30 @@ namespace MyLab.ApiClient
         }
     }
 
+    class EnumerableResponseProcessor : IResponseProcessor
+    {
+        public async Task<object> GetResponse(HttpContent content, Type returnType)
+        {
+            var listType = typeof(List<>).MakeGenericType(returnType.GetGenericArguments());
+            return await ResponseProcessorDeserializer.ReadObject(content, listType);
+        }
+
+        public bool Predicate(Type returnType)
+        {
+            return returnType.IsGenericType &&
+                   returnType.GetGenericTypeDefinition() == typeof(IEnumerable<>);
+        }
+    }
+
     class StructuredObjectResponseProcessor : IResponseProcessor
     {
         public bool Predicate(Type returnType) =>
             (returnType.IsClass && !returnType.IsAbstract) ||
             (returnType.IsValueType && !returnType.IsPrimitive);
 
-        public async Task<object> GetResponse(HttpContent content, Type returnType)
+        public Task<object> GetResponse(HttpContent content, Type returnType)
         {
-            var contentStr = await content.ReadAsStringAsync();
-            var str = contentStr.Trim(' ', '\"');
-
-            if (str == "null")
-                return null;
-
-            if (str.StartsWith("<"))
-                return DeserializeFromXml(str, returnType);
-
-            if (str.StartsWith("{") || str.StartsWith("["))
-                return DeserializeFromJson(str, returnType);
-
-            throw new ApiClientException("Unexpected response payload content. Only XML and JSON are supported for structural object.");
-        }
-
-        private object DeserializeFromJson(string str, Type returnType)
-        {
-            var d = new JsonSerializer();
-
-            using (var r = new StringReader(str))
-            {
-                return d.Deserialize(r, returnType);
-            }
-        }
-
-        private object DeserializeFromXml(string str, Type returnType)
-        {
-            var rootAttribute = returnType.GetTypeInfo().GetCustomAttribute<XmlRootAttribute>();
-
-            if (rootAttribute == null)
-            {
-                using (var strReader = new StringReader(str))
-                using (var xmlReader = new XmlTextReader(strReader))
-                {
-                    xmlReader.MoveToContent();
-                    rootAttribute = new XmlRootAttribute(xmlReader.Name);
-                }
-            }
-
-            var d = new XmlSerializer(returnType, rootAttribute);
-
-            using (var r = new StringReader(str))
-            {
-                return d.Deserialize(r);
-            }
+            return ResponseProcessorDeserializer.ReadObject(content, returnType);
         }
     }
 
@@ -214,6 +187,58 @@ namespace MyLab.ApiClient
         protected override Guid Deserialize(string str)
         {
             return Guid.Parse(str);
+        }
+    }
+
+    static class ResponseProcessorDeserializer
+    {
+        public static async Task<object> ReadObject(HttpContent content, Type returnType)
+        {
+            var contentStr = await content.ReadAsStringAsync();
+            var str = contentStr.Trim(' ', '\"');
+
+            if (str == "null")
+                return null;
+
+            if (str.StartsWith("<"))
+                return DeserializeFromXml(str, returnType);
+
+            if (str.StartsWith("{") || str.StartsWith("["))
+                return DeserializeFromJson(str, returnType);
+
+            throw new ApiClientException("Unexpected response payload content. Only XML and JSON are supported for structural object.");
+        }
+
+        private static object DeserializeFromJson(string str, Type returnType)
+        {
+            var d = new JsonSerializer();
+
+            using (var r = new StringReader(str))
+            {
+                return d.Deserialize(r, returnType);
+            }
+        }
+
+        private static object DeserializeFromXml(string str, Type returnType)
+        {
+            var rootAttribute = returnType.GetTypeInfo().GetCustomAttribute<XmlRootAttribute>();
+
+            if (rootAttribute == null)
+            {
+                using (var strReader = new StringReader(str))
+                using (var xmlReader = new XmlTextReader(strReader))
+                {
+                    xmlReader.MoveToContent();
+                    rootAttribute = new XmlRootAttribute(xmlReader.Name);
+                }
+            }
+
+            var d = new XmlSerializer(returnType, rootAttribute);
+
+            using (var r = new StringReader(str))
+            {
+                return d.Deserialize(r);
+            }
         }
     }
 }

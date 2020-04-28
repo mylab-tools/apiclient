@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 
 namespace TestServer.Controllers
 {
@@ -16,6 +18,12 @@ namespace TestServer.Controllers
         public IActionResult GetJsonData()
         {
             return Ok("{\"TestValue\":\"foo\"}");
+        }
+
+        [HttpGet("data/enumerable")]
+        public IEnumerable<string> GetEnumerable()
+        {
+            return new[] {"foo", "bar"};
         }
     }
 }
