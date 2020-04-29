@@ -53,7 +53,7 @@ namespace IntegrationTests
         }
 
         [Fact]
-        public async Task ShouldProvideStatusMessage()
+        public async Task ShouldNotProvideStatusMessageIfNotSuccess()
         {
             //Arrange
             var client = new ApiClient<ITestServer>(_clientProvider);
@@ -64,7 +64,8 @@ namespace IntegrationTests
                 .GetResult();
 
             //Assert
-            Assert.Equal("This is a message", resp);
+            //Assert.Equal("This is a message", resp);
+            Assert.Null(resp);
         }
 
         [Fact]
