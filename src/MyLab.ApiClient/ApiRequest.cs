@@ -105,7 +105,7 @@ namespace MyLab.ApiClient
 
         async Task<(HttpResponseMessage Response, HttpRequestMessage Request)> SendRequestAsync(CancellationToken cancellationToken)
         {
-            var addr = new Uri(_baseUrl.TrimEnd('/') + "/" +  _methodDescription.Url, UriKind.RelativeOrAbsolute);
+            var addr = new Uri((_baseUrl?.TrimEnd('/') ?? "") + "/" +  _methodDescription.Url, UriKind.RelativeOrAbsolute);
 
             var reqMsg = new HttpRequestMessage
             {
