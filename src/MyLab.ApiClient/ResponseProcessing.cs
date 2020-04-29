@@ -14,7 +14,8 @@ namespace MyLab.ApiClient
         {
             if (targetType == typeof(void))
                 return null;
-            if (httpContent.Headers.ContentLength.HasValue && httpContent.Headers.ContentLength.Value == 0)
+            if (httpContent.Headers.ContentType?.MediaType == "application/problem+json" ||
+                httpContent.Headers.ContentLength.HasValue && httpContent.Headers.ContentLength.Value == 0)
             {
                 return targetType.IsValueType ? Activator.CreateInstance(targetType) : null;
             }

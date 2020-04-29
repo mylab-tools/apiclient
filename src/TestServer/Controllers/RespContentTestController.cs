@@ -11,13 +11,13 @@ namespace TestServer.Controllers
         [HttpGet("data/xml")]
         public IActionResult GetXmlData()
         {
-            return Ok("<Root><TestValue>foo</TestValue></Root>");
+            return Content("<Root><TestValue>foo</TestValue></Root>", "application/xml");
         }
 
         [HttpGet("data/json")]
         public IActionResult GetJsonData()
         {
-            return Ok("{\"TestValue\":\"foo\"}");
+            return Content("{\"TestValue\":\"foo\"}", "application/json");
         }
 
         [HttpGet("data/enumerable")]

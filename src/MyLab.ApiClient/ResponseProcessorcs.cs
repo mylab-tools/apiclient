@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
-using Newtonsoft.Json;
 
 namespace MyLab.ApiClient
 {
@@ -64,15 +60,19 @@ namespace MyLab.ApiClient
 
         public async Task<object> GetResponse(HttpContent content, Type returnType)
         {
-            var bin = await content.ReadAsByteArrayAsync();
+            return await new MediaTypeProc(content)
+                .Supports("application/json", async c =>
+                {
+                    var bin = await c.ReadAsByteArrayAsync();
+                    if (bin.Length != 0 && bin[0] == '\"')
+                    {
+                        var base64Str = Encoding.UTF8.GetString(bin).Trim('\"');
+                        return Convert.FromBase64String(base64Str);
+                    }
 
-            if (bin.Length != 0 && bin[0] == '\"')
-            {
-                var base64Str = Encoding.UTF8.GetString(bin).Trim('\"');
-                return Convert.FromBase64String(base64Str);
-            }
-
-            return bin;
+                    return bin;
+                })
+                .GetResult();
         }
     }
 
@@ -82,8 +82,14 @@ namespace MyLab.ApiClient
 
         public async Task<object> GetResponse(HttpContent content, Type returnType)
         {
-            var res = await content.ReadAsStringAsync();
-            return res.Trim('\"');
+            return await new MediaTypeProc(content)
+                .Supports("application/json", async c =>
+                {
+                    var res = await content.ReadAsStringAsync();
+                    return res.Trim('\"');
+                })
+                .Supports("text/plain", async c => await content.ReadAsStringAsync())
+                .GetResult();
         }
     }
 
@@ -92,7 +98,11 @@ namespace MyLab.ApiClient
         public async Task<object> GetResponse(HttpContent content, Type returnType)
         {
             var listType = typeof(List<>).MakeGenericType(returnType.GetGenericArguments());
-            return await ResponseProcessorDeserializer.ReadObject(content, listType);
+
+            return await new MediaTypeProc(content)
+                .Supports("application/json", async c => await ResponseProcessorConverter.ReadObjectJson(content, listType))
+                .Supports("application/xml", async c => await ResponseProcessorConverter.ReadObjectXml(content, listType))
+                .GetResult();
         }
 
         public bool Predicate(Type returnType)
@@ -108,9 +118,13 @@ namespace MyLab.ApiClient
             (returnType.IsClass && !returnType.IsAbstract) ||
             (returnType.IsValueType && !returnType.IsPrimitive);
 
-        public Task<object> GetResponse(HttpContent content, Type returnType)
+        public async Task<object> GetResponse(HttpContent content, Type returnType)
         {
-            return ResponseProcessorDeserializer.ReadObject(content, returnType);
+            return await new MediaTypeProc(content)
+                .Supports("application/json", async c => await ResponseProcessorConverter.ReadObjectJson(content, returnType))
+                .Supports("application/xml", async c => await ResponseProcessorConverter.ReadObjectXml(content, returnType))
+                .GetResult();
+            
         }
     }
 
@@ -127,7 +141,10 @@ namespace MyLab.ApiClient
         public async Task<object> GetResponse(HttpContent content, Type returnType)
         {
             var contentStr = await content.ReadAsStringAsync();
-            return Deserialize(contentStr.Trim('\"', ' '));
+            return await new MediaTypeProc(content)
+                .Supports("application/json", async c => Deserialize(contentStr.Trim('\"', ' ')))
+                .Supports("text/plain", async c => Deserialize(contentStr.Trim('\"', ' ')))
+                .GetResult();
         }
 
         protected abstract T Deserialize(string str);
@@ -247,58 +264,6 @@ namespace MyLab.ApiClient
         protected override Guid Deserialize(string str)
         {
             return Guid.Parse(str);
-        }
-    }
-
-    static class ResponseProcessorDeserializer
-    {
-        public static async Task<object> ReadObject(HttpContent content, Type returnType)
-        {
-            var contentStr = await content.ReadAsStringAsync();
-            var str = contentStr.Trim(' ', '\"');
-
-            if (str == "null")
-                return null;
-
-            if (str.StartsWith("<"))
-                return DeserializeFromXml(str, returnType);
-
-            if (str.StartsWith("{") || str.StartsWith("["))
-                return DeserializeFromJson(str, returnType);
-
-            throw new ApiClientException("Unexpected response payload content. Only XML and JSON are supported for structural object.");
-        }
-
-        private static object DeserializeFromJson(string str, Type returnType)
-        {
-            var d = new JsonSerializer();
-
-            using (var r = new StringReader(str))
-            {
-                return d.Deserialize(r, returnType);
-            }
-        }
-
-        private static object DeserializeFromXml(string str, Type returnType)
-        {
-            var rootAttribute = returnType.GetTypeInfo().GetCustomAttribute<XmlRootAttribute>();
-
-            if (rootAttribute == null)
-            {
-                using (var strReader = new StringReader(str))
-                using (var xmlReader = new XmlTextReader(strReader))
-                {
-                    xmlReader.MoveToContent();
-                    rootAttribute = new XmlRootAttribute(xmlReader.Name);
-                }
-            }
-
-            var d = new XmlSerializer(returnType, rootAttribute);
-
-            using (var r = new StringReader(str))
-            {
-                return d.Deserialize(r);
-            }
         }
     }
 }
