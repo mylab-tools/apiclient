@@ -21,9 +21,15 @@ namespace MyLab.ApiClient
         SupportedResponseProcessors()
         {
             Add(new BoolResponseProcessor());
+            Add(new ShortResponseProcessor());
+            Add(new UShortResponseProcessor());
             Add(new IntResponseProcessor());
             Add(new UintResponseProcessor());
+            Add(new LongResponseProcessor());
+            Add(new ULongResponseProcessor());
             Add(new DoubleResponseProcessor());
+            Add(new FloatResponseProcessor());
+            Add(new DecimalResponseProcessor());
             Add(new StringResponseProcessor());
             Add(new TimeSpanResponseProcessor());
             Add(new DateTimeResponseProcessor());
@@ -150,7 +156,61 @@ namespace MyLab.ApiClient
         /// <inheritdoc />
         protected override double Deserialize(string str)
         {
-            return Convert.ToDouble(str.Replace(",","."), CultureInfo.InvariantCulture);
+            return double.Parse(str.Replace(",", "."), CultureInfo.InvariantCulture);
+        }
+    }
+
+    class FloatResponseProcessor : PrimitiveResponseProcessor<float>
+    {
+        /// <inheritdoc />
+        protected override float Deserialize(string str)
+        {
+            return float.Parse(str.Replace(",", "."), CultureInfo.InvariantCulture);
+        }
+    }
+
+    class DecimalResponseProcessor : PrimitiveResponseProcessor<decimal>
+    {
+        /// <inheritdoc />
+        protected override decimal Deserialize(string str)
+        {
+            return decimal.Parse(str.Replace(",", "."), CultureInfo.InvariantCulture);
+        }
+    }
+
+    class ShortResponseProcessor : PrimitiveResponseProcessor<short>
+    {
+        /// <inheritdoc />
+        protected override short Deserialize(string str)
+        {
+            return short.Parse(str);
+        }
+    }
+
+    class UShortResponseProcessor : PrimitiveResponseProcessor<ushort>
+    {
+        /// <inheritdoc />
+        protected override ushort Deserialize(string str)
+        {
+            return ushort.Parse(str);
+        }
+    }
+
+    class LongResponseProcessor : PrimitiveResponseProcessor<long>
+    {
+        /// <inheritdoc />
+        protected override long Deserialize(string str)
+        {
+            return long.Parse(str);
+        }
+    }
+
+    class ULongResponseProcessor : PrimitiveResponseProcessor<ulong>
+    {
+        /// <inheritdoc />
+        protected override ulong Deserialize(string str)
+        {
+            return ulong.Parse(str);
         }
     }
 

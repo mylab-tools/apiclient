@@ -25,5 +25,17 @@ namespace TestServer.Controllers
         {
             return new[] {"foo", "bar"};
         }
+
+        [HttpGet("data/int")]
+        public IActionResult GetInt()
+        {
+            return Ok(10);
+        }
+
+        [HttpGet("data/float")]
+        public IActionResult GetFloat()
+        {
+            return Ok(10.1);
+        }
     }
 }
