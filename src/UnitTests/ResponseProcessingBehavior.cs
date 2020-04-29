@@ -42,13 +42,13 @@ namespace UnitTests
         }
 
         [Theory]
-        [InlineData("<Root><TestValue>foo</TestValue></Root>")]
-        [InlineData("{\"TestValue\":\"foo\"}")]
-        [InlineData("{TestValue:\"foo\"}")]
-        public async Task ShouldDeserializeContent(string strContent)
+        [InlineData("<Root><TestValue>foo</TestValue></Root>", "application/xml")]
+        [InlineData("{\"TestValue\":\"foo\"}", "application/json")]
+        [InlineData("{TestValue:\"foo\"}", "application/json")]
+        public async Task ShouldDeserializeContent(string strContent, string mediaType)
         {
             //Arrange
-            var httpContent = new StringContent(strContent);
+            var httpContent = new StringContent(strContent, Encoding.UTF8, mediaType);
 
             //Act
             var res = await ResponseProcessing.DeserializeContent<TestModel>(httpContent);
