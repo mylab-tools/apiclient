@@ -28,12 +28,6 @@ namespace MyLab.ApiClient
     {
         private readonly Expression _valueProviderExpression;
 
-        private static readonly IExpressionValueProvider[] ValueProviders =
-        {
-            new ConstantExpressionValueProvider(), 
-            new MemberExpressionValueProvider(), 
-        };
-
         /// <summary>
         /// Initializes a new instance of <see cref="ExpressionBasedApiRequestParameterValueProvider"/>
         /// </summary>
@@ -56,7 +50,8 @@ namespace MyLab.ApiClient
             new MemberExpressionValueProvider(),
             new CallExpressionValueProvider(), 
             new NewExpressionValueProvider(), 
-            new MemberInitExpressionValueProvider()
+            new MemberInitExpressionValueProvider(),
+            new ConvertExpressionValueProvider()
         };
 
         public static object GetValue(Expression expression)
@@ -67,6 +62,20 @@ namespace MyLab.ApiClient
                 throw new NotSupportedException($"Expression type '{expression.NodeType}' not supported");
 
             return valProvider.GetValue(expression);
+        }
+    }
+
+    internal class ConvertExpressionValueProvider : IExpressionValueProvider
+    {
+        public bool Predicate(Expression expression)
+        {
+            return expression.NodeType == ExpressionType.Convert;
+        }
+
+        public object GetValue(Expression expression)
+        {
+            var uExpr = (UnaryExpression) expression;
+            return ExpressionValueProvidingTools.GetValue(uExpr.Operand);
         }
     }
 
