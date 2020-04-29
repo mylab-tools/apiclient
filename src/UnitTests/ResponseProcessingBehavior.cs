@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,7 +36,7 @@ namespace UnitTests
             var httpContent = new StringContent(strContent);
 
             //Act
-            var res = await ResponseProcessing.DeserializeContent(targetType, httpContent);
+            var res = await ResponseProcessing.DeserializeContent(targetType, httpContent, HttpStatusCode.OK);
 
             //Assert
             Assert.Equal(expected, res);
@@ -51,7 +52,7 @@ namespace UnitTests
             var httpContent = new StringContent(strContent, Encoding.UTF8, mediaType);
 
             //Act
-            var res = await ResponseProcessing.DeserializeContent<TestModel>(httpContent);
+            var res = await ResponseProcessing.DeserializeContent<TestModel>(httpContent, HttpStatusCode.OK);
 
             //Assert
             Assert.Equal("foo", res.TestValue);

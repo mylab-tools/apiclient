@@ -75,7 +75,10 @@ namespace MyLab.ApiClient
 
             await IsStatusCodeUnexpected(resp.Response, true);
 
-            return (TRes) await ResponseProcessing.DeserializeContent(_returnType, resp.Response.Content);
+            return (TRes) await ResponseProcessing.DeserializeContent(
+                _returnType, 
+                resp.Response.Content, 
+                resp.Response.StatusCode);
         }
 
         /// <summary>
@@ -84,7 +87,10 @@ namespace MyLab.ApiClient
         public async Task<CallDetails<TRes>> GetDetailed(CancellationToken cancellationToken)
         {
             var resp = await SendRequestAsync(cancellationToken);
-            var respContent = await ResponseProcessing.DeserializeContent(_returnType, resp.Response.Content);
+            var respContent = await ResponseProcessing.DeserializeContent(
+                _returnType, 
+                resp.Response.Content, 
+                resp.Response.StatusCode);
 
             var msgDumper = new HttpMessageDumper();
             var reqDump = await msgDumper.Dump(resp.Request);
