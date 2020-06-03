@@ -72,6 +72,7 @@ namespace MyLab.ApiClient
 
                     return bin;
                 })
+                .Supports("application/octet-stream", async c => await c.ReadAsByteArrayAsync())
                 .GetResult();
         }
     }

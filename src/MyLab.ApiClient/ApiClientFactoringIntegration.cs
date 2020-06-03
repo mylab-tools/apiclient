@@ -25,9 +25,12 @@ namespace MyLab.ApiClient
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (sectionName == null) throw new ArgumentNullException(nameof(sectionName));
 
-            var options = configuration
-                .GetSection(sectionName)
-                .Get<ApiClientsOptions>();
+            var optionsSection = configuration.GetSection(sectionName);
+
+            if(!optionsSection.Exists())
+                throw new InvalidOperationException($"Section '{sectionName}' does not exists");
+
+            var options = optionsSection.Get<ApiClientsOptions>();
             
             return AddApiClients(services, contractRegistration, options);
         }

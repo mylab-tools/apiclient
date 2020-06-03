@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 
 namespace TestServer.Controllers
 {
@@ -36,6 +39,24 @@ namespace TestServer.Controllers
         public IActionResult GetFloat()
         {
             return Ok(10.1);
+        }
+
+        [HttpGet("data/bin-json")]
+        public IActionResult GetBinJson()
+        {
+            var bin = Encoding.UTF8.GetBytes("foo");
+            var json = JsonConvert.SerializeObject(bin);
+
+            return Content(json, "application/json");
+        }
+
+        [HttpGet("data/bin-octet-stream")]
+        public IActionResult GetBinOctetStream()
+        {
+            var bin = Encoding.UTF8.GetBytes("foo");
+            var memStream = new MemoryStream(bin);
+            
+            return new FileStreamResult(memStream, "application/octet-stream");
         }
     }
 }
