@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MyLab.ApiClient
@@ -39,10 +40,12 @@ namespace MyLab.ApiClient
             if (!validationResult.Success)
                 throw new ApiContractValidationException(validationResult);
 
+            string serviceKey = typeof(TContract).GetCustomAttribute<ApiAttribute>()?.Key;
+
             _services.AddScoped(serviceProvider =>
             {
                 var httpFactory = (IHttpClientFactory) serviceProvider.GetService(typeof(IHttpClientFactory));
-                return ApiProxy<TContract>.Create(new FactoryHttpClientProvider(httpFactory));
+                return ApiProxy<TContract>.Create(new FactoryHttpClientProvider(httpFactory, serviceKey));
             });
         }
     }
