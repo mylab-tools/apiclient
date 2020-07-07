@@ -111,7 +111,19 @@ namespace MyLab.ApiClient
 
         async Task<(HttpResponseMessage Response, HttpRequestMessage Request)> SendRequestAsync(CancellationToken cancellationToken)
         {
-            var addr = new Uri((_baseUrl?.TrimEnd('/') ?? "") + "/" +  _methodDescription.Url, UriKind.RelativeOrAbsolute);
+            Uri addr;
+
+            try
+            {
+                addr = new Uri((_baseUrl?.TrimEnd('/') ?? "") + "/" + _methodDescription.Url, UriKind.RelativeOrAbsolute);
+            }
+            catch (Exception e)
+            {
+                e.Data.Add("baseUrl", _baseUrl);
+                e.Data.Add("methodUrl", _methodDescription.Url);
+
+                throw;
+            }
 
             var reqMsg = new HttpRequestMessage
             {
@@ -123,7 +135,25 @@ namespace MyLab.ApiClient
 
             ApplyModifiers(reqMsg);
 
-            var response = await _httpClientProvider.Provide().SendAsync(reqMsg, cancellationToken);
+            HttpResponseMessage response;
+            HttpClient httpClient = null;
+
+            try
+            {
+                httpClient = _httpClientProvider.Provide();
+                response = await httpClient.SendAsync(reqMsg, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                e.Data.Add("httpClient is null", httpClient == null);
+
+                if (httpClient != null) 
+                {
+                    e.Data.Add("httpClient.BaseAddress", httpClient.BaseAddress);
+                }
+
+                throw;
+            }
 
             return (response, reqMsg);
         }

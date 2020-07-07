@@ -9,7 +9,7 @@ namespace MyLab.ApiClient
 {
     public class ApiProxy<TContract> : DispatchProxy
     {
-        private ApiRequestFactory _apiRequestFactory;
+        internal ApiRequestFactory ApiRequestFactory;
         private GenericCallTaskFactory _callTaskFactory;
 
         public static TContract Create(IHttpClientProvider httpClientProvider)
@@ -27,8 +27,8 @@ namespace MyLab.ApiClient
         {
             var contractType = typeof(TContract);
 
-            _apiRequestFactory = new ApiRequestFactory(contractType, httpClientProvider);
-            _callTaskFactory = new GenericCallTaskFactory(_apiRequestFactory);
+            ApiRequestFactory = new ApiRequestFactory(contractType, httpClientProvider);
+            _callTaskFactory = new GenericCallTaskFactory(ApiRequestFactory);
         }
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)
@@ -36,7 +36,7 @@ namespace MyLab.ApiClient
             var retType = targetMethod.ReturnType;
 
             if (retType == typeof(Task))
-                return _apiRequestFactory.Create(targetMethod, args).GetResult(CancellationToken.None);
+                return ApiRequestFactory.Create(targetMethod, args).GetResult(CancellationToken.None);
             else
             {
 
