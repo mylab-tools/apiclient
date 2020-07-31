@@ -32,8 +32,15 @@ namespace UnitTests
             var content = contentFactory.Create(source);
             var contentStr = await content.ReadAsStringAsync();
 
+            _output.WriteLine("HEADERS:");
+
+            foreach (var header in content.Headers)
+            {
+                _output.WriteLine($"\t{header.Key} = {string.Join(',', header.Value)}");
+            }
+
             _output.WriteLine("CONTENT:");
-            _output.WriteLine(contentStr);
+            _output.WriteLine("\t" + contentStr);
 
             //Assert
             Assert.Equal(expected, contentStr);
