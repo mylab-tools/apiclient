@@ -31,10 +31,14 @@ namespace MyLab.ApiClient
     {
         public HttpContent Create(object source)
         {
-            return new StringContent(JsonConvert.SerializeObject(source))
+            var content = new StringContent(JsonConvert.SerializeObject(source))
             {
                 Headers = { ContentType = new MediaTypeHeaderValue("application/json") }
             };
+
+            var len = content.Headers.ContentLength.GetValueOrDefault();
+
+            return content;
         }
     }
 
