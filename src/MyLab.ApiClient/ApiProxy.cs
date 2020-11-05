@@ -37,15 +37,24 @@ namespace MyLab.ApiClient
 
             if (retType == typeof(Task))
                 return ApiRequestFactory.Create(targetMethod, args).GetResult(CancellationToken.None);
-            else
+
+            if (!retType.IsGenericType || retType.GetGenericTypeDefinition() != typeof(Task<>))
+                throw new ApiClientException($"Wrong method return type '{retType.FullName}'");
+
+            var gRetType = retType.GetGenericArguments().First();
+
+            if(gRetType.IsGenericType)
             {
+                var gRetTypeGeneric = gRetType.GetGenericTypeDefinition();
 
-                if (!retType.IsGenericType || retType.GetGenericTypeDefinition() != typeof(Task<>))
-                    throw new ApiClientException($"Wrong method return type '{retType.FullName}'");
-                var gRetType = retType.GetGenericArguments().First();
-
-                return _callTaskFactory.Create(targetMethod, args, gRetType);
+                if (gRetTypeGeneric == typeof(CallDetails<>))
+                {
+                    var respContentType = gRetType.GetGenericArguments().First();
+                    return _callTaskFactory.CreateDetailed(targetMethod, args, respContentType);
+                }
             }
+
+            return _callTaskFactory.CreateCall(targetMethod, args, gRetType);
         }
     }
 }
