@@ -1,0 +1,42 @@
+﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using MyLab.ApiClient;
+using TestServer;
+using Xunit.Abstractions;
+
+namespace IntegrationTests
+{
+    public partial class ApiProxyBehavior
+    {
+        private readonly WebApplicationFactory<Startup> _webApplicationFactory;
+        private readonly ITestOutputHelper _output;
+
+        public ApiProxyBehavior(WebApplicationFactory<Startup> webApplicationFactory, ITestOutputHelper output)
+        {
+            _webApplicationFactory = webApplicationFactory;
+            _output = output;
+        }
+
+        private ITestServer CreateProxy()
+        {
+            var services = new ServiceCollection();
+
+            try
+            {
+                services.AddApiClients(
+                    registrar => { registrar.RegisterContract<ITestServer>(); },
+                    new WebApplicationFactoryHttpClientFactory<Startup>(_webApplicationFactory)
+                );
+            }
+            catch (ApiContractValidationException e)
+            {
+                _output.WriteLine(e.ValidationResult.ToString());
+                throw;
+            }
+
+            var serviceProvider = services.BuildServiceProvider();
+            var api = (ITestServer) serviceProvider.GetService(typeof(ITestServer));
+            return api;
+        }
+    }
+}

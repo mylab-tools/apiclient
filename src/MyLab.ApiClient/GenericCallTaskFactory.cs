@@ -27,7 +27,19 @@ namespace MyLab.ApiClient
             _apiRequestFactory = apiRequestFactory;
         }
 
-        public object Create(MethodInfo method, object[] args, Type taskResultType)
+        public object CreateCall(MethodInfo method, object[] args, Type taskResultType)
+        {
+            //ApiRequest<STRING>.GetResult - just for compilling
+            return CreateCore(nameof(ApiRequest<string>.GetResult), method, args, taskResultType);
+        }
+
+        public object CreateDetailed(MethodInfo method, object[] args, Type taskResultType)
+        {
+            //ApiRequest<STRING>.GetResult - just for compilling
+            return CreateCore(nameof(ApiRequest<string>.GetDetailed), method, args, taskResultType);
+        }
+
+        object CreateCore(string requestMethodName, MethodInfo method, object[] args, Type taskResultType)
         {
             var createTaskMethod = CreateGenericTaskMethod.MakeGenericMethod(taskResultType);
             var apiRequest = createTaskMethod.Invoke(_apiRequestFactory, new object[]
@@ -36,9 +48,9 @@ namespace MyLab.ApiClient
                 args
             });
 
-            var getResultMethod = apiRequest.GetType().GetMethod("GetResult");
-            if(getResultMethod == null)
-                throw new InvalidOperationException($"Cant find method 'GetResult' in type '{apiRequest.GetType().FullName}'");
+            var getResultMethod = apiRequest.GetType().GetMethod(requestMethodName);
+            if (getResultMethod == null)
+                throw new InvalidOperationException($"Cant find method '{requestMethodName}' in type '{apiRequest.GetType().FullName}'");
 
             return getResultMethod.Invoke(apiRequest, new object[]
             {
