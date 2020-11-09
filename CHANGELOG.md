@@ -4,6 +4,13 @@
 
 Формат лога изменений базируется на [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Новое]
+
+### Изменено
+
+* При ошибке обработки ответа на запрос в методе `ApiRequest<TRes>.GetResult()` выбрасывается исключение `ResponseProcessingException`
+* При ошибке обработки ответа на запрос в методе `ApiRequest<TRes>.GetDetails()` выбрасывается исключение `DetailedResponseProcessingException<TRes>`, содержащее все детали запроса и ответа, кроме самого десериализованного ответа
+
 ## [3.5.11] - 2020-11-05
 
 ### Добавлено
