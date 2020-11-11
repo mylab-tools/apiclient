@@ -58,6 +58,59 @@ namespace UnitTests
             Assert.Equal("foo", res.TestValue);
         }
 
+        [Fact]
+        public async Task ShouldDeserializeInheritors()
+        {
+            //Arrange
+            var json =
+                "{" +
+                    "\"Status\": {" +
+                        "\"$type\": \"UnitTests.ResponseProcessingBehavior+InheritaceModels+Status, UnitTests\"," +
+                        "\"Consumes\": {" +
+                            "\"async-proc-test:queue:6cb845c0f9564644b8b2bbc627536930\": {" +
+                                "\"LastTime\": \"2020-11-10T03:19:47.7876725+03:00\"" +
+                            "}" +
+                        "}" +
+                    "}" +
+                "}";
+
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            //Act
+            var res = await ResponseProcessing.DeserializeContent<InheritaceModels.Root>(httpContent, HttpStatusCode.OK);
+
+            var status = res?.Status as InheritaceModels.Status;
+
+            //Assert
+            Assert.NotNull(status);
+            Assert.NotNull(status.Consumes);
+            Assert.True(status.Consumes.ContainsKey("async-proc-test:queue:6cb845c0f9564644b8b2bbc627536930"));
+            Assert.Equal(10, status.Consumes["async-proc-test:queue:6cb845c0f9564644b8b2bbc627536930"].LastTime.Day);
+        }
+
+        public class InheritaceModels
+        {
+            public class Root
+            {
+                public ICloneable Status { get; set; }
+            }
+
+            public class Status : ICloneable
+            {
+                public Dictionary<string, Consume> Consumes { get;set; }
+
+                public object Clone()
+                {
+                    return null;
+                }
+            }
+
+            public class Consume
+            {
+                public DateTime LastTime { get; set; }
+            }
+        }
+
         public class TestModel
         {
             public string TestValue { get; set; }

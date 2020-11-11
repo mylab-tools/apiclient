@@ -75,10 +75,21 @@ namespace MyLab.ApiClient
 
             await IsStatusCodeUnexpected(resp.Response, true);
 
-            return (TRes) await ResponseProcessing.DeserializeContent(
-                _returnType, 
-                resp.Response.Content, 
-                resp.Response.StatusCode);
+            TRes resultObject;
+
+            try
+            {
+                resultObject = (TRes) await ResponseProcessing.DeserializeContent(
+                    _returnType, 
+                    resp.Response.Content, 
+                    resp.Response.StatusCode);
+            }
+            catch (Exception e)
+            {
+                throw new ResponseProcessingException(e);
+            }
+
+            return resultObject;
         }
 
         /// <summary>
@@ -87,26 +98,39 @@ namespace MyLab.ApiClient
         public async Task<CallDetails<TRes>> GetDetailed(CancellationToken cancellationToken)
         {
             var resp = await SendRequestAsync(cancellationToken);
-            var respContent = await ResponseProcessing.DeserializeContent(
-                _returnType, 
-                resp.Response.Content, 
-                resp.Response.StatusCode);
 
             var msgDumper = new HttpMessageDumper();
             var reqDump = await msgDumper.Dump(resp.Request);
             var respDump = await msgDumper.Dump(resp.Response);
             var isUnexpectedStatusCode = await IsStatusCodeUnexpected(resp.Response, false);
 
-            return new CallDetails<TRes>
+            var resDetails =  new CallDetails<TRes>
             {
                 RequestMessage = resp.Request,
                 ResponseMessage = resp.Response,
-                ResponseContent = (TRes) respContent,
                 RequestDump = reqDump,
                 ResponseDump = respDump,
                 StatusCode = resp.Response.StatusCode,
                 IsUnexpectedStatusCode = isUnexpectedStatusCode
             };
+
+            object respContent;
+
+            try
+            {
+                respContent = await ResponseProcessing.DeserializeContent(
+                    _returnType,
+                    resp.Response.Content,
+                    resp.Response.StatusCode);
+            }
+            catch (Exception e)
+            {
+                throw new DetailedResponseProcessingException<TRes>(resDetails, e);
+            }
+
+            resDetails.ResponseContent = (TRes)respContent;
+
+            return resDetails;
         }
 
         async Task<(HttpResponseMessage Response, HttpRequestMessage Request)> SendRequestAsync(CancellationToken cancellationToken)

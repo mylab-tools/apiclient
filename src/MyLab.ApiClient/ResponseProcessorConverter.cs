@@ -35,7 +35,10 @@ namespace MyLab.ApiClient
 
         private static object DeserializeFromJson(string str, Type returnType)
         {
-            var d = new JsonSerializer();
+            var d = new JsonSerializer()
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            };
 
             using (var r = new StringReader(str))
             {

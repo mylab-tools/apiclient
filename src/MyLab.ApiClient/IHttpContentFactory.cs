@@ -89,7 +89,10 @@ namespace MyLab.ApiClient
 
             if(source is byte[] binSource)
             {
-                return new ByteArrayContent(binSource);
+                var resContent = new ByteArrayContent(binSource);
+                resContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+
+                return resContent;
             }
             else
             {
