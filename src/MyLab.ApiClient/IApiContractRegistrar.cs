@@ -42,7 +42,7 @@ namespace MyLab.ApiClient
 
             string serviceKey = typeof(TContract).GetCustomAttribute<ApiAttribute>()?.Key;
 
-            _services.AddScoped(serviceProvider =>
+            _services.AddSingleton(serviceProvider =>
             {
                 var httpFactory = (IHttpClientFactory) serviceProvider.GetService(typeof(IHttpClientFactory));
                 return ApiProxy<TContract>.Create(new FactoryHttpClientProvider(httpFactory, serviceKey));
