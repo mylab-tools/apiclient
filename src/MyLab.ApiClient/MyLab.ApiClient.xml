@@ -105,6 +105,25 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiContractValidationResult"/>
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.ApiProxy`1">
+            <summary>
+            Transparent proxy fro API contract
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiProxy`1.Create(MyLab.ApiClient.IHttpClientProvider,System.IObserver{MyLab.ApiClient.CallDetails})">
+            <summary>
+            Creates transparent proxy 
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiProxy`1.Invoke(System.Reflection.MethodInfo,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ApiProxy`1.Subscribe(System.IObserver{MyLab.ApiClient.CallDetails})">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ApiProxy`1.Dispose">
+            <inheritdoc />
+        </member>
         <member name="M:MyLab.ApiClient.ApiRequest`1.#ctor(MyLab.ApiClient.ApiRequest{`0})">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiRequest`1"/>
