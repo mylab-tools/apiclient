@@ -1,4 +1,4 @@
-## MyLab.ApiClient -Вызов
+## MyLab.ApiClient - Вызов
 
 ### Результат
 
@@ -14,7 +14,7 @@ public interface IService
 
 //....
 
-var orderId = await service.Call(s => s.CreateOrder(order)).GetResult();
+var orderId = await service.Method(s => s.CreateOrder(order)).GetResultAsync();
 ```
 
 Вызов сервиса без получения результата:
@@ -29,15 +29,15 @@ public interface IService
 
 //....
 
-await service.Call(s => s.CreateOrder(order)).GetResult();
+await service.Call(s => s.CreateOrder(order)).CallAsync();
 ```
 
-При получении непредвиденного статус-кода, кроме `200 (OK)`, метод `GetResult` выдаёт исключение `ResponseCodeException`. Это можно использовать следующим образом:
+При получении непредвиденного статус-кода, кроме `200 (OK)`, метод `GetResultAsync` выдаёт исключение `ResponseCodeException`. Это можно использовать следующим образом:
 
 ```C#
 try
 {
-    await service.Call(s => s.CreateOrder(order)).GetResult();
+    await service.Method(s => s.CreateOrder(order)).GetResultAsync();
 }
 catch(ResponseCodeException e) when (e.StatusCode == HttpStatusCode.BadRequest)
 {
@@ -55,14 +55,21 @@ catch(ResponseCodeException e) when (e.StatusCode == HttpStatusCode.Forbidden)
 
 ```C#
 /// <summary>
-/// Contains detailed service call information
+/// Contains detailed service call information with response
 /// </summary>
-public class CallDetails<T>
+public class CallDetails<T> : CallDetails
 {
     /// <summary>
     /// Expected response content
     /// </summary>
     public T ResponseContent { get; set; }
+}
+
+/// <summary>
+/// Contains detailed service call information 
+/// </summary>
+public class CallDetails
+{
     /// <summary>
     /// HTTP status code
     /// </summary>
@@ -102,7 +109,7 @@ public interface IService
 
 //....
 
-var response = await service.Call(s => s.CreateOrder(order)).GetDetailed();
+CallDetails<int> response = await service.Method(s => s.CreateOrder(order)).GetDetailedAsync();
 ```
 
 Вызов сервиса без получения результата:
@@ -117,15 +124,15 @@ public interface IService
 
 //....
 
-var response = await service.Call(s => s.CreateOrder(order)).GetDetailed();
+CallDetails response = await service.Method(s => s.CreateOrder(order)).GetDetailedAsync();
 ```
 
-В случае, когда метод контракта сервиса не имеет возвращаемого значения, метод `GetDetailed` возвращает объект детализации со строковым содержимым ответа: `CallDetails<string>`.
+В случае, когда метод контракта сервиса не имеет возвращаемого значения, метод `GetDetailedAsync` возвращает объект детализации без содержимого ответа: `CallDetails`.
 
-При получении непредвиденного статус-кода, кроме `200 (OK)`, метод `GetDetailed` не выбрасывает исключение, а устанавливает свойства объекта детализации `IsUnexpectedStatusCode` в `true`.
+При получении непредвиденного статус-кода, кроме `200 (OK)`, метод `GetDetailedAsync` не выбрасывает исключение, а устанавливает свойства объекта детализации `IsUnexpectedStatusCode` в `true`.
 
 ```C#
-var response = await service.Call(s => s.CreateOrder(order)).GetResult();
+var response = await service.Method(s => s.CreateOrder(order)).GetResultAsync();
 
 if (response.IsUnexpectedStatusCode)
 {
@@ -163,5 +170,3 @@ Content-Type: text/plain; charset=utf-8
 
 foo
 ```
-
-## 

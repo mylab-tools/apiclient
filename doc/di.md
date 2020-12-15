@@ -139,7 +139,7 @@ class TestServiceForHttpClientFactory
 
     public async Task<string> TestMethod(string msg, ITestOutputHelper log)
     {
-        var resp = await _server.Call(s => s.Echo(msg)).GetDetailed();
+        var resp = await _server.Method(s => s.Echo(msg)).GetDetailedAsync();
 
         log.WriteLine("Resquest dump:");
         log.WriteLine(resp.RequestDump);
@@ -196,7 +196,7 @@ class TestServiceForProxy
 
 #### Детализация
 
-Прозрачное прокси поддерживает возврат детализации (`CallDetails<>`) методом контракта:
+Прозрачное прокси поддерживает возврат детализации (`CallDetails`) методом контракта:
 
 ```C#
 [Api("echo")]
@@ -204,11 +204,14 @@ interface ITestServer
 {
     [Get]
     Task<CallDetails<string>> CallEchoAndGetDetails([JsonContent] string msg);
+    
+    [Get]
+    Task<CallDetails> CallEchoAndGetDetailsWithoutResonse([JsonContent] string msg);
 }
 
 //....
     
 CallDetails<string> call = await api.CallEchoAndGetDetails("foo");
-```
 
-## 
+CallDetails call = await api.CallEchoAndGetDetailsWithoutResonse("foo");
+```
