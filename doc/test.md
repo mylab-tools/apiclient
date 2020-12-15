@@ -26,7 +26,7 @@
          //Arrange
 
          //Act 
-         var result = await _client.Method(s => s.Get()).GetResultAsync();
+         var result = await _client.Request(s => s.Get()).GetResultAsync();
 
          //Assert
          Assert.NotNull(result);
@@ -63,8 +63,8 @@ public class TestServerBehavior : IClassFixture<WebApplicationFactory<Startup>>
          var client = new ApiClient<ITestServer>(clProvider);
 
          //Act
-         await client.Method(s => s.Post("foo")).GetResultAsync();
-         var result = await client.Method(s => s.Get()).GetResultAsync();
+         await client.Request(s => s.Post("foo")).GetResultAsync();
+         var result = await client.Request(s => s.Get()).GetResultAsync();
 
          //Assert
          Assert.Equal("foo", result);

@@ -139,7 +139,7 @@ class TestServiceForHttpClientFactory
 
     public async Task<string> TestMethod(string msg, ITestOutputHelper log)
     {
-        var resp = await _server.Method(s => s.Echo(msg)).GetDetailedAsync();
+        var resp = await _server.Request(s => s.Echo(msg)).GetDetailedAsync();
 
         log.WriteLine("Resquest dump:");
         log.WriteLine(resp.RequestDump);

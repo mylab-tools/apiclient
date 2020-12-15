@@ -14,7 +14,7 @@ public interface IService
 
 //....
 
-var orderId = await service.Method(s => s.CreateOrder(order)).GetResultAsync();
+var orderId = await service.Request(s => s.CreateOrder(order)).GetResultAsync();
 ```
 
 Вызов сервиса без получения результата:
@@ -37,7 +37,7 @@ await service.Call(s => s.CreateOrder(order)).CallAsync();
 ```C#
 try
 {
-    await service.Method(s => s.CreateOrder(order)).GetResultAsync();
+    await service.Request(s => s.CreateOrder(order)).GetResultAsync();
 }
 catch(ResponseCodeException e) when (e.StatusCode == HttpStatusCode.BadRequest)
 {
@@ -109,7 +109,7 @@ public interface IService
 
 //....
 
-CallDetails<int> response = await service.Method(s => s.CreateOrder(order)).GetDetailedAsync();
+CallDetails<int> response = await service.Request(s => s.CreateOrder(order)).GetDetailedAsync();
 ```
 
 Вызов сервиса без получения результата:
@@ -124,7 +124,7 @@ public interface IService
 
 //....
 
-CallDetails response = await service.Method(s => s.CreateOrder(order)).GetDetailedAsync();
+CallDetails response = await service.Request(s => s.CreateOrder(order)).GetDetailedAsync();
 ```
 
 В случае, когда метод контракта сервиса не имеет возвращаемого значения, метод `GetDetailedAsync` возвращает объект детализации без содержимого ответа: `CallDetails`.
@@ -132,7 +132,7 @@ CallDetails response = await service.Method(s => s.CreateOrder(order)).GetDetail
 При получении непредвиденного статус-кода, кроме `200 (OK)`, метод `GetDetailedAsync` не выбрасывает исключение, а устанавливает свойства объекта детализации `IsUnexpectedStatusCode` в `true`.
 
 ```C#
-var response = await service.Method(s => s.CreateOrder(order)).GetResultAsync();
+var response = await service.Request(s => s.CreateOrder(order)).GetResultAsync();
 
 if (response.IsUnexpectedStatusCode)
 {

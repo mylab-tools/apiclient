@@ -23,7 +23,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Creates API request based on contract method without result
         /// </summary>
-        public ApiRequest Method(Expression<Func<TContract, Task>> serviceCallExpr)
+        public ApiRequest Request(Expression<Func<TContract, Task>> serviceCallExpr)
         {
             return _reqFactory.Create(serviceCallExpr);
         }
@@ -31,7 +31,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Creates API request based on contract method with result
         /// </summary>
-        public ApiRequest<TRes> Method<TRes>(Expression<Func<TContract, Task<TRes>>> serviceCallExpr)
+        public ApiRequest<TRes> Request<TRes>(Expression<Func<TContract, Task<TRes>>> serviceCallExpr)
         {
             return _reqFactory.Create(serviceCallExpr);
         }

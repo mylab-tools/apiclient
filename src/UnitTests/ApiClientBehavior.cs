@@ -17,7 +17,7 @@ namespace UnitTests
             var client = new ApiClient<IContract>(httpClientProvider);
             
             //Act & Assert
-            Assert.Throws<NotSupportedException>(() => client.Method(c => Task.CompletedTask));
+            Assert.Throws<NotSupportedException>(() => client.Request(c => Task.CompletedTask));
         }
         
         [Fact]
@@ -28,7 +28,7 @@ namespace UnitTests
             var client = new ApiClient<IContract>(httpClientProvider);
             
             //Act & Assert
-            client.Method(c => c.Foo());
+            client.Request(c => c.Foo());
         }
 
         [Api]

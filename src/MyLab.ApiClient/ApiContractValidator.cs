@@ -126,7 +126,7 @@ namespace MyLab.ApiClient
                     //{
                     //    Reason = "A method relative path should be specified",
                     //    ServiceContract = type,
-                    //    Method = method
+                    //    Request = method
                     //});
                 }
                 else
@@ -203,7 +203,7 @@ namespace MyLab.ApiClient
             if (pAttrs.Length == 0)
                 issues.Add(new ApiContractValidationIssuer
                 {
-                    Reason = $"Method argument should be market by inheritor of'{typeof(ApiParameterAttribute)}'",
+                    Reason = $"Request argument should be market by inheritor of'{typeof(ApiParameterAttribute)}'",
                     Critical = true,
                     ServiceContract = type,
                     Method = method,

@@ -24,6 +24,16 @@ namespace IntegrationTests
         }
 
         [Fact]
+        public async Task ShouldCallWithoutResponse()
+        {
+            //Arrange
+            var api = CreateProxy();
+
+            //Act & Assert
+            await api.CallEchoWithoutResponse("foo");
+        }
+
+        [Fact]
         public async Task ShouldCallAndGetDetails()
         {
             //Arrange
@@ -58,6 +68,9 @@ namespace IntegrationTests
         {
             [Get("echo")]
             Task<string> CallEcho([JsonContent] string msg);
+
+            [Get("echo")]
+            Task CallEchoWithoutResponse([JsonContent] string msg);
 
             [Get("echo")]
             Task<CallDetails<string>> CallEchoAndGetDetails([JsonContent] string msg);

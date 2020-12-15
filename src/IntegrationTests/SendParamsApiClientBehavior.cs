@@ -36,7 +36,7 @@ namespace IntegrationTests
 
             //Act
             var resp = await client
-                .Method(serviceCallExpr)
+                .Request(serviceCallExpr)
                 .GetDetailedAsync();
 
             _output.WriteLine("====== Request ======");

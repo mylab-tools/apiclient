@@ -15,12 +15,12 @@
             Initializes a new instance of <see cref="N:MyLab.ApiClient"/>
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClient`1.Method(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
+        <member name="M:MyLab.ApiClient.ApiClient`1.Request(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
             <summary>
             Creates API request based on contract method without result
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClient`1.Method``1(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task{``0}}})">
+        <member name="M:MyLab.ApiClient.ApiClient`1.Request``1(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task{``0}}})">
             <summary>
             Creates API request based on contract method with result
             </summary>

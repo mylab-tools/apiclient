@@ -73,5 +73,5 @@ HttpClient httpClient = ...
 var s = ApiClient<ITestServer>.Create(new SingleHttpClientProvider(httpClient));
 
 var order = new Order{ Foo ="bar" }
-int newOrderId = await _client.Method(s => s.CreateOrder(order)).GetResultAsync();
+int newOrderId = await _client.Request(s => s.CreateOrder(order)).GetResultAsync();
 ```
