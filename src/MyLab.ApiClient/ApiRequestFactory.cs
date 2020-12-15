@@ -21,7 +21,7 @@ namespace MyLab.ApiClient
             _paramProvider = new ApiRequestFactoryParametersProvider(_description);
         }
         
-        public ApiRequest<string> Create(Expression<Func<TContract, Task>> serviceCallExpr)
+        public ApiRequest Create(Expression<Func<TContract, Task>> serviceCallExpr)
         {
             if (serviceCallExpr == null) throw new ArgumentNullException(nameof(serviceCallExpr));
             if (!(serviceCallExpr.Body is MethodCallExpression mExpr))
@@ -31,7 +31,7 @@ namespace MyLab.ApiClient
                 mExpr.Method,
                 ExpressionArgumentsToProviders(mExpr));
 
-            return new ApiRequest<string>(
+            return new ApiRequest(
                 _description.Url,
                 requestParameters.MethodDescription,
                 requestParameters.Appliers,
@@ -78,7 +78,7 @@ namespace MyLab.ApiClient
             _description = ServiceDescription.Create(contractType);
             _paramProvider = new ApiRequestFactoryParametersProvider(_description);
         }
-        public ApiRequest<string> Create(MethodInfo method, object[] args)
+        public ApiRequest Create(MethodInfo method, object[] args)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
 
@@ -86,7 +86,7 @@ namespace MyLab.ApiClient
                 method,
                 ObjectArgumentsToProviders(args));
 
-            return new ApiRequest<string>(
+            return new ApiRequest(
                 _description.Url,
                 requestParameters.MethodDescription,
                 requestParameters.Appliers,

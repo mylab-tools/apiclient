@@ -74,7 +74,7 @@ namespace IntegrationTests
 
             public async Task<string> TestMethod(string msg, ITestOutputHelper log)
             {
-                var resp = await _server.Call(s => s.Echo(msg)).GetDetailed();
+                var resp = await _server.Method(s => s.Echo(msg)).GetDetailedAsync();
 
                 log.WriteLine("Resquest dump:");
                 log.WriteLine(resp.RequestDump);

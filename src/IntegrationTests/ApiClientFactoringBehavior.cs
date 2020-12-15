@@ -1,9 +1,6 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using MyLab.ApiClient;
 using TestServer;
 using Xunit;
@@ -37,7 +34,7 @@ namespace IntegrationTests
             //Act
             try
             {
-                await client.Call(s => s.Get()).GetResult();
+                await client.Method(s => s.Get()).CallAsync();
             }
             catch (ResponseCodeException e)
             {

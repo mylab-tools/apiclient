@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,7 +35,9 @@ namespace MyLab.ApiClient
             var retType = targetMethod.ReturnType;
 
             if (retType == typeof(Task))
-                return ApiRequestFactory.Create(targetMethod, args).GetResult(CancellationToken.None);
+                return ApiRequestFactory.Create(targetMethod, args).CallAsync();
+            if (retType == typeof(Task<CallDetails>))
+                return ApiRequestFactory.Create(targetMethod, args).GetDetailedAsync();
 
             if (!retType.IsGenericType || retType.GetGenericTypeDefinition() != typeof(Task<>))
                 throw new ApiClientException($"Wrong method return type '{retType.FullName}'");

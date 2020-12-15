@@ -34,7 +34,7 @@ namespace IntegrationTests
             //Act & Assert
             try
             {
-                await client.Call(s => s.GetUnexpected404()).GetResult();
+                await client.Method(s => s.GetUnexpected404()).CallAsync();
             }
             catch (ResponseCodeException e) when (e.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -49,7 +49,7 @@ namespace IntegrationTests
             var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act & Assert
-            await client.Call(s => s.GetExpected404()).GetResult();
+            await client.Method(s => s.GetExpected404()).CallAsync();
         }
 
         [Fact]
@@ -58,14 +58,10 @@ namespace IntegrationTests
             //Arrange
             var client = new ApiClient<ITestServer>(_clientProvider);
 
-            //Act
-            var resp = await client
-                .Call(s => s.GetExpected404())
-                .GetResult();
-
-            //Assert
-            //Assert.Equal("This is a message", resp);
-            Assert.Null(resp);
+            //Act & Assert
+            await client
+                .Method(s => s.GetExpected404())
+                .CallAsync();
         }
 
         [Fact]
