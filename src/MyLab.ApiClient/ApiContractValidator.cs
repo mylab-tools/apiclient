@@ -43,13 +43,7 @@ namespace MyLab.ApiClient
                 });
             else
             {
-                if (string.IsNullOrWhiteSpace(apiAttr.Url))
-                    issues.Add(new ApiContractValidationIssuer
-                    {
-                        Reason = "A service base path should be specified",
-                        ServiceContract = t
-                    });
-                else
+                if (!string.IsNullOrWhiteSpace(apiAttr.Url))
                 {
                     try
                     {
