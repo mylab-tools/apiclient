@@ -26,7 +26,7 @@ namespace IntegrationTests
             var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act 
-            var resDet = await client.Method(s => s.GetNullString()).GetDetailedAsync();
+            var resDet = await client.Request(s => s.GetNullString()).GetDetailedAsync();
             Log(resDet);
 
             //Assert
@@ -43,7 +43,7 @@ namespace IntegrationTests
             var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act 
-            var resDet = await client.Method(s => s.GetNullValue()).GetDetailedAsync();
+            var resDet = await client.Request(s => s.GetNullValue()).GetDetailedAsync();
             Log(resDet);
 
             //Assert
@@ -57,7 +57,7 @@ namespace IntegrationTests
             var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act 
-            var resDet = await client.Method(s => s.GetNullArray()).GetDetailedAsync();
+            var resDet = await client.Request(s => s.GetNullArray()).GetDetailedAsync();
             Log(resDet);
 
             //Assert
@@ -74,7 +74,7 @@ namespace IntegrationTests
             var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act & Assert
-            var resDet = await client.Method(s => s.GetNoResult()).GetDetailedAsync();
+            var resDet = await client.Request(s => s.GetNoResult()).GetDetailedAsync();
             Log(resDet);
             
         }

@@ -34,7 +34,7 @@ namespace IntegrationTests
             //Act
             try
             {
-                await client.Method(s => s.Get()).CallAsync();
+                await client.Request(s => s.Get()).CallAsync();
             }
             catch (ResponseCodeException e)
             {

@@ -34,7 +34,7 @@ namespace IntegrationTests
         {
             //Act
             var resp = await _client
-                .Method(s => s.GetXmlObj())
+                .Request(s => s.GetXmlObj())
                 .GetResultAsync();
 
             //Assert
@@ -46,7 +46,7 @@ namespace IntegrationTests
         {
             //Act
             var resp = await _client
-                .Method(s => s.GetJsonObj())
+                .Request(s => s.GetJsonObj())
                 .GetResultAsync();
 
             //Assert
@@ -58,7 +58,7 @@ namespace IntegrationTests
         {
             //Act
             var resp = await _client
-                .Method(s => s.GetEnumerable())
+                .Request(s => s.GetEnumerable())
                 .GetResultAsync();
             var respArr = resp.ToArray();
 
@@ -73,7 +73,7 @@ namespace IntegrationTests
         {
             //Act
             var resp = await _client
-                .Method(s => s.GetArray())
+                .Request(s => s.GetArray())
                 .GetResultAsync();
             var respArr = resp.ToArray();
 
@@ -183,15 +183,15 @@ namespace IntegrationTests
 
         public static IEnumerable<object[]> GetDigitContentProvidingTestCases()
         {
-            yield return new object[]{ "short", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Method(s => s.GetShort()).GetResultAsync()), (short)10 };
-            yield return new object[]{ "ushort", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Method(s => s.GetUShort()).GetResultAsync()), (ushort)10 };
-            yield return new object[]{ "int", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Method(s => s.GetInt()).GetResultAsync()), 10 };
-            yield return new object[]{ "uint", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Method(s => s.GetUInt()).GetResultAsync()), 10U };
-            yield return new object[]{ "long", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Method(s => s.GetLong()).GetResultAsync()), 10L };
-            yield return new object[]{ "ulong", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Method(s => s.GetULong()).GetResultAsync()), 10UL };
-            yield return new object[]{ "double", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Method(s => s.GetDouble()).GetResultAsync()), 10.1D };
-            yield return new object[]{ "float", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Method(s => s.GetFloat()).GetResultAsync()), 10.1F };
-            yield return new object[]{ "decimal", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Method(s => s.GetDecimal()).GetResultAsync()), (decimal)10.1 };
+            yield return new object[]{ "short", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Request(s => s.GetShort()).GetResultAsync()), (short)10 };
+            yield return new object[]{ "ushort", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Request(s => s.GetUShort()).GetResultAsync()), (ushort)10 };
+            yield return new object[]{ "int", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Request(s => s.GetInt()).GetResultAsync()), 10 };
+            yield return new object[]{ "uint", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Request(s => s.GetUInt()).GetResultAsync()), 10U };
+            yield return new object[]{ "long", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Request(s => s.GetLong()).GetResultAsync()), 10L };
+            yield return new object[]{ "ulong", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Request(s => s.GetULong()).GetResultAsync()), 10UL };
+            yield return new object[]{ "double", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Request(s => s.GetDouble()).GetResultAsync()), 10.1D };
+            yield return new object[]{ "float", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Request(s => s.GetFloat()).GetResultAsync()), 10.1F };
+            yield return new object[]{ "decimal", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Request(s => s.GetDecimal()).GetResultAsync()), (decimal)10.1 };
         }
 
         public static IEnumerable<object[]> GetDigitContentProvidingTestCasesForProxy()
@@ -209,8 +209,8 @@ namespace IntegrationTests
 
         public static IEnumerable<object[]> GetBinaryTestCases()
         {
-            yield return new object[] { "json", (Func<ApiClient<ITestServer>, Task<byte[]>>)(async c => await c.Method(s => s.GetBinJson()).GetResultAsync())};
-            yield return new object[] { "octet", (Func<ApiClient<ITestServer>, Task<byte[]>>)(async c => await c.Method(s => s.GetBinOctetStream()).GetResultAsync())};
+            yield return new object[] { "json", (Func<ApiClient<ITestServer>, Task<byte[]>>)(async c => await c.Request(s => s.GetBinJson()).GetResultAsync())};
+            yield return new object[] { "octet", (Func<ApiClient<ITestServer>, Task<byte[]>>)(async c => await c.Request(s => s.GetBinOctetStream()).GetResultAsync())};
         }
 
         public static IEnumerable<object[]> GetBinaryTestCasesForProxy()
