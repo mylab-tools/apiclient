@@ -33,7 +33,7 @@ namespace IntegrationTests
         public async Task ShouldIgnoreProblemWhenValueTypeReturns()
         {
             //Act
-            var resp = await _client.Call(s => s.GetAbsent()).GetDetailed();
+            var resp = await _client.Request(s => s.GetAbsent()).GetDetailedAsync();
             Log(resp);
 
             //Assert
@@ -43,7 +43,7 @@ namespace IntegrationTests
         public async Task ShouldIgnoreProblemWhenObjectTypeReturns()
         {
             //Act
-            var resp = await _client.Call(s => s.GetAbsentModel()).GetDetailed();
+            var resp = await _client.Request(s => s.GetAbsentModel()).GetDetailedAsync();
             Log(resp);
 
             //Assert

@@ -1,5 +1,3 @@
-using System.Net;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,52 +11,33 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Send request and return serialized response
         /// </summary>
-        public static async Task<TRes> GetResult<TRes>(this ApiRequest<TRes> req)
+        public static async Task<TRes> GetResultAsync<TRes>(this ApiRequest<TRes> req)
         {
-            return await req.GetResult(CancellationToken.None);
+            return await req.GetResultAsync(CancellationToken.None);
         }
 
         /// <summary>
         /// Send request and return detailed information about operation
         /// </summary>
-        public static async Task<CallDetails<TRes>> GetDetailed<TRes>(this ApiRequest<TRes> req)
+        public static async Task<CallDetails<TRes>> GetDetailedAsync<TRes>(this ApiRequest<TRes> req)
         {
-            return await req.GetDetailed(CancellationToken.None);
+            return await req.GetDetailedAsync(CancellationToken.None);
         }
-    }
 
-    /// <summary>
-    /// Contains detailed service call information
-    /// </summary>
-    public class CallDetails<T>
-    {
         /// <summary>
-        /// Expected response content
+        /// Send request and return detailed information about operation
         /// </summary>
-        public T ResponseContent { get; set; }
+        public static async Task<CallDetails> GetDetailedAsync(this ApiRequest req)
+        {
+            return await req.GetDetailedAsync(CancellationToken.None);
+        }
+
         /// <summary>
-        /// HTTP status code
+        /// Send request 
         /// </summary>
-        public HttpStatusCode StatusCode { get; set; }
-        /// <summary>
-        /// Gets true if status code is unexpected
-        /// </summary>
-        public bool IsUnexpectedStatusCode { get; set; }
-        /// <summary>
-        /// Text request dump
-        /// </summary>
-        public string RequestDump { get; set; }
-        /// <summary>
-        /// Text response dump
-        /// </summary>
-        public string ResponseDump { get; set; }
-        /// <summary>
-        /// Response object
-        /// </summary>
-        public HttpResponseMessage ResponseMessage { get; set; }
-        /// <summary>
-        /// Request object
-        /// </summary>
-        public HttpRequestMessage RequestMessage { get; set; }
+        public static async Task CallAsync(this ApiRequest req)
+        {
+            await req.CallAsync(CancellationToken.None);
+        }
     }
 }

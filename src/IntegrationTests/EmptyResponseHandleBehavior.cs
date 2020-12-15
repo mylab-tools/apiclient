@@ -26,7 +26,7 @@ namespace IntegrationTests
             var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act 
-            var resDet = await client.Call(s => s.GetNullString()).GetDetailed();
+            var resDet = await client.Request(s => s.GetNullString()).GetDetailedAsync();
             Log(resDet);
 
             //Assert
@@ -43,7 +43,7 @@ namespace IntegrationTests
             var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act 
-            var resDet = await client.Call(s => s.GetNullValue()).GetDetailed();
+            var resDet = await client.Request(s => s.GetNullValue()).GetDetailedAsync();
             Log(resDet);
 
             //Assert
@@ -57,7 +57,7 @@ namespace IntegrationTests
             var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act 
-            var resDet = await client.Call(s => s.GetNullArray()).GetDetailed();
+            var resDet = await client.Request(s => s.GetNullArray()).GetDetailedAsync();
             Log(resDet);
 
             //Assert
@@ -67,7 +67,19 @@ namespace IntegrationTests
             Assert.Null(resDet.ResponseContent);
         }
 
-        private void Log<T>(CallDetails<T> resDet)
+        [Fact]
+        public async Task ShouldSupportNoResult()
+        {
+            //Arrange
+            var client = new ApiClient<ITestServer>(_clientProvider);
+
+            //Act & Assert
+            var resDet = await client.Request(s => s.GetNoResult()).GetDetailedAsync();
+            Log(resDet);
+            
+        }
+
+        private void Log(CallDetails resDet)
         {
             _output.WriteLine("Request:");
             _output.WriteLine(resDet.RequestDump);
@@ -79,6 +91,9 @@ namespace IntegrationTests
         [Api("echo/empty")]
         interface ITestServer
         {
+            [Get]
+            Task GetNoResult();
+
             [Get]
             Task<string> GetNullString();
 

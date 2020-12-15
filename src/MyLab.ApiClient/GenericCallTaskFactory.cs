@@ -29,14 +29,14 @@ namespace MyLab.ApiClient
 
         public object CreateCall(MethodInfo method, object[] args, Type taskResultType)
         {
-            //ApiRequest<STRING>.GetResult - just for compilling
-            return CreateCore(nameof(ApiRequest<string>.GetResult), method, args, taskResultType);
+            //ApiRequest<STRING>.GetResultAsync - just for compilling
+            return CreateCore(nameof(ApiRequest<string>.GetResultAsync), method, args, taskResultType);
         }
 
         public object CreateDetailed(MethodInfo method, object[] args, Type taskResultType)
         {
-            //ApiRequest<STRING>.GetResult - just for compilling
-            return CreateCore(nameof(ApiRequest<string>.GetDetailed), method, args, taskResultType);
+            //ApiRequest<STRING>.GetResultAsync - just for compilling
+            return CreateCore(nameof(ApiRequest<string>.GetDetailedAsync), method, args, taskResultType);
         }
 
         object CreateCore(string requestMethodName, MethodInfo method, object[] args, Type taskResultType)

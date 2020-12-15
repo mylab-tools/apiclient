@@ -15,6 +15,16 @@
             Initializes a new instance of <see cref="N:MyLab.ApiClient"/>
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.ApiClient`1.Request(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
+            <summary>
+            Creates API request based on contract method without result
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiClient`1.Request``1(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task{``0}}})">
+            <summary>
+            Creates API request based on contract method with result
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ApiClientException">
             <summary>
             Throws when some thing wrong with Api client
@@ -95,32 +105,69 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiContractValidationResult"/>
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.ApiRequest`1">
+        <member name="T:MyLab.ApiClient.ApiProxy`1">
             <summary>
-            Provides abilities to tune and send request
+            Transparent proxy fro API contract
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.ApiRequest`1.RequestModifiers">
+        <member name="M:MyLab.ApiClient.ApiProxy`1.Create(MyLab.ApiClient.IHttpClientProvider,System.IObserver{MyLab.ApiClient.CallDetails})">
             <summary>
-            Gets request modifiers collection
+            Creates transparent proxy 
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.ApiRequest`1.ExpectedCodes">
+        <member name="M:MyLab.ApiClient.ApiProxy`1.Invoke(System.Reflection.MethodInfo,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ApiProxy`1.Subscribe(System.IObserver{MyLab.ApiClient.CallDetails})">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ApiProxy`1.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ApiRequest`1.#ctor(MyLab.ApiClient.ApiRequest{`0})">
             <summary>
-            Contains expected response http status codes
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiRequest`1"/>
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiRequest`1.Clone">
-            <summary>
-            Clones an object
-            </summary>
+        <member name="M:MyLab.ApiClient.ApiRequest`1.GetDetailedAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
         </member>
-        <member name="M:MyLab.ApiClient.ApiRequest`1.GetResult(System.Threading.CancellationToken)">
+        <member name="M:MyLab.ApiClient.ApiRequest`1.GetResultAsync(System.Threading.CancellationToken)">
             <summary>
             Send request and return serialized response
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiRequest`1.GetDetailed(System.Threading.CancellationToken)">
+        <member name="M:MyLab.ApiClient.ApiRequest.#ctor(MyLab.ApiClient.ApiRequest)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiRequest`1"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiRequest.CallAsync(System.Threading.CancellationToken)">
+            <summary>
+            Calls API without result
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ApiRequestBase`1">
+            <summary>
+            Provides abilities to tune and send request
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ApiRequestBase`1.RequestModifiers">
+            <summary>
+            Gets request modifiers collection
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ApiRequestBase`1.ExpectedCodes">
+            <summary>
+            Contains expected response http status codes
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiRequestBase`1.#ctor(MyLab.ApiClient.ApiRequestBase{`0})">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiRequestBase`1"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiRequestBase`1.GetDetailedAsync(System.Threading.CancellationToken)">
             <summary>
             Send request and return detailed information about operation
             </summary>
@@ -130,54 +177,24 @@
             Contains extensions for <see cref="T:MyLab.ApiClient.ApiRequest`1"/>
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiRequestExtensions.GetResult``1(MyLab.ApiClient.ApiRequest{``0})">
+        <member name="M:MyLab.ApiClient.ApiRequestExtensions.GetResultAsync``1(MyLab.ApiClient.ApiRequest{``0})">
             <summary>
             Send request and return serialized response
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiRequestExtensions.GetDetailed``1(MyLab.ApiClient.ApiRequest{``0})">
+        <member name="M:MyLab.ApiClient.ApiRequestExtensions.GetDetailedAsync``1(MyLab.ApiClient.ApiRequest{``0})">
             <summary>
             Send request and return detailed information about operation
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.CallDetails`1">
+        <member name="M:MyLab.ApiClient.ApiRequestExtensions.GetDetailedAsync(MyLab.ApiClient.ApiRequest)">
             <summary>
-            Contains detailed service call information
+            Send request and return detailed information about operation
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.CallDetails`1.ResponseContent">
+        <member name="M:MyLab.ApiClient.ApiRequestExtensions.CallAsync(MyLab.ApiClient.ApiRequest)">
             <summary>
-            Expected response content
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails`1.StatusCode">
-            <summary>
-            HTTP status code
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails`1.IsUnexpectedStatusCode">
-            <summary>
-            Gets true if status code is unexpected
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails`1.RequestDump">
-            <summary>
-            Text request dump
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails`1.ResponseDump">
-            <summary>
-            Text response dump
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails`1.ResponseMessage">
-            <summary>
-            Response object
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails`1.RequestMessage">
-            <summary>
-            Request object
+            Send request 
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.ApiMarkupAttribute">
@@ -210,6 +227,51 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiAttribute"/>
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.CallDetails`1">
+            <summary>
+            Contains detailed service call information with response
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.CallDetails`1.ResponseContent">
+            <summary>
+            Expected response content
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.CallDetails">
+            <summary>
+            Contains detailed service call information 
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.CallDetails.StatusCode">
+            <summary>
+            HTTP status code
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.CallDetails.IsUnexpectedStatusCode">
+            <summary>
+            Gets true if status code is unexpected
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.CallDetails.RequestDump">
+            <summary>
+            Text request dump
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.CallDetails.ResponseDump">
+            <summary>
+            Text response dump
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.CallDetails.ResponseMessage">
+            <summary>
+            Response object
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.CallDetails.RequestMessage">
+            <summary>
+            Request object
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.DetailedResponseProcessingException`1">
             <summary>
             Occurs in Details provided method when response processing error
@@ -220,7 +282,7 @@
             Gets or sets call details
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.DetailedResponseProcessingException`1.#ctor(MyLab.ApiClient.CallDetails{`0},System.Exception)">
+        <member name="M:MyLab.ApiClient.DetailedResponseProcessingException`1.#ctor(`0,System.Exception)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.DetailedResponseProcessingException`1"/>
             </summary>
