@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using TestServer.Models;
 
 namespace TestServer.Controllers
 {
@@ -57,6 +58,12 @@ namespace TestServer.Controllers
             var memStream = new MemoryStream(bin);
             
             return new FileStreamResult(memStream, "application/octet-stream");
+        }
+
+        [HttpGet("data/enum-val-2")]
+        public IActionResult GetEnumValue2()
+        {
+            return Ok(TestEnum.Value2);
         }
     }
 }

@@ -181,6 +181,18 @@ namespace IntegrationTests
             Assert.Equal(expected, resp);
         }
 
+        [Fact]
+        public async Task ShouldProvideEnumValue()
+        {
+            //Act
+            var resp = await _client
+                .Request(s => s.GetEnumValue2())
+                .GetResultAsync();
+            
+            //Assert
+            Assert.Equal(TestEnum.Value2, resp);
+        }
+
         public static IEnumerable<object[]> GetDigitContentProvidingTestCases()
         {
             yield return new object[]{ "short", (Func<ApiClient<ITestServer>, Task<object>>) (async c => await c.Request(s => s.GetShort()).GetResultAsync()), (short)10 };
@@ -259,6 +271,9 @@ namespace IntegrationTests
 
             [Get("data/bin-octet-stream")]
             Task<byte[]> GetBinOctetStream();
+
+            [Get("data/enum-val-2")]
+            Task<TestEnum> GetEnumValue2();
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using MyLab.ApiClient;
 using TestServer;
+using TestServer.Models;
 using Xunit;
 
 namespace IntegrationTests
@@ -63,6 +64,33 @@ namespace IntegrationTests
             Assert.Equal("foo" , respStr);
         }
 
+        [Fact]
+        public async Task ShouldGetEnumValue()
+        {
+            //Arrange
+            var api = CreateProxy();
+
+            //Act
+            var res = await api.GetEnumVal2();
+            
+            //Assert
+            Assert.Equal(TestEnum.Value2, res);
+        }
+
+        [Fact]
+        public async Task ShouldGetEnumValueWithDetails()
+        {
+            //Arrange
+            var api = CreateProxy();
+
+            //Act
+            var res = await api.GetEnumVal2WithDetails();
+
+            //Assert
+            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
+            Assert.Equal(TestEnum.Value2, res.ResponseContent);
+        }
+
         [Api(Key = "No matter for this test")]
         interface ITestServer
         {
@@ -77,6 +105,12 @@ namespace IntegrationTests
 
             [Get("resp-content/data/bin-octet-stream")]
             Task<CallDetails<byte[]>> GetBinAndGetDetails();
+
+            [Get("resp-content/data/enum-val-2")]
+            Task<TestEnum> GetEnumVal2();
+
+            [Get("resp-content/data/enum-val-2")]
+            Task<CallDetails<TestEnum>> GetEnumVal2WithDetails();
         }
     }
 }
