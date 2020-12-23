@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using TestServer.Models;
 
 namespace TestServer.Controllers
 {
@@ -57,6 +59,13 @@ namespace TestServer.Controllers
             var memStream = new MemoryStream(bin);
             
             return new FileStreamResult(memStream, "application/octet-stream");
+        }
+
+        [HttpGet("data/enum-val-2")]
+        public async Task<IActionResult> GetEnumValue2()
+        {
+            await Task.Delay(100);
+            return Ok(TestEnum.Value2);
         }
     }
 }

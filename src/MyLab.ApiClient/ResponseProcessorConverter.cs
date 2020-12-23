@@ -35,12 +35,23 @@ namespace MyLab.ApiClient
 
         private static object DeserializeFromJson(string str, Type returnType)
         {
-            var d = new JsonSerializer()
+            var d = new JsonSerializer
             {
                 TypeNameHandling = TypeNameHandling.Auto
             };
 
-            using (var r = new StringReader(str))
+            string resultStr;
+
+            if (returnType.IsEnum && str.Length > 1 && str[0] != '\"' && str[^1] != '\"')
+            {
+                resultStr = $"\"{str}\"";
+            }
+            else
+            {
+                resultStr = str;
+            }
+
+            using (var r = new StringReader(resultStr))
             {
                 return d.Deserialize(r, returnType);
             }
