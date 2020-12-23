@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
@@ -61,8 +62,9 @@ namespace TestServer.Controllers
         }
 
         [HttpGet("data/enum-val-2")]
-        public IActionResult GetEnumValue2()
+        public async Task<IActionResult> GetEnumValue2()
         {
+            await Task.Delay(100);
             return Ok(TestEnum.Value2);
         }
     }

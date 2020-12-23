@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -6,6 +7,7 @@ using MyLab.ApiClient;
 using TestServer;
 using TestServer.Models;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace IntegrationTests
 {
@@ -82,11 +84,32 @@ namespace IntegrationTests
         {
             //Arrange
             var api = CreateProxy();
+            CallDetails<TestEnum> res = null;
 
             //Act
-            var res = await api.GetEnumVal2WithDetails();
+            try
+            {
+                res = await api.GetEnumVal2WithDetails();
+            }
+            catch (DetailedResponseProcessingException<CallDetails<TestEnum>> e)
+            {
+                _output.WriteLine("RequestDump:");
+                _output.WriteLine(e.CallDetails.RequestDump);
+                _output.WriteLine("ResponseDump:");
+                _output.WriteLine(e.CallDetails.ResponseDump);
+            }
+
+            if (res != null)
+            {
+                _output.WriteLine("RequestDump:");
+                _output.WriteLine(res.RequestDump);
+                _output.WriteLine("ResponseDump:");
+                _output.WriteLine(res.ResponseDump);
+            }
+
 
             //Assert
+            Assert.NotNull(res);
             Assert.Equal(HttpStatusCode.OK, res.StatusCode);
             Assert.Equal(TestEnum.Value2, res.ResponseContent);
         }
