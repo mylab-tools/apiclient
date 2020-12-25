@@ -126,9 +126,10 @@ namespace MyLab.ApiClient
             }
             catch (Exception e)
             {
-                e.Data.Add("httpClient is null", httpClient == null);
+                if(!e.Data.Contains("httpClient is null"))
+                    e.Data.Add("httpClient is null", httpClient == null);
 
-                if (httpClient != null) 
+                if (httpClient != null && !e.Data.Contains("httpClient.BaseAddress")) 
                 {
                     e.Data.Add("httpClient.BaseAddress", httpClient.BaseAddress);
                 }
