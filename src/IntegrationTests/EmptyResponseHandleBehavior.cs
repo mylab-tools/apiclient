@@ -79,6 +79,18 @@ namespace IntegrationTests
             
         }
 
+        [Fact]
+        public async Task ShouldSupportNoResultWithHead()
+        {
+            //Arrange
+            var client = new ApiClient<ITestServer>(_clientProvider);
+
+            //Act & Assert
+            var resDet = await client.Request(s => s.GetNoResultWithHead()).GetDetailedAsync();
+            Log(resDet);
+
+        }
+
         private void Log(CallDetails resDet)
         {
             _output.WriteLine("Request:");
@@ -93,6 +105,9 @@ namespace IntegrationTests
         {
             [Get]
             Task GetNoResult();
+
+            [Head]
+            Task GetNoResultWithHead();
 
             [Get]
             Task<string> GetNullString();

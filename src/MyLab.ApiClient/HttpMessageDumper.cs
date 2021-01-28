@@ -35,7 +35,14 @@ namespace MyLab.ApiClient
             b.AppendLine($"{(int)msg.StatusCode} {msg.ReasonPhrase}");
             b.AppendLine();
 
-            await Dump(b, msg.Headers, msg.Content, MaxResponseBodySize);
+            try
+            {
+                await Dump(b, msg.Headers, msg.Content, MaxResponseBodySize);
+            }
+            catch (Exception e)
+            {
+                b.AppendLine("Unexpected dump error: " + e);
+            }
 
             return b.ToString();
         }
@@ -68,27 +75,31 @@ namespace MyLab.ApiClient
                     foreach (var header in cha)
                         dumpBuilder.AppendLine($"{header.Key}: {string.Join(", ", header.Value)}");
                 }
-
-                var buff = new byte[bodyLimit];
+                
                 var strm = await content.ReadAsStreamAsync();
-                strm.Seek(0, SeekOrigin.Begin);
-                int readCount = await strm.ReadAsync(buff, 0, buff.Length);
-                bool contentIsTooLarge = strm.ReadByte() != -1;
 
-                var encodingFromRequest =
-                    content.Headers?.ContentEncoding?.FirstOrDefault();
-                var encoding = encodingFromRequest != null
-                    ? Encoding.GetEncoding(encodingFromRequest)
-                    : Encoding.UTF8;
-
-                var strContent = encoding.GetString(buff, 0, readCount);
-
-                if (strContent.Length != 0)
+                if (strm.CanSeek)
                 {
-                    dumpBuilder.AppendLine();
-                    dumpBuilder.AppendLine($"{strContent}");
-                    if (contentIsTooLarge)
-                        dumpBuilder.AppendLine(ContentIsTooLargeText);
+                    var buff = new byte[bodyLimit];
+                    strm.Seek(0, SeekOrigin.Begin);
+                    int readCount = await strm.ReadAsync(buff, 0, buff.Length);
+                    bool contentIsTooLarge = strm.ReadByte() != -1;
+
+                    var encodingFromRequest =
+                        content.Headers?.ContentEncoding?.FirstOrDefault();
+                    var encoding = encodingFromRequest != null
+                        ? Encoding.GetEncoding(encodingFromRequest)
+                        : Encoding.UTF8;
+
+                    var strContent = encoding.GetString(buff, 0, readCount);
+
+                    if (strContent.Length != 0)
+                    {
+                        dumpBuilder.AppendLine();
+                        dumpBuilder.AppendLine($"{strContent}");
+                        if (contentIsTooLarge)
+                            dumpBuilder.AppendLine(ContentIsTooLargeText);
+                    }
                 }
             }
 
