@@ -17,5 +17,11 @@ namespace TestServer.Controllers
         {
             return Ok();
         }
+
+        [HttpHead("empty")]
+        public IActionResult GetHead()
+        {
+            return Ok();
+        }
     }
 }
