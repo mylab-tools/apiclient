@@ -1,5 +1,8 @@
+using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace MyLab.ApiClient
 {
@@ -43,5 +46,16 @@ namespace MyLab.ApiClient
         /// Request object
         /// </summary>
         public HttpRequestMessage RequestMessage { get; set; }
+
+        /// <summary>
+        /// Throws <see cref="ResponseCodeException"/> if <see cref="IsUnexpectedStatusCode"/> is true
+        /// </summary>
+        public async Task ThrowIfUnexpectedStatusCode()
+        {
+            if (!IsUnexpectedStatusCode)
+                return;
+
+            throw await ResponseCodeException.FromResponseMessage(ResponseMessage);
+        }
     }
 }

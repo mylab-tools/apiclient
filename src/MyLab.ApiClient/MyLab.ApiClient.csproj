@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>3.6.18</Version>
+    <Version>3.6.19</Version>
     <Authors>Andrey O.</Authors>
-    <Copyright>Copyright (c) 2020 Andrey Osintsev &lt;ozzy.ext@gmail.com&gt;</Copyright>
+    <Copyright>Copyright (c) 2021 Andrey Osintsev &lt;ozzy.ext@gmail.com&gt;</Copyright>
     <PackageProjectUrl>https://github.com/ozzy-ext-mylab/apiclient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ozzy-ext-mylab/apiclient.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>3.6.18.2901</AssemblyVersion>
-    <FileVersion>3.6.18.2901</FileVersion>
+    <AssemblyVersion>3.6.19.0202</AssemblyVersion>
+    <FileVersion>3.6.19.0202</FileVersion>
     <Description>Provides an object model for working with the HTTP API. Provides transparent integration with .NET Core</Description>
     <PackageTags>http api</PackageTags>
   </PropertyGroup>

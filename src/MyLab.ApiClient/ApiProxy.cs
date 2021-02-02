@@ -76,9 +76,13 @@ namespace MyLab.ApiClient
             if(!typeof(Task).IsAssignableFrom(retType))
                 throw new ApiClientException($"Wrong method return type '{retType.FullName}'");
 
-            if (retType == typeof(Task) || retType == typeof(Task<CallDetails>))
+            if (retType == typeof(Task))
             {
-                return CallAndObserve(targetMethod, args);
+                return CallAndObserve(targetMethod, args, true);
+            }
+            if (retType == typeof(Task<CallDetails>))
+            {
+                return CallAndObserve(targetMethod, args, false);
             }
             if (retType.IsGenericType)
             {
@@ -101,28 +105,6 @@ namespace MyLab.ApiClient
                     var m = CallAndObserveGenericMethod.MakeGenericMethod(gRetType);
                     return m.Invoke(this, new object[] { targetMethod, args });
                 }
-
-                /*if (gRetType.IsGenericType)
-                {
-                    var gRetTypeGeneric = gRetType.GetGenericTypeDefinition();
-
-                    if (gRetTypeGeneric == typeof(CallDetails<>))
-                    {
-                        var respContentType = gRetType.GetGenericArguments().First();
-
-                        var m = CallWithDetailsAndObserveGenericMethod.MakeGenericMethod(respContentType);
-                        return m.Invoke(this, new object[] {targetMethod, args});
-                    }
-                    else
-                    {
-                        var m = CallAndObserveGenericMethod.MakeGenericMethod(gRetTypeGeneric);
-                        return m.Invoke(this, new object[] { targetMethod, args });
-                    }
-                }
-                else
-                {
-                    throw new InvalidOperationException("Generic parameter not found for generic type");
-                }*/
             }
 
             throw new InvalidOperationException("Unexpected return type");
@@ -143,14 +125,19 @@ namespace MyLab.ApiClient
 
             _callObservers.Call(details);
 
+            await details.ThrowIfUnexpectedStatusCode();
+
             return details.ResponseContent;
         }
 
-        async Task<CallDetails> CallAndObserve(MethodInfo targetMethod, object[] args)
+        async Task<CallDetails> CallAndObserve(MethodInfo targetMethod, object[] args, bool throwIfUnexpected)
         {
             var details = await ApiRequestFactory.Create(targetMethod, args).GetDetailedAsync();
 
             _callObservers.Call(details);
+
+            if (throwIfUnexpected)
+                await details.ThrowIfUnexpectedStatusCode();
 
             return details;
         }
