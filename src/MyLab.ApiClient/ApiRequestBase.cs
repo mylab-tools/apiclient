@@ -66,7 +66,7 @@ namespace MyLab.ApiClient
             var msgDumper = new HttpMessageDumper();
             var reqDump = await msgDumper.Dump(resp.Request);
             var respDump = await msgDumper.Dump(resp.Response);
-            var isUnexpectedStatusCode = await IsStatusCodeUnexpectedAsync(resp.Response, false);
+            var isUnexpectedStatusCode = IsStatusCodeUnexpectedAsync(resp.Response);
 
             var resDetails =  new TDetails
             {
@@ -85,7 +85,8 @@ namespace MyLab.ApiClient
         {
             var resp = await SendRequestAsync(cancellationToken);
 
-            await IsStatusCodeUnexpectedAsync(resp.Response, true);
+            if (IsStatusCodeUnexpectedAsync(resp.Response))
+                throw await ResponseCodeException.FromResponseMessage(resp.Response);
 
             return resp.Response;
         }
@@ -163,35 +164,9 @@ namespace MyLab.ApiClient
             }
         }
 
-        private async Task<bool> IsStatusCodeUnexpectedAsync(HttpResponseMessage response, bool throwIfTrue)
+        private bool IsStatusCodeUnexpectedAsync(HttpResponseMessage response)
         {
-            if (response.StatusCode != HttpStatusCode.OK &&
-                !ExpectedCodes.Contains(response.StatusCode))
-            {
-                var contentString = await GetMessageFromResponseContentAsync(response.Content);
-                string msg = !string.IsNullOrWhiteSpace(contentString) 
-                    ? contentString
-                    : response.ReasonPhrase;
-
-                if(throwIfTrue)
-                    throw new ResponseCodeException(response.StatusCode, msg);
-                
-                return true;
-            }
-
-            return false;
-        }
-
-        private async Task<string> GetMessageFromResponseContentAsync(HttpContent responseContent)
-        {
-            var contentStream = await responseContent.ReadAsStreamAsync();
-
-            using var rdr = new StreamReader(contentStream);
-
-            var buff = new char[1024];
-            var read = await rdr.ReadBlockAsync(buff, 0, 1024);
-
-            return new string(buff, 0, read);
+            return response.StatusCode != HttpStatusCode.OK &&!ExpectedCodes.Contains(response.StatusCode);
         }
     }
 }

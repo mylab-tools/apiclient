@@ -272,6 +272,11 @@
             Request object
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.CallDetails.ThrowIfUnexpectedStatusCode">
+            <summary>
+            Throws <see cref="T:MyLab.ApiClient.ResponseCodeException"/> if <see cref="P:MyLab.ApiClient.CallDetails.IsUnexpectedStatusCode"/> is true
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.DetailedResponseProcessingException`1">
             <summary>
             Occurs in Details provided method when response processing error
@@ -590,6 +595,11 @@
         <member name="T:MyLab.ApiClient.ResponseCodeException">
             <summary>
             Throws when got an unexpected response HTTP code
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseCodeException.FromResponseMessage(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Creates <see cref="T:MyLab.ApiClient.ResponseCodeException"/> based on <see cref="T:System.Net.Http.HttpResponseMessage"/>
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.ResponseProcessing">

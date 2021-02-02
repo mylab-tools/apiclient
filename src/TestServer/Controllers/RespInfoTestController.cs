@@ -21,7 +21,7 @@ namespace TestServer.Controllers
         [HttpGet("404")]
         public IActionResult Get404()
         {
-            return NotFound();
+            return NotFound("NotFound");
         }
     }
 }

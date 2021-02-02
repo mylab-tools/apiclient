@@ -114,6 +114,42 @@ namespace IntegrationTests
             Assert.Equal(TestEnum.Value2, res.ResponseContent);
         }
 
+        [Fact]
+        public async Task ShouldGetErrorWhenUnexpected404()
+        {
+            //Arrange
+            var api = CreateProxy();
+
+            //Act && Assert
+            await Assert.ThrowsAsync<ResponseCodeException>(() => api.GetUnexpected404());
+        }
+
+        [Fact]
+        public async Task ShouldGetDefaultValueWhenExpected404()
+        {
+            //Arrange
+            var api = CreateProxy();
+
+            //Act
+            var res = await api.GetExpectedInt404();
+
+            //Assert
+            Assert.Equal(default, res);
+        }
+
+        [Fact]
+        public async Task ShouldGetDefaultObjectWhenExpected404()
+        {
+            //Arrange
+            var api = CreateProxy();
+
+            //Act
+            var res = await api.GetExpectedString404();
+
+            //Assert
+            Assert.Equal(default, res);
+        }
+
         [Api(Key = "No matter for this test")]
         interface ITestServer
         {
@@ -134,6 +170,17 @@ namespace IntegrationTests
 
             [Get("resp-content/data/enum-val-2")]
             Task<CallDetails<TestEnum>> GetEnumVal2WithDetails();
+
+            [Get("resp-info/404")]
+            Task<string> GetUnexpected404();
+
+            [Get("resp-info/404")]
+            [ExpectedCode(HttpStatusCode.NotFound)]
+            Task<string> GetExpectedString404();
+
+            [Get("resp-info/404")]
+            [ExpectedCode(HttpStatusCode.NotFound)]
+            Task<int> GetExpectedInt404();
         }
     }
 }
