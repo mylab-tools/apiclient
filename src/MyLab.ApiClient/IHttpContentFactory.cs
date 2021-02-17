@@ -23,7 +23,7 @@ namespace MyLab.ApiClient
     {
         public HttpContent Create(object source)
         {
-            return new StringContent(source?.ToString() ?? string.Empty);
+            return new StringContent(ObjectToStringConverter.ToString(source));
         }
     }
 

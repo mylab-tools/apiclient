@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 
@@ -49,7 +48,8 @@ namespace MyLab.ApiClient
 
         public void Apply(HttpRequestMessage request)
         {
-            request.Headers.Add(_description.Name, _valueProvider.GetValue()?.ToString() ?? string.Empty);
+            var val = ObjectToStringConverter.ToString(_valueProvider.GetValue());
+            request.Headers.Add(_description.Name, val);
         }
     }
 
