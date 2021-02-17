@@ -19,7 +19,7 @@ namespace MyLab.ApiClient
     {
         public Uri Modify(Uri origin, string paramName, object value)
         { 
-            var strVal = value?.ToString() ?? string.Empty;
+            var strVal = ObjectToStringConverter.ToString(value);
             var tag = "{" + paramName + "}";
 
             var decodedPath = HttpUtility.UrlDecode(origin.IsAbsoluteUri
@@ -55,7 +55,7 @@ namespace MyLab.ApiClient
     {
         public Uri Modify(Uri origin, string paramName, object value)
         {
-            var strVal = Uri.EscapeDataString(value?.ToString() ?? string.Empty);
+            var strVal = Uri.EscapeDataString(ObjectToStringConverter.ToString(value));
 
             var uriStr = origin.OriginalString;
             var queryStart = uriStr.IndexOf("?", StringComparison.InvariantCulture);
