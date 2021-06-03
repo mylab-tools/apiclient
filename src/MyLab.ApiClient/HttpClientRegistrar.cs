@@ -9,9 +9,13 @@ namespace MyLab.ApiClient
         {
             foreach (var desc in options.List)
             {
+                var normUrl = desc.Value.Url == null || desc.Value.Url.EndsWith("/")
+                    ? desc.Value.Url
+                    : desc.Value.Url + "/";
+
                 services.AddHttpClient(desc.Key, client =>
                 {
-                    client.BaseAddress = new Uri(desc.Value.Url);   
+                    client.BaseAddress = new Uri(normUrl);   
                 });
             }
         }

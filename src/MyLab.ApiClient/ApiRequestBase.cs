@@ -15,6 +15,11 @@ namespace MyLab.ApiClient
     public class ApiRequestBase<TDetails>
         where TDetails : CallDetails, new()
     {
+        private readonly string _baseUrl;
+        private readonly MethodDescription _methodDescription;
+        private readonly IHttpClientProvider _httpClientProvider;
+        private readonly IReadOnlyList<IParameterApplier> _paramAppliers;
+
         /// <summary>
         /// Gets request modifiers collection
         /// </summary>
@@ -26,12 +31,7 @@ namespace MyLab.ApiClient
         /// </summary>
         public List<HttpStatusCode> ExpectedCodes { get; }
             = new List<HttpStatusCode>();
-
-        private readonly string _baseUrl;
-        private readonly MethodDescription _methodDescription;
-        private readonly IHttpClientProvider _httpClientProvider;
-        private readonly IReadOnlyList<IParameterApplier> _paramAppliers;
-
+        
         internal ApiRequestBase(
             string baseUrl,
             MethodDescription methodDescription, 
@@ -93,29 +93,35 @@ namespace MyLab.ApiClient
 
         async Task<(HttpResponseMessage Response, HttpRequestMessage Request)> SendRequestAsync(CancellationToken cancellationToken)
         {
-            Uri addr;
+            var reqMsgBuilder = new HttpRequestMessageBuilder(_baseUrl, _methodDescription);
+            reqMsgBuilder.AddParameters(_paramAppliers);
+            reqMsgBuilder.AddModifications(RequestModifiers);
 
-            try
-            {
-                addr = new Uri((_baseUrl?.TrimEnd('/') ?? "") + "/" + _methodDescription.Url, UriKind.RelativeOrAbsolute);
-            }
-            catch (Exception e)
-            {
-                e.Data.Add("baseUrl", _baseUrl);
-                e.Data.Add("methodUrl", _methodDescription.Url);
+            var reqMsg = reqMsgBuilder.Build();
 
-                throw;
-            }
+            //Uri addr;
 
-            var reqMsg = new HttpRequestMessage
-            {
-                Method = _methodDescription.HttpMethod,
-                RequestUri = addr
-            };
+            //try
+            //{
+            //    addr = new Uri((_baseUrl?.TrimEnd('/') ?? "") + "/" + _methodDescription.Url, UriKind.RelativeOrAbsolute);
+            //}
+            //catch (Exception e)
+            //{
+            //    e.Data.Add("baseUrl", _baseUrl);
+            //    e.Data.Add("methodUrl", _methodDescription.Url);
 
-            ApplyParameters(reqMsg);
+            //    throw;
+            //}
 
-            ApplyModifiers(reqMsg);
+            //var reqMsg = new HttpRequestMessage
+            //{
+            //    Method = _methodDescription.HttpMethod,
+            //    RequestUri = addr
+            //};
+
+            //ApplyParameters(reqMsg);
+
+            //ApplyModifiers(reqMsg);
 
             HttpResponseMessage response;
             HttpClient httpClient = null;

@@ -66,7 +66,8 @@ namespace MyLab.ApiClient
 
     class ApiRequestFactory
     {
-        private readonly ServiceDescription _description;
+        public ServiceDescription ServiceDescription { get; }
+
         private readonly IHttpClientProvider _httpClientProvider;
         private readonly ApiRequestFactoryParametersProvider _paramProvider;
 
@@ -75,8 +76,8 @@ namespace MyLab.ApiClient
             if (contractType == null) throw new ArgumentNullException(nameof(contractType));
             
             _httpClientProvider = httpClientProvider ?? throw new ArgumentNullException(nameof(httpClientProvider));
-            _description = ServiceDescription.Create(contractType);
-            _paramProvider = new ApiRequestFactoryParametersProvider(_description);
+            ServiceDescription = ServiceDescription.Create(contractType);
+            _paramProvider = new ApiRequestFactoryParametersProvider(ServiceDescription);
         }
         public ApiRequest Create(MethodInfo method, object[] args)
         {
@@ -87,7 +88,7 @@ namespace MyLab.ApiClient
                 ObjectArgumentsToProviders(args));
 
             return new ApiRequest(
-                _description.Url,
+                ServiceDescription.Url,
                 requestParameters.MethodDescription,
                 requestParameters.Appliers,
                 _httpClientProvider);
@@ -102,7 +103,7 @@ namespace MyLab.ApiClient
                 ObjectArgumentsToProviders(args));
 
             return new ApiRequest<TRes>(
-                _description.Url,
+                ServiceDescription.Url,
                 requestParameters.MethodDescription,
                 requestParameters.Appliers,
                 _httpClientProvider);

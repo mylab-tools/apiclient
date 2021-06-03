@@ -35,14 +35,11 @@ namespace UnitTests
 
             //Assert
             Assert.NotNull(httpClient);
-            Assert.Equal("http://test.com", httpClient.BaseAddress?.OriginalString);
+            Assert.Equal("http://test.com/", httpClient.BaseAddress?.OriginalString);
         }
 
         private HttpClient GetClient(IContract service)
         {
-            //var st = service.GetType().BaseType;
-            //var rF = (ApiRequestFactory)st.GetProperty("ApiRequestFactory").GetValue(service);
-
             var api = (ApiProxy<IContract>) service;
             var clP = (IHttpClientProvider) typeof(ApiRequestFactory)
                 .GetField("_httpClientProvider", BindingFlags.Instance | BindingFlags.NonPublic)

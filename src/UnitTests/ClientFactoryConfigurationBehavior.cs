@@ -36,7 +36,7 @@ namespace UnitTests
 
             //Assert
             Assert.NotNull(httpClient);
-            Assert.Equal("http://test.com", httpClient.BaseAddress?.OriginalString);
+            Assert.Equal("http://test.com/", httpClient.BaseAddress?.OriginalString);
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace UnitTests
 
             //Assert
             Assert.NotNull(httpClient);
-            Assert.Equal("http://test.com", httpClient.BaseAddress?.OriginalString);
+            Assert.Equal("http://test.com/", httpClient.BaseAddress?.OriginalString);
         }
 
         class TestService
