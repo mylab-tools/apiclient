@@ -32,14 +32,8 @@ namespace IntegrationTests
             var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act & Assert
-            try
-            {
-                await client.Request(s => s.GetUnexpected404()).CallAsync();
-            }
-            catch (ResponseCodeException e) when (e.StatusCode == HttpStatusCode.BadRequest)
-            {
-                //Pass
-            }
+            ResponseCodeException e = await Assert.ThrowsAsync<ResponseCodeException>(() => client.Request(s => s.GetUnexpected404()).CallAsync());
+            Assert.Equal(HttpStatusCode.BadRequest, e.StatusCode);
         }
 
         [Fact]
@@ -53,15 +47,17 @@ namespace IntegrationTests
         }
 
         [Fact]
-        public async Task ShouldNotProvideStatusMessageIfNotSuccess()
+        public async Task ShouldProvideOriginalServerMessageWhenError()
         {
             //Arrange
-            var client = new ApiClient<ITestServer>(_clientProvider);
+            var client = ApiProxy<ITestServer>.Create(_clientProvider);
 
-            //Act & Assert
-            await client
-                .Request(s => s.GetExpected404())
-                .CallAsync();
+            //Act
+            ResponseCodeException e = await Assert.ThrowsAsync<ResponseCodeException>(() => client.GetUnexpected404("foo"));
+            Assert.Equal(HttpStatusCode.BadRequest, e.StatusCode);
+
+            //Assert
+            Assert.Equal("foo", e.ServerMessage);
         }
 
         [Fact]
@@ -71,14 +67,8 @@ namespace IntegrationTests
             var client = ApiProxy<ITestServer>.Create(_clientProvider);
 
             //Act & Assert
-            try
-            {
-                await client.GetUnexpected404();
-            }
-            catch (ResponseCodeException e) when (e.StatusCode == HttpStatusCode.BadRequest)
-            {
-                //Pass
-            }
+            ResponseCodeException e = await  Assert.ThrowsAsync<ResponseCodeException>(() => client.GetUnexpected404());
+            Assert.Equal(HttpStatusCode.BadRequest, e.StatusCode);
         }
 
         [Fact]
@@ -96,6 +86,9 @@ namespace IntegrationTests
         {
             [Get("400")]
             Task GetUnexpected404();
+
+            [Get("400")]
+            Task GetUnexpected404([Query] string msg);
 
             [ExpectedCode(HttpStatusCode.BadRequest)]
             [Get("400")]

@@ -11,15 +11,30 @@ namespace MyLab.ApiClient
     /// </summary>
     public class ResponseCodeException : ApiClientException
     {
+        /// <summary>
+        /// Response status code
+        /// </summary>
         public HttpStatusCode StatusCode { get; }
 
-        public static string CreateDescription(HttpStatusCode statusCode, string message)
-            => $"{(int) statusCode}({statusCode}). {message ?? "[no message]"}.";
+        /// <summary>
+        /// Server message
+        /// </summary>
+        public string ServerMessage { get; }
 
-        public ResponseCodeException(HttpStatusCode statusCode, string message) 
-            : base(CreateDescription(statusCode, message))
+        /// <summary>
+        /// Format serverMessage
+        /// </summary>
+        public static string CreateDescription(HttpStatusCode statusCode, string serverMessage)
+            => $"{(int) statusCode}({statusCode}). {serverMessage ?? "[no message]"}.";
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ResponseCodeException"/>
+        /// </summary>
+        public ResponseCodeException(HttpStatusCode statusCode, string serverMessage) 
+            : base(CreateDescription(statusCode, serverMessage))
         {
             StatusCode = statusCode;
+            ServerMessage = serverMessage;
         }
 
         /// <summary>
@@ -37,6 +52,9 @@ namespace MyLab.ApiClient
             async Task<string> GetMessageFromResponseContentAsync(HttpContent responseContent)
             {
                 var contentStream = await responseContent.ReadAsStreamAsync();
+
+                if (contentStream.CanSeek)
+                    contentStream.Seek(0, SeekOrigin.Begin);
 
                 using var rdr = new StreamReader(contentStream);
 

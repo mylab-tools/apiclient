@@ -597,6 +597,26 @@
             Throws when got an unexpected response HTTP code
             </summary>
         </member>
+        <member name="P:MyLab.ApiClient.ResponseCodeException.StatusCode">
+            <summary>
+            Response status code
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseCodeException.ServerMessage">
+            <summary>
+            Server message
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseCodeException.CreateDescription(System.Net.HttpStatusCode,System.String)">
+            <summary>
+            Format serverMessage
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseCodeException.#ctor(System.Net.HttpStatusCode,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ResponseCodeException"/>
+            </summary>
+        </member>
         <member name="M:MyLab.ApiClient.ResponseCodeException.FromResponseMessage(System.Net.Http.HttpResponseMessage)">
             <summary>
             Creates <see cref="T:MyLab.ApiClient.ResponseCodeException"/> based on <see cref="T:System.Net.Http.HttpResponseMessage"/>

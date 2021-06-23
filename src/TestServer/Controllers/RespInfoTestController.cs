@@ -7,9 +7,9 @@ namespace TestServer.Controllers
     public class RespInfoTestController : ControllerBase
     {
         [HttpGet("400")]
-        public IActionResult Get400()
+        public IActionResult Get400([FromQuery]string msg)
         {
-            return BadRequest("This is a message");
+            return BadRequest(msg ?? "This is a message");
         }
 
         [HttpGet("200")]
