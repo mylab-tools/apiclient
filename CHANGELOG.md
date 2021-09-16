@@ -4,6 +4,12 @@
 
 Формат лога изменений базируется на [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.9.21] - 2021-09-16
+
+### Изменено
+
+* Требование к типу параметра коллекции заголовков: `IEnumerable<KeyValuePair<string, object>>` вместо `IDictionary<string, object>` 
+
 ## [3.8.21] - 2021-09-16
 
 ### Добавлено

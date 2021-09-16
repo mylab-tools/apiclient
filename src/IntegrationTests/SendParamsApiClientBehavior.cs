@@ -95,7 +95,7 @@ namespace IntegrationTests
             Task<string> EchoHeader([Header("Message")] string msg);
 
             [Post("echo/header")]
-            Task<string> EchoHeaderCollection([HeaderCollection] IDictionary<string,object> headers);
+            Task<string> EchoHeaderCollection([HeaderCollection] Dictionary<string,object> headers);
 
             [Post("echo/body/obj/xml")]
             Task<string> EchoXmlObj([XmlContent] TestModel model);

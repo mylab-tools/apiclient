@@ -210,14 +210,14 @@ X-Identifier: 2
 
 #### HeaderCollectionAttribute
 
-Аргумент - произвольный список заголовков.
+Аргумент - произвольный список заголовков. Тип параметра должен реализовывать интерфейс `IEnumerable<KeyValuePair<string, object>>`;
 
 ```C#
 [Api("company-services/api")]
 public interface IService
 {   
     [Get("orders")]
-    Task Get([HeaderCollection] IDictionary<string,object> headers);
+    Task Get([HeaderCollection] Dictionary<string, object> headers);
 }
 ```
 
