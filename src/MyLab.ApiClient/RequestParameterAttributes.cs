@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace MyLab.ApiClient
@@ -80,6 +81,26 @@ namespace MyLab.ApiClient
     }
 
     /// <summary>
+    /// Determines api request parameter which place in header
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class HeaderCollectionAttribute : ApiParameterAttribute
+    {
+        /// <inheritdoc />
+        public override ApiContractValidationIssuer ValidateParameter(ParameterInfo p)
+        {
+            return typeof(IDictionary<string, object>).IsAssignableFrom(p.ParameterType)
+                ? null
+                : new ApiContractValidationIssuer
+                {
+                    Critical = true,
+                    Parameter = p,
+                    Reason = "Header collection parameter must implement IDictionary<string,object>"
+                };
+        }
+    }
+
+    /// <summary>
     /// Determines api request parameter which place in content
     /// </summary>
     public class ContentParameterAttribute : ApiParameterAttribute
@@ -138,7 +159,7 @@ namespace MyLab.ApiClient
     }
 
     /// <summary>
-    /// Determines request parameter which place in content with XML format
+    /// Determines request parameter which place in content as Url Encoded Form
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public class FormContentAttribute : ContentParameterAttribute
@@ -148,6 +169,33 @@ namespace MyLab.ApiClient
         /// </summary>
         public FormContentAttribute() : base(new UrlFormHttpContentFactory())
         {
+        }
+    }
+
+    /// <summary>
+    /// Determines request parameter which place in content as Multipart form
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class MultipartContentAttribute : ContentParameterAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of <see cref="MultipartContentAttribute"/>
+        /// </summary>
+        public MultipartContentAttribute() : base(new MultipartFormHttpContentFactory())
+        {
+        }
+
+        /// <inheritdoc />
+        public override ApiContractValidationIssuer ValidateParameter(ParameterInfo p)
+        {
+            return typeof(IMultipartContentParameter).IsAssignableFrom(p.ParameterType)
+                ? null
+                : new ApiContractValidationIssuer
+                {
+                    Critical = true,
+                    Parameter = p,
+                    Reason = "Multipart form parameter must implement IMultipartContentParameter"
+                };
         }
     }
 

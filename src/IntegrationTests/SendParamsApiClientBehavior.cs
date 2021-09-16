@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -61,6 +62,8 @@ namespace IntegrationTests
             Expression<Func<ITestServer, Task<string>>> expr6 = s => s.EchoForm(testModel);
             Expression<Func<ITestServer, Task<string>>> expr7 = s => s.EchoText("foo");
             Expression<Func<ITestServer, Task<string>>> expr8 = s => s.EchoBin(Encoding.UTF8.GetBytes("foo"));
+            Expression<Func<ITestServer, Task<string>>> expr9 = s => s.EchoHeaderCollection(new Dictionary<string, object>{ {"Message", "f"}, { "Message2", "oo" } });
+            Expression<Func<ITestServer, Task<string>>> expr10 = s => s.EchoMultipart(new TestMultipartParameter{ Part1 = "fo", Part2 = "o"});
 
             return new List<object[]>
             {
@@ -72,12 +75,16 @@ namespace IntegrationTests
                 new object[] {expr6},
                 new object[] {expr7},
                 new object[] {expr8},
+                new object[] {expr9},
+                new object[] {expr10},
             };
         }
 
         [Api("param-sending")]
         public interface ITestServer
         {
+            [Post("echo/multipart")]
+            Task<string> EchoMultipart([MultipartContent] TestMultipartParameter msg);
             [Post("echo/query")]
             Task<string> EchoQuery([Query]string msg);
 
@@ -86,6 +93,9 @@ namespace IntegrationTests
 
             [Post("echo/header")]
             Task<string> EchoHeader([Header("Message")] string msg);
+
+            [Post("echo/header")]
+            Task<string> EchoHeaderCollection([HeaderCollection] IDictionary<string,object> headers);
 
             [Post("echo/body/obj/xml")]
             Task<string> EchoXmlObj([XmlContent] TestModel model);
@@ -101,6 +111,18 @@ namespace IntegrationTests
 
             [Post("echo/body/bin")]
             Task<string> EchoBin([BinContent] byte[] msg);
+        }
+
+        public class TestMultipartParameter : IMultipartContentParameter
+        {
+            public string Part1 { get; set; }
+            public string Part2 { get; set; }
+
+            public void AddParts(MultipartFormDataContent content)
+            {
+                content.Add(new StringContent(Part1), "part1");
+                content.Add(new StringContent(Part2), "part2");
+            }
         }
     }
 }

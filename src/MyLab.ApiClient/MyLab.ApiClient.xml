@@ -357,6 +357,16 @@
             Creates <see cref="T:System.Net.Http.HttpContent"/>
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.IMultipartContentParameter">
+            <summary>
+            Specifies input parameter which will be used to create request multipart content
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.IMultipartContentParameter.AddParts(System.Net.Http.MultipartFormDataContent)">
+            <summary>
+            Implement to add parts to content
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.IRequestMessageModifier">
             <summary>
             Integrates into request message preparing pipeline
@@ -487,6 +497,11 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.HeaderRequestParameterDescription"/>
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.HeaderCollectionRequestParameterDescription.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.HeaderCollectionRequestParameterDescription"/>
+            </summary>
+        </member>
         <member name="M:MyLab.ApiClient.ContentRequestParameterDescription.#ctor(System.Int32,MyLab.ApiClient.IHttpContentFactory)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.ContentRequestParameterDescription"/>
@@ -532,6 +547,14 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.HeaderAttribute"/>
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.HeaderCollectionAttribute">
+            <summary>
+            Determines api request parameter which place in header
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.HeaderCollectionAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+            <inheritdoc />
+        </member>
         <member name="T:MyLab.ApiClient.ContentParameterAttribute">
             <summary>
             Determines api request parameter which place in content
@@ -574,13 +597,26 @@
         </member>
         <member name="T:MyLab.ApiClient.FormContentAttribute">
             <summary>
-            Determines request parameter which place in content with XML format
+            Determines request parameter which place in content as Url Encoded Form
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.FormContentAttribute.#ctor">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.FormContentAttribute"/>
             </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.MultipartContentAttribute">
+            <summary>
+            Determines request parameter which place in content as Multipart form
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.MultipartContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.MultipartContentAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.MultipartContentAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+            <inheritdoc />
         </member>
         <member name="T:MyLab.ApiClient.BinContentAttribute">
             <summary>

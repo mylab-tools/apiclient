@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -82,21 +81,37 @@ namespace MyLab.ApiClient
                 {
                     var buff = new byte[bodyLimit];
                     strm.Seek(0, SeekOrigin.Begin);
-                    int readCount = await strm.ReadAsync(buff, 0, buff.Length);
-                    bool contentIsTooLarge = strm.ReadByte() != -1;
 
-                    var encodingFromRequest =
-                        content.Headers?.ContentEncoding?.FirstOrDefault();
-                    var encoding = encodingFromRequest != null
-                        ? Encoding.GetEncoding(encodingFromRequest)
-                        : Encoding.UTF8;
+                    int readCount;
+                    var contentBuilder = new StringBuilder();
 
-                    var strContent = encoding.GetString(buff, 0, readCount);
+                    while (
+                        (readCount = await strm.ReadAsync(buff, 0, buff.Length)) != 0 &&
+                        contentBuilder.Length < bodyLimit
+                        )
+                    {
+                        var encodingFromRequest =
+                            content.Headers?.ContentEncoding?.FirstOrDefault();
+                        var encoding = encodingFromRequest != null
+                            ? Encoding.GetEncoding(encodingFromRequest)
+                            : Encoding.UTF8;
 
-                    if (strContent.Length != 0)
+                        var strContent = encoding.GetString(buff, 0, readCount);
+
+                        contentBuilder.AppendLine(strContent);
+                    }
+
+                    if (contentBuilder.Length != 0)
                     {
                         dumpBuilder.AppendLine();
-                        dumpBuilder.AppendLine($"{strContent}");
+
+                        bool contentIsTooLarge = contentBuilder.Length > bodyLimit;
+
+                        var normContent = contentIsTooLarge
+                            ? contentBuilder.Remove(bodyLimit, contentBuilder.Length-bodyLimit)
+                            : contentBuilder;
+
+                        dumpBuilder.AppendLine(normContent.ToString());
                         if (contentIsTooLarge)
                             dumpBuilder.AppendLine(ContentIsTooLargeText);
                     }
