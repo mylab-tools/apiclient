@@ -89,7 +89,7 @@ namespace MyLab.ApiClient
         /// <inheritdoc />
         public override ApiContractValidationIssuer ValidateParameter(ParameterInfo p)
         {
-            return typeof(IDictionary<string, object>).IsAssignableFrom(p.ParameterType)
+            return typeof(IEnumerable<KeyValuePair<string, object>>).IsAssignableFrom(p.ParameterType)
                 ? null
                 : new ApiContractValidationIssuer
                 {

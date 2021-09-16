@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 
@@ -84,7 +85,7 @@ namespace MyLab.ApiClient
 
         public void Apply(HttpRequestMessage request)
         {
-            var headers = (IDictionary<string, object>) _valueProvider.GetValue();
+            var headers = (IEnumerable<KeyValuePair<string, object>>) _valueProvider.GetValue();
 
             if(headers == null) return;
 
