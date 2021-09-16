@@ -127,4 +127,18 @@ namespace MyLab.ApiClient
             return httpContent;
         }
     }
+
+    class MultipartFormHttpContentFactory : IHttpContentFactory
+    {
+        public HttpContent Create(object source)
+        {
+            var parameter = (IMultipartContentParameter) source;
+
+            var httpContent = new MultipartFormDataContent();
+
+            parameter.AddParts(httpContent);
+
+            return httpContent;
+        }
+    }
 }

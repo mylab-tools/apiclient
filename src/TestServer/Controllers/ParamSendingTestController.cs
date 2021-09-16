@@ -12,6 +12,12 @@ namespace TestServer.Controllers
     [Route("param-sending")]
     public class ParamSendingTestController : ControllerBase
     {
+        [HttpPost("echo/multipart")]
+        public IActionResult EchoMultipart()
+        {
+            return Ok(Request.Form["part1"] + Request.Form["part2"]);
+        }
+
         [HttpPost("echo/query")]
         public IActionResult EchoQuery([FromQuery]string msg)
         {

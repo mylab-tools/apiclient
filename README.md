@@ -210,7 +210,7 @@ X-Identifier: 2
 
 #### HeaderCollectionAttribute
 
-Аргумент - произвольный список заголовков
+Аргумент - произвольный список заголовков.
 
 ```C#
 [Api("company-services/api")]
@@ -421,6 +421,64 @@ Headers:
 Content-Type: application/octet-stream
 
 foo
+```
+
+#### MultipartContentAttribute
+
+Аргумент - содержательная часть запроса в формате `multipart-form`. Параметр должен реализовывать интерфейс `IMultipartContentParameter`.
+
+```C#
+[Api("company-services/api")]
+public interface IService
+{       
+    [Post("orders")]    
+    Task Create([MultipartContent] TestMultipartParameter p);
+}
+
+ public class TestMultipartParameter : IMultipartContentParameter
+ {
+     public string Part1 { get; set; }
+     public string Part2 { get; set; }
+
+     public void AddParts(MultipartFormDataContent content)
+     {
+         content.Add(new StringContent(Part1), "part1");
+         content.Add(new StringContent(Part2), "part2");
+     }
+ }
+```
+
+Вызов:
+
+```C#
+var p = new TestMultipartParameter{ Part1 = "fo", Part2 = "o"}
+
+await srv.Create(p);
+```
+
+Результирующий запрос:
+
+```http
+POST /company-services/api/orders
+Headers:
+Content-Type: multipart/form-data; boundary="2150a4df-de36-421a-8ef7-028f86f90403"
+
+--2150a4df-de36-421a-8ef7-028f86f90403
+
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: form-data; name=part1
+
+
+fo
+
+--2150a4df-de36-421a-8ef7-028f86f90403
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: form-data; name=part2
+
+
+o
+
+--2150a4df-de36-421a-8ef7-028f86f90403--
 ```
 
 ## Результат

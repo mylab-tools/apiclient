@@ -357,6 +357,16 @@
             Creates <see cref="T:System.Net.Http.HttpContent"/>
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.IMultipartContentParameter">
+            <summary>
+            Specifies input parameter which will be used to create request multipart content
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.IMultipartContentParameter.AddParts(System.Net.Http.MultipartFormDataContent)">
+            <summary>
+            Implement to add parts to content
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.IRequestMessageModifier">
             <summary>
             Integrates into request message preparing pipeline
@@ -587,13 +597,26 @@
         </member>
         <member name="T:MyLab.ApiClient.FormContentAttribute">
             <summary>
-            Determines request parameter which place in content with XML format
+            Determines request parameter which place in content as Url Encoded Form
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.FormContentAttribute.#ctor">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.FormContentAttribute"/>
             </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.MultipartContentAttribute">
+            <summary>
+            Determines request parameter which place in content as Multipart form
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.MultipartContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.MultipartContentAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.MultipartContentAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+            <inheritdoc />
         </member>
         <member name="T:MyLab.ApiClient.BinContentAttribute">
             <summary>
