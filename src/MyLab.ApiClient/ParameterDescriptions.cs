@@ -11,21 +11,25 @@ namespace MyLab.ApiClient
         public IReadOnlyList<UrlRequestParameterDescription> UrlParams { get; }
         public IReadOnlyList<HeaderRequestParameterDescription> HeaderParams { get; }
         public IReadOnlyList<ContentRequestParameterDescription> ContentParams { get; }
+        public IReadOnlyList<HeaderCollectionRequestParameterDescription> HeaderCollectionParams { get; }
 
         public RequestParametersDescriptions(
             IEnumerable<UrlRequestParameterDescription> urlParams,
             IEnumerable<HeaderRequestParameterDescription> headerParams,
+            IEnumerable<HeaderCollectionRequestParameterDescription> headerCollectionParams,
             IEnumerable<ContentRequestParameterDescription> contentParams)
         {
             UrlParams = new List<UrlRequestParameterDescription>(urlParams);
             HeaderParams = new List<HeaderRequestParameterDescription>(headerParams);
             ContentParams = new List<ContentRequestParameterDescription>(contentParams);
+            HeaderCollectionParams = new List<HeaderCollectionRequestParameterDescription>(headerCollectionParams);
         }
 
         public static RequestParametersDescriptions Create(MethodInfo mi)
         {
             var urlParams = new List<UrlRequestParameterDescription>();
             var headerParams = new List<HeaderRequestParameterDescription>();
+            var headerCollectionParams = new List<HeaderCollectionRequestParameterDescription>();
             var contentParams = new List<ContentRequestParameterDescription>();
 
             var props = mi.GetParameters();
@@ -40,6 +44,8 @@ namespace MyLab.ApiClient
                     urlParams.Add(new UrlRequestParameterDescription(i, urlA.Name ?? p.Name, urlA.UrlModifier));
                 else if (attr is HeaderAttribute hdrA)
                     headerParams.Add(new HeaderRequestParameterDescription(i, hdrA.Name ?? p.Name));
+                else if (attr is HeaderCollectionAttribute)
+                    headerCollectionParams.Add(new HeaderCollectionRequestParameterDescription(i));
                 else if (attr is ContentParameterAttribute contA)
                     contentParams.Add(new ContentRequestParameterDescription(i, contA.HttpContentFactory));
                 else
@@ -49,6 +55,7 @@ namespace MyLab.ApiClient
             return new RequestParametersDescriptions(
                 urlParams,
                 headerParams,
+                headerCollectionParams,
                 contentParams);
         }
 
@@ -100,6 +107,20 @@ namespace MyLab.ApiClient
             Name = name;
         }
     }
+
+    class HeaderCollectionRequestParameterDescription : IRequestParameterDescription
+    {
+        public int Position { get; }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="HeaderCollectionRequestParameterDescription"/>
+        /// </summary>
+        public HeaderCollectionRequestParameterDescription(int position)
+        {
+            Position = position;
+        }
+    }
+
     class ContentRequestParameterDescription : IRequestParameterDescription
     {
         public int Position { get; }

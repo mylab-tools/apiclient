@@ -72,4 +72,28 @@ namespace MyLab.ApiClient
             request.Content = _description.ContentFactory.Create(_valueProvider.GetValue());
         }
     }
+
+    class HeaderCollectionParameterApplier : IParameterApplier
+    {
+        private readonly IApiRequestParameterValueProvider _valueProvider;
+
+        public HeaderCollectionParameterApplier(IApiRequestParameterValueProvider valueProvider)
+        {
+            _valueProvider = valueProvider;
+        }
+
+        public void Apply(HttpRequestMessage request)
+        {
+            var headers = (IDictionary<string, object>) _valueProvider.GetValue();
+
+            if(headers == null) return;
+
+            foreach (var header in headers)
+            {
+                var val = ObjectToStringConverter.ToString(header.Value);
+                request.Headers.Add(header.Key, val);
+            }
+
+        }
+    }
 }

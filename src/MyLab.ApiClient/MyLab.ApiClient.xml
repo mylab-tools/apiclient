@@ -487,6 +487,11 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.HeaderRequestParameterDescription"/>
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.HeaderCollectionRequestParameterDescription.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.HeaderCollectionRequestParameterDescription"/>
+            </summary>
+        </member>
         <member name="M:MyLab.ApiClient.ContentRequestParameterDescription.#ctor(System.Int32,MyLab.ApiClient.IHttpContentFactory)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.ContentRequestParameterDescription"/>
@@ -531,6 +536,14 @@
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.HeaderAttribute"/>
             </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.HeaderCollectionAttribute">
+            <summary>
+            Determines api request parameter which place in header
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.HeaderCollectionAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+            <inheritdoc />
         </member>
         <member name="T:MyLab.ApiClient.ContentParameterAttribute">
             <summary>

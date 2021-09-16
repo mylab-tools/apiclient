@@ -25,9 +25,9 @@ namespace TestServer.Controllers
         }
 
         [HttpPost("echo/header")]
-        public IActionResult EchoHeader([FromHeader(Name = "Message")]string msg)
+        public IActionResult EchoHeader([FromHeader(Name = "Message")]string msg, [FromHeader(Name = "Message2")] string msg2)
         {
-            return Ok(msg);
+            return Ok(msg + msg2);
         }
 
         [HttpPost("echo/body/obj/xml")]

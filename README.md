@@ -142,9 +142,18 @@ public interface IService
     [Get("orders/{id}")]
     Task Get([Path]string id);
 }
+```
 
-//Result path with id=2: 
-//		`/company-services/api/orders/2`
+Вызов:
+
+```C#
+await srv.Get("2");
+```
+
+Результирующий запрос:
+
+```http
+GET /company-services/api/orders/2
 ```
 
 #### QueryAttribute
@@ -158,9 +167,18 @@ public interface IService
     [Get("orders")]
     Task Get([Query]string id);
 }
+```
 
-//Result path with id=2: 
-//		`/company-services/api/orders?id=2`
+Вызов:
+
+```C#
+await srv.Get("2");
+```
+
+Результирующий запрос:
+
+```http
+GET /company-services/api/orders?id=2
 ```
 
 #### HeaderAttribute
@@ -174,9 +192,54 @@ public interface IService
     [Get("orders")]
     Task Get([Header("X-Identifier")]string id);
 }
+```
 
-//Result header with id=2: 
-//		`X-Identifier: 2`
+Вызов:
+
+```C#
+await srv.Get("2");
+```
+
+Результирующий запрос:
+
+```http
+GET /company-services/api/orders
+Headers:
+X-Identifier: 2
+```
+
+#### HeaderCollectionAttribute
+
+Аргумент - произвольный список заголовков
+
+```C#
+[Api("company-services/api")]
+public interface IService
+{   
+    [Get("orders")]
+    Task Get([HeaderCollection] IDictionary<string,object> headers);
+}
+```
+
+Вызов:
+
+```C#
+var headers = new Dictionary<string, object>
+{
+	{"X-Header-1", "foo"}, 
+    {"X-Header-2", "bar"}    
+}
+
+await srv.Get(headers);
+```
+
+Результирующий запрос:
+
+```http
+GET /company-services/api/orders
+Headers:
+X-Header-1: foo	
+X-Header-2: bar
 ```
 
 #### StringContentAttribute
@@ -190,8 +253,24 @@ public interface IService
     [Post("orders")]
     Task Create([StringContent] int orderId);
 }
+```
 
-//Result content with Id=2: 2
+Вызов:
+
+```C#
+await srv.Create(2);
+```
+
+Результирующий запрос:
+
+```http
+POST /company-services/api/orders
+Headers:
+X-Header-1: foo	
+X-Header-2: bar
+Content-Type: text/plain
+
+2
 ```
 
 #### JsonContentAttribute
@@ -210,9 +289,27 @@ public class Order
 {
 	public string Id { get; set; }
 }
+```
 
-//Result content with Id=2: 
-//		{"Id":"2"}
+Вызов:
+
+```C#
+var order = new Order
+{
+    Id = "2"
+}
+
+await srv.Create(order);
+```
+
+Результирующий запрос:
+
+```http
+POST /company-services/api/orders
+Headers:
+Content-Type: application/json
+
+{"Id":"2"}
 ```
 
 #### XmlContentAttribute
@@ -231,9 +328,27 @@ public class Order
 {
 	public string Id { get; set; }
 }
+```
 
-//Result content with Id=2: 
-//		<Order><Id>2</Id></Order>
+Вызов:
+
+```C#
+var order = new Order
+{
+    Id = "2"
+}
+
+await srv.Create(order);
+```
+
+Результирующий запрос:
+
+```http
+POST /company-services/api/orders
+Headers:
+Content-Type: application/xml
+
+<Order><Id>2</Id></Order>
 ```
 
 #### FormContentAttribute
@@ -253,9 +368,28 @@ public class Order
 	public string Id { get; set; }
     public string Number { get; set; }
 }
+```
 
-//Result content with Id=2 and Number=foo: 
-//		Id=2&Number=foo
+Вызов:
+
+```C#
+var order = new Order
+{
+    Id = "2",
+    Number = "foo"
+}
+
+await srv.Create(order);
+```
+
+Результирующий запрос:
+
+```http
+POST /company-services/api/orders
+Headers:
+Content-Type: application/x-www-form-urlencoded
+
+Id=2&Number=foo
 ```
 
 #### BinContentAttribute
@@ -263,10 +397,31 @@ public class Order
 Аргумент - содержательная часть запроса в бинарном формате
 
 ```C#
-[Api("company-services/api")]public interface IService{       [Post("orders")]    Task Create([BinContent] byte[] orderData);}
+[Api("company-services/api")]
+public interface IService
+{       
+    [Post("orders")]    
+    Task Create([BinContent] byte[] orderData);
+}
 ```
 
-Аргумент должен быть типа `byte[]`.
+Вызов:
+
+```C#
+var bin = Encoding.UTF8.GetBytes("foo")
+
+await srv.Create(bin);
+```
+
+Результирующий запрос:
+
+```http
+POST /company-services/api/orders
+Headers:
+Content-Type: application/octet-stream
+
+foo
+```
 
 ## Результат
 

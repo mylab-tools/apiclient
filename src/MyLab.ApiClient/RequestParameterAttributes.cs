@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace MyLab.ApiClient
@@ -76,6 +77,26 @@ namespace MyLab.ApiClient
         public HeaderAttribute(string name = null)
         {
             Name = name;
+        }
+    }
+
+    /// <summary>
+    /// Determines api request parameter which place in header
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class HeaderCollectionAttribute : ApiParameterAttribute
+    {
+        /// <inheritdoc />
+        public override ApiContractValidationIssuer ValidateParameter(ParameterInfo p)
+        {
+            return typeof(IDictionary<string, object>).IsAssignableFrom(p.ParameterType)
+                ? null
+                : new ApiContractValidationIssuer
+                {
+                    Critical = true,
+                    Parameter = p,
+                    Reason = "Header collection parameter must implement IDictionary<string,object>"
+                };
         }
     }
 

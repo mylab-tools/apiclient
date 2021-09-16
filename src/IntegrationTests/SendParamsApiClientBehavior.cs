@@ -61,6 +61,7 @@ namespace IntegrationTests
             Expression<Func<ITestServer, Task<string>>> expr6 = s => s.EchoForm(testModel);
             Expression<Func<ITestServer, Task<string>>> expr7 = s => s.EchoText("foo");
             Expression<Func<ITestServer, Task<string>>> expr8 = s => s.EchoBin(Encoding.UTF8.GetBytes("foo"));
+            Expression<Func<ITestServer, Task<string>>> expr9 = s => s.EchoHeaderCollection(new Dictionary<string, object>{ {"Message", "f"}, { "Message2", "oo" } });
 
             return new List<object[]>
             {
@@ -72,6 +73,7 @@ namespace IntegrationTests
                 new object[] {expr6},
                 new object[] {expr7},
                 new object[] {expr8},
+                new object[] {expr9},
             };
         }
 
@@ -86,6 +88,9 @@ namespace IntegrationTests
 
             [Post("echo/header")]
             Task<string> EchoHeader([Header("Message")] string msg);
+
+            [Post("echo/header")]
+            Task<string> EchoHeaderCollection([HeaderCollection] IDictionary<string,object> headers);
 
             [Post("echo/body/obj/xml")]
             Task<string> EchoXmlObj([XmlContent] TestModel model);

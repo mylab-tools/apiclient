@@ -137,6 +137,7 @@ namespace MyLab.ApiClient
             if (values.Length !=
                 mDesc.Parameters.UrlParams.Count +
                 mDesc.Parameters.ContentParams.Count +
+                mDesc.Parameters.HeaderCollectionParams.Count +
                 mDesc.Parameters.HeaderParams.Count
             )
             {
@@ -150,6 +151,9 @@ namespace MyLab.ApiClient
 
             callParams.AddRange(mDesc.Parameters.HeaderParams.Select(d =>
                 new HeaderParameterApplier(d, values[d.Position])));
+
+            callParams.AddRange(mDesc.Parameters.HeaderCollectionParams.Select(d =>
+                new HeaderCollectionParameterApplier(values[d.Position])));
 
             callParams.AddRange(mDesc.Parameters.ContentParams.Select(d =>
                 new ContentParameterApplier(d, values[d.Position])));
