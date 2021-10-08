@@ -17,7 +17,12 @@ namespace IntegrationTests
         }
         public HttpClient CreateClient(string name)
         {
-            return _webApplicationFactory.CreateClient();
+            var opt = new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            };
+
+            return _webApplicationFactory.CreateClient(opt);
         }
     }
 }
