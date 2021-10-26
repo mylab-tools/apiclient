@@ -1,8 +1,10 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TestServer.Models;
 
@@ -63,6 +65,13 @@ namespace TestServer.Controllers
         public IActionResult EchoForm([FromForm]TestModel model)
         {
             return Ok(model.TestValue);
+        }
+
+        [HttpPost("echo/body/form-with-name")]
+        [Consumes("application/x-www-form-urlencoded")]
+        public IActionResult EchoForm(IFormCollection form)
+        {
+            return Ok(form["test_value"].FirstOrDefault());
         }
 
         [HttpPost("echo/body/text")]

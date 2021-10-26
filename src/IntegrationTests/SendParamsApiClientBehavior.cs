@@ -64,6 +64,7 @@ namespace IntegrationTests
             Expression<Func<ITestServer, Task<string>>> expr8 = s => s.EchoBin(Encoding.UTF8.GetBytes("foo"));
             Expression<Func<ITestServer, Task<string>>> expr9 = s => s.EchoHeaderCollection(new Dictionary<string, object>{ {"Message", "f"}, { "Message2", "oo" } });
             Expression<Func<ITestServer, Task<string>>> expr10 = s => s.EchoMultipart(new TestMultipartParameter{ Part1 = "fo", Part2 = "o"});
+            Expression<Func<ITestServer, Task<string>>> expr11 = s => s.EchoFormWithName(new TestFormWithNAme{ TestValue = "foo"});
 
             return new List<object[]>
             {
@@ -77,6 +78,7 @@ namespace IntegrationTests
                 new object[] {expr8},
                 new object[] {expr9},
                 new object[] {expr10},
+                new object[] {expr11},
             };
         }
 
@@ -106,6 +108,9 @@ namespace IntegrationTests
             [Post("echo/body/form")]
             Task<string> EchoForm([FormContent] TestModel model);
 
+            [Post("echo/body/form-with-name")]
+            Task<string> EchoFormWithName([FormContent] TestFormWithNAme model);
+
             [Post("echo/body/text")]
             Task<string> EchoText([StringContent] string msg);
 
@@ -123,6 +128,12 @@ namespace IntegrationTests
                 content.Add(new StringContent(Part1), "part1");
                 content.Add(new StringContent(Part2), "part2");
             }
+        }
+
+        public class TestFormWithNAme
+        {
+            [UrlFormItem(Name = "test_value")]
+            public string TestValue { get; set; }
         }
     }
 }
