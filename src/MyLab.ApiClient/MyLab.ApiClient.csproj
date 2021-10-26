@@ -13,6 +13,8 @@
     <FileVersion>3.10.22.2710</FileVersion>
     <Description>Provides an object model for working with the HTTP API. Provides transparent integration with .NET Core</Description>
     <PackageTags>http api</PackageTags>
+    <PackageIcon>tools.png</PackageIcon>
+    <PackageIconUrl />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -30,6 +32,13 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.3" />
     <PackageReference Include="MyLab.ExpressionTools" Version="1.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="tools.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
