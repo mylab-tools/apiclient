@@ -226,7 +226,7 @@ public interface IService
 ```C#
 var headers = new Dictionary<string, object>
 {
-	{"X-Header-1", "foo"}, 
+    {"X-Header-1", "foo"}, 
     {"X-Header-2", "bar"}    
 }
 
@@ -237,7 +237,7 @@ await srv.Get(headers);
 
 ```http
 GET /company-services/api/orders
-Headers:
+
 X-Header-1: foo	
 X-Header-2: bar
 ```
@@ -265,7 +265,7 @@ await srv.Create(2);
 
 ```http
 POST /company-services/api/orders
-Headers:
+
 X-Header-1: foo	
 X-Header-2: bar
 Content-Type: text/plain
@@ -306,7 +306,7 @@ await srv.Create(order);
 
 ```http
 POST /company-services/api/orders
-Headers:
+
 Content-Type: application/json
 
 {"Id":"2"}
@@ -345,7 +345,7 @@ await srv.Create(order);
 
 ```http
 POST /company-services/api/orders
-Headers:
+
 Content-Type: application/xml
 
 <Order><Id>2</Id></Order>
@@ -353,7 +353,7 @@ Content-Type: application/xml
 
 #### FormContentAttribute
 
-Аргумент - содержательная часть запроса в формат `URL encoded form`
+Аргумент - содержательная часть запроса в формат `URL encoded form`. Для переопределния имён элементов формы, используйте `UrlFormItemAttribute` на свойствах объекта формы.
 
 ```C#
 [Api("company-services/api")]
@@ -365,7 +365,9 @@ public interface IService
 
 public class Order
 {
-	public string Id { get; set; }
+    public string Id { get; set; }
+    
+    [UrlFormItem(Name = "order_number")]
     public string Number { get; set; }
 }
 ```
@@ -386,10 +388,10 @@ await srv.Create(order);
 
 ```http
 POST /company-services/api/orders
-Headers:
+
 Content-Type: application/x-www-form-urlencoded
 
-Id=2&Number=foo
+Id=2&order_number=foo
 ```
 
 #### BinContentAttribute
@@ -417,7 +419,7 @@ await srv.Create(bin);
 
 ```http
 POST /company-services/api/orders
-Headers:
+
 Content-Type: application/octet-stream
 
 foo
@@ -460,7 +462,7 @@ await srv.Create(p);
 
 ```http
 POST /company-services/api/orders
-Headers:
+
 Content-Type: multipart/form-data; boundary="2150a4df-de36-421a-8ef7-028f86f90403"
 
 --2150a4df-de36-421a-8ef7-028f86f90403
@@ -675,7 +677,7 @@ if (response.IsUnexpectedStatusCode)
 
 Пример дампа запроса из детализации:
 
-```
+```http
 POST http://localhost/test/ping/body/obj/json
 
 Cookie: <empty>
@@ -686,7 +688,7 @@ Content-Type: application/json; charset=utf-8
 
 Пример дампа ответа из детализации:
 
-```
+```http
 200 OK
 
 Content-Type: text/plain; charset=utf-8

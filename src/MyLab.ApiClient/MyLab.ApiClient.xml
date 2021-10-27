@@ -731,5 +731,15 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.UnexpectedResponseContentTypeException"/>
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.UrlFormItemAttribute">
+            <summary>
+            Defines URL-Form item properties
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.UrlFormItemAttribute.Name">
+            <summary>
+            Specify name to override
+            </summary>
+        </member>
     </members>
 </doc>

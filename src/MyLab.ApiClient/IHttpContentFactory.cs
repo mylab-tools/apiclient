@@ -114,8 +114,12 @@ namespace MyLab.ApiClient
 
                 foreach (var prop in props)
                 {
+                    var formItemAttr = prop.GetCustomAttribute<UrlFormItemAttribute>();
+
+                    string name = formItemAttr?.Name ?? prop.Name;
+
                     var val = prop.GetValue(source);
-                    queryBuilder.Append($"&{prop.Name}={Uri.EscapeDataString(val.ToString())}");
+                    queryBuilder.Append($"&{name}={Uri.EscapeDataString(val?.ToString() ?? string.Empty)}");
                 }
 
                 content = queryBuilder.ToString().TrimStart('&');
