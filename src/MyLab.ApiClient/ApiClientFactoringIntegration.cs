@@ -47,10 +47,11 @@ namespace MyLab.ApiClient
             if (options == null) throw new ArgumentNullException(nameof(options));
 
             HttpClientRegistrar.Register(services, options);
+            services.AddSingleton<IApiClientFactory, ApiClientFactory>();
 
             if (contractRegistration != null)
             {
-                var contractRegistrar = new DefaultApiContractRegistrar(services);
+                var contractRegistrar = new DefaultApiContractRegistrar(services, options);
                 contractRegistration(contractRegistrar);
             }
 
@@ -69,10 +70,11 @@ namespace MyLab.ApiClient
             if (clientFactory == null) throw new ArgumentNullException(nameof(clientFactory));
 
             services.AddSingleton(clientFactory);
+            services.AddSingleton<IApiClientFactory, ApiClientFactory>();
 
             if (contractRegistration != null)
             {
-                var contractRegistrar = new DefaultApiContractRegistrar(services);
+                var contractRegistrar = new DefaultApiContractRegistrar(services, (ApiClientsOptions)null);
                 contractRegistration(contractRegistrar);
             }
 

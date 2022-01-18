@@ -29,7 +29,7 @@ namespace UnitTests
             var contentFactory = new JsonHttpContentFactory();
 
             //Act
-            var content = contentFactory.Create(source);
+            var content = contentFactory.Create(source, null);
             var contentStr = await content.ReadAsStringAsync();
 
             _output.WriteLine("HEADERS:");

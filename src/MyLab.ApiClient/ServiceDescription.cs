@@ -34,5 +34,17 @@ namespace MyLab.ApiClient
                     .GetMethods()
                     .ToDictionary(m => m.MetadataToken, MethodDescription.Create));
         }
+
+        public bool TryGetMethod(MethodInfo method, out MethodDescription mDesc)
+        {
+            return Methods.TryGetValue(method.MetadataToken, out mDesc);
+        }
+
+        public MethodDescription GetRequiredMethod(MethodInfo method)
+        {
+            if (!Methods.TryGetValue(method.MetadataToken, out var mDesc))
+                throw new ApiClientException("Specified method description not found");
+            return mDesc;
+        }
     }
 }

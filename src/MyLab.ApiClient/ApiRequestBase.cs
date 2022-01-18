@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,9 +17,8 @@ namespace MyLab.ApiClient
         where TDetails : CallDetails, new()
     {
         private readonly string _baseUrl;
-        private readonly MethodDescription _methodDescription;
+        private readonly ApiRequestFactoryContext _apiRequestFactoryContext;
         private readonly IHttpClientProvider _httpClientProvider;
-        private readonly IReadOnlyList<IParameterApplier> _paramAppliers;
 
         /// <summary>
         /// Gets request modifiers collection
@@ -34,24 +34,23 @@ namespace MyLab.ApiClient
         
         internal ApiRequestBase(
             string baseUrl,
-            MethodDescription methodDescription, 
-            IEnumerable<IParameterApplier> paramAppliers,
+            ApiRequestFactoryContext apiRequestFactoryContext,
             IHttpClientProvider httpClientProvider)
         {
-            if (paramAppliers == null) throw new ArgumentNullException(nameof(paramAppliers));
             _baseUrl = baseUrl;
-            _methodDescription = methodDescription ?? throw new ArgumentNullException(nameof(methodDescription));
-            _httpClientProvider = httpClientProvider ?? throw new ArgumentNullException(nameof(httpClientProvider));
-            _paramAppliers = paramAppliers.ToList().AsReadOnly();
+            
+            _apiRequestFactoryContext = apiRequestFactoryContext ?? throw new ArgumentNullException(nameof(apiRequestFactoryContext));
 
-            ExpectedCodes.AddRange(_methodDescription.ExpectedStatusCodes);
+            _httpClientProvider = httpClientProvider ?? throw new ArgumentNullException(nameof(httpClientProvider));
+
+            ExpectedCodes.AddRange(apiRequestFactoryContext.Method.ExpectedStatusCodes);
         }
 
         /// <summary>
         /// Initializes a new instance of <see cref="ApiRequestBase{TDetails}"/>
         /// </summary>
         protected ApiRequestBase(ApiRequestBase<TDetails> origin)
-            :this(origin._baseUrl, origin._methodDescription, origin._paramAppliers, origin._httpClientProvider)
+            :this(origin._baseUrl, origin._apiRequestFactoryContext, origin._httpClientProvider)
         {
             RequestModifiers.AddRange(origin.RequestModifiers);
         }
@@ -93,35 +92,11 @@ namespace MyLab.ApiClient
 
         async Task<(HttpResponseMessage Response, HttpRequestMessage Request)> SendRequestAsync(CancellationToken cancellationToken)
         {
-            var reqMsgBuilder = new HttpRequestMessageBuilder(_baseUrl, _methodDescription);
-            reqMsgBuilder.AddParameters(_paramAppliers);
+            var reqMsgBuilder = new HttpRequestMessageBuilder(_baseUrl, _apiRequestFactoryContext.Method);
+            reqMsgBuilder.AddParameters(_apiRequestFactoryContext.ParameterAppliers);
             reqMsgBuilder.AddModifications(RequestModifiers);
 
             var reqMsg = reqMsgBuilder.Build();
-
-            //Uri addr;
-
-            //try
-            //{
-            //    addr = new Uri((_baseUrl?.TrimEnd('/') ?? "") + "/" + _methodDescription.Url, UriKind.RelativeOrAbsolute);
-            //}
-            //catch (Exception e)
-            //{
-            //    e.Data.Add("baseUrl", _baseUrl);
-            //    e.Data.Add("methodUrl", _methodDescription.Url);
-
-            //    throw;
-            //}
-
-            //var reqMsg = new HttpRequestMessage
-            //{
-            //    Method = _methodDescription.HttpMethod,
-            //    RequestUri = addr
-            //};
-
-            //ApplyParameters(reqMsg);
-
-            //ApplyModifiers(reqMsg);
 
             HttpResponseMessage response;
             HttpClient httpClient = null;
@@ -145,29 +120,6 @@ namespace MyLab.ApiClient
             }
 
             return (response, reqMsg);
-        }
-
-        private void ApplyParameters(HttpRequestMessage reqMsg)
-        {
-            foreach (var pApplier in _paramAppliers)
-            {
-                pApplier.Apply(reqMsg);
-            }
-        }
-
-        private void ApplyModifiers(HttpRequestMessage reqMsg)
-        {
-            foreach (var requestModifier in RequestModifiers)
-            {
-                try
-                {
-                    requestModifier?.Modify(reqMsg);
-                }
-                catch (Exception e)
-                {
-                    throw new ApiClientException("An error occured while request modifying", e);
-                }
-            }
         }
 
         private bool IsStatusCodeUnexpectedAsync(HttpResponseMessage response)

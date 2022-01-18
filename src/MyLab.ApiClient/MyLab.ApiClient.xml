@@ -10,6 +10,11 @@
             </summary>
             <typeparam name="TContract">API contract</typeparam>
         </member>
+        <member name="P:MyLab.ApiClient.ApiClient`1.Settings">
+            <summary>
+            Contains request factoring settings
+            </summary>
+        </member>
         <member name="M:MyLab.ApiClient.ApiClient`1.#ctor(MyLab.ApiClient.IHttpClientProvider)">
             <summary>
             Initializes a new instance of <see cref="N:MyLab.ApiClient"/>
@@ -60,6 +65,11 @@
             List of api connections options
             </summary>
         </member>
+        <member name="P:MyLab.ApiClient.ApiClientsOptions.JsonSettings">
+            <summary>
+            Defines JSON serialization settings
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ApiConnectionOptions">
             <summary>
             Contains api connection options
@@ -73,6 +83,16 @@
         <member name="P:MyLab.ApiClient.ApiConnectionOptions.SkipServerSslCertVerification">
             <summary>
             Do not verify the server SSL certificate
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ApiJsonSettings">
+            <summary>
+            Defines JSON serialization settings
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ApiJsonSettings.IgnoreNullValues">
+            <summary>
+            Ignores null fields. True by default.
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.ApiContractException">
@@ -115,7 +135,7 @@
             Transparent proxy fro API contract
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiProxy`1.Create(MyLab.ApiClient.IHttpClientProvider,System.IObserver{MyLab.ApiClient.CallDetails})">
+        <member name="M:MyLab.ApiClient.ApiProxy`1.Create(MyLab.ApiClient.IHttpClientProvider,MyLab.ApiClient.RequestFactoringSettings,System.IObserver{MyLab.ApiClient.CallDetails})">
             <summary>
             Creates transparent proxy 
             </summary>
@@ -297,16 +317,6 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.DetailedResponseProcessingException`1"/>
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.HttpClientFactoryExtensions">
-            <summary>
-            Extension methods for <see cref="T:System.Net.Http.IHttpClientFactory"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.HttpClientFactoryExtensions.CreateApiClient``1(System.Net.Http.IHttpClientFactory)">
-            <summary>
-            Creates api client for specified contract
-            </summary>
-        </member>
         <member name="T:MyLab.ApiClient.IHttpClientProvider">
             <summary>
             Specifies <see cref="T:System.Net.Http.HttpClient"/> provider
@@ -337,6 +347,16 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.DelegateHttpClientProvider"/>
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.IApiClientFactory">
+            <summary>
+            Creates Api clients
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.IApiClientFactory.CreateApiClient``1">
+            <summary>
+            Creates api client for specified contract
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.IApiContractRegistrar">
             <summary>
             Registers api contract 
@@ -347,7 +367,12 @@
             Registers api contract 
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.DefaultApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+        <member name="M:MyLab.ApiClient.DefaultApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Options.IOptions{MyLab.ApiClient.ApiClientsOptions})">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.DefaultApiContractRegistrar"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.DefaultApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,MyLab.ApiClient.ApiClientsOptions)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.DefaultApiContractRegistrar"/>
             </summary>
@@ -360,6 +385,11 @@
         <member name="T:MyLab.ApiClient.IHttpContentFactory">
             <summary>
             Creates <see cref="T:System.Net.Http.HttpContent"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.IHttpContentFactory.Create(System.Object,MyLab.ApiClient.RequestFactoringSettings)">
+            <summary>
+            Creates content object
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.IMultipartContentParameter">
@@ -487,7 +517,7 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.HeaderParameterApplier"/>
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ContentParameterApplier.#ctor(MyLab.ApiClient.ContentRequestParameterDescription,MyLab.ApiClient.IApiRequestParameterValueProvider)">
+        <member name="M:MyLab.ApiClient.ContentParameterApplier.#ctor(MyLab.ApiClient.ContentRequestParameterDescription,MyLab.ApiClient.IApiRequestParameterValueProvider,MyLab.ApiClient.RequestFactoringSettings)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.ContentParameterApplier"/>
             </summary>
@@ -511,6 +541,23 @@
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.ContentRequestParameterDescription"/>
             </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.RequestFactoringSettings">
+            <summary>
+            Contains request factoring settings
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.RequestFactoringSettings.JsonSettings">
+            <summary>
+            JSON serialization settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.RequestFactoringSettings.CreateFromOptions(MyLab.ApiClient.ApiClientsOptions)">
+            <summary>
+            Creates req factoring settings from app options
+            </summary>
+            <param name="options"></param>
+            <returns></returns>
         </member>
         <member name="T:MyLab.ApiClient.ApiParameterAttribute">
             <summary>

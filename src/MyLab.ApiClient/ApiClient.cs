@@ -13,11 +13,19 @@ namespace MyLab.ApiClient
         private readonly ApiRequestFactory<TContract> _reqFactory;
 
         /// <summary>
+        /// Contains request factoring settings
+        /// </summary>
+        public RequestFactoringSettings Settings { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of <see cref="ApiClient"/>
         /// </summary>
         public ApiClient(IHttpClientProvider httpClientProvider)
         {
-            _reqFactory = new ApiRequestFactory<TContract>(httpClientProvider);
+            _reqFactory = new ApiRequestFactory<TContract>(httpClientProvider)
+            {
+                Settings = Settings
+            };
         }
 
         /// <summary>

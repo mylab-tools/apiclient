@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,11 +10,10 @@ namespace MyLab.ApiClient
         
         internal ApiRequest(
             string baseUrl,
-            MethodDescription methodDescription,
-            IEnumerable<IParameterApplier> paramAppliers,
-            IHttpClientProvider httpClientProvider,
+            ApiRequestFactoryContext apiRequestFactoryContext,
+            IHttpClientProvider clientProvider,
             Type returnType = null)
-            :base(baseUrl, methodDescription, paramAppliers, httpClientProvider)
+            :base(baseUrl, apiRequestFactoryContext, clientProvider)
         {
             _returnType = returnType ?? typeof(TRes);
             if (!typeof(TRes).IsAssignableFrom(_returnType))
@@ -84,10 +82,9 @@ namespace MyLab.ApiClient
     {
         internal ApiRequest(
             string baseUrl,
-            MethodDescription methodDescription,
-            IEnumerable<IParameterApplier> paramAppliers,
-            IHttpClientProvider httpClientProvider)
-            : base(baseUrl, methodDescription, paramAppliers, httpClientProvider)
+            ApiRequestFactoryContext apiRequestFactoryContext,
+            IHttpClientProvider clientProvider)
+            : base(baseUrl, apiRequestFactoryContext, clientProvider)
         {
         }
 

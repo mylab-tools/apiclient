@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -10,15 +8,15 @@ namespace MyLab.ApiClient
 {
     class ApiRequestFactory<TContract>
     {
-        private readonly ServiceDescription _description;
+        private readonly ServiceDescription _srvDesc;
         private readonly IHttpClientProvider _httpClientProvider;
-        private readonly ApiRequestFactoryParametersProvider _paramProvider;
+
+        public RequestFactoringSettings Settings { get; set; }
 
         public ApiRequestFactory(IHttpClientProvider httpClientProvider)
         {
-            _description = ServiceDescription.Create(typeof(TContract));
+            _srvDesc = ServiceDescription.Create(typeof(TContract));
             _httpClientProvider = httpClientProvider;
-            _paramProvider = new ApiRequestFactoryParametersProvider(_description);
         }
         
         public ApiRequest Create(Expression<Func<TContract, Task>> serviceCallExpr)
@@ -27,15 +25,9 @@ namespace MyLab.ApiClient
             if (!(serviceCallExpr.Body is MethodCallExpression mExpr))
                 throw new NotSupportedException("Only method calls are supported");
 
-            var requestParameters = _paramProvider.GetParameters(
-                mExpr.Method,
-                ExpressionArgumentsToProviders(mExpr));
+            var ctx = CreateFactoringCtx(mExpr);
 
-            return new ApiRequest(
-                _description.Url,
-                requestParameters.MethodDescription,
-                requestParameters.Appliers,
-                _httpClientProvider);
+            return new ApiRequest(_srvDesc.Url, ctx, _httpClientProvider);
         }
 
         public ApiRequest<TRes> Create<TRes>(Expression<Func<TContract, Task<TRes>>> serviceCallExpr)
@@ -44,15 +36,20 @@ namespace MyLab.ApiClient
             if (!(serviceCallExpr.Body is MethodCallExpression mExpr))
                 throw new NotSupportedException("Only method calls are supported");
 
-            var requestParameters = _paramProvider.GetParameters(
-                mExpr.Method,
-                ExpressionArgumentsToProviders(mExpr));
+            var ctx = CreateFactoringCtx(mExpr);
 
-            return new ApiRequest<TRes>(
-                _description.Url,
-                requestParameters.MethodDescription,
-                requestParameters.Appliers,
-                _httpClientProvider);
+            return new ApiRequest<TRes>(_srvDesc.Url, ctx, _httpClientProvider);
+        }
+
+        ApiRequestFactoryContext CreateFactoringCtx(MethodCallExpression methodCallExpression)
+        {
+            var mDesc = _srvDesc.GetRequiredMethod(methodCallExpression.Method);
+            var argProviders = ExpressionArgumentsToProviders(methodCallExpression);
+
+            return new ApiRequestFactoryContext(mDesc, argProviders)
+            {
+                Settings = Settings
+            };
         }
 
         IApiRequestParameterValueProvider[] ExpressionArgumentsToProviders(MethodCallExpression methodCallExpression)
@@ -66,47 +63,47 @@ namespace MyLab.ApiClient
 
     class ApiRequestFactory
     {
-        public ServiceDescription ServiceDescription { get; }
-
         private readonly IHttpClientProvider _httpClientProvider;
-        private readonly ApiRequestFactoryParametersProvider _paramProvider;
+
+        public ServiceDescription ServiceDescription { get; private set; }
+
+        public RequestFactoringSettings Settings { get; set; }
 
         public ApiRequestFactory(Type contractType, IHttpClientProvider httpClientProvider)
         {
             if (contractType == null) throw new ArgumentNullException(nameof(contractType));
             
             _httpClientProvider = httpClientProvider ?? throw new ArgumentNullException(nameof(httpClientProvider));
+
             ServiceDescription = ServiceDescription.Create(contractType);
-            _paramProvider = new ApiRequestFactoryParametersProvider(ServiceDescription);
         }
         public ApiRequest Create(MethodInfo method, object[] args)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
 
-            var requestParameters = _paramProvider.GetParameters(
-                method,
-                ObjectArgumentsToProviders(args));
+            var ctx = CreateFactoringCtx(method, args);
 
-            return new ApiRequest(
-                ServiceDescription.Url,
-                requestParameters.MethodDescription,
-                requestParameters.Appliers,
-                _httpClientProvider);
+            return new ApiRequest(ServiceDescription.Url, ctx, _httpClientProvider);
         }
 
         public ApiRequest<TRes> Create<TRes>(MethodInfo method, object[] args)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
+            
+            var ctx = CreateFactoringCtx(method, args);
+            
+            return new ApiRequest<TRes>(ServiceDescription.Url, ctx, _httpClientProvider);
+        }
 
-            var requestParameters = _paramProvider.GetParameters(
-                method,
-                ObjectArgumentsToProviders(args));
+        ApiRequestFactoryContext CreateFactoringCtx(MethodInfo method, object[] args)
+        {
+            var mDesc = ServiceDescription.GetRequiredMethod(method);
+            var argProviders = ObjectArgumentsToProviders(args);
 
-            return new ApiRequest<TRes>(
-                ServiceDescription.Url,
-                requestParameters.MethodDescription,
-                requestParameters.Appliers,
-                _httpClientProvider);
+            return new ApiRequestFactoryContext(mDesc, argProviders)
+            {
+                Settings = Settings
+            };
         }
 
         IApiRequestParameterValueProvider[] ObjectArgumentsToProviders(object[] args)
@@ -117,48 +114,5 @@ namespace MyLab.ApiClient
                 .ToArray();
         }
 
-    }
-
-    class ApiRequestFactoryParametersProvider
-    {
-        private readonly ServiceDescription _serviceDescription;
-
-        public ApiRequestFactoryParametersProvider(ServiceDescription serviceDescription)
-        {
-            _serviceDescription = serviceDescription;
-        }
-
-        public (MethodDescription MethodDescription, IEnumerable<IParameterApplier> Appliers) GetParameters(
-            MethodInfo method, IApiRequestParameterValueProvider[] values)
-        {
-            if (!_serviceDescription.Methods.TryGetValue(method.MetadataToken, out var mDesc))
-                throw new ApiClientException("Specified method description not found");
-
-            if (values.Length !=
-                mDesc.Parameters.UrlParams.Count +
-                mDesc.Parameters.ContentParams.Count +
-                mDesc.Parameters.HeaderCollectionParams.Count +
-                mDesc.Parameters.HeaderParams.Count
-            )
-            {
-                throw new ApiClientException("ParamAppliers number mismatch");
-            }
-
-            var callParams = new List<IParameterApplier>();
-
-            callParams.AddRange(mDesc.Parameters.UrlParams.Select(d =>
-                new UrlParameterApplier(d, values[d.Position])));
-
-            callParams.AddRange(mDesc.Parameters.HeaderParams.Select(d =>
-                new HeaderParameterApplier(d, values[d.Position])));
-
-            callParams.AddRange(mDesc.Parameters.HeaderCollectionParams.Select(d =>
-                new HeaderCollectionParameterApplier(values[d.Position])));
-
-            callParams.AddRange(mDesc.Parameters.ContentParams.Select(d =>
-                new ContentParameterApplier(d, values[d.Position])));
-
-            return (mDesc, callParams);
-        }
     }
 }

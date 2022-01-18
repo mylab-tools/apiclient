@@ -16,7 +16,7 @@ namespace UnitTests
 
 
             //Act
-            var content = factory.Create(binData);
+            var content = factory.Create(binData, null);
             var strRes = await content.ReadAsStringAsync();
 
             //Assert
