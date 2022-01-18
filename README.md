@@ -736,7 +736,7 @@ public class Startup
         // Or create options directly in code
         services.AddApiClients(null, new ApiClientsOptions
             {
-                List = new Dictionary<string, ApiConnectionOptions>
+                List =
                 {
                     { "foo", new ApiConnectionOptions{Url = "http://test.com"}}
                 }

@@ -22,7 +22,7 @@ namespace UnitTests
                 null,
                 new ApiClientsOptions
             {
-                List = new Dictionary<string, ApiConnectionOptions>
+                List = 
                 {
                     { "foo", new ApiConnectionOptions{Url = "http://test.com"}}
                 }

@@ -10,12 +10,12 @@ namespace MyLab.ApiClient
         /// <summary>
         /// List of api connections options
         /// </summary>
-        public Dictionary<string, ApiConnectionOptions> List { get; set; }
+        public Dictionary<string, ApiConnectionOptions> List { get; set; } = new Dictionary<string, ApiConnectionOptions>();
 
         /// <summary>
         /// Defines JSON serialization settings
         /// </summary>
-        public ApiJsonSettings JsonSettings { get; set; }
+        public ApiJsonSettings JsonSettings { get; set; } = new ApiJsonSettings();
     }
 
     /// <summary>

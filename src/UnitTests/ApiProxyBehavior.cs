@@ -20,7 +20,7 @@ namespace UnitTests
                     r => r.RegisterContract<ITestApi>(),
                     new ApiClientsOptions
                     {
-                        List = new Dictionary<string, ApiConnectionOptions>
+                        List = 
                         {
                             {"test-key", new ApiConnectionOptions()}
                         }
