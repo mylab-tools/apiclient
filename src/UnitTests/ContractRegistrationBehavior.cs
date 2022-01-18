@@ -19,12 +19,9 @@ namespace UnitTests
             var services = new ServiceCollection()
                 .AddApiClients(
                     registrar => registrar.RegisterContract<IContract>(),
-                    new ApiClientsOptions
+                    o =>
                     {
-                        List = new Dictionary<string, ApiConnectionOptions>
-                        {
-                            { "foo", new ApiConnectionOptions{Url = "http://test.com"}}
-                        }
+                        o.List.Add("foo", new ApiConnectionOptions { Url = "http://test.com" });
                     })
                 .BuildServiceProvider();
 

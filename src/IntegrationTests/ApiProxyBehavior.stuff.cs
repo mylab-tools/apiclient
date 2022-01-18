@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using MyLab.ApiClient;
 using TestServer;
+using TestServer.Models;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace IntegrationTests
@@ -25,6 +31,7 @@ namespace IntegrationTests
             {
                 services.AddApiClients(
                     registrar => { registrar.RegisterContract<ITestServer>(); },
+                    null,
                     new WebApplicationFactoryHttpClientFactory<Startup>(_webApplicationFactory)
                 );
             }
@@ -37,6 +44,19 @@ namespace IntegrationTests
             var serviceProvider = services.BuildServiceProvider();
             var api = (ITestServer) serviceProvider.GetService(typeof(ITestServer));
             return api;
+        }
+
+        [Fact]
+        public async Task ShouldNAME()
+        {
+            //Arrange
+            var api = CreateProxy();
+
+            //Act
+            var res = await api.GetExpectedString404();
+
+            //Assert
+            Assert.Equal(default, res);
         }
     }
 }

@@ -10,7 +10,12 @@ namespace MyLab.ApiClient
         /// <summary>
         /// List of api connections options
         /// </summary>
-        public Dictionary<string, ApiConnectionOptions> List { get; set; }
+        public Dictionary<string, ApiConnectionOptions> List { get; set; } = new Dictionary<string, ApiConnectionOptions>();
+
+        /// <summary>
+        /// Defines JSON serialization settings
+        /// </summary>
+        public ApiJsonSettings JsonSettings { get; set; } = new ApiJsonSettings();
     }
 
     /// <summary>
@@ -22,5 +27,21 @@ namespace MyLab.ApiClient
         /// API base url
         /// </summary>
         public string Url { get; set; }
+
+        /// <summary>
+        /// Do not verify the server SSL certificate
+        /// </summary>
+        public bool SkipServerSslCertVerification { get; set; }
+    }
+
+    /// <summary>
+    /// Defines JSON serialization settings
+    /// </summary>
+    public class ApiJsonSettings
+    {
+        /// <summary>
+        /// Ignores null fields. True by default.
+        /// </summary>
+        public bool IgnoreNullValues { get; set; } = true;
     }
 }

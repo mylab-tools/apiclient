@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MyLab.ApiClient
@@ -13,10 +14,23 @@ namespace MyLab.ApiClient
                     ? desc.Value.Url
                     : desc.Value.Url + "/";
 
-                services.AddHttpClient(desc.Key, client =>
-                {
-                    client.BaseAddress = new Uri(normUrl);   
-                });
+                services
+                    .AddHttpClient(desc.Key, client =>
+                    {
+                        client.BaseAddress = new Uri(normUrl);   
+                    })
+                    .ConfigurePrimaryHttpMessageHandler(() =>
+                    {
+                        var httpHandler = new HttpClientHandler();
+
+                        if (desc.Value.SkipServerSslCertVerification)
+                        {
+                            httpHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                            httpHandler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
+                        }
+
+                        return httpHandler;
+                    });
             }
         }
     }

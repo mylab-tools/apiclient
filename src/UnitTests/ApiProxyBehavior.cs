@@ -18,12 +18,9 @@ namespace UnitTests
             ServiceProvider services = new ServiceCollection()
                 .AddApiClients(
                     r => r.RegisterContract<ITestApi>(),
-                    new ApiClientsOptions
+                    o =>
                     {
-                        List = new Dictionary<string, ApiConnectionOptions>
-                        {
-                            {"test-key", new ApiConnectionOptions()}
-                        }
+                        o.List.Add("test-key", new ApiConnectionOptions());
                     })
                 .AddSingleton<SingletonService>()
                 .BuildServiceProvider();

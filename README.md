@@ -734,12 +734,9 @@ public class Startup
         services.AddApiClients(null, Configuration, "MyApiSectionName");
 
         // Or create options directly in code
-        services.AddApiClients(null, new ApiClientsOptions
+        services.AddApiClients(null, o =>
             {
-                List = new Dictionary<string, ApiConnectionOptions>
-                {
-                    { "foo", new ApiConnectionOptions{Url = "http://test.com"}}
-                }
+                o.List.Add("foo", new ApiConnectionOptions{Url = "http://test.com"})
             });
     }
 
@@ -750,31 +747,7 @@ public class Startup
 }
 ```
 
-Объектная модель конфигурации:
-
-```C#
-/// <summary>
-/// Contains api clients infrastructure options
-/// </summary>
-public class ApiClientsOptions
-{
-    /// <summary>
-    /// List of api connections options
-    /// </summary>
-    public Dictionary<string, ApiConnectionOptions> List { get; set; }
-}
-
-/// <summary>
-/// Contains api connection options
-/// </summary>
-public class ApiConnectionOptions
-{
-    /// <summary>
-    /// API base url
-    /// </summary>
-    public string Url { get; set; }
-}
-```
+Объектная модель конфигурации [тут](src/MyLab.ApiClient/ApiClientsOptions.cs).
 
 Пример файла конфигурации:
 
@@ -817,22 +790,22 @@ public class ApiConnectionOptions
 }
 ```
 
-### Инъекция IHttpClientFactory
+### Инъекция IApiClientFactory
 
-Инъекция `IHttpClientFactory` в объект-потребитель позволяет создавать объекты `ApiClient<>` для дальнейшей работы с `API` через методы `Call` с передачей `Expressions`-выражений вызова методов контракта `API`. 
+Инъекция `IApiClientFactory` в объект-потребитель позволяет создавать объекты `ApiClient<>` для дальнейшей работы с `API` через методы `Call` с передачей `Expressions`-выражений вызова методов контракта `API`. 
 
 Это может быть полезно, например, если в дальнейшем нужно получить детали вызова метода API.
 
-Ниже приведён пример класса-потребителя с использованием инъекции `IHttpClientFactory`:
+Ниже приведён пример класса-потребителя с использованием инъекции `IApiClientFactory`:
 
 ```C#
-class TestServiceForHttpClientFactory
+class TestServiceForApiClientFactory
 {
     private readonly ApiClient<ITestServer> _server;
 
-    public TestServiceForHttpClientFactory(IHttpClientFactory httpClientFactory)
+    public TestServiceForHttpClientFactory(IApiClientFactory apiClientFactory)
     {
-        _server = httpClientFactory.CreateApiClient<ITestServer>();
+        _server = apiClientFactory.CreateApiClient<ITestServer>();
     }
 
     public async Task<string> TestMethod(string msg, ITestOutputHelper log)

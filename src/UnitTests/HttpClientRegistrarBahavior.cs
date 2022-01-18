@@ -20,7 +20,7 @@ namespace UnitTests
             var srvColl = new ServiceCollection();
             HttpClientRegistrar.Register(srvColl, new ApiClientsOptions
             {
-                List = new Dictionary<string, ApiConnectionOptions>
+                List =
                 {
                     {"key", new ApiConnectionOptions { Url = url }}
                 }

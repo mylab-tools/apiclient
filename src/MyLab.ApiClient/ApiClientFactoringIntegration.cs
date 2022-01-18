@@ -30,27 +30,17 @@ namespace MyLab.ApiClient
             if(!optionsSection.Exists())
                 throw new InvalidOperationException($"Section '{sectionName}' does not exists");
 
-            var options = optionsSection.Get<ApiClientsOptions>();
-            
-            return AddApiClients(services, contractRegistration, options);
-        }
+            var opts = optionsSection.Get<ApiClientsOptions>();
 
-        /// <summary>
-        /// Integrates ApiClient factoring
-        /// </summary>
-        public static IServiceCollection AddApiClients(
-            this IServiceCollection services,
-            Action<IApiContractRegistrar> contractRegistration,
-            ApiClientsOptions options)
-        {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            if (options == null) throw new ArgumentNullException(nameof(options));
+            services
+                .AddSingleton<IApiClientFactory, ApiClientFactory>()
+                .Configure<ApiClientsOptions>(optionsSection);
 
-            HttpClientRegistrar.Register(services, options);
+            HttpClientRegistrar.Register(services, opts);
 
             if (contractRegistration != null)
             {
-                var contractRegistrar = new DefaultApiContractRegistrar(services);
+                var contractRegistrar = new DefaultApiContractRegistrar(services, opts);
                 contractRegistration(contractRegistrar);
             }
 
@@ -62,17 +52,33 @@ namespace MyLab.ApiClient
         /// </summary>
         public static IServiceCollection AddApiClients(
             this IServiceCollection services,
-            Action<IApiContractRegistrar> contractRegistration,
-            IHttpClientFactory clientFactory)
+            Action<IApiContractRegistrar>? contractRegistration,
+            Action<ApiClientsOptions>? configureOptions,
+            IHttpClientFactory clientFactory = null)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
-            if (clientFactory == null) throw new ArgumentNullException(nameof(clientFactory));
 
-            services.AddSingleton(clientFactory);
+            services
+                .AddSingleton<IApiClientFactory, ApiClientFactory>();
+
+            if (clientFactory != null)
+            {
+                services.AddSingleton(clientFactory);
+            }
+
+            var opts = new ApiClientsOptions();
+
+            if (configureOptions != null)
+            {
+                services.Configure(configureOptions);
+                configureOptions(opts);
+            }
+
+            HttpClientRegistrar.Register(services, opts);
 
             if (contractRegistration != null)
             {
-                var contractRegistrar = new DefaultApiContractRegistrar(services);
+                var contractRegistrar = new DefaultApiContractRegistrar(services, opts);
                 contractRegistration(contractRegistrar);
             }
 

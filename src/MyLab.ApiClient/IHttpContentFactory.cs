@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
-using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -16,12 +15,15 @@ namespace MyLab.ApiClient
     /// </summary>
     public interface IHttpContentFactory
     {
-        HttpContent Create(object source);
+        /// <summary>
+        /// Creates content object
+        /// </summary>
+        HttpContent Create(object source, RequestFactoringSettings? settings);
     }
 
     class StringHttpContentFactory : IHttpContentFactory
     {
-        public HttpContent Create(object source)
+        public HttpContent Create(object source, RequestFactoringSettings? settings)
         {
             return new StringContent(ObjectToStringConverter.ToString(source));
         }
@@ -29,14 +31,16 @@ namespace MyLab.ApiClient
 
     class JsonHttpContentFactory : IHttpContentFactory
     {
-        public HttpContent Create(object source)
+        public HttpContent Create(object source, RequestFactoringSettings? settings)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(source))
+            var serialized = settings?.JsonSettings != null 
+                ? JsonConvert.SerializeObject(source, settings.JsonSettings)
+                : JsonConvert.SerializeObject(source);
+
+            var content = new StringContent(serialized)
             {
                 Headers = { ContentType = new MediaTypeHeaderValue("application/json") }
             };
-
-            var len = content.Headers.ContentLength.GetValueOrDefault();
 
             return content;
         }
@@ -44,7 +48,7 @@ namespace MyLab.ApiClient
 
     class XmlHttpContentFactory : IHttpContentFactory
     {
-        public HttpContent Create(object source)
+        public HttpContent Create(object source, RequestFactoringSettings? settings)
         {
             string strContent = null;
 
@@ -54,13 +58,13 @@ namespace MyLab.ApiClient
                 ns.Add("", "");
 
                 var ser = new XmlSerializer(source.GetType());
-                var settings = new XmlWriterSettings
+                var xmlSettings = new XmlWriterSettings
                 {
                     OmitXmlDeclaration = true,
                     Encoding = new UTF8Encoding(false)
                 };
                 using (var mem = new MemoryStream())
-                using (var wrtr = XmlWriter.Create(mem, settings))
+                using (var wrtr = XmlWriter.Create(mem, xmlSettings))
                 {
 
                     ser.Serialize(wrtr, source, ns);
@@ -83,7 +87,7 @@ namespace MyLab.ApiClient
 
     class BinaryHttpContentFactory : IHttpContentFactory
     {
-        public HttpContent Create(object source)
+        public HttpContent Create(object source, RequestFactoringSettings? settings)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
@@ -103,7 +107,7 @@ namespace MyLab.ApiClient
 
     class UrlFormHttpContentFactory : IHttpContentFactory
     {
-        public HttpContent Create(object source)
+        public HttpContent Create(object source, RequestFactoringSettings? settings)
         {
             string content = string.Empty;
 
@@ -134,7 +138,7 @@ namespace MyLab.ApiClient
 
     class MultipartFormHttpContentFactory : IHttpContentFactory
     {
-        public HttpContent Create(object source)
+        public HttpContent Create(object source, RequestFactoringSettings? settings)
         {
             var parameter = (IMultipartContentParameter) source;
 

@@ -58,19 +58,25 @@ namespace MyLab.ApiClient
     {
         readonly ContentRequestParameterDescription _description;
         readonly IApiRequestParameterValueProvider _valueProvider;
+        private readonly RequestFactoringSettings _requestFactoringSettings;
 
         /// <summary>
         /// Initializes a new instance of <see cref="ContentParameterApplier"/>
         /// </summary>
-        public ContentParameterApplier(ContentRequestParameterDescription description, IApiRequestParameterValueProvider valueProvider)
+        public ContentParameterApplier(
+            ContentRequestParameterDescription description, 
+            IApiRequestParameterValueProvider valueProvider,
+            RequestFactoringSettings requestFactoringSettings)
         {
             _description = description;
             _valueProvider = valueProvider;
+            _requestFactoringSettings = requestFactoringSettings;
         }
 
         public void Apply(HttpRequestMessage request)
         {
-            request.Content = _description.ContentFactory.Create(_valueProvider.GetValue());
+            var valProvider = _valueProvider.GetValue();
+            request.Content = _description.ContentFactory.Create(valProvider, _requestFactoringSettings);
         }
     }
 

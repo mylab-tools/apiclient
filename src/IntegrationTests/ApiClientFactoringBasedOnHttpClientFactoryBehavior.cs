@@ -31,6 +31,7 @@ namespace IntegrationTests
 
             services.AddApiClients(
                 null,
+                null,
                 new WebApplicationFactoryHttpClientFactory<Startup>(_webApplicationFactory)
             );
 
@@ -67,9 +68,9 @@ namespace IntegrationTests
         {
             private readonly ApiClient<ITestServer> _server;
 
-            public TestServiceForHttpClientFactory(IHttpClientFactory httpClientFactory)
+            public TestServiceForHttpClientFactory(IApiClientFactory apiClientFactory)
             {
-                _server = httpClientFactory.CreateApiClient<ITestServer>();
+                _server = apiClientFactory.CreateApiClient<ITestServer>();
             }
 
             public async Task<string> TestMethod(string msg, ITestOutputHelper log)

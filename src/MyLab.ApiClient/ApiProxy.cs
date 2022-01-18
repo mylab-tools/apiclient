@@ -33,25 +33,28 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Creates transparent proxy 
         /// </summary>
-        public static TContract Create(IHttpClientProvider httpClientProvider, IObserver<CallDetails> callObserver = null)
+        public static TContract Create(IHttpClientProvider httpClientProvider, RequestFactoringSettings requestFactoringSettings = null, IObserver<CallDetails> callObserver = null)
         {
             if (httpClientProvider == null) throw new ArgumentNullException(nameof(httpClientProvider));
 
             object proxy = Create<TContract, ApiProxy<TContract>>();
             
             var proxyInner = (ApiProxy<TContract>)proxy;
-            proxyInner.Initialize(httpClientProvider);
+            proxyInner.Initialize(httpClientProvider, requestFactoringSettings);
             if (callObserver != null)
                 proxyInner.Subscribe(callObserver);
 
             return (TContract)proxy;
         }
 
-        private void Initialize(IHttpClientProvider httpClientProvider)
+        private void Initialize(IHttpClientProvider httpClientProvider, RequestFactoringSettings requestFactoringSettings)
         {
             var contractType = typeof(TContract);
 
-            ApiRequestFactory = new ApiRequestFactory(contractType, httpClientProvider);
+            ApiRequestFactory = new ApiRequestFactory(contractType, httpClientProvider)
+            {
+                Settings = requestFactoringSettings
+            };
             _callTaskFactory = new GenericCallTaskFactory(ApiRequestFactory);
         }
 
