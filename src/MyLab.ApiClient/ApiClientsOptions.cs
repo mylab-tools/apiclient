@@ -19,6 +19,11 @@ namespace MyLab.ApiClient
     public class ApiConnectionOptions
     {
         /// <summary>
+        /// Do not verify the server SSL certificate
+        /// </summary>
+        public bool SkipServerSslCertVerification { get; set; }
+
+        /// <summary>
         /// API base url
         /// </summary>
         public string Url { get; set; }

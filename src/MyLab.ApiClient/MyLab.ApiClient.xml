@@ -70,6 +70,11 @@
             API base url
             </summary>
         </member>
+        <member name="P:MyLab.ApiClient.ApiConnectionOptions.SkipServerSslCertVerification">
+            <summary>
+            Do not verify the server SSL certificate
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ApiContractException">
             <summary>
             Throws when some thing wrong with Api contact

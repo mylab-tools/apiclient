@@ -773,6 +773,11 @@ public class ApiConnectionOptions
     /// API base url
     /// </summary>
     public string Url { get; set; }
+    
+    /// <summary>
+    /// Do not verify the server SSL certificate
+    /// </summary>
+    public bool SkipServerSslCertVerification { get; set; }
 }
 ```
 
