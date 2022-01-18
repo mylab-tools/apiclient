@@ -45,12 +45,7 @@
             Integrates ApiClient factoring
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar},MyLab.ApiClient.ApiClientsOptions)">
-            <summary>
-            Integrates ApiClient factoring
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar},System.Net.Http.IHttpClientFactory)">
+        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar},System.Action{MyLab.ApiClient.ApiClientsOptions},System.Net.Http.IHttpClientFactory)">
             <summary>
             Integrates ApiClient factoring
             </summary>

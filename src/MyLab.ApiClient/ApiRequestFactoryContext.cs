@@ -11,9 +11,14 @@ namespace MyLab.ApiClient
 
         public RequestFactoringSettings Settings { get; set; }
         
-        public ApiRequestFactoryContext(MethodDescription method, IApiRequestParameterValueProvider[] values)
+        public static ApiRequestFactoryContext Create(MethodDescription method, IApiRequestParameterValueProvider[] values, RequestFactoringSettings settings)
         {
-            Method = method;
+            var ctx = new ApiRequestFactoryContext
+            {
+                Method = method,
+                Settings = settings
+            };
+
 
             if (values.Length !=
                 method.Parameters.UrlParams.Count +
@@ -37,9 +42,11 @@ namespace MyLab.ApiClient
                 new HeaderCollectionParameterApplier(values[d.Position])));
 
             callParams.AddRange(method.Parameters.ContentParams.Select(d =>
-                new ContentParameterApplier(d, values[d.Position], Settings)));
+                new ContentParameterApplier(d, values[d.Position], settings)));
 
-            ParameterAppliers = callParams.ToArray();
+            ctx.ParameterAppliers = callParams.ToArray();
+
+            return ctx;
         }
     }
 }

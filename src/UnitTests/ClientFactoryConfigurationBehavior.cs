@@ -20,13 +20,10 @@ namespace UnitTests
             
             services.AddApiClients(
                 null,
-                new ApiClientsOptions
-            {
-                List = 
+                o =>
                 {
-                    { "foo", new ApiConnectionOptions{Url = "http://test.com"}}
-                }
-            });
+                    o.List.Add("foo", new ApiConnectionOptions { Url = "http://test.com" });
+                });
 
             var serviceProvider = services.BuildServiceProvider();
             var srv = ActivatorUtilities.CreateInstance<TestService>(serviceProvider);

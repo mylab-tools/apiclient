@@ -734,12 +734,9 @@ public class Startup
         services.AddApiClients(null, Configuration, "MyApiSectionName");
 
         // Or create options directly in code
-        services.AddApiClients(null, new ApiClientsOptions
+        services.AddApiClients(null, o =>
             {
-                List =
-                {
-                    { "foo", new ApiConnectionOptions{Url = "http://test.com"}}
-                }
+                o.List.Add("foo", new ApiConnectionOptions{Url = "http://test.com"})
             });
     }
 

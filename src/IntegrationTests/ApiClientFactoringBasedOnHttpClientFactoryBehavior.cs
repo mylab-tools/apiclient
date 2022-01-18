@@ -31,6 +31,7 @@ namespace IntegrationTests
 
             services.AddApiClients(
                 null,
+                null,
                 new WebApplicationFactoryHttpClientFactory<Startup>(_webApplicationFactory)
             );
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using MyLab.ApiClient;
@@ -36,6 +32,7 @@ namespace IntegrationTests
                     {
                         registrar.RegisterContract<ITestServer>();
                     },
+                    null,
                     new WebApplicationFactoryHttpClientFactory<Startup>(_webApplicationFactory)
                 );
             }

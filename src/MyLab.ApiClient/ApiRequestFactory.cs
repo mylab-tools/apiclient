@@ -46,10 +46,7 @@ namespace MyLab.ApiClient
             var mDesc = _srvDesc.GetRequiredMethod(methodCallExpression.Method);
             var argProviders = ExpressionArgumentsToProviders(methodCallExpression);
 
-            return new ApiRequestFactoryContext(mDesc, argProviders)
-            {
-                Settings = Settings
-            };
+            return ApiRequestFactoryContext.Create(mDesc, argProviders, Settings);
         }
 
         IApiRequestParameterValueProvider[] ExpressionArgumentsToProviders(MethodCallExpression methodCallExpression)
@@ -100,10 +97,7 @@ namespace MyLab.ApiClient
             var mDesc = ServiceDescription.GetRequiredMethod(method);
             var argProviders = ObjectArgumentsToProviders(args);
 
-            return new ApiRequestFactoryContext(mDesc, argProviders)
-            {
-                Settings = Settings
-            };
+            return ApiRequestFactoryContext.Create(mDesc, argProviders, Settings);
         }
 
         IApiRequestParameterValueProvider[] ObjectArgumentsToProviders(object[] args)
