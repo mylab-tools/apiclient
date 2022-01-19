@@ -65,6 +65,11 @@
             Defines JSON serialization settings
             </summary>
         </member>
+        <member name="P:MyLab.ApiClient.ApiClientsOptions.UrlFormSettings">
+            <summary>
+            Defines url-encoded-form serialization settings
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ApiConnectionOptions">
             <summary>
             Contains api connection options
@@ -88,6 +93,21 @@
         <member name="P:MyLab.ApiClient.ApiJsonSettings.IgnoreNullValues">
             <summary>
             Ignores null fields. True by default.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.UrlFormSettings">
+            <summary>
+            Defines url-encoded-form serialization settings
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.UrlFormSettings.EscapeSymbols">
+            <summary>
+            Converts symbols to its escaped representation. True by default
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.UrlFormSettings.IgnoreNullValues">
+            <summary>
+            Ignores null fields. False by default.
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.ApiContractException">
@@ -545,6 +565,11 @@
         <member name="P:MyLab.ApiClient.RequestFactoringSettings.JsonSettings">
             <summary>
             JSON serialization settings
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.RequestFactoringSettings.UrlFormSettings">
+            <summary>
+            Defines url-encoded-form serialization settings
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.RequestFactoringSettings.CreateFromOptions(MyLab.ApiClient.ApiClientsOptions)">
