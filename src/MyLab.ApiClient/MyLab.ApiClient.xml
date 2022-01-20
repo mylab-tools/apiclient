@@ -95,17 +95,17 @@
             Ignores null fields. True by default.
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.UrlFormSettings">
+        <member name="T:MyLab.ApiClient.ApiUrlFormSettings">
             <summary>
             Defines url-encoded-form serialization settings
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.UrlFormSettings.EscapeSymbols">
+        <member name="P:MyLab.ApiClient.ApiUrlFormSettings.EscapeSymbols">
             <summary>
             Converts symbols to its escaped representation. True by default
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.UrlFormSettings.IgnoreNullValues">
+        <member name="P:MyLab.ApiClient.ApiUrlFormSettings.IgnoreNullValues">
             <summary>
             Ignores null fields. False by default.
             </summary>
