@@ -15,8 +15,8 @@ namespace TestServer.Controllers
             return Ok(msg);
         }
 
-        [HttpGet("obj")]
-        public async Task<IActionResult> GetObj()
+        [HttpGet("body")]
+        public async Task<IActionResult> GetBody()
         {
             using var rdr = new StreamReader(Request.Body);
             

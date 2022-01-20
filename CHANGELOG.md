@@ -4,6 +4,13 @@
 
 Формат лога изменений базируется на [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.12.24] - 2022-01-19
+
+### Добавлено
+
+* опция `Api.UrlFormSettings.EscapeSymbols` декодирования в `url-encoded-form`
+* опция `Api.UrlFormSettings.IgnoreNullValues` игнорирования не указанных (`null`) параметров в `url-encoded-form`
+
 ## [3.11.24] - 2022-01-18
 
 ### Добавлено

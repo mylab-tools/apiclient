@@ -122,8 +122,23 @@ namespace MyLab.ApiClient
 
                     string name = formItemAttr?.Name ?? prop.Name;
 
-                    var val = prop.GetValue(source);
-                    queryBuilder.Append($"&{name}={Uri.EscapeDataString(val?.ToString() ?? string.Empty)}");
+                    var strVal = prop.GetValue(source)?.ToString();
+
+                    if (strVal != null)
+                    {
+                        var normVal = settings is { UrlFormSettings: { EscapeSymbols: true } }
+                            ? Uri.EscapeDataString(strVal)
+                            : strVal;
+
+                        queryBuilder.Append($"&{name}={normVal}");
+                    }
+                    else
+                    {
+                        if (settings is { UrlFormSettings: { IgnoreNullValues: false } })
+                        {
+                            queryBuilder.Append($"&{name}=");
+                        }
+                    }
                 }
 
                 content = queryBuilder.ToString().TrimStart('&');
