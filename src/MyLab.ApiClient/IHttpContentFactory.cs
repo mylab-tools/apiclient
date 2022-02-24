@@ -42,6 +42,9 @@ namespace MyLab.ApiClient
                 Headers = { ContentType = new MediaTypeHeaderValue("application/json") }
             };
 
+            //To calculate `content-length` header
+            var len = content.Headers.ContentLength.GetValueOrDefault();
+
             return content;
         }
     }
@@ -78,10 +81,15 @@ namespace MyLab.ApiClient
                 strContent = string.Empty;
             }
 
-            return new StringContent(strContent)
+            var content = new StringContent(strContent)
             {
                 Headers = { ContentType = new MediaTypeHeaderValue("application/xml") }
             };
+
+            //To calculate `content-length` header
+            var len = content.Headers.ContentLength.GetValueOrDefault();
+
+            return content;
         }
     }
 
