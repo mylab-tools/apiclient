@@ -87,5 +87,11 @@ namespace TestServer.Controllers
             var rdr = new StreamReader(Request.Body, Encoding.UTF8);
             return Ok(await rdr.ReadToEndAsync());
         }
+
+        [HttpPost("echo/json-headers")]
+        public IActionResult EchoJsonHeaders()
+        {
+            return Ok(Request.Headers.ToDictionary(h=> h.Key, h => h.Value.ToString()));
+        }
     }
 }

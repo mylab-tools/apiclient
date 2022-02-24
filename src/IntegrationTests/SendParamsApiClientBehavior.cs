@@ -50,6 +50,28 @@ namespace IntegrationTests
             Assert.Equal("foo", resp.ResponseContent);
         }
 
+        [Fact]
+        public async Task ShouldSendContentLengthWhenSendJson()
+        {
+            //Arrange
+            var client = new ApiClient<ITestServer>(_clientProvider);
+            var model = new TestModel();
+
+            //Act
+            var resp = await client
+                .Request(s => s.EchoJsonHeaders(model))
+                .GetDetailedAsync();
+
+            _output.WriteLine("====== Request ======");
+            _output.WriteLine(resp.RequestDump);
+            _output.WriteLine("====== Response ======");
+            _output.WriteLine(resp.ResponseDump);
+
+            //Assert
+            Assert.False(resp.IsUnexpectedStatusCode);
+            Assert.Contains(resp.ResponseContent, pair => pair.Key == "Content-Length");
+        }
+
         public static IEnumerable<object[]> GetSendParametersTests()
         {
             var testModel = new TestModel {TestValue = "foo"};
@@ -116,6 +138,9 @@ namespace IntegrationTests
 
             [Post("echo/body/bin")]
             Task<string> EchoBin([BinContent] byte[] msg);
+
+            [Post("echo/json-headers")]
+            Task<Dictionary<string, string>> EchoJsonHeaders([JsonContent] TestModel model);
         }
 
         public class TestMultipartParameter : IMultipartContentParameter
