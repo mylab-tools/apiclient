@@ -90,6 +90,21 @@ namespace MyLab.ApiClient
     }
 
     /// <summary>
+    /// PATCH HTTP method
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method)]
+    public class PatchAttribute : ApiMethodAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of <see cref="PutAttribute"/>
+        /// </summary>
+        public PatchAttribute(string url = null)
+            : base(url, HttpMethod.Patch)
+        {
+        }
+    }
+
+    /// <summary>
     /// DELETE HTTP method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
