@@ -87,9 +87,6 @@ namespace MyLab.ApiClient
                 throw new ArgumentNullException(nameof(sectionName));
 
             var optionsSection = config.GetSection(sectionName);
-
-            if (!optionsSection.Exists())
-                throw new InvalidOperationException($"Section '{sectionName}' does not exists");
             
             services.Configure<ApiClientsOptions>(optionsSection);
 
