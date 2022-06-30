@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,23 +22,20 @@ namespace MyLab.ApiClient
     class DefaultApiContractRegistrar : IApiContractRegistrar
     {
         private readonly IServiceCollection _services;
-        private readonly ApiClientsOptions _opts;
+
+        readonly List<string> _registeredApiKeys = new List<string>();
 
         /// <summary>
         /// Initializes a new instance of <see cref="DefaultApiContractRegistrar"/>
         /// </summary>
-        public DefaultApiContractRegistrar(IServiceCollection services, IOptions<ApiClientsOptions> opts = null)
-            :this(services, opts?.Value)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="DefaultApiContractRegistrar"/>
-        /// </summary>
-        public DefaultApiContractRegistrar(IServiceCollection services, ApiClientsOptions opts = null)
+        public DefaultApiContractRegistrar(IServiceCollection services)
         {
             _services = services;
-            _opts = opts;
+        }
+
+        public IEnumerable<string> GetRegisteredApiKeys()
+        {
+            return _registeredApiKeys;
         }
 
         public void RegisterContract<TContract>()
@@ -52,16 +50,20 @@ namespace MyLab.ApiClient
                 throw new ApiContractValidationException(validationResult);
 
             string serviceKey = typeof(TContract).GetCustomAttribute<ApiAttribute>()?.Key;
-
-            var reqFactoringSettings = _opts != null 
-                ? RequestFactoringSettings.CreateFromOptions(_opts)
-                : null;
-
+            
             _services.AddSingleton(serviceProvider =>
             {
+                var opts = serviceProvider.GetService<IOptions<ApiClientsOptions>>();
+
+                var reqFactoringSettings = opts.Value != null
+                    ? RequestFactoringSettings.CreateFromOptions(opts.Value)
+                    : null;
+
                 var httpFactory = (IHttpClientFactory) serviceProvider.GetService(typeof(IHttpClientFactory));
                 return ApiProxy<TContract>.Create(new FactoryHttpClientProvider(httpFactory, serviceKey), reqFactoringSettings);
             });
+
+            _registeredApiKeys.Add(serviceKey);
         }
     }
 }

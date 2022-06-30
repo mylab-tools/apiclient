@@ -10,6 +10,9 @@ namespace MyLab.ApiClient
     /// </summary>
     public static class ApiClientFactoringIntegration
     {
+        /// <summary>
+        /// Default configuration section name
+        /// </summary>
         public const string DefaultConfigSectionName = "Api";
 
         /// <summary>
@@ -17,32 +20,40 @@ namespace MyLab.ApiClient
         /// </summary>
         public static IServiceCollection AddApiClients(
             this IServiceCollection services,
+            Action<IApiContractRegistrar> contractRegistration)
+        {
+            AddServicesCore(services, contractRegistration);
+            
+            return services;
+        }
+
+        /// <summary>
+        /// Integrates ApiClient and configures factoring
+        /// </summary>
+        public static IServiceCollection AddApiClients(
+            this IServiceCollection services,
             Action<IApiContractRegistrar> contractRegistration,
-            IConfiguration configuration,
+            IConfiguration config,
             string sectionName = DefaultConfigSectionName)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            if (sectionName == null) throw new ArgumentNullException(nameof(sectionName));
+            AddServicesCore(services, contractRegistration);
 
-            var optionsSection = configuration.GetSection(sectionName);
+            ConfigureApiClients(services, config, sectionName);
 
-            if(!optionsSection.Exists())
-                throw new InvalidOperationException($"Section '{sectionName}' does not exists");
+            return services;
+        }
 
-            var opts = optionsSection.Get<ApiClientsOptions>();
+        /// <summary>
+        /// Integrates ApiClient and configures factoring
+        /// </summary>
+        public static IServiceCollection AddApiClients(
+            this IServiceCollection services,
+            Action<IApiContractRegistrar> contractRegistration,
+            Action<ApiClientsOptions> configureOptions)
+        {
+            AddServicesCore(services, contractRegistration);
 
-            services
-                .AddSingleton<IApiClientFactory, ApiClientFactory>()
-                .Configure<ApiClientsOptions>(optionsSection);
-
-            HttpClientRegistrar.Register(services, opts);
-
-            if (contractRegistration != null)
-            {
-                var contractRegistrar = new DefaultApiContractRegistrar(services, opts);
-                contractRegistration(contractRegistrar);
-            }
+            ConfigureApiClients(services, configureOptions);
 
             return services;
         }
@@ -52,37 +63,67 @@ namespace MyLab.ApiClient
         /// </summary>
         public static IServiceCollection AddApiClients(
             this IServiceCollection services,
-            Action<IApiContractRegistrar>? contractRegistration,
-            Action<ApiClientsOptions>? configureOptions,
-            IHttpClientFactory clientFactory = null)
+            Action<IApiContractRegistrar> contractRegistration,
+            IHttpClientFactory clientFactory)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            AddServicesCore(services, contractRegistration);
 
-            services
-                .AddSingleton<IApiClientFactory, ApiClientFactory>();
-
-            if (clientFactory != null)
-            {
-                services.AddSingleton(clientFactory);
-            }
-
-            var opts = new ApiClientsOptions();
-
-            if (configureOptions != null)
-            {
-                services.Configure(configureOptions);
-                configureOptions(opts);
-            }
-
-            HttpClientRegistrar.Register(services, opts);
-
-            if (contractRegistration != null)
-            {
-                var contractRegistrar = new DefaultApiContractRegistrar(services, opts);
-                contractRegistration(contractRegistrar);
-            }
+            services.AddSingleton(clientFactory);
 
             return services;
+        }
+
+        /// <summary>
+        /// Configures ApiClient factoring
+        /// </summary>
+        public static IServiceCollection ConfigureApiClients(
+            this IServiceCollection services,
+            IConfiguration config,
+            string sectionName = DefaultConfigSectionName)
+        {
+            if (config == null) 
+                throw new ArgumentNullException(nameof(config));
+            if (sectionName == null) 
+                throw new ArgumentNullException(nameof(sectionName));
+
+            var optionsSection = config.GetSection(sectionName);
+
+            if (!optionsSection.Exists())
+                throw new InvalidOperationException($"Section '{sectionName}' does not exists");
+            
+            services.Configure<ApiClientsOptions>(optionsSection);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Configures ApiClient factoring
+        /// </summary>
+        public static IServiceCollection ConfigureApiClients(
+            this IServiceCollection services,
+            Action<ApiClientsOptions> configureOptions)
+        {
+            if (configureOptions == null) 
+                throw new ArgumentNullException(nameof(configureOptions));
+
+            services.Configure(configureOptions);
+
+            return services;
+        }
+
+        static void AddServicesCore(
+            IServiceCollection services,
+            Action<IApiContractRegistrar> contractRegistration)
+        {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (contractRegistration == null) throw new ArgumentNullException(nameof(contractRegistration));
+
+            services.AddSingleton<IApiClientFactory, ApiClientFactory>();
+
+            var contractRegistrar = new DefaultApiContractRegistrar(services);
+            contractRegistration(contractRegistrar);
+
+            HttpClientRegistrar.Register(services, contractRegistrar.GetRegisteredApiKeys());
         }
     }
 }

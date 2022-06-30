@@ -25,13 +25,13 @@ namespace IntegrationTests
 
         private ITestServer CreateProxy(Action<ApiClientsOptions> configure)
         {
-            var services = new ServiceCollection();
+            var services = new ServiceCollection()
+                .ConfigureApiClients(configure);
 
             try
             {
                 services.AddApiClients(
                     registrar => { registrar.RegisterContract<ITestServer>(); },
-                    configure,
                     new WebApplicationFactoryHttpClientFactory<Startup>(_webApplicationFactory)
                 );
             }

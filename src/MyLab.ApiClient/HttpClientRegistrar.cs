@@ -1,29 +1,38 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace MyLab.ApiClient
 {
     static class HttpClientRegistrar
     {
-        public static void Register(IServiceCollection services, ApiClientsOptions options)
+        public static void Register(IServiceCollection services, IEnumerable<string> registeredApiKeys)
         {
-            foreach (var desc in options.List)
+            foreach (var apiKey in registeredApiKeys)
             {
-                var normUrl = desc.Value.Url == null || desc.Value.Url.EndsWith("/")
-                    ? desc.Value.Url
-                    : desc.Value.Url + "/";
-
                 services
-                    .AddHttpClient(desc.Key, client =>
+                    .AddHttpClient(apiKey, (sp, client) =>
                     {
-                        client.BaseAddress = new Uri(normUrl);   
+                        var opt = GetApiOpts(sp, apiKey);
+
+                        if (opt.Url == null)
+                            throw new InvalidOperationException($"Api '{apiKey}' URL is null");
+
+                        var normUrl = opt.Url == null || opt.Url.EndsWith("/")
+                            ? opt.Url
+                            : opt.Url + "/";
+
+                        client.BaseAddress = new Uri(normUrl);
                     })
-                    .ConfigurePrimaryHttpMessageHandler(() =>
+                    .ConfigurePrimaryHttpMessageHandler(sp =>
                     {
                         var httpHandler = new HttpClientHandler();
 
-                        if (desc.Value.SkipServerSslCertVerification)
+                        var opt = GetApiOpts(sp, apiKey);
+
+                        if (opt.SkipServerSslCertVerification)
                         {
                             httpHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
                             httpHandler.ServerCertificateCustomValidationCallback = (httpRequestMessage, cert, cetChain, policyErrors) => true;
@@ -32,6 +41,19 @@ namespace MyLab.ApiClient
                         return httpHandler;
                     });
             }
+        }
+
+        static ApiConnectionOptions GetApiOpts(IServiceProvider sp, string apiKey)
+        {
+            var opt = sp.GetService<IOptions<ApiClientsOptions>>();
+
+            if (opt?.Value == null)
+                throw new InvalidOperationException($"ApiClient options not found");
+            
+            if (!opt.Value.List.TryGetValue(apiKey, out var apiOpt))
+                throw new InvalidOperationException($"Api '{apiKey}' options not found");
+
+            return apiOpt;
         }
     }
 }

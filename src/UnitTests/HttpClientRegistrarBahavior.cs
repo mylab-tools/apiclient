@@ -17,14 +17,13 @@ namespace UnitTests
         public void ShouldRegisterUrlWithTRailedSlash(string url, string expected)
         {
             //Arrange
-            var srvColl = new ServiceCollection();
-            HttpClientRegistrar.Register(srvColl, new ApiClientsOptions
-            {
-                List =
+            var srvColl = new ServiceCollection()
+                .ConfigureApiClients(opt =>
                 {
-                    {"key", new ApiConnectionOptions { Url = url }}
-                }
-            });
+                    opt.List.Add("key", new ApiConnectionOptions { Url = url });
+                });
+
+            HttpClientRegistrar.Register(srvColl, new []{"key"});
 
             var srvProvider = srvColl.BuildServiceProvider();
             var httpClientFactory = srvProvider.GetService<IHttpClientFactory>();

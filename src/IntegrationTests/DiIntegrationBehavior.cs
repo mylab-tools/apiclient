@@ -32,7 +32,6 @@ namespace IntegrationTests
                     {
                         registrar.RegisterContract<ITestServer>();
                     },
-                    null,
                     new WebApplicationFactoryHttpClientFactory<Startup>(_webApplicationFactory)
                 );
             }
