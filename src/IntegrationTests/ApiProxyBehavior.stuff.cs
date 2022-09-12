@@ -31,7 +31,6 @@ namespace IntegrationTests
             {
                 services.AddApiClients(
                     registrar => { registrar.RegisterContract<ITestServer>(); },
-                    null,
                     new WebApplicationFactoryHttpClientFactory<Startup>(_webApplicationFactory)
                 );
             }

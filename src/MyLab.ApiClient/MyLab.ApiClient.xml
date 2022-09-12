@@ -40,14 +40,44 @@
             Contains method to integrate ApiClient factoring
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar},Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+        <member name="F:MyLab.ApiClient.ApiClientFactoringIntegration.DefaultConfigSectionName">
+            <summary>
+            Default configuration section name
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar})">
             <summary>
             Integrates ApiClient factoring
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar},System.Action{MyLab.ApiClient.ApiClientsOptions},System.Net.Http.IHttpClientFactory)">
+        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar},Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <summary>
+            Integrates ApiClient and configures factoring
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar},System.Action{MyLab.ApiClient.ApiClientsOptions})">
+            <summary>
+            Integrates ApiClient and configures factoring
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar},System.Net.Http.IHttpClientFactory)">
             <summary>
             Integrates ApiClient factoring
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddScopedApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar})">
+            <summary>
+            Integrates ApiClient for default HttpClient
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.ConfigureApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <summary>
+            Configures ApiClient factoring
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.ConfigureApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.ApiClientsOptions})">
+            <summary>
+            Configures ApiClient factoring
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.ApiClientsOptions">
@@ -382,14 +412,14 @@
             Registers api contract 
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.DefaultApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Options.IOptions{MyLab.ApiClient.ApiClientsOptions})">
+        <member name="M:MyLab.ApiClient.KeyBasedApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.DefaultApiContractRegistrar"/>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.KeyBasedApiContractRegistrar"/>
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.DefaultApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,MyLab.ApiClient.ApiClientsOptions)">
+        <member name="M:MyLab.ApiClient.ScopedApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.DefaultApiContractRegistrar"/>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ScopedApiContractRegistrar"/>
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.ExpressionBasedApiRequestParameterValueProvider.#ctor(System.Linq.Expressions.Expression)">
@@ -493,6 +523,16 @@
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.PutAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.PutAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.PatchAttribute">
+            <summary>
+            PATCH HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.PatchAttribute.#ctor(System.String)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.PutAttribute"/>
             </summary>

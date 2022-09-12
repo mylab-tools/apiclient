@@ -14,7 +14,7 @@ namespace MyLab.ApiClient
         /// </summary>
         HttpClient Provide();
     }
-
+    
     public class FactoryHttpClientProvider : IHttpClientProvider
     {
         private readonly IHttpClientFactory _httpClientFactory;

@@ -728,13 +728,19 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         // Simple case - using default section name "Api"
-    	services.AddApiClients(null, Configuration);
+    	services.AddApiClients(
+            r => r.RegisterContract<IApiContract>(), 
+            Configuration);
         
         // Or specify custom section name
-        services.AddApiClients(null, Configuration, "MyApiSectionName");
+        services.AddApiClients(
+            r => r.RegisterContract<IApiContract>(),
+            Configuration, "MyApiSectionName");
 
         // Or create options directly in code
-        services.AddApiClients(null, o =>
+        services.AddApiClients(
+            r => r.RegisterContract<IApiContract>(), 
+            o =>
             {
                 o.List.Add("foo", new ApiConnectionOptions{Url = "http://test.com"})
             });
@@ -886,6 +892,8 @@ CallDetails<string> call = await api.CallEchoAndGetDetails("foo");
 
 CallDetails call = await api.CallEchoAndGetDetailsWithoutResonse("foo");
 ```
+
+## 
 
 ## Тестирование 
 

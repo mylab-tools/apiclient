@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-using System.IO;
+using System;
 using System.Net.Http;
-using System.Text;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using MyLab.ApiClient;
 using Xunit;
@@ -19,7 +16,10 @@ namespace UnitTests
             var services = new ServiceCollection();
             
             services.AddApiClients(
-                null,
+                registrar =>
+                {
+                    registrar.RegisterContract<IApiContract>();
+                },
                 o =>
                 {
                     o.List.Add("foo", new ApiConnectionOptions { Url = "http://test.com" });
@@ -47,7 +47,10 @@ namespace UnitTests
 
             var services = new ServiceCollection();
 
-            services.AddApiClients(null, config);
+            services.AddApiClients(registrar =>
+            {
+                registrar.RegisterContract<IApiContract>();
+            }, config);
 
             var serviceProvider = services.BuildServiceProvider();
             var srv = ActivatorUtilities.CreateInstance<TestService>(serviceProvider);
@@ -73,6 +76,12 @@ namespace UnitTests
             {
                 return _httpClientFactory.CreateClient("foo");
             }
+        }
+
+        [Api(Key = "foo")]
+        interface IApiContract
+        {
+
         }
     }
 }
