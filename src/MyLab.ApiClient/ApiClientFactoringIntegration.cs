@@ -74,6 +74,24 @@ namespace MyLab.ApiClient
         }
 
         /// <summary>
+        /// Integrates ApiClient for default HttpClient
+        /// </summary>
+        public static IServiceCollection AddScopedApiClients(
+            this IServiceCollection services,
+            Action<IApiContractRegistrar> contractRegistration)
+        {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (contractRegistration == null) throw new ArgumentNullException(nameof(contractRegistration));
+
+            services.AddScoped<IApiClientFactory, ApiClientFactory>();
+
+            var contractRegistrar = new ScopedApiContractRegistrar(services);
+            contractRegistration(contractRegistrar);
+            
+            return services;
+        }
+
+        /// <summary>
         /// Configures ApiClient factoring
         /// </summary>
         public static IServiceCollection ConfigureApiClients(
@@ -117,7 +135,7 @@ namespace MyLab.ApiClient
 
             services.AddSingleton<IApiClientFactory, ApiClientFactory>();
 
-            var contractRegistrar = new DefaultApiContractRegistrar(services);
+            var contractRegistrar = new KeyBasedApiContractRegistrar(services);
             contractRegistration(contractRegistrar);
 
             HttpClientRegistrar.Register(services, contractRegistrar.GetRegisteredApiKeys());

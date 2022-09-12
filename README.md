@@ -893,6 +893,8 @@ CallDetails<string> call = await api.CallEchoAndGetDetails("foo");
 CallDetails call = await api.CallEchoAndGetDetailsWithoutResonse("foo");
 ```
 
+## 
+
 ## Тестирование 
 
 При написании функциональных и интеграционных тестов, для взаимодействия с сервисом через его контракт `API`, используйте класс `ApiClient<>` и провайдер `DelegateHttpClientProvider`. 
