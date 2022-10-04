@@ -51,6 +51,29 @@ namespace IntegrationTests
         }
 
         [Fact]
+        public async Task ShouldSendDateTimeParameters()
+        {
+            //Arrange
+            var client = new ApiClient<ITestServer>(_clientProvider);
+
+            var testDateTime = new DateTime(1991, 1, 2, 3, 4, 5);
+
+            //Act
+            var resp = await client
+                .Request(s => s.EchoDateTime(testDateTime))
+                .GetDetailedAsync();
+
+            _output.WriteLine("====== Request ======");
+            _output.WriteLine(resp.RequestDump);
+            _output.WriteLine("====== Response ======");
+            _output.WriteLine(resp.ResponseDump);
+
+            //Assert
+            Assert.False(resp.IsUnexpectedStatusCode);
+            Assert.Equal(testDateTime, resp.ResponseContent);
+        }
+
+        [Fact]
         public async Task ShouldSendContentLengthWhenSendJson()
         {
             //Arrange
@@ -100,7 +123,7 @@ namespace IntegrationTests
                 new object[] {expr8},
                 new object[] {expr9},
                 new object[] {expr10},
-                new object[] {expr11},
+                new object[] {expr11}
             };
         }
 
@@ -135,6 +158,9 @@ namespace IntegrationTests
 
             [Post("echo/body/text")]
             Task<string> EchoText([StringContent] string msg);
+
+            [Post("echo/body/datetime")]
+            Task<DateTime> EchoDateTime([StringContent] DateTime msg);
 
             [Post("echo/body/bin")]
             Task<string> EchoBin([BinContent] byte[] msg);
