@@ -14,6 +14,11 @@ namespace MyLab.ApiClient
                 return dt.ToString(CultureInfo.InvariantCulture);
             }
 
+            if (target is Guid guid)
+            {
+                return guid.ToString("N");
+            }
+
             return target.ToString();
         }
     }
