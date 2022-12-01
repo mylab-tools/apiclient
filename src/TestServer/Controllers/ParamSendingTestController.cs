@@ -84,9 +84,12 @@ namespace TestServer.Controllers
 
         [HttpPost("echo/body/datetime")]
         [Consumes("text/plain; charset=utf-8")]
-        public Task<IActionResult> EchoDateTime([FromBody]string dateTime)
+        public async Task<IActionResult> EchoDateTime()
         {
-            return Task.FromResult((IActionResult)Ok(dateTime));
+            using StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+            string dateTimeStr = await reader.ReadToEndAsync();
+
+            return Ok(dateTimeStr);
         }
 
         [HttpPost("echo/body/bin")]
