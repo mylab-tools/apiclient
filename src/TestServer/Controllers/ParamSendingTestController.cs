@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,10 +76,20 @@ namespace TestServer.Controllers
         }
 
         [HttpPost("echo/body/text")]
-        public async Task<IActionResult> EchoForm()
+        public async Task<IActionResult> EchoText()
         {
             var rdr = new StreamReader(Request.Body);
             return Ok(await rdr.ReadToEndAsync());
+        }
+
+        [HttpPost("echo/body/datetime")]
+        [Consumes("text/plain; charset=utf-8")]
+        public async Task<IActionResult> EchoDateTime()
+        {
+            using StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8);
+            string dateTimeStr = await reader.ReadToEndAsync();
+
+            return Ok(dateTimeStr);
         }
 
         [HttpPost("echo/body/bin")]
