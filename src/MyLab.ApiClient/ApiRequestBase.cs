@@ -112,9 +112,14 @@ namespace MyLab.ApiClient
                     e.Data.Add("httpClient is null", httpClient == null);
 
                 if (httpClient != null && !e.Data.Contains("httpClient.BaseAddress")) 
-                {
                     e.Data.Add("httpClient.BaseAddress", httpClient.BaseAddress);
-                }
+
+                if (!e.Data.Contains("reqMsg.RequestUri"))
+                    e.Data.Add("reqMsg.RequestUri", reqMsg.RequestUri);
+                if (!e.Data.Contains("reqMsg.Method"))
+                    e.Data.Add("reqMsg.Method", reqMsg.Method);
+                if (!e.Data.Contains("reqMsg.Headers"))
+                    e.Data.Add("reqMsg.Headers", reqMsg.Headers);
 
                 throw;
             }
