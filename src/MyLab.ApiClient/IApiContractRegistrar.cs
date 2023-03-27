@@ -54,7 +54,7 @@ namespace MyLab.ApiClient
             _services.AddSingleton(serviceProvider =>
             {
                 var opts = serviceProvider.GetService<IOptions<ApiClientsOptions>>();
-
+                
                 var reqFactoringSettings = opts.Value != null
                     ? RequestFactoringSettings.CreateFromOptions(opts.Value)
                     : null;

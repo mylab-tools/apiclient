@@ -56,6 +56,38 @@ namespace IntegrationTests
 
         }
 
+        [Fact]
+        public async Task ShouldCreateClientWithConfig()
+        {
+            //Arrange
+            var services = new ServiceCollection();
+
+            services.AddApiClients(
+                registrar => { },
+                new WebApplicationFactoryHttpClientFactory<Startup>(_webApplicationFactory)
+            );
+
+            var serviceProvider = services.BuildServiceProvider();
+            TestServiceForHttpClientFactory srv;
+
+            try
+            {
+                srv = ActivatorUtilities.CreateInstance<TestServiceForHttpClientFactory>(serviceProvider);
+            }
+            catch (ApiContractValidationException e)
+            {
+                _output.WriteLine(e.ValidationResult.ToString());
+                throw;
+            }
+
+            //Act
+            var resMsg = await srv.TestMethod("foo", _output);
+
+            //Assert
+            Assert.NotNull(resMsg);
+            Assert.Equal("foo", resMsg);
+        }
+
         [Api("echo", Key = "No matter for this test")]
         interface ITestServer
         {
