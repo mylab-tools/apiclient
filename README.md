@@ -727,20 +727,16 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddApiClients(r => r.RegisterContract<IApiContract>();
+                               
         // Simple case - using default section name "Api"
-    	services.AddApiClients(
-            r => r.RegisterContract<IApiContract>(), 
-            Configuration);
+    	services.ConfigureApiClients(Configuration);
         
         // Or specify custom section name
-        services.AddApiClients(
-            r => r.RegisterContract<IApiContract>(),
-            Configuration, "MyApiSectionName");
+        services.ConfigureApiClients(Configuration, "MyApiSectionName");
 
         // Or create options directly in code
-        services.AddApiClients(
-            r => r.RegisterContract<IApiContract>(), 
-            o =>
+        services.ConfigureApiClients(o =>
             {
                 o.List.Add("foo", new ApiConnectionOptions{Url = "http://test.com"})
             });
@@ -796,6 +792,19 @@ public class Startup
 }
 ```
 
+В случае отсутствия указанного ключа используется имя интерфейса контракта (без пространства имён):
+
+ ```json
+ {
+   "Api": {
+     "List": {
+       "ITestServer": { "Url": "http://foo-test.com" }, //<--- here it is 
+       "bar": { "Url": "http://bar-test.com" }
+     }
+   }
+ }
+ ```
+
 ### Инъекция IApiClientFactory
 
 Инъекция `IApiClientFactory` в объект-потребитель позволяет создавать объекты `ApiClient<>` для дальнейшей работы с `API` через методы `Call` с передачей `Expressions`-выражений вызова методов контракта `API`. 
@@ -846,7 +855,7 @@ public void ConfigureServices(IServiceCollection services)
         registrar => 
         {
             registrar.RegisterContract<ITestServer>();
-        }, Configuration);
+        });
 }
 ```
 
@@ -892,8 +901,6 @@ CallDetails<string> call = await api.CallEchoAndGetDetails("foo");
 
 CallDetails call = await api.CallEchoAndGetDetailsWithoutResonse("foo");
 ```
-
-## 
 
 ## Тестирование 
 
