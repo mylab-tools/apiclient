@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -72,6 +74,37 @@ namespace IntegrationTests
 
         }
 
+        [Fact]
+        public void ShouldInjectNullIfOptionsNotFoundAndApiClientIsOptional()
+        {
+            //Arrange
+            var services = new ServiceCollection()
+                .AddOptionalApiClients(registrar => registrar.RegisterContract<ITestServer>())
+                .BuildServiceProvider();
+            
+            //Act
+            var exampleService= ActivatorUtilities.CreateInstance<ExampleService>(services);
+
+            //Assert
+            Assert.Null(exampleService.TestServerApi);
+        }
+
+        [Fact]
+        public void ShouldProvideObjectIfOptionsFoundAndApiClientIsOptional()
+        {
+            //Arrange
+            var services = new ServiceCollection()
+                .AddOptionalApiClients(registrar => registrar.RegisterContract<ITestServer>())
+                .ConfigureApiClients(o => o.List.Add("bar", new ApiConnectionOptions()))
+                .BuildServiceProvider();
+
+            //Act
+            var exampleService = ActivatorUtilities.CreateInstance<ExampleService>(services);
+
+            //Assert
+            Assert.NotNull(exampleService.TestServerApi);
+        }
+
         private void OutputResponse(CallDetails<string> resp)
         {
             _output.WriteLine("Resquest dump:");
@@ -87,11 +120,21 @@ namespace IntegrationTests
             Task Get();
         }
 
-        [Api("echo", Key = "No matter for this test")]
+        [Api("echo", Key = "bar")]
         interface ITestServer
         {
             [Get]
             Task<string> Echo([JsonContent] string msg);
+        }
+
+        class ExampleService
+        {
+            public ITestServer TestServerApi { get; }
+
+            public ExampleService(ITestServer testServerApi = null)
+            {
+                TestServerApi = testServerApi;
+            }
         }
     }
 }
