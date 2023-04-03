@@ -13,8 +13,6 @@ namespace MyLab.ApiClient
     /// </summary>
     public class ApiContractValidator
     {
-        public bool ContractKeyMustBeSpecified { get; set; } = false;
-
         /// <summary>
         /// Validates web api service contract
         /// </summary>
@@ -59,14 +57,6 @@ namespace MyLab.ApiClient
                         });
                     }
                 }
-
-                if(ContractKeyMustBeSpecified && string.IsNullOrWhiteSpace(apiAttr.Key))
-                    issues.Add(new ApiContractValidationIssuer
-                    {
-                        Reason = "Api contract key mast be specified for configuration binding",
-                        Critical = true,
-                        ServiceContract = t
-                    });
             }
 
             foreach (var method in t.GetMethods(BindingFlags.Instance | BindingFlags.Public))

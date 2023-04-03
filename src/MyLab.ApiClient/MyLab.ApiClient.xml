@@ -50,9 +50,9 @@
             Integrates ApiClient factoring
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar},Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddOptionalApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar})">
             <summary>
-            Integrates ApiClient and configures factoring
+            Integrates ApiClient factoring
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar},System.Action{MyLab.ApiClient.ApiClientsOptions})">
@@ -138,6 +138,11 @@
         <member name="P:MyLab.ApiClient.ApiUrlFormSettings.IgnoreNullValues">
             <summary>
             Ignores null fields. False by default.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ApiConfigKeyProvider">
+            <summary>
+            Provides config api key
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.ApiContractException">
@@ -415,6 +420,11 @@
         <member name="M:MyLab.ApiClient.KeyBasedApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.KeyBasedApiContractRegistrar"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.OptionalKeyBasedApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.OptionalKeyBasedApiContractRegistrar"/>
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.ScopedApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">

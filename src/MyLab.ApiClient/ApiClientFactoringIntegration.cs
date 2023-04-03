@@ -28,6 +28,27 @@ namespace MyLab.ApiClient
         }
 
         /// <summary>
+        /// Integrates ApiClient factoring
+        /// </summary>
+        public static IServiceCollection AddOptionalApiClients(
+            this IServiceCollection services,
+            Action<IApiContractRegistrar> contractRegistration)
+        {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            if (contractRegistration == null) throw new ArgumentNullException(nameof(contractRegistration));
+
+            services.AddSingleton<IApiClientFactory, ApiClientFactory>();
+
+            var contractRegistrar = new OptionalKeyBasedApiContractRegistrar(services);
+            contractRegistration(contractRegistrar);
+
+            HttpClientRegistrar.Register(services, contractRegistrar.GetRegisteredApiKeys());
+
+            return services;
+        }
+
+        [Obsolete("Use ConfigureApiClient(...) separately")]
+        /// <summary>
         /// Integrates ApiClient and configures factoring
         /// </summary>
         public static IServiceCollection AddApiClients(
@@ -46,6 +67,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Integrates ApiClient and configures factoring
         /// </summary>
+        [Obsolete("Use ConfigureApiClient(...) separately")]
         public static IServiceCollection AddApiClients(
             this IServiceCollection services,
             Action<IApiContractRegistrar> contractRegistration,
