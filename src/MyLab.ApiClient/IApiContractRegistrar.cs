@@ -41,15 +41,12 @@ namespace MyLab.ApiClient
         public void RegisterContract<TContract>()
             where TContract : class
         {
-            var validationResult = new ApiContractValidator
-            {
-                ContractKeyMustBeSpecified = true
-            }.Validate(typeof(TContract));
+            var validationResult = new ApiContractValidator().Validate(typeof(TContract));
 
             if (!validationResult.Success)
                 throw new ApiContractValidationException(validationResult);
 
-            string serviceKey = typeof(TContract).GetCustomAttribute<ApiAttribute>()?.Key;
+            string serviceKey = ApiConfigKeyProvider.Provide(typeof(TContract));
             
             _services.AddSingleton(serviceProvider =>
             {
@@ -89,15 +86,12 @@ namespace MyLab.ApiClient
         public void RegisterContract<TContract>()
             where TContract : class
         {
-            var validationResult = new ApiContractValidator
-            {
-                ContractKeyMustBeSpecified = true
-            }.Validate(typeof(TContract));
+            var validationResult = new ApiContractValidator().Validate(typeof(TContract));
 
             if (!validationResult.Success)
                 throw new ApiContractValidationException(validationResult);
 
-            string serviceKey = typeof(TContract).GetCustomAttribute<ApiAttribute>()!.Key;
+            string serviceKey = ApiConfigKeyProvider.Provide(typeof(TContract));
 
             _services.AddSingleton(serviceProvider =>
             {
@@ -131,10 +125,7 @@ namespace MyLab.ApiClient
         public void RegisterContract<TContract>()
             where TContract : class
         {
-            var validationResult = new ApiContractValidator
-            {
-                ContractKeyMustBeSpecified = false
-            }.Validate(typeof(TContract));
+            var validationResult = new ApiContractValidator().Validate(typeof(TContract));
 
             if (!validationResult.Success)
                 throw new ApiContractValidationException(validationResult);

@@ -140,6 +140,11 @@
             Ignores null fields. False by default.
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.ApiConfigKeyProvider">
+            <summary>
+            Provides config api key
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ApiContractException">
             <summary>
             Throws when some thing wrong with Api contact

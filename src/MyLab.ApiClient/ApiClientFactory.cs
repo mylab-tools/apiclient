@@ -23,18 +23,12 @@ namespace MyLab.ApiClient
 
         public ApiClient<TContract> CreateApiClient<TContract>()
         {
-            var valRes = new ApiContractValidator
-            {
-                ContractKeyMustBeSpecified = true
-            }.Validate(typeof(TContract));
+            var valRes = new ApiContractValidator().Validate(typeof(TContract));
 
             if (!valRes.Success)
                 throw new ApiContractValidationException(valRes);
 
-            var contractKey = typeof(TContract).GetCustomAttribute<ApiAttribute>()?.Key;
-
-            if (contractKey == null)
-                throw new InvalidOperationException("Api contract key not specified");
+            var contractKey = ApiConfigKeyProvider.Provide(typeof(TContract));
 
             return new ApiClient<TContract>(new FactoryHttpClientProvider(_httpClientFactory, contractKey))
             {
