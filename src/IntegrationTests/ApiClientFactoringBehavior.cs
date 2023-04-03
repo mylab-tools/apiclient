@@ -1,6 +1,8 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using MyLab.ApiClient;
 using TestServer;
 using Xunit;
@@ -46,11 +48,50 @@ namespace IntegrationTests
             Assert.Equal(HttpStatusCode.NotFound, actualCode.Value);
         }
 
+        [Fact]
+        public async Task ShouldCreateWithHttpClientFactory()
+        {
+            //Arrange
+            var services = new ServiceCollection()
+                .AddApiClients(
+                    registrar => { },
+                    new WebApplicationFactoryHttpClientFactory<Startup>(_webApplicationFactory)
+                )
+                .BuildServiceProvider();
+
+            var apiClientFactory = services.GetService<IApiClientFactory>();
+            var apiClient = apiClientFactory.CreateApiClient<ITestServer>();
+
+            //Act
+            var resp = await apiClient.Request(s => s.Echo("foo")).GetDetailedAsync();
+
+            OutputResponse(resp);
+
+            //Assert
+            Assert.Equal("foo", resp.ResponseContent);
+
+        }
+
+        private void OutputResponse(CallDetails<string> resp)
+        {
+            _output.WriteLine("Resquest dump:");
+            _output.WriteLine(resp.RequestDump);
+            _output.WriteLine("Response dump:");
+            _output.WriteLine(resp.ResponseDump);
+        }
+
         [Api]
         interface ITestContractWithoutPath
         {
             [Get]
             Task Get();
+        }
+
+        [Api("echo", Key = "No matter for this test")]
+        interface ITestServer
+        {
+            [Get]
+            Task<string> Echo([JsonContent] string msg);
         }
     }
 }
