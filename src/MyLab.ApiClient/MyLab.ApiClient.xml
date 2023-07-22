@@ -412,7 +412,7 @@
             Registers api contract 
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.IApiContractRegistrar.RegisterContract``1">
+        <member name="M:MyLab.ApiClient.IApiContractRegistrar.RegisterContract``1(System.String)">
             <summary>
             Registers api contract 
             </summary>

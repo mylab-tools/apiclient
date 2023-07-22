@@ -15,7 +15,7 @@ namespace MyLab.ApiClient
         /// <summary>
         /// Registers api contract 
         /// </summary>
-        void RegisterContract<TContract>()
+        void RegisterContract<TContract>(string httpClientName = null)
             where TContract : class;
     }
 
@@ -38,7 +38,7 @@ namespace MyLab.ApiClient
             return _registeredApiKeys;
         }
 
-        public void RegisterContract<TContract>()
+        public void RegisterContract<TContract>(string httpClientName = null)
             where TContract : class
         {
             var validationResult = new ApiContractValidator().Validate(typeof(TContract));
@@ -46,7 +46,7 @@ namespace MyLab.ApiClient
             if (!validationResult.Success)
                 throw new ApiContractValidationException(validationResult);
 
-            string serviceKey = ApiConfigKeyProvider.Provide(typeof(TContract));
+            string serviceKey = httpClientName ?? ApiConfigKeyProvider.Provide(typeof(TContract));
             
             _services.AddSingleton(serviceProvider =>
             {
@@ -83,7 +83,7 @@ namespace MyLab.ApiClient
             return _registeredApiKeys;
         }
 
-        public void RegisterContract<TContract>()
+        public void RegisterContract<TContract>(string httpClientName = null)
             where TContract : class
         {
             var validationResult = new ApiContractValidator().Validate(typeof(TContract));
@@ -91,7 +91,7 @@ namespace MyLab.ApiClient
             if (!validationResult.Success)
                 throw new ApiContractValidationException(validationResult);
 
-            string serviceKey = ApiConfigKeyProvider.Provide(typeof(TContract));
+            string serviceKey = httpClientName ?? ApiConfigKeyProvider.Provide(typeof(TContract));
 
             _services.AddSingleton(serviceProvider =>
             {
@@ -122,13 +122,15 @@ namespace MyLab.ApiClient
             _services = services;
         }
 
-        public void RegisterContract<TContract>()
+        public void RegisterContract<TContract>(string httpClientName = null)
             where TContract : class
         {
             var validationResult = new ApiContractValidator().Validate(typeof(TContract));
 
             if (!validationResult.Success)
                 throw new ApiContractValidationException(validationResult);
+
+            string serviceKey = httpClientName ?? ApiConfigKeyProvider.Provide(typeof(TContract));
 
             _services.AddScoped(serviceProvider =>
             {
@@ -138,7 +140,12 @@ namespace MyLab.ApiClient
                     ? RequestFactoringSettings.CreateFromOptions(opts.Value)
                     : null;
 
-                var httpClient = serviceProvider.GetService<HttpClient>();
+                var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
+
+                var httpClient = serviceKey != null
+                    ? httpClientFactory.CreateClient(serviceKey)
+                    : httpClientFactory.CreateClient();
+
                 return ApiProxy<TContract>.Create(new SingleHttpClientProvider(httpClient), reqFactoringSettings);
             });
         }
