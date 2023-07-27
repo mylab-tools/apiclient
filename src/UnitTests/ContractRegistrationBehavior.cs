@@ -59,13 +59,22 @@ namespace UnitTests
         public void ShouldRegisterScoped()
         {
             //Arrange
-            var srvCollection = new ServiceCollection();
-            srvCollection.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://test.com/") });
-            srvCollection.AddScopedApiClients(registrar => registrar.RegisterContract<IContract2>());
+            var srvCollection = new ServiceCollection()
+                .ConfigureApiClients(
+                o =>
+                {
+                    o.List.Add(nameof(IContract2), new ApiConnectionOptions { Url = "http://test.com/" });
+                })
+                .AddScopedApiClients(registrar => registrar.RegisterContract<IContract2>());
 
             var services = srvCollection.BuildServiceProvider();
 
-            var service = services.GetService<IContract2>();
+            IContract2 service;
+
+            using (var scope = services.CreateScope())
+            {
+                service = services.GetService<IContract2>();
+            }
 
             //Act
             var httpClient = GetClient(service);
