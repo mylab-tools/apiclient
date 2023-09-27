@@ -109,7 +109,9 @@ namespace MyLab.ApiClient
 
             var contractRegistrar = new ScopedApiContractRegistrar(services);
             contractRegistration(contractRegistrar);
-            
+
+            HttpClientRegistrar.Register(services, contractRegistrar.GetRegisteredApiKeys());
+
             return services;
         }
 

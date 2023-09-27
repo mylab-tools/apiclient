@@ -452,6 +452,11 @@
             Registers api contract 
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.IApiContractRegistrar.RegisterContract``1">
+            <summary>
+            Registers api contract 
+            </summary>
+        </member>
         <member name="M:MyLab.ApiClient.KeyBasedApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.KeyBasedApiContractRegistrar"/>
