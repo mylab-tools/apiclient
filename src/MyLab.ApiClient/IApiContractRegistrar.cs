@@ -101,7 +101,7 @@ namespace MyLab.ApiClient
                     return null;
                 
                 var reqFactoringSettings = RequestFactoringSettings.CreateFromOptions(opts.Value);
-                var httpFactory = (IHttpClientFactory)serviceProvider.GetService(typeof(IHttpClientFactory));
+                var httpFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
 
                 return ApiProxy<TContract>.Create(new FactoryHttpClientProvider(httpFactory, serviceKey), reqFactoringSettings);
             });
@@ -140,7 +140,7 @@ namespace MyLab.ApiClient
                     ? RequestFactoringSettings.CreateFromOptions(opts.Value)
                     : null;
 
-                var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
+                var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
 
                 var httpClient = serviceKey != null
                     ? httpClientFactory.CreateClient(serviceKey)

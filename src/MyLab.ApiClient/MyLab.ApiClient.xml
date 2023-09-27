@@ -397,6 +397,41 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.DelegateHttpClientProvider"/>
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.HttpMessageDumper">
+            <summary>
+            Contains tools to create dump from http request and response
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.HttpMessageDumper.DefaultMaxBodySize">
+            <summary>
+            Default max body size for dumping
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.HttpMessageDumper.ContentIsTooLargeText">
+            <summary>
+            DumpAsync text when body is too large
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.HttpMessageDumper.MaxRequestBodySize">
+            <summary>
+            Set to customize request body size which is maximum dor dumping
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.HttpMessageDumper.MaxResponseBodySize">
+            <summary>
+            Set to customize response body size which is maximum dor dumping
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.HttpMessageDumper.DumpAsync(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Dumps a request
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.HttpMessageDumper.DumpAsync(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Dumps a response
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.IApiClientFactory">
             <summary>
             Creates Api clients

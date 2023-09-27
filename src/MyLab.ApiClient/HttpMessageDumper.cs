@@ -8,26 +8,48 @@ using System.Threading.Tasks;
 
 namespace MyLab.ApiClient
 {
-    class HttpMessageDumper
+    /// <summary>
+    /// Contains tools to create dump from http request and response
+    /// </summary>
+    public class HttpMessageDumper
     {
-        public const int DefaultMexBodySize = 10 * 1024;
+        /// <summary>
+        /// Default max body size for dumping
+        /// </summary>
+        public const int DefaultMaxBodySize = 10 * 1024;
+
+        /// <summary>
+        /// DumpAsync text when body is too large
+        /// </summary>
         public const string ContentIsTooLargeText = "... [content is too large to dump]";
 
-        public int MaxRequestBodySize { get; set; } = DefaultMexBodySize;
-        public int MaxResponseBodySize { get; set; } = DefaultMexBodySize;
+        /// <summary>
+        /// Set to customize request body size which is maximum dor dumping
+        /// </summary>
+        public int MaxRequestBodySize { get; set; } = DefaultMaxBodySize;
+        /// <summary>
+        /// Set to customize response body size which is maximum dor dumping
+        /// </summary>
+        public int MaxResponseBodySize { get; set; } = DefaultMaxBodySize;
 
-        public async Task<string> Dump(HttpRequestMessage msg)
+        /// <summary>
+        /// Dumps a request
+        /// </summary>
+        public async Task<string> DumpAsync(HttpRequestMessage msg)
         {
             var b = new StringBuilder();
             b.AppendLine($"{msg.Method} {msg.RequestUri}");
             b.AppendLine();
 
-            await Dump(b, msg.Headers, msg.Content, MaxRequestBodySize);
+            await DumpAsync(b, msg.Headers, msg.Content, MaxRequestBodySize);
 
             return b.ToString();
         }
 
-        public async Task<string> Dump(HttpResponseMessage msg)
+        /// <summary>
+        /// Dumps a response
+        /// </summary>
+        public async Task<string> DumpAsync(HttpResponseMessage msg)
         {
             var b = new StringBuilder();
 
@@ -36,7 +58,7 @@ namespace MyLab.ApiClient
 
             try
             {
-                await Dump(b, msg.Headers, msg.Content, MaxResponseBodySize);
+                await DumpAsync(b, msg.Headers, msg.Content, MaxResponseBodySize);
             }
             catch (Exception e)
             {
@@ -46,7 +68,7 @@ namespace MyLab.ApiClient
             return b.ToString();
         }
 
-        public async Task<string> Dump(
+        async Task DumpAsync(
             StringBuilder dumpBuilder, 
             HttpHeaders msgHeaders, 
             HttpContent content,
@@ -117,8 +139,6 @@ namespace MyLab.ApiClient
                     }
                 }
             }
-
-            return dumpBuilder.ToString();
         }
     }
 }
