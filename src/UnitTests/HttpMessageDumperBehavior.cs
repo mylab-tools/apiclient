@@ -39,7 +39,7 @@ namespace UnitTests
             var dumper = new HttpMessageDumper();
 
             //Act
-            var dump = await dumper.Dump(req);
+            var dump = await dumper.DumpAsync(req);
             _output.WriteLine(dump);
 
             //Assert
@@ -63,7 +63,7 @@ namespace UnitTests
             var dumper = new HttpMessageDumper();
 
             //Act
-            var dump = await dumper.Dump(req);
+            var dump = await dumper.DumpAsync(req);
             _output.WriteLine(dump);
 
             //Assert
@@ -86,7 +86,7 @@ namespace UnitTests
             };
 
             //Act
-            var dump = await dumper.Dump(req);
+            var dump = await dumper.DumpAsync(req);
             _output.WriteLine(dump);
 
             //Assert
@@ -108,7 +108,7 @@ namespace UnitTests
             };
 
             //Act
-            var dump = await dumper.Dump(req);
+            var dump = await dumper.DumpAsync(req);
             _output.WriteLine(dump);
 
             //Assert

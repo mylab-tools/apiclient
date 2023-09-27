@@ -63,8 +63,8 @@ namespace MyLab.ApiClient
             var resp = await SendRequestAsync(cancellationToken);
 
             var msgDumper = new HttpMessageDumper();
-            var reqDump = await msgDumper.Dump(resp.Request);
-            var respDump = await msgDumper.Dump(resp.Response);
+            var reqDump = await msgDumper.DumpAsync(resp.Request);
+            var respDump = await msgDumper.DumpAsync(resp.Response);
             var isUnexpectedStatusCode = IsStatusCodeUnexpectedAsync(resp.Response);
 
             var resDetails =  new TDetails
