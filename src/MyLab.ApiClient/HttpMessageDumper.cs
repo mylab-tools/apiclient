@@ -38,8 +38,8 @@ namespace MyLab.ApiClient
         public async Task<string> DumpAsync(HttpRequestMessage msg)
         {
             var b = new StringBuilder();
-            b.AppendLine($"{msg.Method} {msg.RequestUri}");
-            b.AppendLine();
+            AppendLine(b, $"{msg.Method} {msg.RequestUri}");
+            AppendLine(b, "");
 
             await DumpAsync(b, msg.Headers, msg.Content, MaxRequestBodySize);
 
@@ -53,8 +53,8 @@ namespace MyLab.ApiClient
         {
             var b = new StringBuilder();
 
-            b.AppendLine($"{(int)msg.StatusCode} {msg.ReasonPhrase}");
-            b.AppendLine();
+            AppendLine(b, $"{(int)msg.StatusCode} {msg.ReasonPhrase}");
+            AppendLine(b, "");
 
             try
             {
@@ -62,7 +62,7 @@ namespace MyLab.ApiClient
             }
             catch (Exception e)
             {
-                b.AppendLine("Unexpected dump error: " + e);
+                AppendLine(b, "Unexpected dump error: " + e);
             }
 
             return b.ToString();
@@ -83,7 +83,7 @@ namespace MyLab.ApiClient
                         v => string.IsNullOrWhiteSpace(v)
                             ? "<empty>"
                             : v );
-                    dumpBuilder.AppendLine(
+                    AppendLine(dumpBuilder, 
                         $"{header.Key}: {string.Join(", ", hvs)}");
                 }
             }
@@ -94,7 +94,7 @@ namespace MyLab.ApiClient
                 if (cha.Length != 0)
                 {
                     foreach (var header in cha)
-                        dumpBuilder.AppendLine($"{header.Key}: {string.Join(", ", header.Value)}");
+                        AppendLine(dumpBuilder, $"{header.Key}: {string.Join(", ", header.Value)}");
                 }
                 
                 var strm = await content.ReadAsStreamAsync();
@@ -120,12 +120,12 @@ namespace MyLab.ApiClient
 
                         var strContent = encoding.GetString(buff, 0, readCount);
 
-                        contentBuilder.AppendLine(strContent);
+                        AppendLine(contentBuilder, strContent);
                     }
 
                     if (contentBuilder.Length != 0)
                     {
-                        dumpBuilder.AppendLine();
+                        AppendLine(dumpBuilder, "");
 
                         bool contentIsTooLarge = contentBuilder.Length > bodyLimit;
 
@@ -133,12 +133,14 @@ namespace MyLab.ApiClient
                             ? contentBuilder.Remove(bodyLimit, contentBuilder.Length-bodyLimit)
                             : contentBuilder;
 
-                        dumpBuilder.AppendLine(normContent.ToString());
+                        AppendLine(dumpBuilder, normContent.ToString());
                         if (contentIsTooLarge)
-                            dumpBuilder.AppendLine(ContentIsTooLargeText);
+                            AppendLine(dumpBuilder, ContentIsTooLargeText);
                     }
                 }
             }
         }
+
+        void AppendLine(StringBuilder sb, string str) => sb.Append(str + "\r\n");
     }
 }
