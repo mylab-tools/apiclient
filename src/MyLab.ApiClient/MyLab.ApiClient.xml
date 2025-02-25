@@ -790,6 +790,11 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.BinContentAttribute"/>
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.BinContentAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.BinContentAttribute"/>
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ResponseCodeException">
             <summary>
             Throws when got an unexpected response HTTP code

@@ -15,6 +15,12 @@ namespace TestServer.Controllers
             return Ok(msg);
         }
 
+        [HttpGet("content-type")]
+        public IActionResult GetContentType()
+        {
+            return Ok(Request.ContentType);
+        }
+
         [HttpGet("body")]
         public async Task<IActionResult> GetBody()
         {

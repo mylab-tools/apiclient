@@ -95,6 +95,18 @@ namespace MyLab.ApiClient
 
     class BinaryHttpContentFactory : IHttpContentFactory
     {
+        private readonly string _mimeType;
+
+        public BinaryHttpContentFactory()
+        {
+            
+        }
+
+        public BinaryHttpContentFactory(string mimeType)
+        {
+            _mimeType = mimeType;
+        }
+
         public HttpContent Create(object source, RequestFactoringSettings? settings)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
@@ -102,7 +114,7 @@ namespace MyLab.ApiClient
             if(source is byte[] binSource)
             {
                 var resContent = new ByteArrayContent(binSource);
-                resContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                resContent.Headers.ContentType = new MediaTypeHeaderValue(_mimeType ?? "application/octet-stream");
 
                 return resContent;
             }
