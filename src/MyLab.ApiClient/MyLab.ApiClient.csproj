@@ -9,12 +9,14 @@
     <RepositoryUrl>https://github.com/ozzy-ext-mylab/apiclient.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>3.21.31.1302</AssemblyVersion>
-    <FileVersion>3.21.31.1302</FileVersion>
+    <AssemblyVersion>3.21.31.2502</AssemblyVersion>
+    <FileVersion>3.21.31.2502</FileVersion>
     <Description>Provides an object model for working with the HTTP API. Provides transparent integration with .NET Core</Description>
     <PackageTags>http api</PackageTags>
     <PackageIcon>tools.png</PackageIcon>
     <PackageIconUrl />
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -35,6 +37,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="tools.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
