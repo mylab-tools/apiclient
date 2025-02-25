@@ -163,6 +163,19 @@ namespace IntegrationTests
             Assert.Contains("http%3A%2F%2Ftest.com%2F", resp);
         }
 
+        [Fact]
+        public async Task ShouldSendSpecifiedContentType()
+        {
+            //Arrange
+            var proxy = CreateProxy(o => { });
+
+            //Act
+            var resp = await proxy.CallEchoContentType(Array.Empty<byte>());
+
+            //Assert
+            Assert.Equal("custom/type", resp);
+        }
+
         [Api(Key = "No matter for this test")]
         interface ITestServer
         {
@@ -171,6 +184,9 @@ namespace IntegrationTests
 
             [Get("echo/body")]
             Task<string> CallEchoForm([FormContent] TestModel msg);
+
+            [Get("echo/content-type")]
+            Task<string> CallEchoContentType([BinContent("custom/type")] byte[] bin);
         }
     }
 }

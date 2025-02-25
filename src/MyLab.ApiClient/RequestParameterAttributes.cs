@@ -212,6 +212,13 @@ namespace MyLab.ApiClient
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="BinContentAttribute"/>
+        /// </summary>
+        public BinContentAttribute(string mimeType) : base(new BinaryHttpContentFactory(mimeType))
+        {
+        }
+
         public override ApiContractValidationIssuer ValidateParameter(ParameterInfo p)
         {
             base.ValidateParameter(p);
