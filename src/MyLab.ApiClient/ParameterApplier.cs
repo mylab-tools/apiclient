@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 
@@ -49,8 +51,30 @@ namespace MyLab.ApiClient
 
         public void Apply(HttpRequestMessage request)
         {
-            var val = ObjectToStringConverter.ToString(_valueProvider.GetValue());
-            request.Headers.Add(_description.Name, val);
+            var valObj = _valueProvider.GetValue();
+
+            if (_description.Name == "If-Modified-Since")
+            {
+                Debug.WriteLine("!!!! " + valObj.GetType().FullName);
+
+                if (valObj is DateTime dt)
+                {
+                    request.Headers.IfModifiedSince = new DateTimeOffset(dt);
+                }
+                else if (valObj is DateTimeOffset dtOffset)
+                {
+                    request.Headers.IfModifiedSince = dtOffset;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Header If-Modified-Since is not DateTime or DateTimeOffset!!");
+                }
+            }
+            else
+            {
+                var headerValue = ObjectToStringConverter.ToString(valObj);
+                request.Headers.Add(_description.Name, headerValue);
+            }
         }
     }
 
