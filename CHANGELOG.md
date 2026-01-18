@@ -4,6 +4,12 @@
 
 Формат лога изменений базируется на [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.21.32]-2026-01-19
+
+### Изменено
+
+* Поддержка заголовка `If-Modified-Since` в виде типа `DateTime` и `DateTimeOffset` 
+
 ## [3.21.31]-2025-02-25
 
 ### Добавлено

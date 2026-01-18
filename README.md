@@ -208,6 +208,10 @@ Headers:
 X-Identifier: 2
 ```
 
+##### Заголовок If-Modified-Since
+
+Поддерживаются аргументы типа DateTime и DateTimeOffset - в этом случае будет правильная сериализация в строку специального формата.
+
 #### HeaderCollectionAttribute
 
 Аргумент - произвольный список заголовков. Тип параметра должен реализовывать интерфейс `IEnumerable<KeyValuePair<string, object>>`;
