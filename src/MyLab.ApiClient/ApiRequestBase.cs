@@ -129,7 +129,12 @@ namespace MyLab.ApiClient
 
         private bool IsStatusCodeUnexpectedAsync(HttpResponseMessage response)
         {
-            return response.StatusCode != HttpStatusCode.OK &&!ExpectedCodes.Contains(response.StatusCode);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return ExpectedCodes.Any(c => (int)c > 200 && (int)c < 300) && 
+                       !ExpectedCodes.Contains(HttpStatusCode.OK);
+            }
+            return !ExpectedCodes.Contains(response.StatusCode);
         }
     }
 }
