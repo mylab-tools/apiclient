@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -50,6 +51,19 @@ namespace IntegrationTests
                 .GetResultAsync();
 
             //Assert
+            Assert.Equal("foo", resp.TestValue);
+        }
+
+        [Fact]
+        public async Task ShouldProvideJsonResponseWithUnsuccessfulStatus()
+        {
+            //Act
+            var resp = await _client
+                .Request(s => s.GetJsonObj409())
+                .GetResultAsync();
+
+            //Assert
+            Assert.NotNull(resp);
             Assert.Equal("foo", resp.TestValue);
         }
 
@@ -240,6 +254,10 @@ namespace IntegrationTests
 
             [Get("data/json")]
             Task<TestModel> GetJsonObj();
+
+            [Get("data/json/409")]
+            [ExpectedCode(HttpStatusCode.Conflict)]
+            Task<TestModel> GetJsonObj409();
 
             [Get("data/enumerable")]
             Task<IEnumerable<string>> GetEnumerable();

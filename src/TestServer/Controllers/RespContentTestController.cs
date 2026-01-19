@@ -25,6 +25,15 @@ namespace TestServer.Controllers
             return Content("{\"TestValue\":\"foo\"}", "application/json");
         }
 
+        [HttpGet("data/json/409")]
+        public IActionResult GetJsonData409()
+        {
+            var res  = Content("{\"TestValue\":\"foo\"}", "application/json");
+            res.StatusCode = 409;
+
+            return res;
+        }
+
         [HttpGet("data/enumerable")]
         public IEnumerable<string> GetEnumerable()
         {

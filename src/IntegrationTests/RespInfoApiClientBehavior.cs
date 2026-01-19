@@ -81,6 +81,26 @@ namespace IntegrationTests
             await client.GetExpected404();
         }
 
+        [Fact]
+        public async Task ShouldFailWhenUnexpected200()
+        {
+            //Arrange
+            var client = ApiProxy<ITestServer>.Create(_clientProvider);
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ResponseCodeException>(() =>client.GetUnexpected200());
+        }
+
+        [Fact]
+        public async Task ShouldPassWhenExpected200()
+        {
+            //Arrange
+            var client = ApiProxy<ITestServer>.Create(_clientProvider);
+
+            //Act & Assert
+            await client.GetExpected200();
+        }
+
         [Api("resp-info")]
         public interface ITestServer
         {
@@ -93,6 +113,15 @@ namespace IntegrationTests
             [ExpectedCode(HttpStatusCode.BadRequest)]
             [Get("400")]
             Task GetExpected404();
+
+            [ExpectedCode(HttpStatusCode.Accepted)]
+            [Get("200")]
+            Task GetUnexpected200();
+
+            [ExpectedCode(HttpStatusCode.Accepted)]
+            [ExpectedCode(HttpStatusCode.OK)]
+            [Get("200")]
+            Task GetExpected200();
         }
     }
 }

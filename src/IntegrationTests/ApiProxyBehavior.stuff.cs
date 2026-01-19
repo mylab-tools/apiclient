@@ -44,18 +44,5 @@ namespace IntegrationTests
             var api = (ITestServer) serviceProvider.GetService(typeof(ITestServer));
             return api;
         }
-
-        [Fact]
-        public async Task ShouldNAME()
-        {
-            //Arrange
-            var api = CreateProxy();
-
-            //Act
-            var res = await api.GetExpectedString404();
-
-            //Assert
-            Assert.Equal(default, res);
-        }
     }
 }

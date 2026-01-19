@@ -208,6 +208,10 @@ Headers:
 X-Identifier: 2
 ```
 
+##### Заголовок If-Modified-Since
+
+Поддерживаются аргументы типа DateTime и DateTimeOffset - в этом случае будет правильная сериализация в строку специального формата.
+
 #### HeaderCollectionAttribute
 
 Аргумент - произвольный список заголовков. Тип параметра должен реализовывать интерфейс `IEnumerable<KeyValuePair<string, object>>`;
@@ -505,7 +509,11 @@ public interface IService
 
 Алгоритм проверки статус-кода выглядит следующим образом:
 
-* если код == 200 - успех
+* если код == 200:
+  * если в списке, определённом атрибутами `ExpectedCodeAttribute`, есть другие коды 2хх:
+    * если есть атрибут `ExpectedCodeAttribute` с кодом 200 - успех
+    * иначе - ошибка 
+  * иначе - успех
 * если код есть в списке, определённом атрибутами `ExpectedCodeAttribute` - успех
 * ошибка `ResponseCodeException`
 
