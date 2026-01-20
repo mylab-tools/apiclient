@@ -32,7 +32,7 @@ namespace IntegrationTests
             var client = new ApiClient<ITestServer>(_clientProvider);
 
             //Act & Assert
-            ResponseCodeException e = await Assert.ThrowsAsync<ResponseCodeException>(() => client.Request(s => s.GetUnexpected404()).CallAsync());
+            ResponseCodeException e = await Assert.ThrowsAsync<ResponseCodeException>(() => client.Request(s => s.GetUnexpected400()).GetResultAsync());
             Assert.Equal(HttpStatusCode.BadRequest, e.StatusCode);
         }
 
@@ -53,7 +53,7 @@ namespace IntegrationTests
             var client = ApiProxy<ITestServer>.Create(_clientProvider);
 
             //Act
-            ResponseCodeException e = await Assert.ThrowsAsync<ResponseCodeException>(() => client.GetUnexpected404("foo"));
+            ResponseCodeException e = await Assert.ThrowsAsync<ResponseCodeException>(() => client.GetUnexpected400("foo"));
             Assert.Equal(HttpStatusCode.BadRequest, e.StatusCode);
 
             //Assert
@@ -67,7 +67,7 @@ namespace IntegrationTests
             var client = ApiProxy<ITestServer>.Create(_clientProvider);
 
             //Act & Assert
-            ResponseCodeException e = await  Assert.ThrowsAsync<ResponseCodeException>(() => client.GetUnexpected404());
+            ResponseCodeException e = await  Assert.ThrowsAsync<ResponseCodeException>(() => client.GetUnexpected400());
             Assert.Equal(HttpStatusCode.BadRequest, e.StatusCode);
         }
 
@@ -105,10 +105,10 @@ namespace IntegrationTests
         public interface ITestServer
         {
             [Get("400")]
-            Task GetUnexpected404();
+            Task<TestResponse> GetUnexpected400();
 
             [Get("400")]
-            Task GetUnexpected404([Query] string msg);
+            Task<TestResponse> GetUnexpected400([Query] string msg);
 
             [ExpectedCode(HttpStatusCode.BadRequest)]
             [Get("400")]
@@ -122,6 +122,11 @@ namespace IntegrationTests
             [ExpectedCode(HttpStatusCode.OK)]
             [Get("200")]
             Task GetExpected200();
+        }
+
+        public class TestResponse
+        {
+
         }
     }
 }
