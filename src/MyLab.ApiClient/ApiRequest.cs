@@ -34,7 +34,7 @@ namespace MyLab.ApiClient
         {
             var details = await base.GetDetailedAsync(cancellationToken);
 
-            object respContent;
+            object respContent = default(TRes);
 
             try
             {
@@ -42,6 +42,13 @@ namespace MyLab.ApiClient
                     _returnType,
                     details.ResponseMessage.Content,
                     details.ResponseMessage.StatusCode);
+            }
+            catch (UnexpectedResponseContentTypeException e)
+            {
+                if ((int)details.StatusCode >= 200 && (int)details.StatusCode < 300)
+                {
+                    throw new DetailedResponseProcessingException<CallDetails<TRes>>(details, e);
+                }
             }
             catch (Exception e)
             {
