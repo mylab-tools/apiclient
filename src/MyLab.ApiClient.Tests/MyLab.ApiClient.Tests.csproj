@@ -4,6 +4,8 @@
     <TargetFrameworks>net10.0</TargetFrameworks>
     
     <IsPackable>false</IsPackable>
+    
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +17,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MyLab.ApiClient\MyLab.ApiClient.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="RequestFactoring\" />
   </ItemGroup>
   
 </Project>

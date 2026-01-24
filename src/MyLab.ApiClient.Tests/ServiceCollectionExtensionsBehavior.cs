@@ -11,7 +11,7 @@ using Xunit;
 namespace MyLab.ApiClient.Tests;
 
 [TestSubject(typeof(ServiceCollectionExtensions))]
-public class ServiceCollectionExtensionsTest
+public class ServiceCollectionExtensionsBehavior
 {
     [Fact]
     public void ShouldThrowArgumentNullExceptionWhenConfigIsNull()

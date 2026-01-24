@@ -4,6 +4,106 @@
         <name>MyLab.ApiClient</name>
     </assembly>
     <members>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ApiAttribute">
+            <summary>
+            Obsolete
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ApiContractAttribute">
+            <summary>
+            Defines metadata for an API contract interface.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ApiContractAttribute.Url">
+            <summary>
+            Gets or sets the relative URL associated with the API contract.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ApiContractAttribute.ConfigKey">
+            <summary>
+            Gets or sets the configuration key associated with the API contract.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ApiMethodAttribute">
+            <summary>
+            The base class for method attributes
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ApiMethodAttribute.Url">
+            <summary>
+            Related end-point url
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ApiMethodAttribute.HttpMethod">
+            <summary>
+            HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ApiMethodAttribute.#ctor(System.String,System.Net.Http.HttpMethod)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ApiMethodAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.DeleteAttribute">
+            <summary>
+            Determines that the method corresponds to the DELETE HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.DeleteAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.DeleteAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.GetAttribute">
+            <summary>
+            Determines that the method corresponds to the GET HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.GetAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.GetAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.HeadAttribute">
+            <summary>
+            Determines that the method corresponds to the HEAD HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.HeadAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.HeadAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.PatchAttribute">
+            <summary>
+            Determines that the method corresponds to the PATCH HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.PatchAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.PatchAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.PostAttribute">
+            <summary>
+            Determines that the method corresponds to the POST HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.PostAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.PostAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.PutAttribute">
+            <summary>
+            Determines that the method corresponds to the PUT HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.PutAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.PutAttribute"/>
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.Options.ApiClientOptions">
             <summary>
             Represents the configuration options for API clients, including endpoints, 
@@ -73,6 +173,16 @@
         <member name="P:MyLab.ApiClient.Options.ApiUrlFormSettings.IgnoreNullValues">
             <summary>
             Ignores null fields. False by default.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.RequestFactoring.IUriModifier">
+            <summary>
+            Modifies a URI
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.RequestFactoring.IUriModifier.Modify(System.Uri,System.String,System.Object)">
+            <summary>
+            Modifies a URI
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.ServiceCollectionExtensions">
