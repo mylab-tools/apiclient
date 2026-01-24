@@ -175,12 +175,12 @@
             Ignores null fields. False by default.
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.RequestFactoring.IUriModifier">
+        <member name="T:MyLab.ApiClient.RequestFactoring.IUrlModifier">
             <summary>
             Modifies a URI
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.RequestFactoring.IUriModifier.Modify(System.Uri,System.String,System.Object)">
+        <member name="M:MyLab.ApiClient.RequestFactoring.IUrlModifier.Modify(System.Uri,System.String,System.Object)">
             <summary>
             Modifies a URI
             </summary>

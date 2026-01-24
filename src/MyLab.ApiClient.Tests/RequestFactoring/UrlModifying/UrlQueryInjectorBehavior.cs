@@ -1,9 +1,9 @@
 ﻿using System;
 using JetBrains.Annotations;
-using MyLab.ApiClient.RequestFactoring;
+using MyLab.ApiClient.RequestFactoring.UrlModifying;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.RequestFactoring;
+namespace MyLab.ApiClient.Tests.RequestFactoring.UrlModifying;
 
 [TestSubject(typeof(UrlQueryInjector))]
 public class UrlQueryInjectorBehavior
