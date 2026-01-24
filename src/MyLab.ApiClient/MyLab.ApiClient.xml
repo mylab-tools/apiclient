@@ -4,5 +4,113 @@
         <name>MyLab.ApiClient</name>
     </assembly>
     <members>
+        <member name="T:MyLab.ApiClient.Options.ApiClientOptions">
+            <summary>
+            Represents the configuration options for API clients, including endpoints, 
+            JSON serialization settings, and URL-encoded form serialization settings.
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.Options.ApiClientOptions.DefaultSectionName">
+            <summary>
+            Default configuration section name
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiClientOptions.Endpoints">
+            <summary>
+            List of api connections options
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiClientOptions.JsonSettings">
+            <summary>
+            Defines JSON serialization settings
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiClientOptions.UrlFormSettings">
+            <summary>
+            Defines url-encoded-form serialization settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Options.ApiClientOptions.ExtractFromSection(Microsoft.Extensions.Configuration.IConfigurationSection)">
+            <summary>
+            Extracts options from configuration section 
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Options.ApiEndpointOptions">
+            <summary>
+            Contains api connection options
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiEndpointOptions.Url">
+            <summary>
+            API base url
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiEndpointOptions.SkipServerSslCertVerification">
+            <summary>
+            Do not verify the server SSL certificate
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Options.ApiJsonSettings">
+            <summary>
+            Defines JSON serialization settings
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiJsonSettings.IgnoreNullValues">
+            <summary>
+            Ignores null fields. True by default.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Options.ApiUrlFormSettings">
+            <summary>
+            Defines url-encoded-form serialization settings
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiUrlFormSettings.EscapeSymbols">
+            <summary>
+            Converts symbols to its escaped representation. True by default
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiUrlFormSettings.IgnoreNullValues">
+            <summary>
+            Ignores null fields. False by default.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ServiceCollectionExtensions">
+            <summary>
+            Provides extension methods for configuring API client options in an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
+            </summary>
+            <remarks>
+            This class contains methods to simplify the configuration of API client options, 
+            including binding configuration sections or using custom configuration actions.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.ServiceCollectionExtensions.ConfigureApiClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <summary>
+            Configures the API client options for the application using the specified configuration section.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to which the configuration will be added.</param>
+            <param name="config">The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> instance containing the configuration data.</param>
+            <param name="sectionName">
+            The name of the configuration section to bind to the <see cref="T:MyLab.ApiClient.Options.ApiClientOptions"/>. 
+            Defaults to <see cref="F:MyLab.ApiClient.Options.ApiClientOptions.DefaultSectionName"/> if not specified.
+            </param>
+            <returns>The updated <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="config"/> or <paramref name="sectionName"/> is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:MyLab.ApiClient.ServiceCollectionExtensions.ConfigureApiClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.Options.ApiClientOptions})">
+            <summary>
+            Configures API client options for the application.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to which the configuration will be added.</param>
+            <param name="configureOptions">
+            An <see cref="T:System.Action`1"/> to configure the <see cref="T:MyLab.ApiClient.Options.ApiClientOptions"/>.
+            </param>
+            <returns>The updated <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="configureOptions"/> is <c>null</c>.
+            </exception>
+        </member>
     </members>
 </doc>
