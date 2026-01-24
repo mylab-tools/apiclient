@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyLab.ApiClient.Contracts.Attributes;
+namespace MyLab.ApiClient.Contracts.Attributes.ForContract;
 
 /// <summary>
 /// Defines metadata for an API contract interface.

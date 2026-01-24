@@ -4,104 +4,114 @@
         <name>MyLab.ApiClient</name>
     </assembly>
     <members>
-        <member name="T:MyLab.ApiClient.Contracts.Attributes.ApiAttribute">
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiAttribute">
             <summary>
             Obsolete
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Contracts.Attributes.ApiContractAttribute">
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute">
             <summary>
             Defines metadata for an API contract interface.
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Contracts.Attributes.ApiContractAttribute.Url">
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute.Url">
             <summary>
             Gets or sets the relative URL associated with the API contract.
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Contracts.Attributes.ApiContractAttribute.ConfigKey">
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute.ConfigKey">
             <summary>
             Gets or sets the configuration key associated with the API contract.
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Contracts.Attributes.ApiMethodAttribute">
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForData.UrlFormItemAttribute">
+            <summary>
+            Defines URL-Form item properties
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForData.UrlFormItemAttribute.Name">
+            <summary>
+            Specify name to override
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.ApiMethodAttribute">
             <summary>
             The base class for method attributes
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Contracts.Attributes.ApiMethodAttribute.Url">
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForMethod.ApiMethodAttribute.Url">
             <summary>
             Related end-point url
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Contracts.Attributes.ApiMethodAttribute.HttpMethod">
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForMethod.ApiMethodAttribute.HttpMethod">
             <summary>
             HTTP method
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Attributes.ApiMethodAttribute.#ctor(System.String,System.Net.Http.HttpMethod)">
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.ApiMethodAttribute.#ctor(System.String,System.Net.Http.HttpMethod)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ApiMethodAttribute"/>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.ApiMethodAttribute"/>
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Contracts.Attributes.DeleteAttribute">
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.DeleteAttribute">
             <summary>
             Determines that the method corresponds to the DELETE HTTP method
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Attributes.DeleteAttribute.#ctor(System.String)">
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.DeleteAttribute.#ctor(System.String)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.DeleteAttribute"/>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.DeleteAttribute"/>
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Contracts.Attributes.GetAttribute">
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.GetAttribute">
             <summary>
             Determines that the method corresponds to the GET HTTP method
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Attributes.GetAttribute.#ctor(System.String)">
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.GetAttribute.#ctor(System.String)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.GetAttribute"/>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.GetAttribute"/>
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Contracts.Attributes.HeadAttribute">
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.HeadAttribute">
             <summary>
             Determines that the method corresponds to the HEAD HTTP method
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Attributes.HeadAttribute.#ctor(System.String)">
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.HeadAttribute.#ctor(System.String)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.HeadAttribute"/>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.HeadAttribute"/>
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Contracts.Attributes.PatchAttribute">
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PatchAttribute">
             <summary>
             Determines that the method corresponds to the PATCH HTTP method
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Attributes.PatchAttribute.#ctor(System.String)">
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PatchAttribute.#ctor(System.String)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.PatchAttribute"/>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PatchAttribute"/>
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Contracts.Attributes.PostAttribute">
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PostAttribute">
             <summary>
             Determines that the method corresponds to the POST HTTP method
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Attributes.PostAttribute.#ctor(System.String)">
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PostAttribute.#ctor(System.String)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.PostAttribute"/>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PostAttribute"/>
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Contracts.Attributes.PutAttribute">
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PutAttribute">
             <summary>
             Determines that the method corresponds to the PUT HTTP method
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Attributes.PutAttribute.#ctor(System.String)">
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PutAttribute.#ctor(System.String)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.PutAttribute"/>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PutAttribute"/>
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.Options.ApiClientOptions">
@@ -175,12 +185,54 @@
             Ignores null fields. False by default.
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.RequestFactoring.IUrlModifier">
+        <member name="T:MyLab.ApiClient.RequestFactoring.ContentFactoring.IHttpContentFactory">
+            <summary>
+            Creates <see cref="T:System.Net.Http.HttpContent"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.RequestFactoring.ContentFactoring.IHttpContentFactory.Create(System.Object,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
+            <summary>
+            Creates content object
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.RequestFactoring.ContentFactoring.IMultipartContentParameter">
+            <summary>
+            Specifies input parameter which will be used to create request multipart content
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.RequestFactoring.ContentFactoring.IMultipartContentParameter.AddParts(System.Net.Http.MultipartFormDataContent)">
+            <summary>
+            Implement to add parts to content
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings">
+            <summary>
+            Contains request factoring settings
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings.JsonSettings">
+            <summary>
+            JSON serialization settings
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings.UrlFormSettings">
+            <summary>
+            Defines url-encoded-form serialization settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings.CreateFromOptions(MyLab.ApiClient.Options.ApiClientOptions)">
+            <summary>
+            Creates req factoring settings from app options
+            </summary>
+            <param name="options"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MyLab.ApiClient.RequestFactoring.UrlModifying.IUrlModifier">
             <summary>
             Modifies a URI
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.RequestFactoring.IUrlModifier.Modify(System.Uri,System.String,System.Object)">
+        <member name="M:MyLab.ApiClient.RequestFactoring.UrlModifying.IUrlModifier.Modify(System.Uri,System.String,System.Object)">
             <summary>
             Modifies a URI
             </summary>

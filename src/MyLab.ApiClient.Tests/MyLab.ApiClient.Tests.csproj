@@ -18,5 +18,9 @@
   <ItemGroup>
     <ProjectReference Include="..\MyLab.ApiClient\MyLab.ApiClient.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="RequestFactoring\ContentFactoring\" />
+  </ItemGroup>
   
 </Project>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 
-namespace MyLab.ApiClient.Contracts.Attributes;
+namespace MyLab.ApiClient.Contracts.Attributes.ForMethod;
 
 /// <summary>
 /// Determines that the method corresponds to the PATCH HTTP method

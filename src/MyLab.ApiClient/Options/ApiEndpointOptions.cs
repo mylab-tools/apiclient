@@ -8,7 +8,7 @@ public class ApiEndpointOptions
     /// <summary>
     /// API base url
     /// </summary>
-    public string Url { get; set; }
+    public string? Url { get; set; }
 
     /// <summary>
     /// Do not verify the server SSL certificate
