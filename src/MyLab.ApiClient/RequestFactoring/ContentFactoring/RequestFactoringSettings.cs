@@ -11,12 +11,12 @@ public class RequestFactoringSettings
     /// <summary>
     /// JSON serialization settings
     /// </summary>
-    public JsonSerializerSettings JsonSettings { get; private init; }
+    public JsonSerializerSettings? JsonSettings { get; init; }
 
     /// <summary>
     /// Defines url-encoded-form serialization settings
     /// </summary>
-    public ApiUrlFormSettings UrlFormSettings { get; private init; }
+    public ApiUrlFormSettings? UrlFormSettings { get; init; }
 
 
     /// <summary>
@@ -40,10 +40,5 @@ public class RequestFactoringSettings
             JsonSettings = jsonSerializerSettings,
             UrlFormSettings = options?.UrlFormSettings ?? new ApiUrlFormSettings()
         };
-    }
-
-    RequestFactoringSettings()
-    {
-        
     }
 }
