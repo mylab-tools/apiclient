@@ -1,5 +1,6 @@
-﻿using System;
-using MyLab.ApiClient.RequestFactoring.ContentFactoring;
+﻿using MyLab.ApiClient.RequestFactoring.ContentFactoring;
+using System;
+using System.Reflection;
 
 namespace MyLab.ApiClient.Contracts.Attributes.ForParameters;
 
@@ -14,5 +15,12 @@ public class MultipartContentAttribute : ContentParameterAttribute
     /// </summary>
     public MultipartContentAttribute() : base(new MultipartFormHttpContentFactory())
     {
+    }
+
+    /// <inheritdoc />
+    public override void ValidateParameter(ParameterInfo p)
+    {
+        if (!typeof(IMultipartContentParameter).IsAssignableFrom(p.ParameterType))
+            throw new InvalidApiContractException("Multipart form parameter must implement IMultipartContentParameter");
     }
 }

@@ -6,7 +6,7 @@ namespace MyLab.ApiClient.Contracts.Attributes.ForParameters;
 /// Determines api request parameter which place in header
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-public class HeaderAttribute : Attribute
+public class HeaderAttribute : ApiParameterAttribute
 {
     /// <summary>
     /// Gets overriden header name

@@ -6,7 +6,7 @@ namespace MyLab.ApiClient.Contracts.Attributes.ForParameters;
 /// <summary>
 /// Determines api request parameter which place in content
 /// </summary>
-public class ContentParameterAttribute : Attribute
+public class ContentParameterAttribute : ApiParameterAttribute
 {
     /// <summary>
     /// Gets content factory

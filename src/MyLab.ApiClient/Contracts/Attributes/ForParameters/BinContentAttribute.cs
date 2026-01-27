@@ -1,5 +1,6 @@
-﻿using System;
-using MyLab.ApiClient.RequestFactoring.ContentFactoring;
+﻿using MyLab.ApiClient.RequestFactoring.ContentFactoring;
+using System;
+using System.Reflection;
 
 namespace MyLab.ApiClient.Contracts.Attributes.ForParameters;
 
@@ -21,5 +22,12 @@ public class BinContentAttribute : ContentParameterAttribute
     /// </summary>
     public BinContentAttribute(string mimeType) : base(new BinaryHttpContentFactory(mimeType))
     {
+    }
+
+    /// <inheritdoc />
+    public override void ValidateParameter(ParameterInfo p)
+    {
+        if (!(p.ParameterType == typeof(byte[])))
+            throw new InvalidApiContractException("Only 'byte[]' supported as binary argument");
     }
 }

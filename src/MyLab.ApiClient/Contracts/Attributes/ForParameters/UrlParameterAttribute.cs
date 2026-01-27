@@ -6,7 +6,7 @@ namespace MyLab.ApiClient.Contracts.Attributes.ForParameters
     /// <summary>
     /// Determines api request parameter which place in URL
     /// </summary>
-    public class UrlParameterAttribute : Attribute
+    public class UrlParameterAttribute : ApiParameterAttribute
     {
         /// <summary>
         /// Gets overriden parameter name
