@@ -52,8 +52,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Contracts\Attributes\ForParameters\" />
-  </ItemGroup>
-
 </Project>
