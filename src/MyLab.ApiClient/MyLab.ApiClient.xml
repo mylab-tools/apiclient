@@ -9,6 +9,21 @@
             Obsolete
             </summary>
         </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiAttribute.Url">
+            <summary>
+            Base service URL
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiAttribute.Key">
+            <summary>
+            Determine key to bind with configuration
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiAttribute"/>
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute">
             <summary>
             Defines metadata for an API contract interface.
@@ -112,6 +127,180 @@
         <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PutAttribute.#ctor(System.String)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PutAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.ApiParameterAttribute">
+            <summary>
+            The base class for api client parameter attributes
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.ApiParameterAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.ApiParameterAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.ApiParameterAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+            <summary>
+            Override to validate parameter
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute">
+            <summary>
+            Determines request parameter which place in content with binary format
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.ContentParameterAttribute">
+            <summary>
+            Determines api request parameter which place in content
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForParameters.ContentParameterAttribute.HttpContentFactory">
+            <summary>
+            Gets content factory
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.ContentParameterAttribute.#ctor(MyLab.ApiClient.RequestFactoring.ContentFactoring.IHttpContentFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.ContentParameterAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.FormContentAttribute">
+            <summary>
+            Determines request parameter which place in content as Url Encoded Form
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.FormContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.FormContentAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderAttribute">
+            <summary>
+            Determines api request parameter which place in header
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderAttribute.Name">
+            <summary>
+            Gets overriden header name
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderCollectionAttribute">
+            <summary>
+            Determines api request parameter which place in header
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderCollectionAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.JsonContentAttribute">
+            <summary>
+            Determines request parameter which place in content with JSON format
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.JsonContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.JsonContentAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.MultipartContentAttribute">
+            <summary>
+            Determines request parameter which place in content as Multipart form
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.MultipartContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.MultipartContentAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.MultipartContentAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.PathAttribute">
+            <summary>
+            Determines request parameter which place in URL path
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.PathAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.PathAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.QueryAttribute">
+            <summary>
+            Determines request parameter which place in URL query
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.QueryAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.QueryAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.StringContentAttribute">
+            <summary>
+            Determines request parameter which place in content with simple string format
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.StringContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.StringContentAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.UrlParameterAttribute">
+            <summary>
+            Determines api request parameter which place in URL
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForParameters.UrlParameterAttribute.Name">
+            <summary>
+            Gets overriden parameter name
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForParameters.UrlParameterAttribute.UrlModifier">
+            <summary>
+            Gets URL modifier
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.UrlParameterAttribute.#ctor(System.String,MyLab.ApiClient.RequestFactoring.UrlModifying.IUrlModifier)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.UrlParameterAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.XmlContentAttribute">
+            <summary>
+            Determines request parameter which place in content with XML format
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.XmlContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.XmlContentAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.InvalidApiContractException">
+            <summary>
+            Represents an exception that is thrown when an API contract is invalid.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.InvalidApiContractException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.InvalidApiContractException"/>
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.Options.ApiClientOptions">
