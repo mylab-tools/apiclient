@@ -34,7 +34,7 @@
             Gets or sets the relative URL associated with the API contract.
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute.ConfigKey">
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute.Binding">
             <summary>
             Gets or sets the configuration key associated with the API contract.
             </summary>
@@ -77,6 +77,21 @@
         <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.DeleteAttribute.#ctor(System.String)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.DeleteAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.ExpectedResponseAttribute">
+            <summary>
+            Defines expected response parameters
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForMethod.ExpectedResponseAttribute.ExpectedCode">
+            <summary>
+            Gets expected response code
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.ExpectedResponseAttribute.#ctor(System.Net.HttpStatusCode)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.ExpectedResponseAttribute"/>
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.GetAttribute">
@@ -291,6 +306,146 @@
         <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.XmlContentAttribute.#ctor">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.XmlContentAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Descriptions.ContentParameterDescription">
+            <summary>
+            Describes parameter which will be used to create request content
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.ContentParameterDescription.#ctor(System.Int32,MyLab.ApiClient.RequestFactoring.ContentFactoring.IHttpContentFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Descriptions.ContentParameterDescription"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription">
+            <summary>
+            Describes service endpoint
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.Url">
+            <summary>
+            Gets the relative URL for endpoint
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.HttpMethod">
+            <summary>
+            Gets the HTTP method used by the endpoint (e.g., GET, POST, PUT, DELETE).
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.ExpectedStatusCodes">
+            <summary>
+            Gets the list of HTTP status codes that are expected as valid responses for the endpoint.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.Parameters">
+            <summary>
+            Gets endpoint request parameters
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.#ctor(System.Net.Http.HttpMethod,MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.FromMethod(System.Reflection.MethodInfo)">
+            <summary>
+            FromMethod <see cref="T:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription"/> from reflection method
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Descriptions.HeaderCollectionParameterDescription">
+            <summary>
+            Describes parameter which is a collection of the headers, and it will be added into headers
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.HeaderCollectionParameterDescription.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Descriptions.HeaderCollectionParameterDescription"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Descriptions.HeaderParameterDescription">
+            <summary>
+            Describes parameter which will be added into headers
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.HeaderParameterDescription.#ctor(System.Int32,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Descriptions.HeaderParameterDescription"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Descriptions.IRequestParameterDescription">
+            <summary>
+            Describes API request parameter
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.IRequestParameterDescription.Position">
+            <summary>
+            Position in method arguments
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions">
+            <summary>
+            Describes API request method parameters
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions.UrlParams">
+            <summary>
+            Gets parameters which will modify a URL  
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions.HeaderParams">
+            <summary>
+            Gets parameters which will be added into headers
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions.ContentParams">
+            <summary>
+            Gets parameters which will be used to create request content
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions.HeaderCollectionParams">
+            <summary>
+            Gets parameters which is a collection of the headers, and it will be added into headers
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions.FromMethod(System.Reflection.MethodInfo)">
+            <summary>
+            Creates <see cref="T:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions"/> from reflection <see cref="T:System.Reflection.MethodInfo"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription">
+            <summary>
+            Describes API contract
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription.Url">
+            <summary>
+            Gets the relative URL for all endpoints
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription.Bindings">
+            <summary>
+            Gets the relative URL for all endpoints
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription.Endpoints">
+            <summary>
+            Gets endpoint map by Method.MetadataToken
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription.FromContract(System.Type)">
+            <summary>
+            Creates <see cref="T:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription"/> from contract type
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Descriptions.UrlParameterDescription">
+            <summary>
+            Describes parameter which will modify a URL
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.UrlParameterDescription.#ctor(System.Int32,System.String,MyLab.ApiClient.RequestFactoring.UrlModifying.IUrlModifier)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Descriptions.UrlParameterDescription"/>
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.Contracts.InvalidApiContractException">

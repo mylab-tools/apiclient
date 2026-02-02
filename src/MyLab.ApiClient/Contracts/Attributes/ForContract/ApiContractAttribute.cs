@@ -16,5 +16,5 @@ public class ApiContractAttribute : Attribute
     /// <summary>
     /// Gets or sets the configuration key associated with the API contract.
     /// </summary>
-    public string? ConfigKey { get; set; }
+    public string? Binding { get; set; }
 }
