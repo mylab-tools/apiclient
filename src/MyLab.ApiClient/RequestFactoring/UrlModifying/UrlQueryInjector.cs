@@ -10,10 +10,8 @@ class UrlQueryInjector : IUrlModifier
         if (origin == null) throw new ArgumentNullException(nameof(origin));
         if (string.IsNullOrEmpty(paramName))
             throw new ArgumentException("Value cannot be null or empty.", nameof(paramName));
-            
-        var strVal = value != null 
-            ? Uri.EscapeDataString(ObjectToStringConverter.ToString(value))
-            : string.Empty;
+
+        var strVal = ObjectToStringConverter.ToString(value);
 
         var uriStr = origin.OriginalString;
         var queryStart = uriStr.IndexOf("?", StringComparison.InvariantCulture);

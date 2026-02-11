@@ -21,7 +21,7 @@ public class RequestParametersDescriptionsBehavior
         var m = GetMethod(nameof(IApiContract.UrlMethod));
 
         //Act
-        var desc = RequestParametersDescriptions.FromMethod(m);
+        var desc = RequestParametersDescriptions.FromMethod(m, null);
 
         //Assert
         Assert.NotNull(desc.UrlParams);
@@ -36,7 +36,7 @@ public class RequestParametersDescriptionsBehavior
         var m = GetMethod(nameof(IApiContract.HeaderMethod));
 
         //Act
-        var desc = RequestParametersDescriptions.FromMethod(m);
+        var desc = RequestParametersDescriptions.FromMethod(m, null);
 
         //Assert
         Assert.NotNull(desc.HeaderParams);
@@ -50,7 +50,7 @@ public class RequestParametersDescriptionsBehavior
         var m = GetMethod(nameof(IApiContract.ContentMethod));
 
         //Act
-        var desc = RequestParametersDescriptions.FromMethod(m);
+        var desc = RequestParametersDescriptions.FromMethod(m, null);
 
         //Assert
         Assert.NotNull(desc.ContentParams);
@@ -64,7 +64,7 @@ public class RequestParametersDescriptionsBehavior
         var m = GetMethod(nameof(IApiContract.HeaderMethod));
 
         //Act
-        var desc = RequestParametersDescriptions.FromMethod(m);
+        var desc = RequestParametersDescriptions.FromMethod(m, null);
 
         //Assert
         Assert.NotNull(desc.HeaderCollectionParams);
@@ -80,7 +80,7 @@ public class RequestParametersDescriptionsBehavior
         //Act & Assert
 
         Assert.NotNull(m);
-        var e = Assert.Throws<InvalidApiContractException>(() => RequestParametersDescriptions.FromMethod(m));
+        var e = Assert.Throws<InvalidApiContractException>(() => RequestParametersDescriptions.FromMethod(m, null));
         Assert.Contains("is not supported", e.Message);
     }
 
@@ -93,7 +93,7 @@ public class RequestParametersDescriptionsBehavior
         //Act & Assert
 
         Assert.NotNull(m);
-        var e = Assert.Throws<InvalidApiContractException>(() => RequestParametersDescriptions.FromMethod(m));
+        var e = Assert.Throws<InvalidApiContractException>(() => RequestParametersDescriptions.FromMethod(m, null));
         Assert.Contains("must be marked with one of inheritors of", e.Message);
     }
 

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MyLab.ApiClient.Contracts.Attributes.ForParameters;
+using MyLab.ApiClient.RequestFactoring.ContentFactoring;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using MyLab.ApiClient.Contracts.Attributes.ForParameters;
 
 namespace MyLab.ApiClient.Contracts.Descriptions;
 
@@ -31,7 +32,7 @@ class RequestParametersDescriptions
     /// <summary>
     /// Creates <see cref="RequestParametersDescriptions"/> from reflection <see cref="MethodInfo"/>
     /// </summary>
-    public static RequestParametersDescriptions FromMethod(MethodInfo mi)
+    public static RequestParametersDescriptions FromMethod(MethodInfo mi, RequestFactoringSettings? settings = null)
     {
         if (mi == null) throw new ArgumentNullException(nameof(mi));
             
@@ -51,16 +52,16 @@ class RequestParametersDescriptions
             switch (attr)
             {
                 case UrlParameterAttribute urlA:
-                    urlParams.Add(new UrlParameterDescription(i, urlA.Name ?? p.Name!, urlA.UrlModifier));
+                    urlParams.Add(new UrlParameterDescription(i, urlA.Name ?? p.Name!, urlA.UrlModifier){ Settings = settings});
                     break;
                 case HeaderAttribute hdrA:
-                    headerParams.Add(new HeaderParameterDescription(i, hdrA.Name ?? p.Name!));
+                    headerParams.Add(new HeaderParameterDescription(i, hdrA.Name ?? p.Name!) { Settings = settings });
                     break;
                 case HeaderCollectionAttribute:
-                    headerCollectionParams.Add(new HeaderCollectionParameterDescription(i));
+                    headerCollectionParams.Add(new HeaderCollectionParameterDescription(i) { Settings = settings });
                     break;
                 case ContentParameterAttribute contA:
-                    contentParams.Add(new ContentParameterDescription(i, contA.HttpContentFactory));
+                    contentParams.Add(new ContentParameterDescription(i, contA.HttpContentFactory) { Settings = settings });
                     break;
                 default:
                     throw new InvalidApiContractException($"Request attribute type '{attr.GetType().FullName}' is not supported");
@@ -74,6 +75,21 @@ class RequestParametersDescriptions
             ContentParams = contentParams,
             HeaderCollectionParams = headerCollectionParams
         };
+    }
+
+    public IRequestParameterDescription[] ToArray()
+    {
+        var allParams = new List<IRequestParameterDescription>();
+
+        if (UrlParams != null) allParams.AddRange(UrlParams);
+
+        if (HeaderParams != null) allParams.AddRange(HeaderParams);
+
+        if (ContentParams != null) allParams.AddRange(ContentParams);
+
+        if (HeaderCollectionParams != null) allParams.AddRange(HeaderCollectionParams);
+
+        return allParams.OrderBy(p => p.Position).ToArray();
     }
 
     static ApiParameterAttribute GetParamAttr(ParameterInfo p)

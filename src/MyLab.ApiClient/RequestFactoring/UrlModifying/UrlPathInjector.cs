@@ -13,9 +13,7 @@ class UrlPathInjector : IUrlModifier
             throw new ArgumentException("Value cannot be null or empty.", nameof(paramName));
 
 
-        var strVal = value != null 
-            ? ObjectToStringConverter.ToString(value)
-            : string.Empty;
+        var strVal = ObjectToStringConverter.ToString(value);
             
         var tag = "{" + paramName + "}";
 

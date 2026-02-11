@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MyLab.ApiClient.Contracts.Attributes.ForMethod;
+using MyLab.ApiClient.RequestFactoring.ContentFactoring;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using MyLab.ApiClient.Contracts.Attributes.ForMethod;
 
 namespace MyLab.ApiClient.Contracts.Descriptions;
 
@@ -31,7 +32,7 @@ class EndpointDescription
     /// <summary>
     /// Gets endpoint request parameters
     /// </summary>
-    public RequestParametersDescriptions Parameters { get; }
+    public IReadOnlyCollection<IRequestParameterDescription> Parameters { get; }
 
     /// <summary>
     /// Initializes a new instance of <see cref="EndpointDescription"/>
@@ -39,13 +40,15 @@ class EndpointDescription
     public EndpointDescription(HttpMethod httpMethod, RequestParametersDescriptions parameters)
     {
         HttpMethod = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
-        Parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
+        if(parameters == null) throw new ArgumentNullException(nameof(parameters));
+
+        Parameters = parameters.ToArray();
     }
 
     /// <summary>
     /// FromMethod <see cref="EndpointDescription"/> from reflection method
     /// </summary>
-    public static EndpointDescription FromMethod(MethodInfo mi)
+    public static EndpointDescription FromMethod(MethodInfo mi, RequestFactoringSettings? settings = null)
     {
         if (mi == null) throw new ArgumentNullException(nameof(mi));
 
@@ -53,7 +56,7 @@ class EndpointDescription
         if (httpMethodAttr == null)
             throw new InvalidApiContractException($"The method '{mi.Name}' must be marked with one of ApiMethodAttribute inheritors.");
 
-        var parameters = RequestParametersDescriptions.FromMethod(mi);
+        var parameters = RequestParametersDescriptions.FromMethod(mi, settings);
 
         return new EndpointDescription(httpMethodAttr.HttpMethod, parameters)
         {

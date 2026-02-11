@@ -18,7 +18,7 @@ namespace MyLab.ApiClient.Tests.Contracts.Descriptions
             var contract = typeof(ClassContract);
 
             //Act & Assert
-            var e = Assert.Throws<InvalidApiContractException>(() => ServiceDescription.FromContract(contract));
+            var e = Assert.Throws<InvalidApiContractException>(() => ServiceDescription.FromContract(contract, null));
             Assert.Contains("is not an interface", e.Message);
         }
 

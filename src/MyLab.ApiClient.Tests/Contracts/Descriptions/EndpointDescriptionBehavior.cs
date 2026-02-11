@@ -21,7 +21,7 @@ namespace MyLab.ApiClient.Tests.Contracts.Descriptions
             var m = GetMethod(nameof(IApiContract.Method));
 
             //Act
-            var desc = EndpointDescription.FromMethod(m);
+            var desc = EndpointDescription.FromMethod(m, null);
 
             //Assert
             Assert.NotNull(desc);
@@ -29,9 +29,9 @@ namespace MyLab.ApiClient.Tests.Contracts.Descriptions
             Assert.Equal(HttpMethod.Post, desc.HttpMethod);
             Assert.NotNull(desc.ExpectedStatusCodes);
             Assert.Contains(HttpStatusCode.BadRequest, desc.ExpectedStatusCodes);
-            Assert.NotNull(desc.Parameters.UrlParams);
-            Assert.Single(desc.Parameters.UrlParams);
-            Assert.Contains(desc.Parameters.UrlParams, p => p is { Name: "urlParam", Position:0 });
+            Assert.NotNull(desc.Parameters);
+            Assert.Single(desc.Parameters);
+            Assert.Contains(desc.Parameters, p => p is UrlParameterDescription { Name: "urlParam", Position:0 });
         }
         
         [Fact]
@@ -41,7 +41,7 @@ namespace MyLab.ApiClient.Tests.Contracts.Descriptions
             var m = GetMethod(nameof(IApiContract.MethodWithoutApiMethodAttribute));
 
             //Act && Assert
-            var e = Assert.Throws<InvalidApiContractException>(() => EndpointDescription.FromMethod(m));
+            var e = Assert.Throws<InvalidApiContractException>(() => EndpointDescription.FromMethod(m, null));
             Assert.Contains("must be marked with one of", e.Message);
         }
 

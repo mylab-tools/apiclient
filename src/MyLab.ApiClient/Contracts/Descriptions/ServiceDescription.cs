@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MyLab.ApiClient.Contracts.Attributes.ForContract;
+using MyLab.ApiClient.RequestFactoring.ContentFactoring;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using MyLab.ApiClient.Contracts.Attributes.ForContract;
 
 namespace MyLab.ApiClient.Contracts.Descriptions
 {
@@ -34,7 +35,7 @@ namespace MyLab.ApiClient.Contracts.Descriptions
         /// <summary>
         /// Creates <see cref="ServiceDescription"/> from contract type
         /// </summary>
-        public static ServiceDescription FromContract(Type contractType)
+        public static ServiceDescription FromContract(Type contractType, RequestFactoringSettings? settings = null)
         {
             if (contractType == null) throw new ArgumentNullException(nameof(contractType));
 
@@ -45,7 +46,7 @@ namespace MyLab.ApiClient.Contracts.Descriptions
                 .ToDictionary
                 (
                     m => m.MetadataToken,
-                    EndpointDescription.FromMethod
+                    m => EndpointDescription.FromMethod(m, settings)
                 );
 
             var bindings = new List<string>{ contractType.Name };

@@ -1,4 +1,8 @@
-﻿using MyLab.ApiClient.RequestFactoring.UrlModifying;
+﻿using MyLab.ApiClient.RequestFactoring.ContentFactoring;
+using MyLab.ApiClient.RequestFactoring.UrlModifying;
+using System;
+using System.Net.Http;
+using System.Reflection;
 
 namespace MyLab.ApiClient.Contracts.Descriptions;
 
@@ -12,6 +16,11 @@ class UrlParameterDescription : IRequestParameterDescription
     public IUrlModifier Modifier { get; }
 
     /// <summary>
+    /// Request factoring settings
+    /// </summary>
+    public RequestFactoringSettings? Settings { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of <see cref="UrlParameterDescription"/>
     /// </summary>
     public UrlParameterDescription(int position, string name, IUrlModifier modifier)
@@ -19,5 +28,12 @@ class UrlParameterDescription : IRequestParameterDescription
         Position = position;
         Name = name;
         Modifier = modifier;
+    }
+
+    public void Apply(HttpRequestMessage request, object? value)
+    {
+        if (request == null) throw new ArgumentNullException(nameof(request));
+        
+        request.RequestUri = Modifier.Modify(request.RequestUri ?? new Uri("", UriKind.Relative), Name, value);
     }
 }

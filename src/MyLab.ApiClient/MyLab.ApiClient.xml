@@ -348,7 +348,7 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription"/>
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.FromMethod(System.Reflection.MethodInfo)">
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.FromMethod(System.Reflection.MethodInfo,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
             <summary>
             FromMethod <see cref="T:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription"/> from reflection method
             </summary>
@@ -356,6 +356,11 @@
         <member name="T:MyLab.ApiClient.Contracts.Descriptions.HeaderCollectionParameterDescription">
             <summary>
             Describes parameter which is a collection of the headers, and it will be added into headers
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.HeaderCollectionParameterDescription.Settings">
+            <summary>
+            Request factoring settings
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.Contracts.Descriptions.HeaderCollectionParameterDescription.#ctor(System.Int32)">
@@ -366,6 +371,11 @@
         <member name="T:MyLab.ApiClient.Contracts.Descriptions.HeaderParameterDescription">
             <summary>
             Describes parameter which will be added into headers
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.HeaderParameterDescription.Settings">
+            <summary>
+            Request factoring settings
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.Contracts.Descriptions.HeaderParameterDescription.#ctor(System.Int32,System.String)">
@@ -381,6 +391,16 @@
         <member name="P:MyLab.ApiClient.Contracts.Descriptions.IRequestParameterDescription.Position">
             <summary>
             Position in method arguments
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.IRequestParameterDescription.Settings">
+            <summary>
+            Request factoring settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.IRequestParameterDescription.Apply(System.Net.Http.HttpRequestMessage,System.Object)">
+            <summary>
+            Applies the parameter to the specified HTTP request.
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions">
@@ -408,7 +428,7 @@
             Gets parameters which is a collection of the headers, and it will be added into headers
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions.FromMethod(System.Reflection.MethodInfo)">
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions.FromMethod(System.Reflection.MethodInfo,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
             <summary>
             Creates <see cref="T:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions"/> from reflection <see cref="T:System.Reflection.MethodInfo"/>
             </summary>
@@ -433,7 +453,7 @@
             Gets endpoint map by Method.MetadataToken
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription.FromContract(System.Type)">
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription.FromContract(System.Type,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
             <summary>
             Creates <see cref="T:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription"/> from contract type
             </summary>
@@ -441,6 +461,11 @@
         <member name="T:MyLab.ApiClient.Contracts.Descriptions.UrlParameterDescription">
             <summary>
             Describes parameter which will modify a URL
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Descriptions.UrlParameterDescription.Settings">
+            <summary>
+            Request factoring settings
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.Contracts.Descriptions.UrlParameterDescription.#ctor(System.Int32,System.String,MyLab.ApiClient.RequestFactoring.UrlModifying.IUrlModifier)">
