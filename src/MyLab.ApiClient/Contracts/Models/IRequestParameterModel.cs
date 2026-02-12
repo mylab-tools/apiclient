@@ -1,13 +1,12 @@
-﻿using MyLab.ApiClient.RequestFactoring.ContentFactoring;
-using System.Net.Http;
-using System.Reflection;
+﻿using System.Net.Http;
+using MyLab.ApiClient.RequestFactoring.ContentFactoring;
 
-namespace MyLab.ApiClient.Contracts.Descriptions;
+namespace MyLab.ApiClient.Contracts.Models;
 
 /// <summary>
-/// Describes API request parameter
+/// Represent API request parameter
 /// </summary>
-public interface IRequestParameterDescription
+public interface IRequestParameterModel
 {
     /// <summary>
     /// Position in method arguments

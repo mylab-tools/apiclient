@@ -1,15 +1,15 @@
-﻿using JetBrains.Annotations;
-using MyLab.ApiClient.Contracts.Descriptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using JetBrains.Annotations;
+using MyLab.ApiClient.Contracts.Models;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Contracts.Descriptions;
+namespace MyLab.ApiClient.Tests.Contracts.Models;
 
-[TestSubject(typeof(HeaderCollectionParameterDescription))]
-public class HeaderCollectionParameterDescriptionBehavior
+[TestSubject(typeof(HeaderCollectionParameterModel))]
+public class HeaderCollectionParameterModelBehavior
 {
     [Theory]
     [InlineData(0)]
@@ -19,7 +19,7 @@ public class HeaderCollectionParameterDescriptionBehavior
     public void ShouldInitializePositionCorrectly(int position)
     {
         // Act
-        var description = new HeaderCollectionParameterDescription(position);
+        var description = new HeaderCollectionParameterModel(position);
 
         // Assert
         Assert.Equal(position, description.Position);
@@ -29,7 +29,7 @@ public class HeaderCollectionParameterDescriptionBehavior
     public void ShouldThrowIfRequestIsNull()
     {
         // Arrange
-        var description = new HeaderCollectionParameterDescription(0);
+        var description = new HeaderCollectionParameterModel(0);
 
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => description.Apply(null!, new List<KeyValuePair<string, object>>()));
@@ -39,7 +39,7 @@ public class HeaderCollectionParameterDescriptionBehavior
     public void ShouldThrowIfValueIsNotEnumerableOfKeyValuePairs()
     {
         // Arrange
-        var description = new HeaderCollectionParameterDescription(0);
+        var description = new HeaderCollectionParameterModel(0);
         var request = new HttpRequestMessage();
 
         // Act & Assert
@@ -50,7 +50,7 @@ public class HeaderCollectionParameterDescriptionBehavior
     public void ShouldAddHeadersToRequest()
     {
         // Arrange
-        var description = new HeaderCollectionParameterDescription(0);
+        var description = new HeaderCollectionParameterModel(0);
         var request = new HttpRequestMessage();
         var headers = new List<KeyValuePair<string, object>>
         {
@@ -72,7 +72,7 @@ public class HeaderCollectionParameterDescriptionBehavior
     public void ShouldHandleEmptyHeaders()
     {
         // Arrange
-        var description = new HeaderCollectionParameterDescription(0);
+        var description = new HeaderCollectionParameterModel(0);
         var request = new HttpRequestMessage();
         var headers = new List<KeyValuePair<string, object>>();
 
@@ -87,7 +87,7 @@ public class HeaderCollectionParameterDescriptionBehavior
     public void ShouldHandleNullHeaderValues()
     {
         // Arrange
-        var description = new HeaderCollectionParameterDescription(0);
+        var description = new HeaderCollectionParameterModel(0);
         var request = new HttpRequestMessage();
         var headers = new List<KeyValuePair<string, object>>
         {
@@ -105,7 +105,7 @@ public class HeaderCollectionParameterDescriptionBehavior
     public void ShouldHandleSpecialCharactersInHeaderValues()
     {
         // Arrange
-        var description = new HeaderCollectionParameterDescription(0);
+        var description = new HeaderCollectionParameterModel(0);
         var request = new HttpRequestMessage();
         var headers = new List<KeyValuePair<string, object>>
         {
@@ -123,7 +123,7 @@ public class HeaderCollectionParameterDescriptionBehavior
     public void ShouldHandleEnumerableHeaderValues()
     {
         // Arrange
-        var description = new HeaderCollectionParameterDescription(0);
+        var description = new HeaderCollectionParameterModel(0);
         var request = new HttpRequestMessage();
         var headers = new List<KeyValuePair<string, object>>
         {

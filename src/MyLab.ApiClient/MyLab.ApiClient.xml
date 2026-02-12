@@ -308,171 +308,6 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.XmlContentAttribute"/>
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Contracts.Descriptions.ContentParameterDescription">
-            <summary>
-            Describes parameter which will be used to create request content
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.ContentParameterDescription.#ctor(System.Int32,MyLab.ApiClient.RequestFactoring.ContentFactoring.IHttpContentFactory)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Descriptions.ContentParameterDescription"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription">
-            <summary>
-            Describes service endpoint
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.Url">
-            <summary>
-            Gets the relative URL for endpoint
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.HttpMethod">
-            <summary>
-            Gets the HTTP method used by the endpoint (e.g., GET, POST, PUT, DELETE).
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.ExpectedStatusCodes">
-            <summary>
-            Gets the list of HTTP status codes that are expected as valid responses for the endpoint.
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.Parameters">
-            <summary>
-            Gets endpoint request parameters
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.#ctor(System.Net.Http.HttpMethod,System.Collections.Generic.IEnumerable{MyLab.ApiClient.Contracts.Descriptions.IRequestParameterDescription})">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.FromMethod(System.Reflection.MethodInfo,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
-            <summary>
-            FromMethod <see cref="T:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription"/> from reflection method
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.Contracts.Descriptions.HeaderCollectionParameterDescription">
-            <summary>
-            Describes parameter which is a collection of the headers, and it will be added into headers
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.HeaderCollectionParameterDescription.Settings">
-            <summary>
-            Request factoring settings
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.HeaderCollectionParameterDescription.#ctor(System.Int32)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Descriptions.HeaderCollectionParameterDescription"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.Contracts.Descriptions.HeaderParameterDescription">
-            <summary>
-            Describes parameter which will be added into headers
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.HeaderParameterDescription.Settings">
-            <summary>
-            Request factoring settings
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.HeaderParameterDescription.#ctor(System.Int32,System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Descriptions.HeaderParameterDescription"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.Contracts.Descriptions.IRequestParameterDescription">
-            <summary>
-            Describes API request parameter
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.IRequestParameterDescription.Position">
-            <summary>
-            Position in method arguments
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.IRequestParameterDescription.Settings">
-            <summary>
-            Request factoring settings
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.IRequestParameterDescription.Apply(System.Net.Http.HttpRequestMessage,System.Object)">
-            <summary>
-            Applies the parameter to the specified HTTP request.
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions">
-            <summary>
-            Describes API request method parameters
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions.UrlParams">
-            <summary>
-            Gets parameters which will modify a URL  
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions.HeaderParams">
-            <summary>
-            Gets parameters which will be added into headers
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions.ContentParams">
-            <summary>
-            Gets parameters which will be used to create request content
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions.HeaderCollectionParams">
-            <summary>
-            Gets parameters which is a collection of the headers, and it will be added into headers
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions.FromMethod(System.Reflection.MethodInfo,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
-            <summary>
-            Creates <see cref="T:MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions"/> from reflection <see cref="T:System.Reflection.MethodInfo"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription">
-            <summary>
-            Describes API contract
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription.Url">
-            <summary>
-            Gets the relative URL for all endpoints
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription.Bindings">
-            <summary>
-            Gets the relative URL for all endpoints
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription.Endpoints">
-            <summary>
-            Gets endpoint map by Method.MetadataToken
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription.FromContract(System.Type,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
-            <summary>
-            Creates <see cref="T:MyLab.ApiClient.Contracts.Descriptions.ServiceDescription"/> from contract type
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.Contracts.Descriptions.UrlParameterDescription">
-            <summary>
-            Describes parameter which will modify a URL
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Descriptions.UrlParameterDescription.Settings">
-            <summary>
-            Request factoring settings
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.UrlParameterDescription.#ctor(System.Int32,System.String,MyLab.ApiClient.RequestFactoring.UrlModifying.IUrlModifier)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Descriptions.UrlParameterDescription"/>
-            </summary>
-        </member>
         <member name="T:MyLab.ApiClient.Contracts.InvalidApiContractException">
             <summary>
             Represents an exception that is thrown when an API contract is invalid.
@@ -481,6 +316,141 @@
         <member name="M:MyLab.ApiClient.Contracts.InvalidApiContractException.#ctor(System.String)">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.InvalidApiContractException"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.ContentParameterModel">
+            <summary>
+            Represent parameter which will be used to create request content
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.ContentParameterModel.#ctor(System.Int32,MyLab.ApiClient.RequestFactoring.ContentFactoring.IHttpContentFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.ContentParameterModel"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.EndpointDescription">
+            <summary>
+            Represent service endpoint
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointDescription.Url">
+            <summary>
+            Gets the relative URL for endpoint
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointDescription.HttpMethod">
+            <summary>
+            Gets the HTTP method used by the endpoint (e.g., GET, POST, PUT, DELETE).
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointDescription.ExpectedStatusCodes">
+            <summary>
+            Gets the list of HTTP status codes that are expected as valid responses for the endpoint.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointDescription.Parameters">
+            <summary>
+            Gets endpoint request parameters
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.EndpointDescription.#ctor(System.Net.Http.HttpMethod,System.Collections.Generic.IEnumerable{MyLab.ApiClient.Contracts.Models.IRequestParameterModel})">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.EndpointDescription"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.EndpointDescription.FromMethod(System.Reflection.MethodInfo,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
+            <summary>
+            FromMethod <see cref="T:MyLab.ApiClient.Contracts.Models.EndpointDescription"/> from reflection method
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.HeaderCollectionParameterModel">
+            <summary>
+            Represent parameter which is a collection of the headers, and it will be added into headers
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.HeaderCollectionParameterModel.Settings">
+            <summary>
+            Request factoring settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.HeaderCollectionParameterModel.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.HeaderCollectionParameterModel"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.HeaderParameterModel">
+            <summary>
+            Represent parameter which will be added into headers
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.HeaderParameterModel.Settings">
+            <summary>
+            Request factoring settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.HeaderParameterModel.#ctor(System.Int32,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.HeaderParameterModel"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.IRequestParameterModel">
+            <summary>
+            Represent API request parameter
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.IRequestParameterModel.Position">
+            <summary>
+            Position in method arguments
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.IRequestParameterModel.Settings">
+            <summary>
+            Request factoring settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.IRequestParameterModel.Apply(System.Net.Http.HttpRequestMessage,System.Object)">
+            <summary>
+            Applies the parameter to the specified HTTP request.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.ServiceDescription">
+            <summary>
+            Represent API contract
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.ServiceDescription.Url">
+            <summary>
+            Gets the relative URL for all endpoints
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.ServiceDescription.Bindings">
+            <summary>
+            Gets the relative URL for all endpoints
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.ServiceDescription.Endpoints">
+            <summary>
+            Gets endpoint map by Method.MetadataToken
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.ServiceDescription.FromContract(System.Type,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
+            <summary>
+            Creates <see cref="T:MyLab.ApiClient.Contracts.Models.ServiceDescription"/> from contract type
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.UrlParameterModel">
+            <summary>
+            Represent parameter which will modify a URL
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.UrlParameterModel.Settings">
+            <summary>
+            Request factoring settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.UrlParameterModel.#ctor(System.Int32,System.String,MyLab.ApiClient.RequestFactoring.UrlModifying.IUrlModifier)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.UrlParameterModel"/>
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.Options.ApiClientOptions">
@@ -642,6 +612,11 @@
             <exception cref="T:System.ArgumentNullException">
             Thrown when <paramref name="configureOptions"/> is <c>null</c>.
             </exception>
+        </member>
+        <member name="M:MyLab.ApiClient.Tools.RequestParameterModelExtractor.FromMethod(System.Reflection.MethodInfo,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
+            <summary>
+            Extract <see cref="T:MyLab.ApiClient.Contracts.Models.IRequestParameterModel"/> from reflection method
+            </summary>
         </member>
     </members>
 </doc>

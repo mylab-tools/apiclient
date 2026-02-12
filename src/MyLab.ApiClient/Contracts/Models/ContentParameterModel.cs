@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Net.Http;
-using System.Reflection;
 using MyLab.ApiClient.RequestFactoring.ContentFactoring;
 
-namespace MyLab.ApiClient.Contracts.Descriptions;
+namespace MyLab.ApiClient.Contracts.Models;
 
 /// <summary>
-/// Describes parameter which will be used to create request content
+/// Represent parameter which will be used to create request content
 /// </summary>
-class ContentParameterDescription : IRequestParameterDescription
+class ContentParameterModel : IRequestParameterModel
 {
     public int Position { get; }
     public IHttpContentFactory ContentFactory { get; }
@@ -16,9 +15,9 @@ class ContentParameterDescription : IRequestParameterDescription
     public RequestFactoringSettings? Settings { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="ContentParameterDescription"/>
+    /// Initializes a new instance of <see cref="ContentParameterModel"/>
     /// </summary>
-    public ContentParameterDescription(int position, IHttpContentFactory contentFactory)
+    public ContentParameterModel(int position, IHttpContentFactory contentFactory)
     {
         Position = position;
         ContentFactory = contentFactory;

@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using MyLab.ApiClient.Contracts;
-using MyLab.ApiClient.Contracts.Descriptions;
+using MyLab.ApiClient.Contracts.Models;
 
 namespace MyLab.ApiClient.RequestFactoring
 {

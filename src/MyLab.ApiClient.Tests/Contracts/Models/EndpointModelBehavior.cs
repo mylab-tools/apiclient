@@ -1,18 +1,18 @@
-﻿using JetBrains.Annotations;
-using MyLab.ApiClient.Contracts.Attributes.ForMethod;
-using MyLab.ApiClient.Contracts.Descriptions;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using JetBrains.Annotations;
 using MyLab.ApiClient.Contracts;
+using MyLab.ApiClient.Contracts.Attributes.ForMethod;
 using MyLab.ApiClient.Contracts.Attributes.ForParameters;
+using MyLab.ApiClient.Contracts.Models;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Contracts.Descriptions
+namespace MyLab.ApiClient.Tests.Contracts.Models
 {
     [TestSubject(typeof(EndpointDescription))]
-    public class EndpointDescriptionBehavior
+    public class EndpointModelBehavior
     {
         [Fact]
         public void ShouldProvideMethodDescription()
@@ -31,7 +31,7 @@ namespace MyLab.ApiClient.Tests.Contracts.Descriptions
             Assert.Contains(HttpStatusCode.BadRequest, desc.ExpectedStatusCodes);
             Assert.NotNull(desc.Parameters);
             Assert.Single(desc.Parameters);
-            Assert.Contains(desc.Parameters, p => p is UrlParameterDescription { Name: "urlParam", Position:0 });
+            Assert.Contains(desc.Parameters, p => p is UrlParameterModel { Name: "urlParam", Position:0 });
         }
         
         [Fact]

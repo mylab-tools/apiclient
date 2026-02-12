@@ -2,14 +2,14 @@
 using System.Net.Http;
 using JetBrains.Annotations;
 using Moq;
-using MyLab.ApiClient.Contracts.Descriptions;
+using MyLab.ApiClient.Contracts.Models;
 using MyLab.ApiClient.RequestFactoring.ContentFactoring;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Contracts.Descriptions;
+namespace MyLab.ApiClient.Tests.Contracts.Models;
 
-[TestSubject(typeof(ContentParameterDescription))]
-public class ContentParameterDescriptionBehavior
+[TestSubject(typeof(ContentParameterModel))]
+public class ContentParameterModelBehavior
 {
     [Fact]
     public void ShouldInitializePropertiesCorrectly()
@@ -19,7 +19,7 @@ public class ContentParameterDescriptionBehavior
         var contentFactoryMock = new Mock<IHttpContentFactory>();
 
         // Act
-        var description = new ContentParameterDescription(position, contentFactoryMock.Object);
+        var description = new ContentParameterModel(position, contentFactoryMock.Object);
 
         // Assert
         Assert.Equal(position, description.Position);
@@ -31,7 +31,7 @@ public class ContentParameterDescriptionBehavior
     {
         // Arrange
         var contentFactoryMock = new Mock<IHttpContentFactory>();
-        var description = new ContentParameterDescription(1, contentFactoryMock.Object);
+        var description = new ContentParameterModel(1, contentFactoryMock.Object);
 
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => description.Apply(null, new object()));
@@ -47,7 +47,7 @@ public class ContentParameterDescriptionBehavior
             .Setup(cf => cf.Create(It.IsAny<object>(), It.IsAny<RequestFactoringSettings>()))
             .Returns(httpContentMock.Object);
 
-        var description = new ContentParameterDescription(1, contentFactoryMock.Object);
+        var description = new ContentParameterModel(1, contentFactoryMock.Object);
         var request = new HttpRequestMessage();
         var value = new object();
 
@@ -69,7 +69,7 @@ public class ContentParameterDescriptionBehavior
             .Setup(cf => cf.Create(null, It.IsAny<RequestFactoringSettings>()))
             .Returns(httpContentMock.Object);
 
-        var description = new ContentParameterDescription(1, contentFactoryMock.Object);
+        var description = new ContentParameterModel(1, contentFactoryMock.Object);
         var request = new HttpRequestMessage();
 
         // Act

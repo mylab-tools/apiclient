@@ -3,13 +3,13 @@ using JetBrains.Annotations;
 using MyLab.ApiClient.Contracts;
 using MyLab.ApiClient.Contracts.Attributes.ForContract;
 using MyLab.ApiClient.Contracts.Attributes.ForMethod;
-using MyLab.ApiClient.Contracts.Descriptions;
+using MyLab.ApiClient.Contracts.Models;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Contracts.Descriptions
+namespace MyLab.ApiClient.Tests.Contracts.Models
 {
     [TestSubject(typeof(ServiceDescription))]
-    public class ServiceDescriptionBehavior
+    public class ServiceModelBehavior
     {
         [Fact]
         public void ShouldFailIfContractIsNotInterface()

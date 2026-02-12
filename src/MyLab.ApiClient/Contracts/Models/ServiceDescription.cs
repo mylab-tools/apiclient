@@ -1,14 +1,14 @@
-﻿using MyLab.ApiClient.Contracts.Attributes.ForContract;
-using MyLab.ApiClient.RequestFactoring.ContentFactoring;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using MyLab.ApiClient.Contracts.Attributes.ForContract;
+using MyLab.ApiClient.RequestFactoring.ContentFactoring;
 
-namespace MyLab.ApiClient.Contracts.Descriptions
+namespace MyLab.ApiClient.Contracts.Models
 {
     /// <summary>
-    /// Describes API contract
+    /// Represent API contract
     /// </summary>
     class ServiceDescription
     {

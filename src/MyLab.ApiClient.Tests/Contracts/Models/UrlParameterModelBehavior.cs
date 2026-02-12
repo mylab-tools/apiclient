@@ -1,15 +1,15 @@
-﻿using JetBrains.Annotations;
-using MyLab.ApiClient.Contracts.Descriptions;
-using MyLab.ApiClient.RequestFactoring.UrlModifying;
-using System;
+﻿using System;
 using System.Net.Http;
-using Xunit;
+using JetBrains.Annotations;
 using Moq;
+using MyLab.ApiClient.Contracts.Models;
+using MyLab.ApiClient.RequestFactoring.UrlModifying;
+using Xunit;
 
-namespace MyLab.ApiClient.Tests.Contracts.Descriptions;
+namespace MyLab.ApiClient.Tests.Contracts.Models;
 
-[TestSubject(typeof(UrlParameterDescription))]
-public class UrlParameterDescriptionBehavior
+[TestSubject(typeof(UrlParameterModel))]
+public class UrlParameterModelBehavior
 {
 
     [Fact]
@@ -17,7 +17,7 @@ public class UrlParameterDescriptionBehavior
     {
         // Arrange
         var mockModifier = new Mock<IUrlModifier>();
-        var description = new UrlParameterDescription(0, "param", mockModifier.Object);
+        var description = new UrlParameterModel(0, "param", mockModifier.Object);
 
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => description.Apply(null, "value"));
@@ -28,7 +28,7 @@ public class UrlParameterDescriptionBehavior
     {
         // Arrange
         var mockModifier = new Mock<IUrlModifier>();
-        var description = new UrlParameterDescription(0, "param", mockModifier.Object);
+        var description = new UrlParameterModel(0, "param", mockModifier.Object);
         var request = new HttpRequestMessage { RequestUri = new Uri("http://example.com") };
         var modifiedUri = new Uri("/example/modified", UriKind.Relative);
 
@@ -48,7 +48,7 @@ public class UrlParameterDescriptionBehavior
     {
         // Arrange
         var mockModifier = new Mock<IUrlModifier>();
-        var description = new UrlParameterDescription(0, "param", mockModifier.Object);
+        var description = new UrlParameterModel(0, "param", mockModifier.Object);
         var request = new HttpRequestMessage { RequestUri = null };
         var modifiedUri = new Uri("/example/modified", UriKind.Relative);
 

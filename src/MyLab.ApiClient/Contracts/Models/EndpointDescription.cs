@@ -1,5 +1,6 @@
 ﻿using MyLab.ApiClient.Contracts.Attributes.ForMethod;
 using MyLab.ApiClient.RequestFactoring.ContentFactoring;
+using MyLab.ApiClient.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +8,10 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 
-namespace MyLab.ApiClient.Contracts.Descriptions;
+namespace MyLab.ApiClient.Contracts.Models;
 
 /// <summary>
-/// Describes service endpoint
+/// Represent service endpoint
 /// </summary>
 class EndpointDescription
 {
@@ -32,12 +33,12 @@ class EndpointDescription
     /// <summary>
     /// Gets endpoint request parameters
     /// </summary>
-    public IReadOnlyCollection<IRequestParameterDescription> Parameters { get; }
+    public IReadOnlyCollection<IRequestParameterModel> Parameters { get; }
 
     /// <summary>
     /// Initializes a new instance of <see cref="EndpointDescription"/>
     /// </summary>
-    public EndpointDescription(HttpMethod httpMethod, IEnumerable<IRequestParameterDescription> parameters)
+    public EndpointDescription(HttpMethod httpMethod, IEnumerable<IRequestParameterModel> parameters)
     {
         HttpMethod = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
         if(parameters == null) throw new ArgumentNullException(nameof(parameters));
@@ -56,7 +57,7 @@ class EndpointDescription
         if (httpMethodAttr == null)
             throw new InvalidApiContractException($"The method '{mi.Name}' must be marked with one of ApiMethodAttribute inheritors.");
 
-        var parameters = RequestParametersDescriptions.FromMethod(mi, settings);
+        var parameters = RequestParameterModelExtractor.FromMethod(mi, settings);
 
         return new EndpointDescription(httpMethodAttr.HttpMethod, parameters.ToArray())
         {

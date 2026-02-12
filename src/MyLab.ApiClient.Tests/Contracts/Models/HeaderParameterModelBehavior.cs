@@ -1,13 +1,13 @@
-﻿using JetBrains.Annotations;
-using MyLab.ApiClient.Contracts.Descriptions;
-using System;
+﻿using System;
 using System.Net.Http;
+using JetBrains.Annotations;
+using MyLab.ApiClient.Contracts.Models;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Contracts.Descriptions;
+namespace MyLab.ApiClient.Tests.Contracts.Models;
 
-[TestSubject(typeof(HeaderParameterDescription))]
-public class HeaderParameterDescriptionBehavior
+[TestSubject(typeof(HeaderParameterModel))]
+public class HeaderParameterModelBehavior
 {
     [Theory]
     [InlineData(0, "HeaderName")]
@@ -18,7 +18,7 @@ public class HeaderParameterDescriptionBehavior
     public void ShouldInitializeCorrectly(int position, string name)
     {
         // Act
-        var headerParamDesc = new HeaderParameterDescription(position, name);
+        var headerParamDesc = new HeaderParameterModel(position, name);
 
         // Assert
         Assert.Equal(position, headerParamDesc.Position);
@@ -29,7 +29,7 @@ public class HeaderParameterDescriptionBehavior
     public void ShouldThrowIfRequestIsNullInApply()
     {
         // Arrange
-        var headerParamDesc = new HeaderParameterDescription(0, "HeaderName");
+        var headerParamDesc = new HeaderParameterModel(0, "HeaderName");
 
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => headerParamDesc.Apply(null, "value"));
@@ -39,7 +39,7 @@ public class HeaderParameterDescriptionBehavior
     public void ShouldThrowIfValueIsNullInApply()
     {
         // Arrange
-        var headerParamDesc = new HeaderParameterDescription(0, "HeaderName");
+        var headerParamDesc = new HeaderParameterModel(0, "HeaderName");
         var request = new HttpRequestMessage();
 
         // Act & Assert
@@ -55,7 +55,7 @@ public class HeaderParameterDescriptionBehavior
     public void ShouldApplyHeaderCorrectly(string value)
     {
         // Arrange
-        var headerParamDesc = new HeaderParameterDescription(0, "HeaderName");
+        var headerParamDesc = new HeaderParameterModel(0, "HeaderName");
         var request = new HttpRequestMessage();
 
         // Act
@@ -77,7 +77,7 @@ public class HeaderParameterDescriptionBehavior
     public void ShouldHandleComplexObjectValue()
     {
         // Arrange
-        var headerParamDesc = new HeaderParameterDescription(0, "HeaderName");
+        var headerParamDesc = new HeaderParameterModel(0, "HeaderName");
         var request = new HttpRequestMessage();
         var complexValue = new { Prop1 = "Value1", Prop2 = 123 };
 
@@ -93,7 +93,7 @@ public class HeaderParameterDescriptionBehavior
     public void ShouldHandleEnumerableValue()
     {
         // Arrange
-        var headerParamDesc = new HeaderParameterDescription(0, "HeaderName");
+        var headerParamDesc = new HeaderParameterModel(0, "HeaderName");
         var request = new HttpRequestMessage();
         var enumerableValue = new[] { "Value1", "Value2", "Value3" };
 

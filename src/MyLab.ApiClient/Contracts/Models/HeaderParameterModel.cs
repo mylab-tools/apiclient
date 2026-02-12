@@ -1,15 +1,14 @@
-﻿using MyLab.ApiClient.RequestFactoring.ContentFactoring;
-using MyLab.ApiClient.Tools;
-using System;
+﻿using System;
 using System.Net.Http;
-using System.Reflection;
+using MyLab.ApiClient.RequestFactoring.ContentFactoring;
+using MyLab.ApiClient.Tools;
 
-namespace MyLab.ApiClient.Contracts.Descriptions;
+namespace MyLab.ApiClient.Contracts.Models;
 
 /// <summary>
-/// Describes parameter which will be added into headers
+/// Represent parameter which will be added into headers
 /// </summary>
-class HeaderParameterDescription : IRequestParameterDescription
+class HeaderParameterModel : IRequestParameterModel
 {
     public int Position { get; }
     public string Name { get; }
@@ -19,9 +18,9 @@ class HeaderParameterDescription : IRequestParameterDescription
     public RequestFactoringSettings? Settings { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="HeaderParameterDescription"/>
+    /// Initializes a new instance of <see cref="HeaderParameterModel"/>
     /// </summary>
-    public HeaderParameterDescription(int position, string name)
+    public HeaderParameterModel(int position, string name)
     {
         Position = position;
         Name = name;
