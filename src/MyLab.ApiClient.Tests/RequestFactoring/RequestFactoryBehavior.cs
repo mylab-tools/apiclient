@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using Moq;
+using MyLab.ApiClient.RequestFactoring.UrlModifying;
 using Xunit;
 
 namespace MyLab.ApiClient.Tests.RequestFactoring;
@@ -19,7 +20,7 @@ public class RequestFactoryBehavior
     {
         // Arrange
         var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>());
-        var epDesc = new EndpointDescription(HttpMethod.Get, new RequestParametersDescriptions());
+        var epDesc = new EndpointDescription(HttpMethod.Get, Array.Empty<IRequestParameterDescription>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
         // Act & Assert
@@ -30,13 +31,10 @@ public class RequestFactoryBehavior
     public void ShouldThrowInvalidApiContractExceptionWhenParameterCountMismatch()
     {
         // Arrange
-        var epDesc = new EndpointDescription(HttpMethod.Get, new RequestParametersDescriptions
-        {
-            UrlParams = new List<UrlParameterDescription>
+        var epDesc = new EndpointDescription(HttpMethod.Get, new[]
             {
-                new UrlParameterDescription(0, "param1", null)
-            }
-        });
+                new UrlParameterDescription(0, "param1", new UrlQueryInjector())
+            });
         var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
@@ -50,9 +48,9 @@ public class RequestFactoryBehavior
         // Arrange
         var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>())
         {
-            Url = "http://example.com"
+            Url = "/example_com"
         };
-        var epDesc = new EndpointDescription(HttpMethod.Get, new RequestParametersDescriptions())
+        var epDesc = new EndpointDescription(HttpMethod.Get, Array.Empty<IRequestParameterDescription>())
         {
             Url = "api/test"
         };
@@ -62,7 +60,7 @@ public class RequestFactoryBehavior
         var request = factory.Create(Array.Empty<object>());
 
         // Assert
-        Assert.Equal(new Uri("http://example.com/api/test"), request.RequestUri);
+        Assert.Equal(new Uri("/example_com/api/test", UriKind.Relative), request.RequestUri);
     }
 
     [Fact]
@@ -70,7 +68,7 @@ public class RequestFactoryBehavior
     {
         // Arrange
         var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>());
-        var epDesc = new EndpointDescription(HttpMethod.Post, new RequestParametersDescriptions());
+        var epDesc = new EndpointDescription(HttpMethod.Post, Array.Empty<IRequestParameterDescription>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
         // Act
@@ -88,12 +86,9 @@ public class RequestFactoryBehavior
         parameterDescription.Setup(p => p.Position).Returns(0);
         parameterDescription.Setup(p => p.Apply(It.IsAny<HttpRequestMessage>(), It.IsAny<object>()));
 
-        var epDesc = new EndpointDescription(HttpMethod.Get, new RequestParametersDescriptions
+        var epDesc = new EndpointDescription(HttpMethod.Get, new[]
         {
-            UrlParams = new List<UrlParameterDescription>
-            {
-                new UrlParameterDescription(0, "param1", null)
-            }
+            parameterDescription.Object
         });
         var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>());
         var factory = new RequestFactory(serviceDesc, epDesc);
@@ -110,7 +105,7 @@ public class RequestFactoryBehavior
     {
         // Arrange
         var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>());
-        var epDesc = new EndpointDescription(HttpMethod.Get, new RequestParametersDescriptions())
+        var epDesc = new EndpointDescription(HttpMethod.Get, Array.Empty<IRequestParameterDescription>())
         {
             Url = "api/test"
         };
@@ -129,16 +124,16 @@ public class RequestFactoryBehavior
         // Arrange
         var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>())
         {
-            Url = "http://example.com"
+            Url = "/example_com"
         };
-        var epDesc = new EndpointDescription(HttpMethod.Get, new RequestParametersDescriptions());
+        var epDesc = new EndpointDescription(HttpMethod.Get, Array.Empty<IRequestParameterDescription>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
         // Act
         var request = factory.Create(Array.Empty<object>());
 
         // Assert
-        Assert.Equal(new Uri("http://example.com"), request.RequestUri);
+        Assert.Equal(new Uri("/example_com/", UriKind.Relative), request.RequestUri);
     }
 
     [Fact]
@@ -146,13 +141,13 @@ public class RequestFactoryBehavior
     {
         // Arrange
         var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>());
-        var epDesc = new EndpointDescription(HttpMethod.Get, new RequestParametersDescriptions());
+        var epDesc = new EndpointDescription(HttpMethod.Get, Array.Empty<IRequestParameterDescription>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
         // Act
         var request = factory.Create(Array.Empty<object>());
 
         // Assert
-        Assert.Null(request.RequestUri);
+        Assert.Equal(new Uri("/", UriKind.Relative), request.RequestUri);
     }
 }

@@ -26,14 +26,14 @@ class UrlParameterDescription : IRequestParameterDescription
     public UrlParameterDescription(int position, string name, IUrlModifier modifier)
     {
         Position = position;
-        Name = name;
-        Modifier = modifier;
+        Name = name ?? throw new ArgumentNullException(nameof(name));
+        Modifier = modifier ?? throw new ArgumentNullException(nameof(modifier));
     }
 
     public void Apply(HttpRequestMessage request, object? value)
     {
         if (request == null) throw new ArgumentNullException(nameof(request));
         
-        request.RequestUri = Modifier.Modify(request.RequestUri ?? new Uri("", UriKind.Relative), Name, value);
+        request.RequestUri = Modifier.Modify(request.RequestUri ?? new Uri("/", UriKind.Relative), Name, value);
     }
 }

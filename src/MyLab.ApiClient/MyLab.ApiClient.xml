@@ -343,7 +343,7 @@
             Gets endpoint request parameters
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.#ctor(System.Net.Http.HttpMethod,MyLab.ApiClient.Contracts.Descriptions.RequestParametersDescriptions)">
+        <member name="M:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription.#ctor(System.Net.Http.HttpMethod,System.Collections.Generic.IEnumerable{MyLab.ApiClient.Contracts.Descriptions.IRequestParameterDescription})">
             <summary>
             Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Descriptions.EndpointDescription"/>
             </summary>

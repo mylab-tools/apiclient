@@ -44,7 +44,11 @@ namespace MyLab.ApiClient.RequestFactoring
             if(sb.Length != 0 && sb[^1] != '/') sb.Append("/");
             if (_epDesc.Url != null) sb.Append(_epDesc.Url);
 
-            return new Uri(sb.ToString());
+            var strUrl = sb.ToString();
+
+            return strUrl != string.Empty 
+                ? new Uri(strUrl, UriKind.Relative)
+                : new Uri("/", UriKind.Relative);
         }
 
         void ApplyParameters(HttpRequestMessage request, object[] parameters)

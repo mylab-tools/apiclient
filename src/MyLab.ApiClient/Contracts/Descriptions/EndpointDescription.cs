@@ -37,7 +37,7 @@ class EndpointDescription
     /// <summary>
     /// Initializes a new instance of <see cref="EndpointDescription"/>
     /// </summary>
-    public EndpointDescription(HttpMethod httpMethod, RequestParametersDescriptions parameters)
+    public EndpointDescription(HttpMethod httpMethod, IEnumerable<IRequestParameterDescription> parameters)
     {
         HttpMethod = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
         if(parameters == null) throw new ArgumentNullException(nameof(parameters));
@@ -58,7 +58,7 @@ class EndpointDescription
 
         var parameters = RequestParametersDescriptions.FromMethod(mi, settings);
 
-        return new EndpointDescription(httpMethodAttr.HttpMethod, parameters)
+        return new EndpointDescription(httpMethodAttr.HttpMethod, parameters.ToArray())
         {
             Url = httpMethodAttr.Url,
             ExpectedStatusCodes = GetExpectedStatusCodes(mi)

@@ -12,7 +12,6 @@ class UrlPathInjector : IUrlModifier
         if (string.IsNullOrEmpty(paramName))
             throw new ArgumentException("Value cannot be null or empty.", nameof(paramName));
 
-
         var strVal = ObjectToStringConverter.ToString(value);
             
         var tag = "{" + paramName + "}";
@@ -20,6 +19,7 @@ class UrlPathInjector : IUrlModifier
         var decodedPath = HttpUtility.UrlDecode(origin.IsAbsoluteUri
             ? origin.PathAndQuery
             : origin.OriginalString);
+        
         string resultPath;
 
         if (!string.IsNullOrWhiteSpace(strVal))
