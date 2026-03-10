@@ -13,7 +13,7 @@ namespace MyLab.ApiClient.Contracts.Models;
 /// <summary>
 /// Represent service endpoint
 /// </summary>
-class EndpointDescription
+class EndpointModel
 {
     /// <summary>
     /// Gets the relative URL for endpoint
@@ -28,6 +28,7 @@ class EndpointDescription
     /// <summary>
     /// Gets the list of HTTP status codes that are expected as valid responses for the endpoint.
     /// </summary>
+    //todo: Вероятно вообще такое понятие исключить
     public IReadOnlyList<HttpStatusCode>? ExpectedStatusCodes { get; set; }
         
     /// <summary>
@@ -36,9 +37,9 @@ class EndpointDescription
     public IReadOnlyCollection<IRequestParameterModel> Parameters { get; }
 
     /// <summary>
-    /// Initializes a new instance of <see cref="EndpointDescription"/>
+    /// Initializes a new instance of <see cref="EndpointModel"/>
     /// </summary>
-    public EndpointDescription(HttpMethod httpMethod, IEnumerable<IRequestParameterModel> parameters)
+    public EndpointModel(HttpMethod httpMethod, IEnumerable<IRequestParameterModel> parameters)
     {
         HttpMethod = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
         if(parameters == null) throw new ArgumentNullException(nameof(parameters));
@@ -47,9 +48,9 @@ class EndpointDescription
     }
 
     /// <summary>
-    /// FromMethod <see cref="EndpointDescription"/> from reflection method
+    /// FromMethod <see cref="EndpointModel"/> from reflection method
     /// </summary>
-    public static EndpointDescription FromMethod(MethodInfo mi, RequestFactoringSettings? settings = null)
+    public static EndpointModel FromMethod(MethodInfo mi, RequestFactoringSettings? settings = null)
     {
         if (mi == null) throw new ArgumentNullException(nameof(mi));
 
@@ -59,7 +60,7 @@ class EndpointDescription
 
         var parameters = RequestParameterModelExtractor.FromMethod(mi, settings);
 
-        return new EndpointDescription(httpMethodAttr.HttpMethod, parameters.ToArray())
+        return new EndpointModel(httpMethodAttr.HttpMethod, parameters.ToArray())
         {
             Url = httpMethodAttr.Url,
             ExpectedStatusCodes = GetExpectedStatusCodes(mi)

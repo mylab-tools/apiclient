@@ -19,8 +19,8 @@ public class RequestFactoryBehavior
     public void ShouldThrowArgumentNullExceptionWhenParametersAreNull(object[] parameters)
     {
         // Arrange
-        var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>());
-        var epDesc = new EndpointDescription(HttpMethod.Get, Array.Empty<IRequestParameterModel>());
+        var serviceDesc = new ServiceModel(new Dictionary<int, EndpointModel>());
+        var epDesc = new EndpointModel(HttpMethod.Get, Array.Empty<IRequestParameterModel>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
         // Act & Assert
@@ -31,11 +31,11 @@ public class RequestFactoryBehavior
     public void ShouldThrowInvalidApiContractExceptionWhenParameterCountMismatch()
     {
         // Arrange
-        var epDesc = new EndpointDescription(HttpMethod.Get, new[]
+        var epDesc = new EndpointModel(HttpMethod.Get, new[]
             {
                 new UrlParameterModel(0, "param1", new UrlQueryInjector())
             });
-        var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>());
+        var serviceDesc = new ServiceModel(new Dictionary<int, EndpointModel>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
         // Act & Assert
@@ -46,11 +46,11 @@ public class RequestFactoryBehavior
     public void ShouldCreateRequestWithCorrectUri()
     {
         // Arrange
-        var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>())
+        var serviceDesc = new ServiceModel(new Dictionary<int, EndpointModel>())
         {
             Url = "/example_com"
         };
-        var epDesc = new EndpointDescription(HttpMethod.Get, Array.Empty<IRequestParameterModel>())
+        var epDesc = new EndpointModel(HttpMethod.Get, Array.Empty<IRequestParameterModel>())
         {
             Url = "api/test"
         };
@@ -67,8 +67,8 @@ public class RequestFactoryBehavior
     public void ShouldCreateRequestWithCorrectHttpMethod()
     {
         // Arrange
-        var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>());
-        var epDesc = new EndpointDescription(HttpMethod.Post, Array.Empty<IRequestParameterModel>());
+        var serviceDesc = new ServiceModel(new Dictionary<int, EndpointModel>());
+        var epDesc = new EndpointModel(HttpMethod.Post, Array.Empty<IRequestParameterModel>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
         // Act
@@ -86,11 +86,11 @@ public class RequestFactoryBehavior
         parameterDescription.Setup(p => p.Position).Returns(0);
         parameterDescription.Setup(p => p.Apply(It.IsAny<HttpRequestMessage>(), It.IsAny<object>()));
 
-        var epDesc = new EndpointDescription(HttpMethod.Get, new[]
+        var epDesc = new EndpointModel(HttpMethod.Get, new[]
         {
             parameterDescription.Object
         });
-        var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>());
+        var serviceDesc = new ServiceModel(new Dictionary<int, EndpointModel>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
         // Act
@@ -104,8 +104,8 @@ public class RequestFactoryBehavior
     public void ShouldHandleEmptyServiceUrl()
     {
         // Arrange
-        var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>());
-        var epDesc = new EndpointDescription(HttpMethod.Get, Array.Empty<IRequestParameterModel>())
+        var serviceDesc = new ServiceModel(new Dictionary<int, EndpointModel>());
+        var epDesc = new EndpointModel(HttpMethod.Get, Array.Empty<IRequestParameterModel>())
         {
             Url = "api/test"
         };
@@ -122,11 +122,11 @@ public class RequestFactoryBehavior
     public void ShouldHandleEmptyEndpointUrl()
     {
         // Arrange
-        var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>())
+        var serviceDesc = new ServiceModel(new Dictionary<int, EndpointModel>())
         {
             Url = "/example_com"
         };
-        var epDesc = new EndpointDescription(HttpMethod.Get, Array.Empty<IRequestParameterModel>());
+        var epDesc = new EndpointModel(HttpMethod.Get, Array.Empty<IRequestParameterModel>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
         // Act
@@ -140,8 +140,8 @@ public class RequestFactoryBehavior
     public void ShouldHandleBothEmptyUrls()
     {
         // Arrange
-        var serviceDesc = new ServiceDescription(new Dictionary<int, EndpointDescription>());
-        var epDesc = new EndpointDescription(HttpMethod.Get, Array.Empty<IRequestParameterModel>());
+        var serviceDesc = new ServiceModel(new Dictionary<int, EndpointModel>());
+        var epDesc = new EndpointModel(HttpMethod.Get, Array.Empty<IRequestParameterModel>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
         // Act

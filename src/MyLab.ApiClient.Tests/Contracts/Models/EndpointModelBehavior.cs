@@ -11,7 +11,7 @@ using Xunit;
 
 namespace MyLab.ApiClient.Tests.Contracts.Models
 {
-    [TestSubject(typeof(EndpointDescription))]
+    [TestSubject(typeof(EndpointModel))]
     public class EndpointModelBehavior
     {
         [Fact]
@@ -21,7 +21,7 @@ namespace MyLab.ApiClient.Tests.Contracts.Models
             var m = GetMethod(nameof(IApiContract.Method));
 
             //Act
-            var desc = EndpointDescription.FromMethod(m, null);
+            var desc = EndpointModel.FromMethod(m, null);
 
             //Assert
             Assert.NotNull(desc);
@@ -41,7 +41,7 @@ namespace MyLab.ApiClient.Tests.Contracts.Models
             var m = GetMethod(nameof(IApiContract.MethodWithoutApiMethodAttribute));
 
             //Act && Assert
-            var e = Assert.Throws<InvalidApiContractException>(() => EndpointDescription.FromMethod(m, null));
+            var e = Assert.Throws<InvalidApiContractException>(() => EndpointModel.FromMethod(m, null));
             Assert.Contains("must be marked with one of", e.Message);
         }
 

@@ -8,7 +8,7 @@ using Xunit;
 
 namespace MyLab.ApiClient.Tests.Contracts.Models
 {
-    [TestSubject(typeof(ServiceDescription))]
+    [TestSubject(typeof(ServiceModel))]
     public class ServiceModelBehavior
     {
         [Fact]
@@ -18,7 +18,7 @@ namespace MyLab.ApiClient.Tests.Contracts.Models
             var contract = typeof(ClassContract);
 
             //Act & Assert
-            var e = Assert.Throws<InvalidApiContractException>(() => ServiceDescription.FromContract(contract, null));
+            var e = Assert.Throws<InvalidApiContractException>(() => ServiceModel.FromContract(contract, null));
             Assert.Contains("is not an interface", e.Message);
         }
 
@@ -29,7 +29,7 @@ namespace MyLab.ApiClient.Tests.Contracts.Models
             var contract = typeof(IApiContractWithoutContractAttribute);
 
             //Act & Assert
-            var e = Assert.Throws<InvalidApiContractException>(() => ServiceDescription.FromContract(contract));
+            var e = Assert.Throws<InvalidApiContractException>(() => ServiceModel.FromContract(contract));
             Assert.Contains("ApiContract", e.Message);
         }
 
@@ -41,7 +41,7 @@ namespace MyLab.ApiClient.Tests.Contracts.Models
             var methodId = contract.GetMethod(nameof(IApiContract.Method))!.MetadataToken;
 
             //Act
-            var desc = ServiceDescription.FromContract(contract);
+            var desc = ServiceModel.FromContract(contract);
 
             //Assert
             Assert.NotNull(desc);

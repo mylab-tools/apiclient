@@ -328,39 +328,39 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.ContentParameterModel"/>
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Contracts.Models.EndpointDescription">
+        <member name="T:MyLab.ApiClient.Contracts.Models.EndpointModel">
             <summary>
             Represent service endpoint
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointDescription.Url">
+        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointModel.Url">
             <summary>
             Gets the relative URL for endpoint
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointDescription.HttpMethod">
+        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointModel.HttpMethod">
             <summary>
             Gets the HTTP method used by the endpoint (e.g., GET, POST, PUT, DELETE).
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointDescription.ExpectedStatusCodes">
+        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointModel.ExpectedStatusCodes">
             <summary>
             Gets the list of HTTP status codes that are expected as valid responses for the endpoint.
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointDescription.Parameters">
+        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointModel.Parameters">
             <summary>
             Gets endpoint request parameters
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Models.EndpointDescription.#ctor(System.Net.Http.HttpMethod,System.Collections.Generic.IEnumerable{MyLab.ApiClient.Contracts.Models.IRequestParameterModel})">
+        <member name="M:MyLab.ApiClient.Contracts.Models.EndpointModel.#ctor(System.Net.Http.HttpMethod,System.Collections.Generic.IEnumerable{MyLab.ApiClient.Contracts.Models.IRequestParameterModel})">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.EndpointDescription"/>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.EndpointModel"/>
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Models.EndpointDescription.FromMethod(System.Reflection.MethodInfo,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
+        <member name="M:MyLab.ApiClient.Contracts.Models.EndpointModel.FromMethod(System.Reflection.MethodInfo,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
             <summary>
-            FromMethod <see cref="T:MyLab.ApiClient.Contracts.Models.EndpointDescription"/> from reflection method
+            FromMethod <see cref="T:MyLab.ApiClient.Contracts.Models.EndpointModel"/> from reflection method
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.Contracts.Models.HeaderCollectionParameterModel">
@@ -413,29 +413,29 @@
             Applies the parameter to the specified HTTP request.
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Contracts.Models.ServiceDescription">
+        <member name="T:MyLab.ApiClient.Contracts.Models.ServiceModel">
             <summary>
             Represent API contract
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Contracts.Models.ServiceDescription.Url">
+        <member name="P:MyLab.ApiClient.Contracts.Models.ServiceModel.Url">
             <summary>
             Gets the relative URL for all endpoints
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Contracts.Models.ServiceDescription.Bindings">
+        <member name="P:MyLab.ApiClient.Contracts.Models.ServiceModel.Bindings">
             <summary>
             Gets the relative URL for all endpoints
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Contracts.Models.ServiceDescription.Endpoints">
+        <member name="P:MyLab.ApiClient.Contracts.Models.ServiceModel.Endpoints">
             <summary>
             Gets endpoint map by Method.MetadataToken
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Contracts.Models.ServiceDescription.FromContract(System.Type,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
+        <member name="M:MyLab.ApiClient.Contracts.Models.ServiceModel.FromContract(System.Type,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
             <summary>
-            Creates <see cref="T:MyLab.ApiClient.Contracts.Models.ServiceDescription"/> from contract type
+            Creates <see cref="T:MyLab.ApiClient.Contracts.Models.ServiceModel"/> from contract type
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.Contracts.Models.UrlParameterModel">
@@ -576,6 +576,66 @@
             Modifies a URI
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.BoolContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.DateTimeContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.DecimalContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.DoubleContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.FloatContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.GuidContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IntContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.LongContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.PrimitiveContentDeserializer`1.Predicate(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.PrimitiveContentDeserializer`1.DeserializeAsync(System.Net.Http.HttpContent,System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.ShortContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.TimeSpanContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UintContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.ULongContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UnexpectedResponseContentTypeException">
+            <summary>
+            Throws when response content has unexpected media type
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UnexpectedResponseContentTypeException.ActualMediaType">
+            <summary>
+            Gets the actual media type of the response content that caused the exception.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UnexpectedResponseContentTypeException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UnexpectedResponseContentTypeException"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UShortContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
         <member name="T:MyLab.ApiClient.ServiceCollectionExtensions">
             <summary>
             Provides extension methods for configuring API client options in an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
@@ -617,6 +677,17 @@
             <summary>
             Extract <see cref="T:MyLab.ApiClient.Contracts.Models.IRequestParameterModel"/> from reflection method
             </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Usage.UnexpectedStatusCodeException.StatusCode">
+            <summary>
+            Gets the HTTP status code that caused the exception.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.UnexpectedStatusCodeException.#ctor(System.Net.HttpStatusCode)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MyLab.ApiClient.Usage.UnexpectedStatusCodeException"/> class with the specified HTTP status code.
+            </summary>
+            <param name="statusCode">The HTTP status code that caused the exception.</param>
         </member>
     </members>
 </doc>

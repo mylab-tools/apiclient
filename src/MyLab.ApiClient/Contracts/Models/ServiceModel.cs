@@ -10,7 +10,7 @@ namespace MyLab.ApiClient.Contracts.Models
     /// <summary>
     /// Represent API contract
     /// </summary>
-    class ServiceDescription
+    class ServiceModel
     {
         /// <summary>
         /// Gets the relative URL for all endpoints
@@ -25,17 +25,17 @@ namespace MyLab.ApiClient.Contracts.Models
         /// <summary>
         /// Gets endpoint map by Method.MetadataToken
         /// </summary>
-        public IReadOnlyDictionary<int, EndpointDescription> Endpoints { get; }
+        public IReadOnlyDictionary<int, EndpointModel> Endpoints { get; }
 
-        public ServiceDescription(IReadOnlyDictionary<int, EndpointDescription> endpoints)
+        public ServiceModel(IReadOnlyDictionary<int, EndpointModel> endpoints)
         {
             Endpoints = endpoints ?? throw new ArgumentNullException(nameof(endpoints));
         }
 
         /// <summary>
-        /// Creates <see cref="ServiceDescription"/> from contract type
+        /// Creates <see cref="ServiceModel"/> from contract type
         /// </summary>
-        public static ServiceDescription FromContract(Type contractType, RequestFactoringSettings? settings = null)
+        public static ServiceModel FromContract(Type contractType, RequestFactoringSettings? settings = null)
         {
             if (contractType == null) throw new ArgumentNullException(nameof(contractType));
 
@@ -46,7 +46,7 @@ namespace MyLab.ApiClient.Contracts.Models
                 .ToDictionary
                 (
                     m => m.MetadataToken,
-                    m => EndpointDescription.FromMethod(m, settings)
+                    m => EndpointModel.FromMethod(m, settings)
                 );
 
             var bindings = new List<string>{ contractType.Name };
@@ -62,7 +62,7 @@ namespace MyLab.ApiClient.Contracts.Models
             if(aca.Binding != null)
                 bindings.Add(aca.Binding);
 
-            return new ServiceDescription(methods)
+            return new ServiceModel(methods)
             {
                 Url = aca?.Url,
                 Bindings = bindings

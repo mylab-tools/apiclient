@@ -8,26 +8,26 @@ namespace MyLab.ApiClient.RequestFactoring
 {
     class RequestFactory
     {
-        readonly ServiceDescription _serviceDesc;
-        readonly EndpointDescription _epDesc;
+        readonly ServiceModel _serviceDesc;
+        readonly EndpointModel _epModel;
 
-        public RequestFactory(ServiceDescription serviceDesc, EndpointDescription epDesc)
+        public RequestFactory(ServiceModel serviceDesc, EndpointModel epModel)
         {
             _serviceDesc = serviceDesc;
-            _epDesc = epDesc;
+            _epModel = epModel;
         }
 
-        public HttpRequestMessage Create(object[] parameters)
+        public HttpRequestMessage Create(object?[] parameters)
         {
             if (parameters == null) throw new ArgumentNullException(nameof(parameters));
             
-            if (_epDesc.Parameters.Count != parameters.Length)
+            if (_epModel.Parameters.Count != parameters.Length)
             {
                 throw new InvalidApiContractException(
-                    $"Endpoint '{_epDesc.Url}' expects {_epDesc.Parameters.Count} parameters, but {parameters.Length} were provided.");
+                    $"Endpoint '{_epModel.Url}' expects {_epModel.Parameters.Count} parameters, but {parameters.Length} were provided.");
             }
             
-            var request = new HttpRequestMessage { Method = _epDesc.HttpMethod };
+            var request = new HttpRequestMessage { Method = _epModel.HttpMethod };
 
             request.RequestUri = CombinePath();
 
@@ -42,7 +42,7 @@ namespace MyLab.ApiClient.RequestFactoring
 
             if (_serviceDesc.Url != null) sb.Append(_serviceDesc.Url);
             if(sb.Length != 0 && sb[^1] != '/') sb.Append("/");
-            if (_epDesc.Url != null) sb.Append(_epDesc.Url);
+            if (_epModel.Url != null) sb.Append(_epModel.Url);
 
             var strUrl = sb.ToString();
 
@@ -51,9 +51,9 @@ namespace MyLab.ApiClient.RequestFactoring
                 : new Uri("/", UriKind.Relative);
         }
 
-        void ApplyParameters(HttpRequestMessage request, object[] parameters)
+        void ApplyParameters(HttpRequestMessage request, object?[] parameters)
         {
-            foreach (var paramDesc in _epDesc.Parameters)
+            foreach (var paramDesc in _epModel.Parameters)
             {
                 var paramValue = parameters[paramDesc.Position];
                 paramDesc.Apply(request, paramValue);
