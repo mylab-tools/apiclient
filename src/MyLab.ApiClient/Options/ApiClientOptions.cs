@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MyLab.ApiClient.Tools;
 
 namespace MyLab.ApiClient.Options;
 
@@ -30,6 +31,11 @@ public class ApiClientOptions
     /// Defines url-encoded-form serialization settings
     /// </summary>
     public ApiUrlFormSettings? UrlFormSettings { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the HTTP message dumper used to log or inspect HTTP requests and responses.
+    /// </summary>
+    public HttpMessageDumper? Dumper { get; set; }
 
     /// <summary>
     /// Extracts options from configuration section 

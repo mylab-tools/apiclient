@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 
@@ -29,4 +31,14 @@ class SupportedContentDeserializers : ReadOnlyCollection<IContentDeserializer>
         new StructuredObjectContentDeserializer(),
         new EnumerableContentDeserializer()
     ];
+
+    public IContentDeserializer GetRequiredDeserializer(Type targetType)
+    {
+        var deserializer = this.FirstOrDefault(p => p.Predicate(targetType));
+        if (deserializer == null)
+            throw new NotSupportedException(
+                $"Content deserializer not found for type '{targetType.FullName}'");
+
+        return deserializer;
+    }
 }

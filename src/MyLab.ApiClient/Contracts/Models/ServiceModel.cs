@@ -56,10 +56,7 @@ namespace MyLab.ApiClient.Contracts.Models
             
             var aca = contractType.GetCustomAttribute<ApiContractAttribute>();
             
-            if (aca == null)
-                throw new InvalidApiContractException("ApiContract attribute not found");
-            
-            if(aca.Binding != null)
+            if(aca?.Binding != null)
                 bindings.Add(aca.Binding);
 
             return new ServiceModel(methods)

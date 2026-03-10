@@ -23,17 +23,6 @@ namespace MyLab.ApiClient.Tests.Contracts.Models
         }
 
         [Fact]
-        public void ShouldFailIfContractWithoutContractAttribute()
-        {
-            //Arrange
-            var contract = typeof(IApiContractWithoutContractAttribute);
-
-            //Act & Assert
-            var e = Assert.Throws<InvalidApiContractException>(() => ServiceModel.FromContract(contract));
-            Assert.Contains("ApiContract", e.Message);
-        }
-
-        [Fact]
         public void ShouldProvideServiceDescription()
         {
             //Arrange

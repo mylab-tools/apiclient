@@ -479,6 +479,11 @@
             Defines url-encoded-form serialization settings
             </summary>
         </member>
+        <member name="P:MyLab.ApiClient.Options.ApiClientOptions.Dumper">
+            <summary>
+            Gets or sets the HTTP message dumper used to log or inspect HTTP requests and responses.
+            </summary>
+        </member>
         <member name="M:MyLab.ApiClient.Options.ApiClientOptions.ExtractFromSection(Microsoft.Extensions.Configuration.IConfigurationSection)">
             <summary>
             Extracts options from configuration section 
@@ -576,6 +581,51 @@
             Modifies a URI
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.ResponseProcessing.CallDetails">
+            <summary>
+            Contains detailed service call information 
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseProcessing.CallDetails.StatusCode">
+            <summary>
+            HTTP status code
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseProcessing.CallDetails.IsOK">
+            <summary>
+            Indicates whether the service call was successful based on the HTTP status code.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseProcessing.CallDetails.RequestDump">
+            <summary>
+            Text request dump
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseProcessing.CallDetails.ResponseDump">
+            <summary>
+            Text response dump
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseProcessing.CallDetails.ResponseMessage">
+            <summary>
+            Response object
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseProcessing.CallDetails.RequestMessage">
+            <summary>
+            Request object
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.CallDetails.ThrowIfNotOKAsync">
+            <summary>
+            Throws <see cref="T:MyLab.ApiClient.ResponseProcessing.ResponseCodeException"/> if <see cref="P:MyLab.ApiClient.ResponseProcessing.CallDetails.IsOK"/> is false
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.CallDetails.ReadContentAsync``1">
+            <summary>
+            Reads and deserializes the content of the HTTP response message into an object of the specified type.
+            </summary>
+        </member>
         <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.BoolContentDeserializer.DeserializeCore(System.String)">
             <inheritdoc />
         </member>
@@ -636,6 +686,36 @@
         <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UShortContentDeserializer.DeserializeCore(System.String)">
             <inheritdoc />
         </member>
+        <member name="T:MyLab.ApiClient.ResponseProcessing.ResponseCodeException">
+            <summary>
+            Throws when got an unexpected response HTTP code
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseProcessing.ResponseCodeException.StatusCode">
+            <summary>
+            Response status code
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseProcessing.ResponseCodeException.ServerMessage">
+            <summary>
+            Server message
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ResponseCodeException.CreateDescription(System.Net.HttpStatusCode,System.String)">
+            <summary>
+            Format serverMessage
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ResponseCodeException.#ctor(System.Net.HttpStatusCode,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ResponseProcessing.ResponseCodeException"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ResponseCodeException.FromResponseMessage(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Creates <see cref="T:MyLab.ApiClient.ResponseProcessing.ResponseCodeException"/> based on <see cref="T:System.Net.Http.HttpResponseMessage"/>
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ServiceCollectionExtensions">
             <summary>
             Provides extension methods for configuring API client options in an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
@@ -673,21 +753,55 @@
             Thrown when <paramref name="configureOptions"/> is <c>null</c>.
             </exception>
         </member>
+        <member name="T:MyLab.ApiClient.Tools.HttpMessageDumper">
+            <summary>
+            Contains tools to create dump from http request and response
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.Tools.HttpMessageDumper.DefaultMaxBodySize">
+            <summary>
+            Default max body size for dumping
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.Tools.HttpMessageDumper.ContentIsTooLargeText">
+            <summary>
+            DumpAsync text when body is too large
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Tools.HttpMessageDumper.MaxRequestBodySize">
+            <summary>
+            Set to customize request body size which is maximum dor dumping
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Tools.HttpMessageDumper.MaxResponseBodySize">
+            <summary>
+            Set to customize response body size which is maximum dor dumping
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Tools.HttpMessageDumper.DumpAsync(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Dumps a request
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Tools.HttpMessageDumper.DumpAsync(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Dumps a response
+            </summary>
+        </member>
         <member name="M:MyLab.ApiClient.Tools.RequestParameterModelExtractor.FromMethod(System.Reflection.MethodInfo,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
             <summary>
             Extract <see cref="T:MyLab.ApiClient.Contracts.Models.IRequestParameterModel"/> from reflection method
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Usage.UnexpectedStatusCodeException.StatusCode">
+        <member name="T:MyLab.ApiClient.Usage.IRequestProcessor">
             <summary>
-            Gets the HTTP status code that caused the exception.
+            Defines a mechanism for processing HTTP requests in an API client.
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.UnexpectedStatusCodeException.#ctor(System.Net.HttpStatusCode)">
+        <member name="M:MyLab.ApiClient.Usage.IRequestProcessor.ProcessRequestAsync(System.Net.Http.HttpRequestMessage)">
             <summary>
-            Initializes a new instance of the <see cref="T:MyLab.ApiClient.Usage.UnexpectedStatusCodeException"/> class with the specified HTTP status code.
+            Processes an HTTP request asynchronously and returns the corresponding HTTP response.
             </summary>
-            <param name="statusCode">The HTTP status code that caused the exception.</param>
         </member>
     </members>
 </doc>
