@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using Moq;
 using MyLab.ApiClient.Contracts.Attributes.ForMethod;
 using MyLab.ApiClient.Contracts.Attributes.ForParameters;
@@ -15,85 +16,46 @@ using Xunit;
 namespace MyLab.ApiClient.Tests.Usage;
 
 [TestSubject(typeof(ApiClientProxy))]
-public class ApiClientProxyBehavior
+public partial class ApiClientProxyBehavior
 {
     [Fact]
     public async Task ShouldPerformVoidMethod()
     {
         //Arrange
-        var opt = new ApiClientOptions();
-
-        var response = new HttpResponseMessage();
-        
-        var reqProcMock = new Mock<IRequestProcessor>();
-        reqProcMock.Setup(p => p.ProcessRequestAsync(It.IsAny<HttpRequestMessage>()))
-            .Returns<HttpRequestMessage>(_ => Task.FromResult(response));
-
-        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, opt);
+        var response = CreateOkResponse();
+        var reqProcMock = CreateReqProcMock(response);
+        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
 
         //Act
         await proxy.PerformVoidAsync(1);
 
         //Assert
-        reqProcMock.Verify(
-            req => 
-                req.ProcessRequestAsync(
-                    It.Is<HttpRequestMessage>(
-                        r => r.RequestUri.ToString() == "void"
-                    )
-                )
-            );
+        VerifyResponseUrl(reqProcMock, "void");
     }
 
     [Fact]
     public async Task ShouldPerformWithReturnParameters()
     {
         //Arrange
-        var opt = new ApiClientOptions();
-
-        var reqProcMock = new Mock<IRequestProcessor>();
-        reqProcMock.Setup(p => p.ProcessRequestAsync(It.IsAny<HttpRequestMessage>()))
-            .Returns<HttpRequestMessage>(req =>
-            {
-                var reqDigit = int.Parse(req.Content.ReadAsStringAsync().Result);
-                var resp = new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent((reqDigit + 1).ToString())
-                };
-
-                return Task.FromResult(resp);
-            });
-
-        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, opt);
+        var response = CreateOkResponse("foo");
+        var reqProcMock = CreateReqProcMock(response);
+        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
 
         //Act
-        var result = await proxy.PerformAddAsync(5);
+        var result = await proxy.GetAsync();
 
         //Assert
-        reqProcMock.Verify(
-            req => req.ProcessRequestAsync(
-                It.Is<HttpRequestMessage>(
-                    r => r.RequestUri.ToString() == "add"
-                )
-            )
-        );
-        
-        Assert.Equal(6, result);
+        VerifyResponseUrl(reqProcMock, "get");
+        Assert.Equal("foo", result);
     }
 
     [Fact]
     public async Task ShouldFailIfStatusCodeIsnNotOK()
     {
         //Arrange
-        var opt = new ApiClientOptions();
-
         var response = new HttpResponseMessage(HttpStatusCode.NotFound);
-
-        var reqProcMock = new Mock<IRequestProcessor>();
-        reqProcMock.Setup(p => p.ProcessRequestAsync(It.IsAny<HttpRequestMessage>()))
-            .Returns<HttpRequestMessage>(_ => Task.FromResult(response));
-
-        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, opt);
+        var reqProcMock = CreateReqProcMock(response);
+        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
 
         //Act & Assert
         var e = await Assert.ThrowsAsync<ResponseCodeException>(() => proxy.PerformVoidAsync(1));
@@ -104,21 +66,9 @@ public class ApiClientProxyBehavior
     public async Task ShouldSupportNewtonJsonModels()
     {
         //Arrange
-        var opt = new ApiClientOptions();
-        var serializedModel = $"{{\"{NewtonJsonModel.ValuePropertyName}\":\"foo\"}}";
-
-        var response = new HttpResponseMessage(HttpStatusCode.OK)
-        {
-            Content = new StringContent(serializedModel, Encoding.UTF8, "application/json")
-        };
-
-        var reqProcMock = new Mock<IRequestProcessor>();
-        reqProcMock.Setup
-        (p => 
-                p.ProcessRequestAsync(It.IsAny<HttpRequestMessage>())
-        ).Returns<HttpRequestMessage>(_ => Task.FromResult(response));
-
-        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, opt);
+        var response = CreateOkResponse($"{{\"{NewtonJsonModel.ValuePropertyName}\":\"foo\"}}");
+        var reqProcMock = CreateReqProcMock(response);
+        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
 
         //Act
         var actualModel = await proxy.GetNewtonJsonModel();
@@ -135,19 +85,8 @@ public class ApiClientProxyBehavior
         {
             JsonSerializer = new MicrosoftJsonSerializer(new ApiJsonSettings())
         };
-        var serializedModel = $"{{\"{MicrosoftModel.ValuePropertyName}\":\"bar\"}}";
-
-        var response = new HttpResponseMessage(HttpStatusCode.OK)
-        {
-            Content = new StringContent(serializedModel, Encoding.UTF8, "application/json")
-        };
-
-        var reqProcMock = new Mock<IRequestProcessor>();
-        reqProcMock.Setup
-        (p =>
-            p.ProcessRequestAsync(It.IsAny<HttpRequestMessage>())
-        ).Returns<HttpRequestMessage>(_ => Task.FromResult(response));
-
+        var response = CreateOkResponse($"{{\"{MicrosoftModel.ValuePropertyName}\":\"bar\"}}");
+        var reqProcMock = CreateReqProcMock(response);
         var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, opt);
 
         //Act
@@ -157,34 +96,51 @@ public class ApiClientProxyBehavior
         Assert.Equal("bar", actualModel.Value);
     }
 
-    interface IContract
+    [Fact]
+    public async Task ShouldSendInt()
     {
-        [Post("void")]
-        public Task PerformVoidAsync([JsonContent]int parameter);
+        //Arrange
+        var response = CreateOkResponse();
+        var reqProcMock = CreateReqProcMock(response);
+        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
 
-        [Post("add")]
-        public Task<int> PerformAddAsync([JsonContent] int parameter);
+        //Act
+        await proxy.SendInt(42);
 
-        [Get("newtonjson")]
-        public Task<NewtonJsonModel> GetNewtonJsonModel();
-
-        [Get("microsoft")]
-        public Task<MicrosoftModel> GetMicrosoftModel();
+        //Assert
+        VerifyResponseUrl(reqProcMock, "send/42");
     }
 
-    class NewtonJsonModel
+    [Fact]
+    public async Task ShouldSendGuid()
     {
-        public const string ValuePropertyName = "nj_val";
+        //Arrange
+        var guid = Guid.NewGuid();
+        var response = CreateOkResponse(guid.ToString("N"));
+        var reqProcMock = CreateReqProcMock(response);
+        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
 
-        [Newtonsoft.Json.JsonProperty(ValuePropertyName)]
-        public string? Value { get; set; }
+        //Act
+        await proxy.SendGuid(guid);
+
+        //Assert
+        VerifyResponseUrl(reqProcMock, $"send/{guid:N}");
     }
 
-    class MicrosoftModel
+    [Fact]
+    public async Task ShouldSendObject()
     {
-        public const string ValuePropertyName = "ms_val";
-        
-        [System.Text.Json.Serialization.JsonPropertyName(ValuePropertyName)]
-        public string? Value { get; set; }
+        //Arrange
+        var response = CreateOkResponse();
+        var reqProcMock = CreateReqProcMock(response);
+        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
+
+        var obj = new NewtonJsonModel { Value = "foo" };
+
+        //Act
+        await proxy.SendObj(obj);
+
+        //Assert
+        VerifyResponseContent(reqProcMock, $"{{\"{NewtonJsonModel.ValuePropertyName}\":\"foo\"}}");
     }
 }
