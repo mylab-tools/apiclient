@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using MyLab.ApiClient.JsonSerialization;
 using MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 using Newtonsoft.Json;
 using Xunit;
@@ -12,8 +13,12 @@ namespace MyLab.ApiClient.Tests.ResponseProcessing.ContentDeserializing;
 [TestSubject(typeof(StructuredObjectContentDeserializer))]
 public class StructuredObjectContentDeserializerBehavior
 {
-    readonly StructuredObjectContentDeserializer _deserializer = new();
-    
+    readonly StructuredObjectContentDeserializer _deserializer = new
+    (
+        new JsonDeserializationTools(NewtonJsonSerializer.Default),
+        new XmlDeserializationTools()
+    );
+
     [Fact]
     public async Task ShouldDeserializeValidStructuredObjectFromJsonContent()
     {

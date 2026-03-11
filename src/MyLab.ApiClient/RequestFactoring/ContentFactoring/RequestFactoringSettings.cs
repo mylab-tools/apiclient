@@ -1,4 +1,5 @@
-﻿using MyLab.ApiClient.Options;
+﻿using MyLab.ApiClient.JsonSerialization;
+using MyLab.ApiClient.Options;
 using Newtonsoft.Json;
 
 namespace MyLab.ApiClient.RequestFactoring.ContentFactoring;
@@ -9,9 +10,9 @@ namespace MyLab.ApiClient.RequestFactoring.ContentFactoring;
 public class RequestFactoringSettings
 {
     /// <summary>
-    /// JSON serialization settings
+    /// Defines JSON serializer
     /// </summary>
-    public JsonSerializerSettings? JsonSettings { get; init; }
+    public IJsonSerializer JsonSerializer { get; init; } = NewtonJsonSerializer.Default;
 
     /// <summary>
     /// Defines url-encoded-form serialization settings
@@ -26,18 +27,9 @@ public class RequestFactoringSettings
     /// <returns></returns>
     public static RequestFactoringSettings CreateFromOptions(ApiClientOptions? options)
     {
-        var apiJsonSettings = options?.JsonSettings ?? new ApiJsonSettings();
-
-        var jsonSerializerSettings = new JsonSerializerSettings
-        {
-            NullValueHandling = apiJsonSettings.IgnoreNullValues
-                ? NullValueHandling.Ignore
-                : NullValueHandling.Include
-        };
-
         return new RequestFactoringSettings
         {
-            JsonSettings = jsonSerializerSettings,
+            JsonSerializer = options?.JsonSerializer ?? NewtonJsonSerializer.Default,
             UrlFormSettings = options?.UrlFormSettings ?? new ApiUrlFormSettings()
         };
     }

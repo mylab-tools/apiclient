@@ -1,29 +1,28 @@
-﻿using MyLab.ApiClient.Options;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
+using MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 using MyLab.ApiClient.Tools;
 
 namespace MyLab.ApiClient.ResponseProcessing;
 
-class CallDetailsFactory
-{
-    readonly HttpMessageDumper _dumper;
-
-    public CallDetailsFactory(ApiClientOptions options)
-    {
-        _dumper = options.Dumper ?? new HttpMessageDumper();
-    }
-    
+class CallDetailsFactory(IContentDeserializerProvider deserializerProvider, HttpMessageDumper? dumper)
+{   
     public async Task<CallDetails> CreateAsync(HttpRequestMessage req, HttpResponseMessage resp)
     {
-        return new CallDetails
+        var reqDump = dumper != null 
+            ? await dumper.DumpAsync(req)
+            : null;
+
+        var respDump = dumper != null
+            ? await dumper.DumpAsync(resp)
+            : null;
+
+        return new CallDetails(deserializerProvider)
         {
             IsOK = IsOK(resp.StatusCode),
-            RequestDump = await _dumper.DumpAsync(req),
-            ResponseDump = await _dumper.DumpAsync(resp),
+            RequestDump = reqDump,
+            ResponseDump = respDump,
             RequestMessage = req,
             ResponseMessage = resp,
             StatusCode = resp.StatusCode

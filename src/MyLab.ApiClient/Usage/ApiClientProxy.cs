@@ -1,14 +1,16 @@
 ﻿using MyLab.ApiClient.Contracts;
 using MyLab.ApiClient.Contracts.Models;
+using MyLab.ApiClient.Options;
 using MyLab.ApiClient.RequestFactoring;
+using MyLab.ApiClient.RequestFactoring.ContentFactoring;
 using MyLab.ApiClient.ResponseProcessing;
+using MyLab.ApiClient.Tools;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using MyLab.ApiClient.Options;
-using MyLab.ApiClient.RequestFactoring.ContentFactoring;
+using MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 
 namespace MyLab.ApiClient.Usage
 {
@@ -26,8 +28,7 @@ namespace MyLab.ApiClient.Usage
         ServiceModel? _serviceModel;
         IRequestProcessor? _requestProcessor;
         CallDetailsFactory? _callDetailsFactory;
-
-
+        
         public static TContract CreateFroContract<TContract>
         (
             IRequestProcessor requestProcessor, 
@@ -36,7 +37,15 @@ namespace MyLab.ApiClient.Usage
         {
             var requestFactoringSettings = RequestFactoringSettings.CreateFromOptions(options);
             var serviceModel = ServiceModel.FromContract(typeof(TContract), requestFactoringSettings);
-            var callDetailsFactory = new CallDetailsFactory(options);
+            var dumper = options.Dumper ?? new HttpMessageDumper();
+
+            var contentDeserializerProvider = SupportedContentDeserializers.Create
+            (
+                new JsonDeserializationTools(options.JsonSerializer),
+                new XmlDeserializationTools()
+            );
+            
+            var callDetailsFactory = new CallDetailsFactory(contentDeserializerProvider, dumper);
 
             object? proxy = Create<TContract, ApiClientProxy>();
 

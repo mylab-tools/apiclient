@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
+using MyLab.ApiClient.JsonSerialization;
+using MyLab.ApiClient.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MyLab.ApiClient.Tools;
 
 namespace MyLab.ApiClient.Options;
 
@@ -23,9 +24,9 @@ public class ApiClientOptions
     public Dictionary<string, ApiEndpointOptions> Endpoints { get; set; } = new();
 
     /// <summary>
-    /// Defines JSON serialization settings
+    /// Defines JSON serializer
     /// </summary>
-    public ApiJsonSettings? JsonSettings { get; set; }
+    public IJsonSerializer JsonSerializer { get; set; } = NewtonJsonSerializer.Default;
 
     /// <summary>
     /// Defines url-encoded-form serialization settings
@@ -47,7 +48,6 @@ public class ApiClientOptions
 
         var opt = new ApiClientOptions
         {
-            JsonSettings = ExtractJsonSettings(section.GetSection(nameof(JsonSettings))),
             UrlFormSettings = ExtractUrlFormSettings(section.GetSection(nameof(UrlFormSettings)))
         };
 
@@ -61,7 +61,7 @@ public class ApiClientOptions
 
         var endpointSections = endpointsSection != null && endpointsSection.Exists()
             ? endpointsSection.GetChildren()
-            : section.GetChildren().Where(s => s.Key != nameof(JsonSettings) && s.Key != nameof(UrlFormSettings));
+            : section.GetChildren().Where(s => s.Key != nameof(UrlFormSettings));
 
         ExtractEndpoints(opt.Endpoints, endpointSections);
 
@@ -101,17 +101,6 @@ public class ApiClientOptions
         if (section == null || !section.Exists()) return null;
 
         var s = new ApiUrlFormSettings();
-
-        section.Bind(s);
-
-        return s;
-    }
-
-    static ApiJsonSettings? ExtractJsonSettings(IConfigurationSection? section)
-    {
-        if (section == null || !section.Exists()) return null;
-
-        var s = new ApiJsonSettings();
 
         section.Bind(s);
 

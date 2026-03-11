@@ -4,15 +4,18 @@ using System.Linq;
 
 namespace MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 
-class SupportedContentDeserializers : ReadOnlyCollection<IContentDeserializer>
+class SupportedContentDeserializers : ReadOnlyCollection<IContentDeserializer>, IContentDeserializerProvider
 {
-    public static readonly SupportedContentDeserializers Instance = new ();
-
-    SupportedContentDeserializers() : base(Create())
+    SupportedContentDeserializers(IContentDeserializer[] deserializers) : base(deserializers)
     {
     }
 
-    static IContentDeserializer[] Create() => [
+    public static SupportedContentDeserializers Create(JsonDeserializationTools jsonDesTools, XmlDeserializationTools xmlDesTools)
+    {
+        return new SupportedContentDeserializers(CreateArray(jsonDesTools, xmlDesTools));
+    }
+
+    static IContentDeserializer[] CreateArray(JsonDeserializationTools jsonDesTools, XmlDeserializationTools xmlDesTools) => [
         new BoolContentDeserializer(),
         new ShortContentDeserializer(),
         new UShortContentDeserializer(),
@@ -28,8 +31,8 @@ class SupportedContentDeserializers : ReadOnlyCollection<IContentDeserializer>
         new DateTimeContentDeserializer(),
         new GuidContentDeserializer(),
         new BinaryContentDeserializer(),
-        new StructuredObjectContentDeserializer(),
-        new EnumerableContentDeserializer()
+        new StructuredObjectContentDeserializer(jsonDesTools, xmlDesTools),
+        new EnumerableContentDeserializer(jsonDesTools, xmlDesTools)
     ];
 
     public IContentDeserializer GetRequiredDeserializer(Type targetType)

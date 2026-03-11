@@ -7,6 +7,15 @@ namespace MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 
 class EnumerableContentDeserializer : IContentDeserializer
 {
+    readonly JsonDeserializationTools _jsonSerTools;
+    readonly XmlDeserializationTools _xmlSerTools;
+
+    public EnumerableContentDeserializer(JsonDeserializationTools jsonSerTools, XmlDeserializationTools xmlSerTools)
+    {
+        _jsonSerTools = jsonSerTools;
+        _xmlSerTools = xmlSerTools;
+    }
+    
     public async Task<object?> DeserializeAsync(HttpContent content, Type returnType)
     {
         if (content == null) throw new ArgumentNullException(nameof(content));
@@ -15,8 +24,8 @@ class EnumerableContentDeserializer : IContentDeserializer
         var listType = typeof(List<>).MakeGenericType(returnType.GetGenericArguments());
 
         return await new MediaTypeProc(content)
-            .Supports("application/json", async c => await JsonDeserializationTools.ReadObjectJson(c, listType))
-            .Supports("application/xml", async c => await XmlDeserializationTools.ReadObjectXml(c, listType))
+            .Supports("application/json", async c => await _jsonSerTools.ReadObjectJson(c, listType))
+            .Supports("application/xml", async c => await _xmlSerTools.ReadObjectXml(c, listType))
             .GetResult();
     }
 

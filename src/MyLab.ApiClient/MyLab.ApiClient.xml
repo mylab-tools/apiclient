@@ -453,6 +453,91 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.UrlParameterModel"/>
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.JsonSerialization.IJsonSerializer">
+            <summary>
+            Provides methods for serializing objects to JSON and deserializing JSON strings to objects.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.IJsonSerializer.Deserialize``1(System.String)">
+            <summary>
+            Deserializes the specified JSON string into an object of the specified type.
+            </summary>
+            <typeparam name="T">The type of the object to deserialize to.</typeparam>
+            <param name="json">The JSON string to deserialize.</param>
+            <returns>An object of type <typeparamref name="T"/> deserialized from the JSON string.</returns>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="json"/> string is null, empty, or consists only of white-space characters.</exception>
+            <exception cref="T:Newtonsoft.Json.JsonException">Thrown when the JSON string is invalid or cannot be deserialized into the specified type.</exception>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.IJsonSerializer.Deserialize(System.String,System.Type)">
+            <summary>
+            Deserializes the specified JSON string into an object of the specified type.
+            </summary>
+            <param name="json">The JSON string to deserialize.</param>
+            <param name="targetType">The target type of the object to deserialize to.</param>
+            <returns>An object of the specified <paramref name="targetType"/> deserialized from the JSON string.</returns>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="json"/> string is null, empty, or consists only of white-space characters.</exception>
+            <exception cref="T:Newtonsoft.Json.JsonException">Thrown when the JSON string is invalid or cannot be deserialized into the specified type.</exception>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.IJsonSerializer.Serialize``1(``0)">
+            <summary>
+            Serializes the specified object into a JSON string.
+            </summary>
+            <typeparam name="T">The type of the object to serialize.</typeparam>
+            <param name="obj">The object to serialize.</param>
+            <returns>A JSON string representation of the specified object.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="obj"/> is null.</exception>
+        </member>
+        <member name="T:MyLab.ApiClient.JsonSerialization.MicrosoftJsonSerializer">
+            <summary>
+            A JSON serializer implementation using the Microsoft JSON library.
+            </summary>
+            <remarks>
+            This class provides methods for serializing objects to JSON strings and deserializing JSON strings to objects.
+            It is configured using the <see cref="T:MyLab.ApiClient.Options.ApiJsonSettings"/> class to customize serialization behavior.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.MicrosoftJsonSerializer.#ctor(MyLab.ApiClient.Options.ApiJsonSettings)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.JsonSerialization.MicrosoftJsonSerializer"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.MicrosoftJsonSerializer.Deserialize``1(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.MicrosoftJsonSerializer.Deserialize(System.String,System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.MicrosoftJsonSerializer.Serialize``1(``0)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer">
+            <summary>
+            A JSON serializer implementation using Newtonsoft.Json.
+            </summary>
+            <remarks>
+            This class provides methods for serializing objects to JSON strings and deserializing JSON strings to objects.
+            It utilizes <see cref="T:Newtonsoft.Json.JsonSerializerSettings"/> for configuring serialization behavior.
+            </remarks>
+        </member>
+        <member name="F:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer.Default">
+            <summary>
+            Provides a default instance of <see cref="T:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer"/> configured with default JSON serialization settings.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer.#ctor(MyLab.ApiClient.Options.ApiJsonSettings)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer.Deserialize``1(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer.Deserialize(System.String,System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer.Serialize``1(``0)">
+            <inheritdoc />
+        </member>
         <member name="T:MyLab.ApiClient.Options.ApiClientOptions">
             <summary>
             Represents the configuration options for API clients, including endpoints, 
@@ -469,9 +554,9 @@
             List of api connections options
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.Options.ApiClientOptions.JsonSettings">
+        <member name="P:MyLab.ApiClient.Options.ApiClientOptions.JsonSerializer">
             <summary>
-            Defines JSON serialization settings
+            Defines JSON serializer
             </summary>
         </member>
         <member name="P:MyLab.ApiClient.Options.ApiClientOptions.UrlFormSettings">
@@ -554,9 +639,9 @@
             Contains request factoring settings
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings.JsonSettings">
+        <member name="P:MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings.JsonSerializer">
             <summary>
-            JSON serialization settings
+            Defines JSON serializer
             </summary>
         </member>
         <member name="P:MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings.UrlFormSettings">
@@ -616,6 +701,11 @@
             Request object
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.CallDetails.#ctor(MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializerProvider)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/>
+            </summary>
+        </member>
         <member name="M:MyLab.ApiClient.ResponseProcessing.CallDetails.ThrowIfNotOKAsync">
             <summary>
             Throws <see cref="T:MyLab.ApiClient.ResponseProcessing.ResponseCodeException"/> if <see cref="P:MyLab.ApiClient.ResponseProcessing.CallDetails.IsOK"/> is false
@@ -643,6 +733,40 @@
         </member>
         <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.GuidContentDeserializer.DeserializeCore(System.String)">
             <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializer">
+            <summary>
+            Defines a contract for deserializing HTTP content into objects of a specified type.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializer.Predicate(System.Type)">
+            <summary>
+            Determines whether the deserializer can process content for the specified return type.
+            </summary>
+            <param name="returnType">The type of the object to be deserialized.</param>
+            <returns>
+            <see langword="true"/> if the deserializer supports the specified return type; otherwise, <see langword="false"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="returnType"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializer.DeserializeAsync(System.Net.Http.HttpContent,System.Type)">
+            <summary>
+            Asynchronously deserializes the provided HTTP content into an object of the specified type.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializerProvider">
+            <summary>
+            Provides a mechanism to retrieve a content deserializer capable of processing a specific target type.
+            </summary>
+            <remarks>
+            This interface is designed to support the selection of an appropriate implementation of 
+            <see cref="T:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializer"/> based on the target type for deserialization.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializerProvider.GetRequiredDeserializer(System.Type)">
+            <summary>
+            Retrieves a content deserializer that is capable of processing the specified target type.
+            </summary>
         </member>
         <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IntContentDeserializer.DeserializeCore(System.String)">
             <inheritdoc />

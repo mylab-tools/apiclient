@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using MyLab.ApiClient.JsonSerialization;
 using Newtonsoft.Json;
 using MyLab.ApiClient.RequestFactoring.ContentFactoring;
 using Xunit;
@@ -57,9 +58,9 @@ public class JsonHttpContentFactoryBehavior
     {
         // Arrange
         var factory = new JsonHttpContentFactory();
-        var settings = new RequestFactoringSettings
+        var settings = new RequestFactoringSettings()
         {
-            JsonSettings = new JsonSerializerSettings()
+            JsonSerializer = NewtonJsonSerializer.Default
         };
 
         // Act

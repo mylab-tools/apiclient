@@ -4,6 +4,7 @@ using Moq;
 using MyLab.ApiClient.Options;
 using System;
 using System.Collections.Generic;
+using MyLab.ApiClient.JsonSerialization;
 using Xunit;
 
 namespace MyLab.ApiClient.Tests.Options;
@@ -29,8 +30,8 @@ public class ApiClientOptionsBehavior
 
         // Assert
         Assert.NotNull(options);
-        Assert.NotNull(options.JsonSettings);
-        Assert.False(options.JsonSettings.IgnoreNullValues);
+        Assert.NotNull(options.JsonSerializer);
+        Assert.Equal(NewtonJsonSerializer.Default, options.JsonSerializer);
     }
     
     [Fact]
@@ -144,7 +145,6 @@ public class ApiClientOptionsBehavior
         // Arrange
         var configurationData = new Dictionary<string, string>
         {
-            { ApiClientOptions.DefaultSectionName + ":JsonSettings:IgnoreNullValues", "true" },
             { ApiClientOptions.DefaultSectionName + ":UrlFormSettings:EscapeSymbols", "true" }
         };
         var configuration = new ConfigurationBuilder()
@@ -155,8 +155,6 @@ public class ApiClientOptionsBehavior
         var options = ApiClientOptions.ExtractFromSection(section);
         // Assert
         Assert.NotNull(options);
-        Assert.NotNull(options.JsonSettings);
-        Assert.True(options.JsonSettings.IgnoreNullValues);
         Assert.NotNull(options.UrlFormSettings);
         Assert.True(options.UrlFormSettings.EscapeSymbols);
         Assert.NotNull(options.Endpoints);

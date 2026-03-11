@@ -8,9 +8,9 @@ using System.Xml.Serialization;
 
 namespace MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 
-static class XmlDeserializationTools
+class XmlDeserializationTools
 {
-    public static async Task<object?> ReadObjectXml(HttpContent content, Type returnType)
+    public async Task<object?> ReadObjectXml(HttpContent content, Type returnType)
     {
         var contentStr = await content.ReadAsStringAsync();
         var str = contentStr.Trim(' ', '\"');
@@ -21,7 +21,7 @@ static class XmlDeserializationTools
         return DeserializeFromXml(str, returnType);
     }
 
-    static object? DeserializeFromXml(string str, Type returnType)
+    object? DeserializeFromXml(string str, Type returnType)
     {
         var rootAttribute = returnType.GetTypeInfo().GetCustomAttribute<XmlRootAttribute>();
 

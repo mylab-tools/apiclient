@@ -27,6 +27,6 @@ class ContentParameterModel : IRequestParameterModel
     {
         if (request == null) throw new ArgumentNullException(nameof(request));
 
-        request.Content = ContentFactory.Create(value, null);
+        request.Content = ContentFactory.Create(value, Settings);
     }
 }
