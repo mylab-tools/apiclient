@@ -2,44 +2,73 @@
 using Microsoft.Extensions.Options;
 using MyLab.ApiClient.Contracts;
 using MyLab.ApiClient.Options;
-using MyLab.ApiClient.RequestFactoring.ContentFactoring;
 using System;
 using System.Net.Http;
 using MyLab.ApiClient.Usage;
 
-namespace MyLab.ApiClient.DI
+namespace MyLab.ApiClient.DI;
+
+class ApiContractRegistrar<TContract> where TContract : class
 {
-    class ApiContractRegistrar<TContract>
-    {
-        readonly ApiContractBinding _binding = new(typeof(TContract));
+    readonly ApiContractBinding _binding = new(typeof(TContract));
         
-        public bool Optional { get; set; } = false;
+    public bool Optional { get; set; } = false;
 
-        public void Regster(IServiceCollection services)
+    public void Register(IServiceCollection services)
+    {
+        ContractValidator.Validate(typeof(TContract));
+
+        services.AddSingleton(serviceProvider =>
         {
-            ContractValidator.Validate(typeof(TContract));
+            var opts = serviceProvider.GetService<IOptions<ApiClientOptions>>();
 
-            services.AddSingleton(serviceProvider =>
+            if (opts?.Value == null)
+                throw new InvalidOperationException("ApiClient options not found");
+
+            if (!_binding.TryGetOptions(opts.Value, out _, out var bindingKey))
             {
-                var opts = serviceProvider.GetService<IOptions<ApiClientOptions>>();
-
-                if (opts?.Value == null)
-                    throw new InvalidOperationException("ApiClient options not found");
-
-                if (!_binding.TryGetOptions(opts.Value, out var epOpt))
+                if (Optional)
                 {
-                    return Optional
-                        ? null
-                        : throw new InvalidOperationException($"Api '{typeof(TContract).FullName}' options not found");
+                    return null;
                 }
 
-                var reqFactoringSettings = RequestFactoringSettings.CreateFromOptions(opts.Value);
-                var httpFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+                throw new InvalidOperationException($"Api '{typeof(TContract).FullName}' options not found");
+            }
 
-                IRequestProcessor reqProc =
-                
-                return ApiClientProxy.CreateFroContract<TContract>()
-            });
-        }
+            var httpFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+            var httpClientProvider = new FactoryHttpClientProvider(httpFactory, bindingKey!);
+            IRequestProcessor reqProc = new HttpClientRequestProcessor(httpClientProvider);
+
+            return ApiClientProxy.CreateFroContract<TContract>(reqProc, opts.Value);
+        });
+    }
+
+    public void RegisterScoped(IServiceCollection services)
+    {
+        ContractValidator.Validate(typeof(TContract));
+
+        services.AddScoped(serviceProvider =>
+        {
+            var opts = serviceProvider.GetService<IOptions<ApiClientOptions>>();
+
+            if (opts?.Value == null)
+                throw new InvalidOperationException("ApiClient options not found");
+
+            if (!_binding.TryGetOptions(opts.Value, out _, out var bindingKey))
+            {
+                if (Optional)
+                {
+                    return null;
+                }
+
+                throw new InvalidOperationException($"Api '{typeof(TContract).FullName}' options not found");
+            }
+
+            var httpFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+            var httpClientProvider = SingleHttpClientProvider.CrateFRomHttpClientFactory(httpFactory, bindingKey!);
+            IRequestProcessor reqProc = new HttpClientRequestProcessor(httpClientProvider);
+
+            return ApiClientProxy.CreateFroContract<TContract>(reqProc, opts.Value);
+        });
     }
 }

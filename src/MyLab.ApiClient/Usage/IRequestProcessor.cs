@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MyLab.ApiClient.Usage;
@@ -11,5 +12,5 @@ public interface IRequestProcessor
     /// <summary>
     /// Processes an HTTP request asynchronously and returns the corresponding HTTP response.
     /// </summary>
-    Task<HttpResponseMessage> ProcessRequestAsync(HttpRequestMessage request);
+    Task<HttpResponseMessage> ProcessRequestAsync(HttpRequestMessage request, CancellationToken ct);
 }

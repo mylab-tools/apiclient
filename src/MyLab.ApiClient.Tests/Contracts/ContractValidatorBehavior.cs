@@ -67,10 +67,10 @@ public class ContractValidatorBehavior
     }
 
     [Fact]
-    public void ShouldThrowWhenContractIsNotDecoratedWithApiContractAttribute()
+    public void ShouldPassWhenContractIsNotDecoratedWithApiContractAttribute()
     {
         var contractType = typeof(ICorrectWithoutContractAttribute);
-        Assert.Throws<InvalidApiContractException>(() => ContractValidator.Validate(contractType));
+        ContractValidator.Validate(contractType);
     }
 
     [Fact]

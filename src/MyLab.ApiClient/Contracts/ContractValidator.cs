@@ -16,9 +16,6 @@ namespace MyLab.ApiClient.Contracts
             if (!contract.IsInterface)
                 throw new InvalidApiContractException("The contract must be interface");
             
-            if(contract.GetCustomAttribute<ApiContractAttribute>() == null)
-                throw new InvalidApiContractException("The contract must be decorated with ApiContractAttribute");
-
             var allMembers = contract.GetMembers();
 
             if (allMembers.Any(m => m.MemberType != MemberTypes.Method))

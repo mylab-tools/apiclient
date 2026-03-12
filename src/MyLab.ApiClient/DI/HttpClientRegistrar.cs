@@ -59,7 +59,7 @@ class HttpClientRegistrar<TContract>
         if (opt?.Value == null)
             throw new InvalidOperationException("ApiClient options not found");
 
-        if (!_binding.TryGetOptions(opt.Value, out var epOpt))
+        if (!_binding.TryGetOptions(opt.Value, out var epOpt, out _))
         {
             return Optional
                 ? null

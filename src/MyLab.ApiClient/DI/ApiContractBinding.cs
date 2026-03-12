@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MyLab.ApiClient.Contracts.Attributes.ForContract;
+using MyLab.ApiClient.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
-using MyLab.ApiClient.Contracts.Attributes.ForContract;
-using MyLab.ApiClient.Options;
 
 namespace MyLab.ApiClient.DI;
 
@@ -19,12 +20,20 @@ class ApiContractBinding
         Keys = CreateContractBindingKeys();
     }
 
-    public bool TryGetOptions(ApiClientOptions opts, out ApiEndpointOptions? apiEndpointOpts)
+    public bool TryGetOptions(ApiClientOptions opts, out ApiEndpointOptions? apiEndpointOpts, out string? bindingKey)
     {
-        apiEndpointOpts = opts.Endpoints
-            .Where(ep => Keys.Contains(ep.Key))
-            .Select(ep => ep.Value)
-            .FirstOrDefault();
+        foreach (var endpointKv in opts.Endpoints)
+        {
+            if (Keys.Contains(endpointKv.Key))
+            {
+                apiEndpointOpts = endpointKv.Value;
+                bindingKey = endpointKv.Key;
+                return true;
+            }
+        }
+
+        apiEndpointOpts = null;
+        bindingKey = null;
 
         return apiEndpointOpts != null;
     }

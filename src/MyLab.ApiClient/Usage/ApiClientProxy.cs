@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 
@@ -25,10 +26,10 @@ namespace MyLab.ApiClient.Usage
                 .First(m => m.Name == nameof(ProcRequestAsync));
         }
 
-        ServiceModel? _serviceModel;
-        IRequestProcessor? _requestProcessor;
-        CallDetailsFactory? _callDetailsFactory;
-        
+        public ServiceModel? ServiceModel { get; private set; }
+        public IRequestProcessor? RequestProcessor { get; private set; }
+        public CallDetailsFactory? CallDetailsFactory { get; private set; }
+
         public static TContract CreateFroContract<TContract>
         (
             IRequestProcessor requestProcessor, 
@@ -62,17 +63,19 @@ namespace MyLab.ApiClient.Usage
         {
             if (targetMethod == null) throw new ArgumentNullException(nameof(targetMethod));
 
-            if (_serviceModel == null) throw new InvalidOperationException("Proxy was not initialized");
+            if (ServiceModel == null) throw new InvalidOperationException("Proxy was not initialized");
             
-            if (!_serviceModel.Endpoints.TryGetValue(targetMethod.MetadataToken, out var endpointModel))
+            if (!ServiceModel.Endpoints.TryGetValue(targetMethod.MetadataToken, out var endpointModel))
                 throw new InvalidOperationException($"Endpoint description not found for method '{targetMethod.Name}'.");
 
-            var requestFactory = new RequestFactory(_serviceModel, endpointModel);
+            var requestFactory = new RequestFactory(ServiceModel, endpointModel);
             var request = requestFactory.Create(args ?? []);
+
+            var cancellationToken = CancellationTokenExtractor.FromMethodInvocation(targetMethod, args);
 
             if (targetMethod.ReturnType == typeof(Task))
             {
-                return ProcRequestForVoidAsync(request);
+                return ProcRequestForVoidAsync(request, cancellationToken);
             }
 
             if (targetMethod.ReturnType.IsGenericType && targetMethod.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
@@ -81,7 +84,7 @@ namespace MyLab.ApiClient.Usage
                 
                 return ProcRequestAsyncMethod
                     .MakeGenericMethod(retType)
-                    .Invoke(this, [request]);
+                    .Invoke(this, [request, cancellationToken]);
             }
 
             throw new InvalidApiContractException($"Return type '{targetMethod.ReturnType.Name}' is not supported.");
@@ -89,30 +92,30 @@ namespace MyLab.ApiClient.Usage
 
         void Initialize(ServiceModel serviceModel, IRequestProcessor requestProcessor, CallDetailsFactory callDetailsFactory)
         {
-            _serviceModel = serviceModel ?? throw new ArgumentNullException(nameof(serviceModel));
-            _requestProcessor = requestProcessor ?? throw new ArgumentNullException(nameof(requestProcessor));
-            _callDetailsFactory = callDetailsFactory ?? throw new ArgumentNullException(nameof(callDetailsFactory));
+            ServiceModel = serviceModel ?? throw new ArgumentNullException(nameof(serviceModel));
+            RequestProcessor = requestProcessor ?? throw new ArgumentNullException(nameof(requestProcessor));
+            CallDetailsFactory = callDetailsFactory ?? throw new ArgumentNullException(nameof(callDetailsFactory));
         }
 
-        async Task ProcRequestForVoidAsync(HttpRequestMessage request)
+        async Task ProcRequestForVoidAsync(HttpRequestMessage request, CancellationToken ct)
         {
-            if (_requestProcessor == null || _callDetailsFactory == null) 
+            if (RequestProcessor == null || CallDetailsFactory == null) 
                 throw new InvalidOperationException("Proxy was not initialized");
 
-            var response = await _requestProcessor.ProcessRequestAsync(request);
+            var response = await RequestProcessor.ProcessRequestAsync(request, ct);
 
-            var callDetails = await _callDetailsFactory.CreateAsync(request, response);
+            var callDetails = await CallDetailsFactory.CreateAsync(request, response);
             await callDetails.ThrowIfNotOKAsync();
         }
 
-        async Task<T?> ProcRequestAsync<T>(HttpRequestMessage request)
+        async Task<T?> ProcRequestAsync<T>(HttpRequestMessage request, CancellationToken ct)
         {
-            if (_requestProcessor == null || _callDetailsFactory == null)
+            if (RequestProcessor == null || CallDetailsFactory == null)
                 throw new InvalidOperationException("Proxy was not initialized");
             
-            var response = await _requestProcessor.ProcessRequestAsync(request);
+            var response = await RequestProcessor.ProcessRequestAsync(request, ct);
 
-            var callDetails = await _callDetailsFactory.CreateAsync(request, response);
+            var callDetails = await CallDetailsFactory.CreateAsync(request, response);
             await callDetails.ThrowIfNotOKAsync(); 
             
             return await callDetails.ReadContentAsync<T>();

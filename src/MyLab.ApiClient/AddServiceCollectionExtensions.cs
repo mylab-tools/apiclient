@@ -1,39 +1,38 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using MyLab.ApiClient.DI;
-using MyLab.ApiClient.Options;
 using System;
 using System.Net.Http;
 
 namespace MyLab.ApiClient;
 
+/// <summary>
+/// Provides extension methods for adding API client services to an <see cref="IServiceCollection"/>.
+/// </summary>
 public static class AddServiceCollectionExtensions
 {
     /// <param name="services">The <see cref="IServiceCollection"/> to which the configuration will be added.</param>
     extension(IServiceCollection services)
     {
+        /// <summary>
+        /// Adds an API client for the specified contract type to the <see cref="IServiceCollection"/>.
+        /// </summary>
         public IServiceCollection AddApiClient<TContract>(bool optional = false)
             where TContract : class
         {
-            var httpClientRegistrar = new HttpClientRegistrar<TContract>
-            {
-                Optional = optional
-            };
-            
-            httpClientRegistrar.Register(services);
+            new HttpClientRegistrar<TContract>{ Optional = optional }.Register(services);
+            new ApiContractRegistrar<TContract>{ Optional = optional }.Register(services);
 
             return services;
         }
 
-        public IServiceCollection AddScopedApiClient<TContract>(bool optional = false)
+        /// <summary>
+        /// Adds an API client for the specified contract type to the <see cref="IServiceCollection"/> with a scoped lifetime.
+        /// </summary>
+        public IServiceCollection AddApiClientScoped<TContract>(bool optional = false)
             where TContract : class
         {
-            var httpClientRegistrar = new HttpClientRegistrar<TContract>
-            {
-                Optional = optional
-            };
-
-            httpClientRegistrar.Register(services);
+            new HttpClientRegistrar<TContract> { Optional = optional }.Register(services);
+            new ApiContractRegistrar<TContract> { Optional = optional }.RegisterScoped(services);
 
             return services;
         }
@@ -74,7 +73,7 @@ public static class AddServiceCollectionExtensions
         /// <summary>
         /// Integrates ApiClient for default HttpClient
         /// </summary>
-        [Obsolete($"Use {nameof(AddScopedApiClient)} instead", true)]
+        [Obsolete($"Use {nameof(AddApiClientScoped)} instead", true)]
         public  IServiceCollection AddScopedApiClients(
             Action<IApiContractRegistrar> contractRegistration)
         {

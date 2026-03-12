@@ -2,13 +2,12 @@
 using JetBrains.Annotations;
 using MyLab.ApiClient.DI;
 using MyLab.ApiClient.Options;
-using MyLab.ApiClient.Contracts.Attributes.ForContract;
 using Xunit;
 
 namespace MyLab.ApiClient.Tests.DI;
 
 [TestSubject(typeof(ApiContractBinding))]
-public class ApiContractBindingBehavior
+public partial class ApiContractBindingBehavior
 {
     [Fact]
     public void ShouldThrowArgumentNullException_WhenContractTypeIsNull()
@@ -18,23 +17,17 @@ public class ApiContractBindingBehavior
     }
 
     [Theory]
-    [InlineData("ContractName", "ContractName")]
-    [InlineData("ContractName", "Namespace.ContractName")]
-    [InlineData("ContractName", "CustomBinding")]
-    public void ShouldCreateCorrectBindingKeys(string contractName, string expectedKey)
+    [MemberData(nameof(GetBindingKeysCases))]
+    public void ShouldCreateCorrectBindingKeys(string expectedKey)
     {
         // Arrange
         var contractType = typeof(ITestContractWithCustomBinding);
-        var binding = new ApiContractBinding(contractType);
 
         // Act
-        var keys = binding.GetType()
-            .GetField("_contractBindingKeys",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .GetValue(binding) as string[];
+        var binding = new ApiContractBinding(contractType);
 
         // Assert
-        Assert.Contains(expectedKey, keys!);
+        Assert.Contains(expectedKey, binding.Keys!);
     }
 
     [Fact]
@@ -46,9 +39,10 @@ public class ApiContractBindingBehavior
         var clientOptions = new ApiClientOptions();
 
         // Act
-        var result = binding.GetOptions(clientOptions);
+        var found = binding.TryGetOptions(clientOptions, out var result, out _);
 
         // Assert
+        Assert.False(found);
         Assert.Null(result);
     }
 
@@ -67,11 +61,13 @@ public class ApiContractBindingBehavior
         };
 
         // Act
-        var result = binding.GetOptions(clientOptions);
+        var found = binding.TryGetOptions(clientOptions, out var opts,out var bindingKey);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.Equal("http://test.com", result!.Url);
+        Assert.True(found);
+        Assert.NotNull(opts);
+        Assert.Equal("http://test.com", opts.Url);
+        Assert.Equal("ITestContract", bindingKey);
     }
 
     [Fact]
@@ -83,9 +79,10 @@ public class ApiContractBindingBehavior
         var clientOptions = new ApiClientOptions();
 
         // Act
-        var result = binding.GetOptions(clientOptions);
+        var found = binding.TryGetOptions(clientOptions, out var result, out _);
 
         // Assert
+        Assert.False(found);
         Assert.Null(result);
     }
 
@@ -94,16 +91,12 @@ public class ApiContractBindingBehavior
     {
         // Arrange
         var contractType = typeof(ITestContractWithFullName);
-        var binding = new ApiContractBinding(contractType);
 
         // Act
-        var keys = binding.GetType()
-            .GetField("_contractBindingKeys",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .GetValue(binding) as string[];
+        var binding = new ApiContractBinding(contractType);
 
         // Assert
-        Assert.Contains("Namespace.ITestContractWithFullName", keys!);
+        Assert.Contains(contractType.FullName, binding.Keys!);
     }
 
     [Fact]
@@ -111,29 +104,13 @@ public class ApiContractBindingBehavior
     {
         // Arrange
         var contractType = typeof(ITestContractWithCustomBinding);
-        var binding = new ApiContractBinding(contractType);
 
         // Act
-        var keys = binding.GetType()
-            .GetField("_contractBindingKeys",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .GetValue(binding) as string[];
+        var binding = new ApiContractBinding(contractType);
 
         // Assert
-        Assert.Contains("CustomBinding", keys!);
+        Assert.Contains("CustomBinding", binding.Keys!);
     }
 
     // Helper classes for testing
-    interface ITestContract
-    {
-    }
-
-    [ApiContract(Binding = "CustomBinding")]
-    interface ITestContractWithCustomBinding
-    {
-    }
-
-    interface ITestContractWithFullName
-    {
-    }
 }

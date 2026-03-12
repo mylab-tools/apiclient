@@ -68,7 +68,7 @@ public static class ConfigServiceCollectionExtensions
         /// <summary>
         /// Configures ApiClient factoring
         /// </summary>
-        [Obsolete($"Use {nameof(ConfigureApiClient)} instead")]
+        [Obsolete($"Use {nameof(ConfigureApiClient)} instead", true)]
         public IServiceCollection ConfigureApiClients(
             IConfiguration config,
             string sectionName = "")
@@ -79,7 +79,7 @@ public static class ConfigServiceCollectionExtensions
         /// <summary>
         /// Configures ApiClient factoring
         /// </summary>
-        [Obsolete($"Use {nameof(ConfigureApiClient)} instead")]
+        [Obsolete($"Use {nameof(ConfigureApiClient)} instead", true)]
         public IServiceCollection ConfigureApiClients(
             Action<ApiClientOptions> configureOptions)
         {

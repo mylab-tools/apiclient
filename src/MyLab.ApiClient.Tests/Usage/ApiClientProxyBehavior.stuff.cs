@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using MyLab.ApiClient.Contracts.Attributes.ForMethod;
@@ -30,18 +31,27 @@ public partial class ApiClientProxyBehavior
     Mock<IRequestProcessor> CreateReqProcMock(HttpResponseMessage response)
     {
         var reqProcMock = new Mock<IRequestProcessor>();
-        reqProcMock.Setup(p => p.ProcessRequestAsync(It.IsAny<HttpRequestMessage>()))
-            .Returns<HttpRequestMessage>(_ => Task.FromResult(response));
+        reqProcMock.Setup
+            (p => 
+                p.ProcessRequestAsync
+                    (
+                        It.IsAny<HttpRequestMessage>(),
+                        It.IsAny<CancellationToken>()
+                    )
+            )
+            .Returns<HttpRequestMessage, CancellationToken>((_,_) => Task.FromResult(response));
 
         return reqProcMock;
     }
 
     void VerifyResponseUrl(Mock<IRequestProcessor> mock, string expectedUrl)
     {
-        mock.Verify(req =>
-            req.ProcessRequestAsync(
-                It.Is<HttpRequestMessage>(r => r.RequestUri!.ToString() == expectedUrl
-                )
+        mock.Verify
+        (req =>
+            req.ProcessRequestAsync
+            (
+                It.Is<HttpRequestMessage>(r => r.RequestUri!.ToString() == expectedUrl),
+                It.IsAny<CancellationToken>()
             )
         );
     }
@@ -49,8 +59,10 @@ public partial class ApiClientProxyBehavior
     void VerifyResponseContent(Mock<IRequestProcessor> mock, string expectedContent)
     {
         mock.Verify(req =>
-            req.ProcessRequestAsync(
-                It.Is<HttpRequestMessage>(r => CheckResponseValue(r, expectedContent))
+            req.ProcessRequestAsync
+            (
+                It.Is<HttpRequestMessage>(r => CheckResponseValue(r, expectedContent)),
+                It.IsAny<CancellationToken>()
             )
         );
     }
