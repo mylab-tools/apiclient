@@ -849,16 +849,16 @@
             including binding configuration sections or using custom configuration actions.
             </remarks>
         </member>
-        <member name="M:MyLab.ApiClient.ServiceCollectionExtensions.ConfigureApiClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
-            <inheritdoc cref="M:MyLab.ApiClient.ServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClient(Microsoft.Extensions.Configuration.IConfiguration,System.String)"/>
+        <member name="M:MyLab.ApiClient.ServiceCollectionExtensions.ConfigureApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.ServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClients(Microsoft.Extensions.Configuration.IConfiguration,System.String)"/>
         </member>
-        <member name="M:MyLab.ApiClient.ServiceCollectionExtensions.ConfigureApiClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.Options.ApiClientOptions})">
-            <inheritdoc cref="M:MyLab.ApiClient.ServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClient(System.Action{MyLab.ApiClient.Options.ApiClientOptions})"/>
+        <member name="M:MyLab.ApiClient.ServiceCollectionExtensions.ConfigureApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.Options.ApiClientOptions})">
+            <inheritdoc cref="M:MyLab.ApiClient.ServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClients(System.Action{MyLab.ApiClient.Options.ApiClientOptions})"/>
         </member>
         <member name="T:MyLab.ApiClient.ServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.&lt;M&gt;$6BEA73177691D2862842D66CC9F1DED9">
             <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to which the configuration will be added.</param>
         </member>
-        <member name="M:MyLab.ApiClient.ServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClient(Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+        <member name="M:MyLab.ApiClient.ServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClients(Microsoft.Extensions.Configuration.IConfiguration,System.String)">
             <summary>
             Configures the API client options for the application using the specified configuration section.
             </summary>
@@ -872,7 +872,7 @@
             Thrown when <paramref name="config"/> or <paramref name="sectionName"/> is <c>null</c>.
             </exception>
         </member>
-        <member name="M:MyLab.ApiClient.ServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClient(System.Action{MyLab.ApiClient.Options.ApiClientOptions})">
+        <member name="M:MyLab.ApiClient.ServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClients(System.Action{MyLab.ApiClient.Options.ApiClientOptions})">
             <summary>
             Configures API client options for the application.
             </summary>

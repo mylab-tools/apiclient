@@ -21,7 +21,7 @@ public class ServiceCollectionExtensionsBehavior
         IConfiguration config = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => services.ConfigureApiClient(config));
+        Assert.Throws<ArgumentNullException>(() => services.ConfigureApiClients(config));
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class ServiceCollectionExtensionsBehavior
         string sectionName = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => services.ConfigureApiClient(config, sectionName));
+        Assert.Throws<ArgumentNullException>(() => services.ConfigureApiClients(config, sectionName));
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class ServiceCollectionExtensionsBehavior
             .Build();
 
         // Act
-        services.ConfigureApiClient(config);
+        services.ConfigureApiClients(config);
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
@@ -73,7 +73,7 @@ public class ServiceCollectionExtensionsBehavior
             .Build();
 
         // Act
-        services.ConfigureApiClient(config, "CustomSection");
+        services.ConfigureApiClients(config, "CustomSection");
 
         // Assert
         var serviceProvider = services.BuildServiceProvider();
