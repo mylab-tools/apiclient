@@ -123,7 +123,7 @@ public class UrlPathInjectorBehavior
             ],
             [
                 "http://example.com/{param}", "param", new DateTime(2023, 10, 1, 12, 0, 0),
-                "http://example.com/2023-10-01T12%3A00%3A00"
+                "http://example.com/2023-10-01T12%3A00%3A00.0000000"
             ],
         };
     }

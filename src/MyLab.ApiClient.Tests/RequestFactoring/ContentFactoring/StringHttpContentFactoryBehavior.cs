@@ -106,7 +106,7 @@ public class StringHttpContentFactoryBehavior
         yield return [123.45, "123.45"];
         yield return [true, "True"];
         yield return [false, "False"];
-        yield return [DateTime.Parse("2023-10-01T12:34:56"), "2023-10-01T12:34:56"];
+        yield return [DateTime.Parse("2023-10-01T12:34:56"), "2023-10-01T12:34:56.0000000"];
         yield return [Guid.Empty, "00000000000000000000000000000000"];
     }
 }

@@ -18,7 +18,17 @@ namespace MyLab.ApiClient.Tools
             
             if (target is DateTime dt)
             {
-                return dt.ToString("s");
+                return dt.ToString("O");
+            }
+
+            if (target is DateOnly date)
+            {
+                return date.ToString("O");
+            }
+
+            if (target is TimeOnly t)
+            {
+                return t.ToString("O");
             }
 
             if (target is Guid guid)

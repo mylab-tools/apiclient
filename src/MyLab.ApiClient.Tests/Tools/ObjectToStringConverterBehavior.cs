@@ -26,8 +26,8 @@ public class ObjectToStringConverterBehavior
     }
 
     [Theory]
-    [InlineData("2023-10-01T12:34:56", "2023-10-01T12:34:56")]
-    [InlineData("2000-01-01T00:00:00", "2000-01-01T00:00:00")]
+    [InlineData("2023-10-01T12:34:56", "2023-10-01T12:34:56.0000000")]
+    [InlineData("2000-01-01T00:00:00", "2000-01-01T00:00:00.0000000")]
     public void ShouldConvertDateTimeToString(string dateTimeString, string expected)
     {
         // Arrange
@@ -105,5 +105,26 @@ public class ObjectToStringConverterBehavior
 
         // Assert
         Assert.Equal("-12345", result);
+    }
+
+    [Fact]
+    public void ShouldConvertDateOnlyToString()
+    {
+        // Arrange
+        var date = new DateOnly(2023, 10, 5); // Example date
+        // Act
+        var result = ObjectToStringConverter.ToString(date);
+        // Assert
+        Assert.Equal("2023-10-05", result); // Expected RFC3339 format for DateOnly
+    }
+    [Fact]
+    public void ShouldConvertTimeOnlyToString()
+    {
+        // Arrange
+        var time = new TimeOnly(14, 30, 15); // Example time: 14:30:15
+        // Act
+        var result = ObjectToStringConverter.ToString(time);
+        // Assert
+        Assert.Equal("14:30:15.0000000", result); // Expected RFC3339 format for TimeOnly
     }
 }
