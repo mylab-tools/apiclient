@@ -1,14 +1,10 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Moq;
-using MyLab.ApiClient.Contracts.Attributes.ForMethod;
-using MyLab.ApiClient.Contracts.Attributes.ForParameters;
 using MyLab.ApiClient.Options;
 using MyLab.ApiClient.ResponseProcessing;
 using MyLab.ApiClient.Usage;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using MyLab.ApiClient.JsonSerialization;
 using Xunit;

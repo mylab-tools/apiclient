@@ -1011,6 +1011,16 @@
             Extract <see cref="T:MyLab.ApiClient.Contracts.Models.IRequestParameterModel"/> from reflection method
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder.#ctor(MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult,MyLab.ApiClient.Usage.Invocation.CallDetailsPredicate)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.UnexpectedResponseStatusCodeException.#ctor(System.Net.HttpStatusCode)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.UnexpectedResponseStatusCodeException"/>
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.Usage.IRequestProcessor">
             <summary>
             Defines a mechanism for processing HTTP requests in an API client.
