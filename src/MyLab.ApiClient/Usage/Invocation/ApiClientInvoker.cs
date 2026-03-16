@@ -73,7 +73,7 @@ namespace MyLab.ApiClient.Usage.Invocation
         /// <exception cref="ArgumentException">
         /// Thrown when the <paramref name="invocation"/> parameter is not a valid lambda expression representing a method call.
         /// </exception>
-        public async Task<ApiClientInvocationResult?> InvokeAsync(Expression<Action<TContract>> invocation)
+        public async Task<ApiClientInvocationResult> InvokeAsync(Expression<Func<TContract, Task>> invocation)
         {
             if (invocation == null)
             {
@@ -96,6 +96,54 @@ namespace MyLab.ApiClient.Usage.Invocation
     }
 
     /// <summary>
+    /// Defines a strategy for fluent processing of API client invocation results.
+    /// </summary>
+    public interface IFluentProcessingStrategy
+    {
+        /// <summary>
+        /// Processes the result of an API client invocation asynchronously.
+        /// </summary>
+        /// <param name="callDetails">
+        /// Contains detailed information about the API call, including request and response data.
+        /// </param>
+        /// <param name="processingContext">
+        /// The context for processing the API call result, which includes status predicates and processing actions.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A token to monitor for cancellation requests.
+        /// </param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// </returns>
+        Task ProcessAsync(CallDetails callDetails, CallResultProcessingContext processingContext, CancellationToken cancellationToken);
+    }
+
+    class DefaultFluentProcessingStrategy : IFluentProcessingStrategy
+    {
+        public async Task ProcessAsync(CallDetails callDetails, CallResultProcessingContext processingContext, CancellationToken cancellationToken)
+        {
+            if (callDetails == null) throw new ArgumentNullException(nameof(callDetails));
+
+            if (processingContext.ThrowIfAnotherStatusCode)
+            {
+                if (processingContext.HandledStatusPredicates == null ||
+                    processingContext.HandledStatusPredicates.All(p => !p(callDetails.StatusCode)))
+                {
+                    throw new UnexpectedResponseStatusCodeException(callDetails.StatusCode);
+                }
+            }
+
+            if (processingContext.ProcessingActions != null)
+            {
+                foreach (var processingAction in processingContext.ProcessingActions.Where(a => a.Predicate(callDetails)))
+                {
+                    await processingAction.PerformAsync(callDetails, cancellationToken);
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Represents the result of an API client invocation, including details about the API call
     /// and the context for processing the call result.
     /// </summary>
@@ -105,6 +153,11 @@ namespace MyLab.ApiClient.Usage.Invocation
     /// </remarks>
     public record ApiClientInvocationResult(CallDetails CallDetails, CallResultProcessingContext ProcessingContext)
     {
+        /// <summary>
+        /// Gets or sets the strategy used for processing the result of an API client invocation.
+        /// </summary>
+        public IFluentProcessingStrategy ProcessingStrategy { get; set; } = new DefaultFluentProcessingStrategy();
+
         /// <summary>
         /// Configures processing logic for specific HTTP status codes.
         /// </summary>
@@ -218,7 +271,7 @@ namespace MyLab.ApiClient.Usage.Invocation
         /// </exception>
         public Task ProcessAsync(CancellationToken cancellationToken)
         {
-            return ProcessingContext.ProcessAsync(CallDetails, cancellationToken);
+            return ProcessingStrategy.ProcessAsync(CallDetails, ProcessingContext, cancellationToken);
         }
 
         ProcessingActionBuilder WhenXxx(int startCode)
@@ -245,7 +298,7 @@ namespace MyLab.ApiClient.Usage.Invocation
 
         ProcessingActionBuilder ToProcessingAction(CallResultProcessingContext newContext, CallDetailsPredicate callDetailsPredicate)
         {
-            var newInvocationResult = new ApiClientInvocationResult(CallDetails, newContext);
+            var newInvocationResult = this with { ProcessingContext = newContext };
             return new ProcessingActionBuilder(newInvocationResult, callDetailsPredicate);
         }
     }
@@ -267,49 +320,7 @@ namespace MyLab.ApiClient.Usage.Invocation
         ReadOnlyCollection<StatusCodePredicate>? HandledStatusPredicates = null,
         ReadOnlyCollection<IProcessingAction>? ProcessingActions = null,
         bool ThrowIfAnotherStatusCode = false
-    )
-    {
-        /// <summary>
-        /// Processes the result of an API call based on the provided call details and cancellation token.
-        /// </summary>
-        /// <param name="callDetails">
-        /// The details of the API call, including status code, request, and response information.
-        /// </param>
-        /// <param name="cancellationToken">
-        /// A token to monitor for cancellation requests.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="callDetails"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="UnexpectedResponseStatusCodeException">
-        /// Thrown when the status code of the API response does not match any of the handled status predicates
-        /// and <see cref="ThrowIfAnotherStatusCode"/> is set to <c>true</c>.
-        /// </exception>
-        /// <returns>
-        /// A task that represents the asynchronous processing operation.
-        /// </returns>
-        public async Task ProcessAsync(CallDetails callDetails, CancellationToken cancellationToken)
-        {
-            if (callDetails == null) throw new ArgumentNullException(nameof(callDetails));
-            
-            if (ThrowIfAnotherStatusCode)
-            {
-                if (HandledStatusPredicates == null ||
-                    HandledStatusPredicates.All(p => !p(callDetails.StatusCode)))
-                {
-                    throw new UnexpectedResponseStatusCodeException(callDetails.StatusCode);
-                }
-            }
-
-            if (ProcessingActions != null)
-            {
-                foreach (var processingAction in ProcessingActions.Where(a => a.Predicate(callDetails)))
-                {
-                    await processingAction.PerformAsync(callDetails, cancellationToken);
-                }
-            }
-        }
-    };
+    );
 
     /// <summary>
     /// Provides a builder for configuring processing actions for API client invocation results.
@@ -463,16 +474,6 @@ namespace MyLab.ApiClient.Usage.Invocation
         }
     }
     
-    public class CallError
-    {
-        public string Message { get; set; }
-
-        public override string ToString()
-        {
-            return Message;
-        }
-    }
-
     /// <summary>
     /// Represents a predicate that evaluates a condition on an HTTP status code.
     /// </summary>

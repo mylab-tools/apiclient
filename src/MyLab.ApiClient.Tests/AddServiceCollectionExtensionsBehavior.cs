@@ -1,7 +1,5 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
-using MyLab.ApiClient.Contracts.Attributes.ForContract;
-using MyLab.ApiClient.Options;
 using MyLab.ApiClient.Usage;
 using System.Net.Http;
 using Xunit;
@@ -64,7 +62,7 @@ public partial class AddServiceCollectionExtensionsBehavior
 
         var client = sp.GetRequiredService<IContract>();
         var proxy = client as ApiClientProxy;
-        var requestProcessor = proxy?.RequestProcessor as HttpClientRequestProcessor;
+        var requestProcessor = proxy?.ReflectionRequestSender?.RequestProcessor as HttpClientRequestProcessor;
         var httpClientProvider = requestProcessor?.HttpClientProvider;
         var httpClient = httpClientProvider?.Provide();
         
@@ -92,7 +90,7 @@ public partial class AddServiceCollectionExtensionsBehavior
             scopedContract = scope.ServiceProvider.GetRequiredService<IContract>();
 
         var proxy = scopedContract as ApiClientProxy;
-        var requestProcessor = proxy?.RequestProcessor as HttpClientRequestProcessor;
+        var requestProcessor = proxy?.ReflectionRequestSender?.RequestProcessor as HttpClientRequestProcessor;
         var httpClientProvider = requestProcessor?.HttpClientProvider;
         var httpClient = httpClientProvider?.Provide();
 

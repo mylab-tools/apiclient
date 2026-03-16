@@ -31,12 +31,12 @@ public class MediaTypeProcBehavior
         // Act & Assert
         if (isSupported)
         {
-            var result = await proc.GetResult();
+            var result = await proc.GetResultAsync();
             Assert.NotNull(result);
         }
         else
         {
-            await Assert.ThrowsAsync<UnexpectedResponseContentTypeException>(() => proc.GetResult());
+            await Assert.ThrowsAsync<UnexpectedResponseContentTypeException>(() => proc.GetResultAsync());
         }
     }
 
@@ -52,7 +52,7 @@ public class MediaTypeProcBehavior
             .Default(async c => await Task.FromResult<object?>("default-result"));
 
         // Act
-        var result = await proc.GetResult();
+        var result = await proc.GetResultAsync();
 
         // Assert
         Assert.Equal("default-result", result);
@@ -69,7 +69,7 @@ public class MediaTypeProcBehavior
             .Supports("application/json", async c => await Task.FromResult<object?>("json-result"));
 
         // Act & Assert
-        await Assert.ThrowsAsync<UnexpectedResponseContentTypeException>(() => proc.GetResult());
+        await Assert.ThrowsAsync<UnexpectedResponseContentTypeException>(() => proc.GetResultAsync());
     }
 
     [Fact]

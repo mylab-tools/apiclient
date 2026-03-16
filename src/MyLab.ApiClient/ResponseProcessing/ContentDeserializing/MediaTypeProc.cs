@@ -40,7 +40,7 @@ class MediaTypeProc
         };
     }
 
-    public async Task<object?> GetResult()
+    public async Task<object?> GetResultAsync()
     {
         bool mediaTypeIsSpecified = _content.Headers.ContentType is { MediaType: not null };
 

@@ -31,6 +31,6 @@ class StructuredObjectContentDeserializer : IContentDeserializer
         return await new MediaTypeProc(content)
             .Supports("application/json", async c => await _jsonSerTools.ReadObjectJson(c, returnType))
             .Supports("application/xml", async c => await _xmlSerTools.ReadObjectXml(c, returnType))
-            .GetResult();
+            .GetResultAsync();
     }
 }

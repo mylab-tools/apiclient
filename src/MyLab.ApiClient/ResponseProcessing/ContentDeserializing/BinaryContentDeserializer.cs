@@ -29,6 +29,6 @@ class BinaryContentDeserializer : IContentDeserializer
             })
             //.Supports("application/octet-stream", async c => await c.ReadAsByteArrayAsync())
             .Default(async c => await c.ReadAsByteArrayAsync())
-            .GetResult();
+            .GetResultAsync();
     }
 }

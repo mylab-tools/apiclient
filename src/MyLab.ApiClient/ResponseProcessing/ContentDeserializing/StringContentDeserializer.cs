@@ -20,6 +20,6 @@ class StringContentDeserializer : IContentDeserializer
                 return res.Trim('\"');
             })
             .Supports("text/plain", async c => await c.ReadAsStringAsync())
-            .GetResult();
+            .GetResultAsync();
     }
 }

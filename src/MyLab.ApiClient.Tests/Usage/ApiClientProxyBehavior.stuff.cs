@@ -16,64 +16,6 @@ public partial class ApiClientProxyBehavior
 {
     readonly ApiClientOptions _defaultOptions = new();
 
-    HttpResponseMessage CreateOkResponse(string? content = null)
-    {
-        var response = new HttpResponseMessage(HttpStatusCode.OK);
-
-        if (content != null)
-        {
-            response.Content = new StringContent(content, Encoding.UTF8, "application/json");
-        }
-
-        return response;
-    }
-
-    Mock<IRequestProcessor> CreateReqProcMock(HttpResponseMessage response)
-    {
-        var reqProcMock = new Mock<IRequestProcessor>();
-        reqProcMock.Setup
-            (p => 
-                p.ProcessRequestAsync
-                    (
-                        It.IsAny<HttpRequestMessage>(),
-                        It.IsAny<CancellationToken>()
-                    )
-            )
-            .Returns<HttpRequestMessage, CancellationToken>((_,_) => Task.FromResult(response));
-
-        return reqProcMock;
-    }
-
-    void VerifyResponseUrl(Mock<IRequestProcessor> mock, string expectedUrl)
-    {
-        mock.Verify
-        (req =>
-            req.ProcessRequestAsync
-            (
-                It.Is<HttpRequestMessage>(r => r.RequestUri!.ToString() == expectedUrl),
-                It.IsAny<CancellationToken>()
-            )
-        );
-    }
-
-    void VerifyResponseContent(Mock<IRequestProcessor> mock, string expectedContent)
-    {
-        mock.Verify(req =>
-            req.ProcessRequestAsync
-            (
-                It.Is<HttpRequestMessage>(r => CheckResponseValue(r, expectedContent)),
-                It.IsAny<CancellationToken>()
-            )
-        );
-    }
-
-    bool CheckResponseValue(HttpRequestMessage input, string expected)
-    {
-        var actualContent = input.Content!.ReadAsStringAsync().Result;
-
-        return actualContent == expected;
-    }
-
     interface IContract
     {
         [Post("void")]

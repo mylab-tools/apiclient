@@ -24,7 +24,7 @@ namespace MyLab.ApiClient.Usage
                 .First(m => m.Name == nameof(ProcRequestAsync));
         }
 
-        ReflectionRequestProcessingLogic? _reflectionRequestSender;
+        public ReflectionRequestProcessingLogic? ReflectionRequestSender { get; private set; }
 
         public static TContract CreateFroContract<TContract>
         (
@@ -59,7 +59,7 @@ namespace MyLab.ApiClient.Usage
         {
             if (targetMethod == null) throw new ArgumentNullException(nameof(targetMethod));
 
-            if (_reflectionRequestSender == null) 
+            if (ReflectionRequestSender == null) 
                 throw new InvalidOperationException("Proxy was not initialized");
             
             if (targetMethod.ReturnType == typeof(Task))
@@ -85,18 +85,18 @@ namespace MyLab.ApiClient.Usage
             if (requestProcessor == null) throw new ArgumentNullException(nameof(requestProcessor));
             if (callDetailsFactory == null) throw new ArgumentNullException(nameof(callDetailsFactory));
             
-            _reflectionRequestSender = new ReflectionRequestProcessingLogic(serviceModel, requestProcessor, callDetailsFactory);
+            ReflectionRequestSender = new ReflectionRequestProcessingLogic(serviceModel, requestProcessor, callDetailsFactory);
         }
 
         async Task ProcRequestForVoidAsync(MethodInfo targetMethod, object?[]? args)
         {
-            var callDetails = await _reflectionRequestSender!.SendRequestAsync(targetMethod, args);
+            var callDetails = await ReflectionRequestSender!.SendRequestAsync(targetMethod, args);
             await callDetails.ThrowIfNotOKAsync();
         }
 
         async Task<T?> ProcRequestAsync<T>(MethodInfo targetMethod, object?[]? args)
         {
-            var callDetails = await _reflectionRequestSender!.SendRequestAsync(targetMethod, args);
+            var callDetails = await ReflectionRequestSender!.SendRequestAsync(targetMethod, args);
             await callDetails.ThrowIfNotOKAsync(); 
             
             return await callDetails.ReadContentAsync<T>();

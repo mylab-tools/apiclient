@@ -31,8 +31,10 @@ class SupportedContentDeserializers : ReadOnlyCollection<IContentDeserializer>, 
         new DateTimeContentDeserializer(),
         new GuidContentDeserializer(),
         new BinaryContentDeserializer(),
+        new ProblemDetailsContentDeserializer(jsonDesTools),
+        new ValidationProblemDetailsContentDeserializer(jsonDesTools),
         new StructuredObjectContentDeserializer(jsonDesTools, xmlDesTools),
-        new EnumerableContentDeserializer(jsonDesTools, xmlDesTools)
+        new EnumerableContentDeserializer(jsonDesTools, xmlDesTools),
     ];
 
     public IContentDeserializer GetRequiredDeserializer(Type targetType)

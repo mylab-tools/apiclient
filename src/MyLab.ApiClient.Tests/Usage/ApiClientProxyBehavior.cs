@@ -11,6 +11,8 @@ using Xunit;
 
 namespace MyLab.ApiClient.Tests.Usage;
 
+using static TestTools;
+
 [TestSubject(typeof(ApiClientProxy))]
 public partial class ApiClientProxyBehavior
 {
@@ -26,7 +28,7 @@ public partial class ApiClientProxyBehavior
         await proxy.PerformVoidAsync(1);
 
         //Assert
-        VerifyResponseUrl(reqProcMock, "void");
+        VerifyRequestUrl(reqProcMock, "void");
     }
 
     [Fact]
@@ -41,7 +43,7 @@ public partial class ApiClientProxyBehavior
         var result = await proxy.GetAsync();
 
         //Assert
-        VerifyResponseUrl(reqProcMock, "get");
+        VerifyRequestUrl(reqProcMock, "get");
         Assert.Equal("foo", result);
     }
 
@@ -104,7 +106,7 @@ public partial class ApiClientProxyBehavior
         await proxy.SendInt(42);
 
         //Assert
-        VerifyResponseUrl(reqProcMock, "send/42");
+        VerifyRequestUrl(reqProcMock, "send/42");
     }
 
     [Fact]
@@ -120,7 +122,7 @@ public partial class ApiClientProxyBehavior
         await proxy.SendGuid(guid);
 
         //Assert
-        VerifyResponseUrl(reqProcMock, $"send/{guid:N}");
+        VerifyRequestUrl(reqProcMock, $"send/{guid:N}");
     }
 
     [Fact]
@@ -137,6 +139,6 @@ public partial class ApiClientProxyBehavior
         await proxy.SendObj(obj);
 
         //Assert
-        VerifyResponseContent(reqProcMock, $"{{\"{NewtonJsonModel.ValuePropertyName}\":\"foo\"}}");
+        VerifyRequestContent(reqProcMock, $"{{\"{NewtonJsonModel.ValuePropertyName}\":\"foo\"}}");
     }
 }

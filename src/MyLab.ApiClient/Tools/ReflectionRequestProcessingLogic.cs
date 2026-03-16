@@ -17,20 +17,25 @@ namespace MyLab.ApiClient.Tools
         CallDetailsFactory callDetailsFactory
     )
     {
+        public ServiceModel ServiceModel { get; } = serviceModel;
+        public IRequestProcessor RequestProcessor { get; } = requestProcessor;
+        public CallDetailsFactory CallDetailsFactory { get; } = callDetailsFactory;
+
+
         public async Task<CallDetails> SendRequestAsync(MethodInfo targetMethod, object?[]? args)
         {
-            if (!serviceModel.Endpoints.TryGetValue(targetMethod.MetadataToken, out var endpointModel))
+            if (!ServiceModel.Endpoints.TryGetValue(targetMethod.MetadataToken, out var endpointModel))
                 throw new InvalidOperationException($"Endpoint description not found for method '{targetMethod.Name}'.");
             
-            var requestFactory = new RequestFactory(serviceModel, endpointModel);
+            var requestFactory = new RequestFactory(ServiceModel, endpointModel);
             var request = requestFactory.Create(args ?? []);
 
             var ct = args != null
                 ? args.OfType<CancellationToken>().FirstOrDefault(CancellationToken.None)
                 : CancellationToken.None;
             
-            var response = await requestProcessor.ProcessRequestAsync(request, ct);
-            return await callDetailsFactory.CreateAsync(request, response);
+            var response = await RequestProcessor.ProcessRequestAsync(request, ct);
+            return await CallDetailsFactory.CreateAsync(request, response);
         }
     }
 }

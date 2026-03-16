@@ -1,30 +1,31 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using MyLab.ApiClient.Problems;
 
 namespace MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 
-abstract class PrimitiveContentDeserializer<T> : IContentDeserializer
-    where T : struct
+class ProblemDetailsContentDeserializer : IContentDeserializer
 {
-    /// <inheritdoc />
-    public bool Predicate(Type returnType)
+    readonly JsonDeserializationTools _jsonSerTools;
+
+    public ProblemDetailsContentDeserializer(JsonDeserializationTools jsonSerTools)
     {
-        return returnType == typeof(T);
+        _jsonSerTools = jsonSerTools;
     }
 
-    /// <inheritdoc />
+    public bool Predicate(Type returnType)
+    {
+        return returnType == typeof(ProblemDetails);
+    }
+
     public async Task<object?> DeserializeAsync(HttpContent content, Type returnType)
     {
         if (content == null) throw new ArgumentNullException(nameof(content));
         if (returnType == null) throw new ArgumentNullException(nameof(returnType));
 
-        var contentStr = await content.ReadAsStringAsync();
         return await new MediaTypeProc(content)
-            .Supports("application/json",_ => Task.FromResult<object?>(DeserializeCore(contentStr.Trim('\"', ' '))))
-            .Supports("text/plain", _ => Task.FromResult<object?>(DeserializeCore(contentStr.Trim('\"', ' '))))
+            .Supports("application/problem+json", async c => await _jsonSerTools.ReadObjectJson(c, returnType))
             .GetResultAsync();
     }
-
-    protected abstract T DeserializeCore(string str);
 }
