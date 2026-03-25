@@ -39,7 +39,7 @@ class ApiContractRegistrar<TContract> where TContract : class
             var httpClientProvider = new FactoryHttpClientProvider(httpFactory, bindingKey!);
             IRequestProcessor reqProc = new HttpClientRequestProcessor(httpClientProvider);
 
-            return ApiClientProxy.CreateFroContract<TContract>(reqProc, opts.Value);
+            return ApiClientProxy.CreateForContract<TContract>(reqProc, opts.Value);
         });
     }
 
@@ -65,10 +65,10 @@ class ApiContractRegistrar<TContract> where TContract : class
             }
 
             var httpFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
-            var httpClientProvider = SingleHttpClientProvider.CrateFRomHttpClientFactory(httpFactory, bindingKey!);
+            var httpClientProvider = SingleHttpClientProvider.CrateFromHttpClientFactory(httpFactory, bindingKey!);
             IRequestProcessor reqProc = new HttpClientRequestProcessor(httpClientProvider);
 
-            return ApiClientProxy.CreateFroContract<TContract>(reqProc, opts.Value);
+            return ApiClientProxy.CreateForContract<TContract>(reqProc, opts.Value);
         });
     }
 }
