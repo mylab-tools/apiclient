@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Globalization;
 using MyLab.ApiClient;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace UnitTests
 {
     public class UrlQueryInjectorBehavior
     {
+        readonly ITestOutputHelper _output;
+
+        public UrlQueryInjectorBehavior(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+        
         [Theory]
         [InlineData("id", "http://foo.com/orders?user=010&order-id=id")]
         [InlineData("", "http://foo.com/orders?user=010&order-id=")]
@@ -58,6 +67,50 @@ namespace UnitTests
 
             //Assert
             Assert.Equal(expectedUrl, modifiedUrl.OriginalString);
+        }
+
+        [Fact]
+        public void ShouldInjectRfc3339DateTime()
+        {
+            //Arrange
+            var dateTime = DateTime.Now;
+            var injector = new UrlQueryInjector
+            {
+                EncodeValues = false
+            };
+            var originUrl = new Uri("orders", UriKind.Relative);
+
+            var expected = "orders?date=" + dateTime.ToString("o", CultureInfo.InvariantCulture);
+                            
+            //Act
+            var modifiedUrl = injector.Modify(originUrl, "date", dateTime);
+
+            _output.WriteLine("Result: " + modifiedUrl.OriginalString);
+
+            //Assert
+            Assert.Equal(expected, modifiedUrl.OriginalString);
+        }
+
+        [Fact]
+        public void ShouldInjectRfc3339UtcDateTime()
+        {
+            //Arrange
+            var dateTime = DateTime.UtcNow;
+            var injector = new UrlQueryInjector
+            {
+                EncodeValues = false
+            };
+            var originUrl = new Uri("orders", UriKind.Relative);
+
+            var expected = "orders?date=" + dateTime.ToString("o", CultureInfo.InvariantCulture);
+
+            //Act
+            var modifiedUrl = injector.Modify(originUrl, "date", dateTime);
+
+            _output.WriteLine("Result: " + modifiedUrl.OriginalString);
+
+            //Assert
+            Assert.Equal(expected, modifiedUrl.OriginalString);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace MyLab.ApiClient
 
             if (target is DateTime dt)
             {
-                return dt.ToString(CultureInfo.InvariantCulture);
+                return dt.ToString("o", CultureInfo.InvariantCulture);
             }
 
             if (target is Guid guid)
