@@ -21,8 +21,7 @@ public class ApiClientInvokerBehavior : IClassFixture<TestApiFixture<Program, IT
         //Arrange
 
         //Act
-        var actual = await _invoker.InvokeAsync(c => c.GetJsonDto(initial))
-            .;
+        var actual = await _invoker.InvokeAsync(c => c.GetJsonDto(initial));
 
         //Assert
         Assert.Equal(initial, actual);
