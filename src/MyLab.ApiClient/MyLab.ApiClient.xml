@@ -569,6 +569,24 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.UrlParameterModel"/>
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.DI.FactoryHttpClientProvider">
+            <summary>
+            Provides an implementation of <see cref="T:MyLab.ApiClient.DI.IHttpClientProvider"/> that uses an <see cref="T:System.Net.Http.IHttpClientFactory"/> 
+            to create and configure instances of <see cref="T:System.Net.Http.HttpClient"/> based on a specified service name.
+            </summary>
+            <remarks>
+            This class is designed to integrate with dependency injection and simplifies the process of obtaining 
+            pre-configured <see cref="T:System.Net.Http.HttpClient"/> instances for making HTTP requests.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.DI.FactoryHttpClientProvider.#ctor(System.Net.Http.IHttpClientFactory,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.DI.FactoryHttpClientProvider"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.DI.FactoryHttpClientProvider.Provide">
+            <inheritdoc />
+        </member>
         <member name="T:MyLab.ApiClient.DI.IApiContractRegistrar">
             <summary>
             Registers api contract 
@@ -583,6 +601,52 @@
             <summary>
             Registers api contract 
             </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.DI.IHttpClientProvider">
+            <summary>
+            Provides a mechanism to supply an instance of <see cref="T:System.Net.Http.HttpClient"/> for making HTTP requests.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.DI.IHttpClientProvider.Provide">
+            <summary>
+            Provides an instance of <see cref="T:System.Net.Http.HttpClient"/> for making HTTP requests.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.DI.SingleHttpClientProvider">
+            <summary>
+            Provides a single instance of <see cref="T:System.Net.Http.HttpClient"/> for making HTTP requests.
+            </summary>
+            <remarks>
+            This class implements the <see cref="T:MyLab.ApiClient.DI.IHttpClientProvider"/> interface and ensures that the same
+            <see cref="T:System.Net.Http.HttpClient"/> instance is reused for all requests.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.DI.SingleHttpClientProvider.#ctor(System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.DI.SingleHttpClientProvider"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.DI.SingleHttpClientProvider.Provide">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.DI.SingleHttpClientProvider.CrateFromHttpClientFactory(System.Net.Http.IHttpClientFactory,System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:MyLab.ApiClient.DI.SingleHttpClientProvider"/> using the specified
+            <see cref="T:System.Net.Http.IHttpClientFactory"/> and service name.
+            </summary>
+            <param name="httpClientFactory">
+            The <see cref="T:System.Net.Http.IHttpClientFactory"/> used to create the <see cref="T:System.Net.Http.HttpClient"/> instance.
+            </param>
+            <param name="serviceName">
+            The name of the service for which the <see cref="T:System.Net.Http.HttpClient"/> is created.
+            </param>
+            <returns>
+            A new instance of <see cref="T:MyLab.ApiClient.DI.SingleHttpClientProvider"/> configured with the specified
+            <see cref="T:System.Net.Http.HttpClient"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="httpClientFactory"/> or <paramref name="serviceName"/> is <c>null</c>.
+            </exception>
         </member>
         <member name="T:MyLab.ApiClient.JsonSerialization.IJsonSerializer">
             <summary>
@@ -1069,62 +1133,70 @@
             Extract <see cref="T:MyLab.ApiClient.Contracts.Models.IRequestParameterModel"/> from reflection method
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1">
+        <member name="T:MyLab.ApiClient.Usage.ApiClientProxy">
             <summary>
-            Provides functionality to invoke methods on an API client contract.
+            Represents a dynamic proxy for API client contracts, enabling the interception and processing
+            of API requests based on the specified contract and configuration.
+            </summary>
+            <remarks>
+            This class is designed to dynamically create and manage API client proxies for specified contracts.
+            It utilizes reflection and request processing logic to handle API calls, ensuring proper serialization,
+            deserialization, and request execution.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.ApiClientProxy.CreateForContract``1(MyLab.ApiClient.Usage.IRequestProcessor,MyLab.ApiClient.Options.ApiClientOptions)">
+            <summary>
+            Creates a proxy instance for the specified API contract type.
             </summary>
             <typeparam name="TContract">
-            The type of the API client contract that defines the interface for interacting with the API.
+            The type of the API contract for which the proxy is being created. 
+            This type must be an interface that defines the API contract.
             </typeparam>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1.FromContract(MyLab.ApiClient.Usage.IRequestProcessor,MyLab.ApiClient.Options.ApiClientOptions)">
-            <summary>
-            Creates an instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1"/> for the specified contract type.
-            </summary>
-            <typeparam name="TContract">
-            The contract type that defines the API client interface.
-            </typeparam>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1.InvokeAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
-            <summary>
-            Invokes a method on the API client contract asynchronously.
-            </summary>
-            <param name="invocation">
-            An expression representing the method invocation on the API client contract.
-            The expression must be a lambda expression that specifies the method to call and its arguments.
+            <param name="requestProcessor">
+            The request processor responsible for handling HTTP requests and responses.
+            </param>
+            <param name="options">
+            The options used to configure the API client, including serialization settings and optional HTTP message dumper.
             </param>
             <returns>
-            A task that represents the asynchronous operation. The task result contains an 
-            <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult"/> object, which provides details about the API call and its processing context.
+            A proxy instance that implements the specified API contract type.
             </returns>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown when the <paramref name="invocation"/> parameter is <c>null</c>.
-            </exception>
-            <exception cref="T:System.ArgumentException">
-            Thrown when the <paramref name="invocation"/> parameter is not a valid lambda expression representing a method call.
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the proxy instance cannot be created.
             </exception>
         </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation.IFluentProcessingStrategy">
+        <member name="M:MyLab.ApiClient.Usage.ApiClientProxy.Invoke(System.Reflection.MethodInfo,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.HttpClientRequestProcessor">
             <summary>
-            Defines a strategy for fluent processing of API client invocation results.
+            Processes HTTP requests using an <see cref="T:MyLab.ApiClient.DI.IHttpClientProvider"/> to obtain an <see cref="T:System.Net.Http.HttpClient"/>.
+            </summary>
+            <remarks>
+            This class implements the <see cref="T:MyLab.ApiClient.Usage.IRequestProcessor"/> interface and is responsible for sending HTTP requests
+            using the provided <see cref="T:System.Net.Http.HttpClient"/> instance.
+            </remarks>
+        </member>
+        <member name="P:MyLab.ApiClient.Usage.HttpClientRequestProcessor.HttpClientProvider">
+            <summary>
+            Gets the <see cref="T:MyLab.ApiClient.DI.IHttpClientProvider"/> instance used to supply <see cref="T:System.Net.Http.HttpClient"/> objects
+            for processing HTTP requests.
+            </summary>
+            <value>
+            An implementation of <see cref="T:MyLab.ApiClient.DI.IHttpClientProvider"/> that provides <see cref="T:System.Net.Http.HttpClient"/> instances.
+            </value>
+            <remarks>
+            This property is initialized through the constructor and is used internally to obtain
+            <see cref="T:System.Net.Http.HttpClient"/> instances for sending HTTP requests.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.HttpClientRequestProcessor.#ctor(MyLab.ApiClient.DI.IHttpClientProvider)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Usage.HttpClientRequestProcessor"/>
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.IFluentProcessingStrategy.ProcessAsync(MyLab.ApiClient.ResponseProcessing.CallDetails,MyLab.ApiClient.Usage.Invocation.CallResultProcessingContext,System.Threading.CancellationToken)">
-            <summary>
-            Processes the result of an API client invocation asynchronously.
-            </summary>
-            <param name="callDetails">
-            Contains detailed information about the API call, including request and response data.
-            </param>
-            <param name="processingContext">
-            The context for processing the API call result, which includes status predicates and processing actions.
-            </param>
-            <param name="cancellationToken">
-            A token to monitor for cancellation requests.
-            </param>
-            <returns>
-            A task that represents the asynchronous operation.
-            </returns>
+        <member name="M:MyLab.ApiClient.Usage.HttpClientRequestProcessor.ProcessRequestAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <inheritdoc />
         </member>
         <member name="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult">
             <summary>
@@ -1231,6 +1303,50 @@
             Thrown if the operation is canceled via the provided <paramref name="cancellationToken"/>.
             </exception>
         </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1">
+            <summary>
+            Provides functionality to invoke methods on an API client contract.
+            </summary>
+            <typeparam name="TContract">
+            The type of the API client contract that defines the interface for interacting with the API.
+            </typeparam>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1.FromContract(MyLab.ApiClient.Usage.IRequestProcessor,MyLab.ApiClient.Options.ApiClientOptions)">
+            <summary>
+            Creates an instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1"/> for the specified contract type.
+            </summary>
+            <typeparam name="TContract">
+            The contract type that defines the API client interface.
+            </typeparam>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1.InvokeAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
+            <summary>
+            Invokes a method on the API client contract asynchronously.
+            </summary>
+            <param name="invocation">
+            An expression representing the method invocation on the API client contract.
+            The expression must be a lambda expression that specifies the method to call and its arguments.
+            </param>
+            <returns>
+            A task that represents the asynchronous operation. The task result contains an 
+            <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult"/> object, which provides details about the API call and its processing context.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when the <paramref name="invocation"/> parameter is <c>null</c>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            Thrown when the <paramref name="invocation"/> parameter is not a valid lambda expression representing a method call.
+            </exception>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.CallDetailsPredicate">
+            <summary>
+            Represents a predicate that evaluates a <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/> instance.
+            </summary>
+            <param name="callDetails">The details of the service call to evaluate.</param>
+            <returns>
+            <c>true</c> if the predicate condition is satisfied for the provided <paramref name="callDetails"/>; otherwise, <c>false</c>.
+            </returns>
+        </member>
         <member name="T:MyLab.ApiClient.Usage.Invocation.CallResultProcessingContext">
             <summary>
             Represents the context for processing the result of an API call.
@@ -1276,6 +1392,61 @@
             Indicates whether an exception should be thrown if the status code of the API response
             does not match any of the handled status predicates.
             </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.IFluentProcessingStrategy">
+            <summary>
+            Defines a strategy for fluent processing of API client invocation results.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IFluentProcessingStrategy.ProcessAsync(MyLab.ApiClient.ResponseProcessing.CallDetails,MyLab.ApiClient.Usage.Invocation.CallResultProcessingContext,System.Threading.CancellationToken)">
+            <summary>
+            Processes the result of an API client invocation asynchronously.
+            </summary>
+            <param name="callDetails">
+            Contains detailed information about the API call, including request and response data.
+            </param>
+            <param name="processingContext">
+            The context for processing the API call result, which includes status predicates and processing actions.
+            </param>
+            <param name="cancellationToken">
+            A token to monitor for cancellation requests.
+            </param>
+            <returns>
+            A task that represents the asynchronous operation.
+            </returns>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.IProcessingAction">
+            <summary>
+            Defines an action to be performed during the processing of an API call result.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Usage.Invocation.IProcessingAction.Predicate">
+            <summary>
+            Gets the predicate that determines whether the processing action should be executed 
+            based on the provided <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/>.
+            </summary>
+            <value>
+            A delegate of type <see cref="T:MyLab.ApiClient.Usage.Invocation.CallDetailsPredicate"/> that evaluates the 
+            <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/> and returns <c>true</c> if the action should be performed; 
+            otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IProcessingAction.PerformAsync(MyLab.ApiClient.ResponseProcessing.CallDetails,System.Threading.CancellationToken)">
+            <summary>
+            Executes the processing action asynchronously using the provided call details and cancellation token.
+            </summary>
+            <param name="callDetails">
+            The details of the API call to be processed. Must not be <c>null</c>.
+            </param>
+            <param name="cancellationToken">
+            A token to monitor for cancellation requests.
+            </param>
+            <returns>
+            A task that represents the asynchronous operation.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="callDetails"/> is <c>null</c>.
+            </exception>
         </member>
         <member name="T:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder">
             <summary>
@@ -1339,39 +1510,6 @@
             or transforming validation details into a specific format.
             </remarks>
         </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation.IProcessingAction">
-            <summary>
-            Defines an action to be performed during the processing of an API call result.
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Usage.Invocation.IProcessingAction.Predicate">
-            <summary>
-            Gets the predicate that determines whether the processing action should be executed 
-            based on the provided <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/>.
-            </summary>
-            <value>
-            A delegate of type <see cref="T:MyLab.ApiClient.Usage.Invocation.CallDetailsPredicate"/> that evaluates the 
-            <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/> and returns <c>true</c> if the action should be performed; 
-            otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.IProcessingAction.PerformAsync(MyLab.ApiClient.ResponseProcessing.CallDetails,System.Threading.CancellationToken)">
-            <summary>
-            Executes the processing action asynchronously using the provided call details and cancellation token.
-            </summary>
-            <param name="callDetails">
-            The details of the API call to be processed. Must not be <c>null</c>.
-            </param>
-            <param name="cancellationToken">
-            A token to monitor for cancellation requests.
-            </param>
-            <returns>
-            A task that represents the asynchronous operation.
-            </returns>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown when <paramref name="callDetails"/> is <c>null</c>.
-            </exception>
-        </member>
         <member name="T:MyLab.ApiClient.Usage.Invocation.StatusCodePredicate">
             <summary>
             Represents a predicate that evaluates a condition on an HTTP status code.
@@ -1379,15 +1517,6 @@
             <param name="statusCode">The HTTP status code to evaluate.</param>
             <returns>
             <c>true</c> if the condition is met for the specified <paramref name="statusCode"/>; otherwise, <c>false</c>.
-            </returns>
-        </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation.CallDetailsPredicate">
-            <summary>
-            Represents a predicate that evaluates a <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/> instance.
-            </summary>
-            <param name="callDetails">The details of the service call to evaluate.</param>
-            <returns>
-            <c>true</c> if the predicate condition is satisfied for the provided <paramref name="callDetails"/>; otherwise, <c>false</c>.
             </returns>
         </member>
         <member name="T:MyLab.ApiClient.Usage.Invocation.UnexpectedResponseStatusCodeException">

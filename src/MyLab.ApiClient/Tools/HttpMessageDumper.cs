@@ -54,8 +54,7 @@ public class HttpMessageDumper
     {
         var b = new StringBuilder();
 
-        AppendLine(b, $"{(int)msg.StatusCode} {msg.ReasonPhrase}");
-        AppendLine(b, "");
+        b.Append($"{(int)msg.StatusCode} {msg.ReasonPhrase}");
 
         try
         {
@@ -121,7 +120,7 @@ public class HttpMessageDumper
 
                     var strContent = encoding.GetString(buff, 0, readCount);
 
-                    AppendLine(contentBuilder, strContent);
+                    contentBuilder.Append(strContent);
                 }
 
                 if (contentBuilder.Length != 0)
@@ -134,9 +133,12 @@ public class HttpMessageDumper
                         ? contentBuilder.Remove(bodyLimit, contentBuilder.Length - bodyLimit)
                         : contentBuilder;
 
-                    AppendLine(dumpBuilder, normContent.ToString());
+                    dumpBuilder.Append(normContent.ToString());
                     if (contentIsTooLarge)
-                        AppendLine(dumpBuilder, ContentIsTooLargeText);
+                    {
+                        AppendLine(dumpBuilder, "");
+                        dumpBuilder.Append(ContentIsTooLargeText);
+                    }
                 }
             }
         }
