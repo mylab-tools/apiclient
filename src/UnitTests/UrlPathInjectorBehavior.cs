@@ -1,7 +1,8 @@
-﻿using System;
+﻿using MyLab.ApiClient;
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
-using MyLab.ApiClient;
 using Xunit;
 
 namespace UnitTests
@@ -42,6 +43,30 @@ namespace UnitTests
 
             //Assert
             Assert.Equal(expectedUrl, modifiedUrl.OriginalString);
+        }
+
+        [Theory]
+        [InlineData(TestEnum.ElementA, "ElementA")]
+        [InlineData(TestEnum.ElementB, "B-value")]
+        public void ShouldInjectEnum(TestEnum enumValue, string expectedValue)
+        {
+            //Arrange
+            var injector = new UrlPathInjector();
+            var originUrl = new Uri("orders/{order-id}/description", UriKind.Relative);
+
+            //Act
+            var modifiedUrl = injector.Modify(originUrl, "order-id", enumValue);
+            var expectedUrl = $"orders/{expectedValue}/description";
+
+            //Assert
+            Assert.Equal(expectedUrl, modifiedUrl.OriginalString);
+        }
+
+        public enum TestEnum
+        {
+            ElementA,
+            [EnumMember(Value = "B-value")]
+            ElementB
         }
     }
 }
