@@ -53,9 +53,13 @@ namespace MyLab.ApiClient
 
     class UrlQueryInjector : IUriModifier
     {
+        public bool EncodeValues { get; set; } = true;
+        
         public Uri Modify(Uri origin, string paramName, object value)
         {
-            var strVal = Uri.EscapeDataString(ObjectToStringConverter.ToString(value));
+            var strVal = EncodeValues 
+                ? Uri.EscapeDataString(ObjectToStringConverter.ToString(value))
+                : ObjectToStringConverter.ToString(value);
 
             var uriStr = origin.OriginalString;
             var queryStart = uriStr.IndexOf("?", StringComparison.InvariantCulture);
