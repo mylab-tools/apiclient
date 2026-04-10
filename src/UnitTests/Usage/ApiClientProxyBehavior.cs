@@ -22,7 +22,7 @@ public partial class ApiClientProxyBehavior
         //Arrange
         var response = CreateOkResponse();
         var reqProcMock = CreateReqProcMock(response);
-        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
+        var proxy = ApiClientProxy.CreateForContract<IContract>(reqProcMock.Object, _defaultOptions);
 
         //Act
         await proxy.PerformVoidAsync(1);
@@ -37,7 +37,7 @@ public partial class ApiClientProxyBehavior
         //Arrange
         var response = CreateOkResponse("foo");
         var reqProcMock = CreateReqProcMock(response);
-        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
+        var proxy = ApiClientProxy.CreateForContract<IContract>(reqProcMock.Object, _defaultOptions);
 
         //Act
         var result = await proxy.GetAsync();
@@ -53,7 +53,7 @@ public partial class ApiClientProxyBehavior
         //Arrange
         var response = new HttpResponseMessage(HttpStatusCode.NotFound);
         var reqProcMock = CreateReqProcMock(response);
-        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
+        var proxy = ApiClientProxy.CreateForContract<IContract>(reqProcMock.Object, _defaultOptions);
 
         //Act & Assert
         var e = await Assert.ThrowsAsync<ResponseCodeException>(() => proxy.PerformVoidAsync(1));
@@ -66,7 +66,7 @@ public partial class ApiClientProxyBehavior
         //Arrange
         var response = CreateOkResponse($"{{\"{NewtonJsonModel.ValuePropertyName}\":\"foo\"}}");
         var reqProcMock = CreateReqProcMock(response);
-        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
+        var proxy = ApiClientProxy.CreateForContract<IContract>(reqProcMock.Object, _defaultOptions);
 
         //Act
         var actualModel = await proxy.GetNewtonJsonModel();
@@ -85,7 +85,7 @@ public partial class ApiClientProxyBehavior
         };
         var response = CreateOkResponse($"{{\"{MicrosoftModel.ValuePropertyName}\":\"bar\"}}");
         var reqProcMock = CreateReqProcMock(response);
-        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, opt);
+        var proxy = ApiClientProxy.CreateForContract<IContract>(reqProcMock.Object, opt);
 
         //Act
         var actualModel = await proxy.GetMicrosoftModel();
@@ -100,7 +100,7 @@ public partial class ApiClientProxyBehavior
         //Arrange
         var response = CreateOkResponse();
         var reqProcMock = CreateReqProcMock(response);
-        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
+        var proxy = ApiClientProxy.CreateForContract<IContract>(reqProcMock.Object, _defaultOptions);
 
         //Act
         await proxy.SendInt(42);
@@ -116,7 +116,7 @@ public partial class ApiClientProxyBehavior
         var guid = Guid.NewGuid();
         var response = CreateOkResponse(guid.ToString("N"));
         var reqProcMock = CreateReqProcMock(response);
-        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
+        var proxy = ApiClientProxy.CreateForContract<IContract>(reqProcMock.Object, _defaultOptions);
 
         //Act
         await proxy.SendGuid(guid);
@@ -131,7 +131,7 @@ public partial class ApiClientProxyBehavior
         //Arrange
         var response = CreateOkResponse();
         var reqProcMock = CreateReqProcMock(response);
-        var proxy = ApiClientProxy.CreateFroContract<IContract>(reqProcMock.Object, _defaultOptions);
+        var proxy = ApiClientProxy.CreateForContract<IContract>(reqProcMock.Object, _defaultOptions);
 
         var obj = new NewtonJsonModel { Value = "foo" };
 

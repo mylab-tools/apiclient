@@ -1,1 +1,1 @@
-﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("MyLab.ApiClient.Tests")]
+﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("UnitTests")]

@@ -25,18 +25,6 @@ namespace MyLab.ApiClient.Tests
             return response;
         }
 
-        public static HttpRequestMessage CreateSimpleRequest(string? content = null)
-        {
-            var request = new HttpRequestMessage();
-
-            if (content != null)
-            {
-                request.Content = new StringContent(content, Encoding.UTF8, "application/json");
-            }
-
-            return request;
-        }
-
         public static Mock<IRequestProcessor> CreateReqProcMock(HttpResponseMessage response)
         {
             var reqProcMock = new Mock<IRequestProcessor>();
