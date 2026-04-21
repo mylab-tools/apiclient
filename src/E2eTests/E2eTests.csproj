@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TestTools\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MyLab.ApiClient.Test\MyLab.ApiClient.Test.csproj" />
     <ProjectReference Include="..\MyLab.ApiClient\MyLab.ApiClient.csproj" />
     <ProjectReference Include="..\TestServer\TestServer.csproj" />
