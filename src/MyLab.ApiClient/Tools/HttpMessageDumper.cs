@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -88,7 +89,7 @@ public class HttpMessageDumper
             }
         }
 
-        if (content != null)
+        if (content is { Headers.ContentLength: not null })
         {
             var cha = content.Headers.ToArray();
             if (cha.Length != 0)
@@ -107,38 +108,25 @@ public class HttpMessageDumper
                 int readCount;
                 var contentBuilder = new StringBuilder();
 
-                while (
-                    (readCount = await strm.ReadAsync(buff, 0, buff.Length)) != 0 &&
-                    contentBuilder.Length < bodyLimit
-                    )
+                if ((readCount = await strm.ReadAsync(buff, 0, buff.Length)) != 0)
                 {
                     var encodingFromRequest =
-                        content.Headers?.ContentEncoding?.FirstOrDefault();
+                        content.Headers.ContentEncoding.FirstOrDefault();
                     var encoding = encodingFromRequest != null
                         ? Encoding.GetEncoding(encodingFromRequest)
                         : Encoding.UTF8;
 
                     var strContent = encoding.GetString(buff, 0, readCount);
 
-                    contentBuilder.Append(strContent);
+                    dumpBuilder.Append(strContent);
                 }
 
-                if (contentBuilder.Length != 0)
+                bool contentIsTooLarge = content.Headers.ContentLength > bodyLimit;
+
+                if (contentIsTooLarge)
                 {
                     AppendLine(dumpBuilder, "");
-
-                    bool contentIsTooLarge = contentBuilder.Length > bodyLimit;
-
-                    var normContent = contentIsTooLarge
-                        ? contentBuilder.Remove(bodyLimit, contentBuilder.Length - bodyLimit)
-                        : contentBuilder;
-
-                    dumpBuilder.Append(normContent.ToString());
-                    if (contentIsTooLarge)
-                    {
-                        AppendLine(dumpBuilder, "");
-                        dumpBuilder.Append(ContentIsTooLargeText);
-                    }
+                    dumpBuilder.Append(ContentIsTooLargeText);
                 }
             }
         }
