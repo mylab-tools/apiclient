@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -55,7 +53,8 @@ public class HttpMessageDumper
     {
         var b = new StringBuilder();
 
-        b.Append($"{(int)msg.StatusCode} {msg.ReasonPhrase}");
+        AppendLine(b, $"{(int)msg.StatusCode} {msg.ReasonPhrase}");
+        AppendLine(b, "");
 
         try
         {
