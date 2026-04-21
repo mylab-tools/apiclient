@@ -102,7 +102,7 @@ namespace UnitTests.Usage
             TestTools.VerifyRequestContent(reqProc, "foo");
 
             Assert.NotNull(callDetails);
-            Assert.Equal(HttpStatusCode.OK, callDetails.StatusCode);
+            Assert.Equal(expectedStatusCode, callDetails.StatusCode);
             Assert.Equal(HttpMethod.Post, callDetails.RequestMessage.Method);
             Assert.Equal(expectedResultContent, actualResult);
             Assert.Equal(expectedStatusCode, actualStatusCode);
@@ -156,10 +156,13 @@ namespace UnitTests.Usage
 
         public static object?[][] GetHandlersCases()
         {
+            var successStringResponse = new HttpResponseMessage(HttpStatusCode.OK);
+            successStringResponse.Content = new StringContent("foo");
+
             return new object?[][]
             {
                 [
-                    new HttpResponseMessage(HttpStatusCode.OK),
+                    successStringResponse,
                     "foo",
                     HttpStatusCode.OK
                 ],
