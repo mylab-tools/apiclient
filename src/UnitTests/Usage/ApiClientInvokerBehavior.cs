@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using MyLab.ApiClient.Usage.Invocation2;
 using System.Net;
 using System.Net.Http;
@@ -76,14 +77,12 @@ namespace UnitTests.Usage
         {
             //Arrange
             var reqProc = TestTools.CreateReqProcMock(response);
-
             var invoker = ApiClientInvoker<IContract>.FromContract(reqProc.Object, TestTools.DefaultOptions);
 
             string? actualResult = null;
             HttpStatusCode actualStatusCode = default;
 
             //Act
-
             var callDetails = await invoker
                 .ForExpression(c => c.EchoAsync("foo"))
                 .When2xx().ProcessResult<string>((res, code) =>
@@ -118,7 +117,6 @@ namespace UnitTests.Usage
         {
             //Arrange
             var reqProc = TestTools.CreateReqProcMock(response);
-
             var invoker = ApiClientInvoker<IContract>.FromContract(reqProc.Object, TestTools.DefaultOptions);
 
             string? actualResult = null;
@@ -138,7 +136,6 @@ namespace UnitTests.Usage
                 .When4xx().ProcessStatusCodeAsync(code =>
                 {
                     actualStatusCode = code;
-
                     return Task.CompletedTask;
                 })
                 .InvokeAsync(TestContext.Current.CancellationToken);
@@ -152,6 +149,52 @@ namespace UnitTests.Usage
             Assert.Equal(HttpMethod.Post, callDetails.RequestMessage.Method);
             Assert.Equal(expectedResultContent, actualResult);
             Assert.Equal(expectedStatusCode, actualStatusCode);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetUnexpectedTestCases))]
+        public async Task ShouldFailWhenUnexpectedResponseCode(HttpResponseMessage response, bool expected)
+        {
+            //Arrange
+            var reqProc = TestTools.CreateReqProcMock(response);
+            var invoker = ApiClientInvoker<IContract>.FromContract(reqProc.Object, TestTools.DefaultOptions);
+
+            UnexpectedResponseStatusCodeException? unexpectedResponseStatusCodeException = null;
+
+            //Act
+            try
+            {
+                await invoker
+                    .ForExpression(c => c.EchoAsync("foo"))
+                    .When(HttpStatusCode.BadRequest).ProcessStatusCode(_ =>
+                    {
+                        //expected
+                    })
+                    .ThrowIfAnotherStatusCode()
+                    .InvokeAsync(TestContext.Current.CancellationToken);
+            }
+            catch (UnexpectedResponseStatusCodeException e)
+            {
+                unexpectedResponseStatusCodeException = e;
+            }
+
+            //Assert
+            Assert.Equal(expected, unexpectedResponseStatusCodeException == null);
+        }
+
+        public static object?[][] GetUnexpectedTestCases()
+        {
+            return new object?[][]
+            {
+                [
+                    new HttpResponseMessage(HttpStatusCode.BadRequest),
+                    true
+                ],
+                [
+                    new HttpResponseMessage(HttpStatusCode.NotFound),
+                    false
+                ]
+            };
         }
 
         public static object?[][] GetHandlersCases()
