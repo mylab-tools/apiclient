@@ -1198,7 +1198,7 @@
         <member name="M:MyLab.ApiClient.Usage.HttpClientRequestProcessor.ProcessRequestAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation2.ApiClientInvoker`1">
+        <member name="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1">
             <summary>
             Provides functionality to invoke API client methods defined in a contract interface.
             </summary>
@@ -1211,9 +1211,9 @@
             required to interact with the API.
             </remarks>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.ApiClientInvoker`1.FromContract(MyLab.ApiClient.Usage.IRequestProcessor,MyLab.ApiClient.Options.ApiClientOptions)">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1.FromContract(MyLab.ApiClient.Usage.IRequestProcessor,MyLab.ApiClient.Options.ApiClientOptions)">
             <summary>
-            Creates an instance of <see cref="T:MyLab.ApiClient.Usage.Invocation2.ApiClientInvoker`1"/> from the specified contract type.
+            Creates an instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1"/> from the specified contract type.
             </summary>
             <typeparam name="TContract">
             The type of the contract interface that defines the API client methods.
@@ -1225,14 +1225,14 @@
             The <see cref="T:MyLab.ApiClient.Options.ApiClientOptions"/> containing configuration settings for the API client.
             </param>
             <returns>
-            A new instance of <see cref="T:MyLab.ApiClient.Usage.Invocation2.ApiClientInvoker`1"/> configured for the specified contract type.
+            A new instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1"/> configured for the specified contract type.
             </returns>
             <remarks>
             This method initializes the API client invoker by creating the necessary request processing logic,
             including request factoring settings, service model, and response deserialization tools.
             </remarks>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.ApiClientInvoker`1.ForExpression(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1.ForExpression(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
             <summary>
             Creates an API invocation expression based on the provided contract method expression.
             </summary>
@@ -1241,75 +1241,23 @@
             that defines the API call to be invoked.
             </param>
             <returns>
-            An object implementing <see cref="T:MyLab.ApiClient.Usage.Invocation2.IApiInvocationExpression`1"/> that allows further configuration 
+            An object implementing <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1"/> that allows further configuration 
             and execution of the API invocation.
             </returns>
             <typeparam name="TContract">
             The type of the contract interface that defines the API methods.
             </typeparam>
         </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation2.IApiInvocationExpression`1">
+        <member name="T:MyLab.ApiClient.Usage.Invocation.CallDetailsPredicate">
             <summary>
-            Represents an API invocation expression that allows configuration and execution of API calls
-            based on a contract interface.
+            Represents a predicate that evaluates a <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/> instance.
             </summary>
-            <typeparam name="TContract">
-            The type of the contract interface that defines the API methods to be invoked.
-            </typeparam>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiInvocationExpression`1.When(System.Net.HttpStatusCode,System.Net.HttpStatusCode[])">
-            <summary>
-            Configures processing logic for specific HTTP status codes.
-            </summary>
-            <param name="code">The primary HTTP status code to handle.</param>
-            <param name="anotherCodes">Additional HTTP status codes to handle.</param>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiInvocationExpression`1.When1xx">
-            <summary>
-            Configures processing logic specifically for HTTP 1xx (Informational) status codes.
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiInvocationExpression`1.When2xx">
-            <summary>
-            Configures processing logic specifically for HTTP 2xx (Successful) status codes.
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiInvocationExpression`1.When3xx">
-            <summary>
-            Configures processing logic specifically for HTTP 3xx (Redirection) status codes.
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiInvocationExpression`1.When4xx">
-            <summary>
-            Configures processing logic specifically for HTTP 4xx (Client Error) status codes.
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiInvocationExpression`1.When5xx">
-            <summary>
-            Configures processing logic specifically for HTTP 5xx (Server Error) status codes.
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiInvocationExpression`1.ThrowIfAnotherStatusCode">
-            <summary>
-            Ensures that an exception is thrown if the HTTP response status code does not match any of the configured status codes.
-            </summary>
+            <param name="callDetails">The details of the service call to evaluate.</param>
             <returns>
-            The current API invocation expression, allowing for further configuration or execution of the API call.
+            <c>true</c> if the predicate condition is satisfied for the provided <paramref name="callDetails"/>; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiInvocationExpression`1.InvokeAsync(System.Threading.CancellationToken)">
-            <summary>
-            Executes the API call asynchronously based on the configured invocation expression.
-            </summary>
-            <param name="cancellationToken">
-            A token to monitor for cancellation requests.
-            </param>
-            <returns>
-            A task that represents the asynchronous operation. The task result contains detailed information
-            about the service call, including the HTTP request and response details.
-            </returns>
-        </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation2.IApiExpressionConditionalStarter`1">
+        <member name="T:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1">
             <summary>
             Represents a conditional starter interface for configuring API invocation expressions 
             based on specific HTTP status codes or conditions.
@@ -1318,7 +1266,7 @@
             The type of the API client contract associated with the invocation.
             </typeparam>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiExpressionConditionalStarter`1.ProcessResult``1(System.Action{``0,System.Net.HttpStatusCode})">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessResult``1(System.Action{``0,System.Net.HttpStatusCode})">
             <summary>
             Configures the processing of the result for the current API client invocation.
             </summary>
@@ -1332,7 +1280,7 @@
             Thrown if the <paramref name="action"/> parameter is <c>null</c>.
             </exception>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiExpressionConditionalStarter`1.ProcessStatusCode(System.Action{System.Net.HttpStatusCode})">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessStatusCode(System.Action{System.Net.HttpStatusCode})">
             <summary>
             Configures the API invocation expression to process the HTTP status code of the response
             using the specified action.
@@ -1344,7 +1292,7 @@
             The API invocation expression for further configuration or execution.
             </returns>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiExpressionConditionalStarter`1.ProcessProblem(System.Action{MyLab.ApiClient.Problems.ProblemDetails,System.Net.HttpStatusCode})">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessProblem(System.Action{MyLab.ApiClient.Problems.ProblemDetails,System.Net.HttpStatusCode})">
             <summary>
             Configures a processing action to handle API invocation results as problems.
             </summary>
@@ -1356,7 +1304,7 @@
             as problems, typically conforming to the Problem Details standard (RFC 7807).
             </remarks>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiExpressionConditionalStarter`1.ProcessValidationProblem(System.Action{MyLab.ApiClient.Problems.ValidationProblemDetails,System.Net.HttpStatusCode})">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessValidationProblem(System.Action{MyLab.ApiClient.Problems.ValidationProblemDetails,System.Net.HttpStatusCode})">
             <summary>
             Configures a processing action to handle validation problems encountered during an API client invocation.
             </summary>
@@ -1369,7 +1317,7 @@
             or transforming validation details into a specific format.
             </remarks>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiExpressionConditionalStarter`1.ProcessResultAsync``1(System.Func{``0,System.Net.HttpStatusCode,System.Threading.Tasks.Task})">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessResultAsync``1(System.Func{``0,System.Net.HttpStatusCode,System.Threading.Tasks.Task})">
             <summary>
             Configures the asynchronous processing of the result for the current API client invocation.
             </summary>
@@ -1386,7 +1334,7 @@
             Thrown if the <paramref name="func"/> parameter is <c>null</c>.
             </exception>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiExpressionConditionalStarter`1.ProcessStatusCodeAsync(System.Func{System.Net.HttpStatusCode,System.Threading.Tasks.Task})">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessStatusCodeAsync(System.Func{System.Net.HttpStatusCode,System.Threading.Tasks.Task})">
             <summary>
             Configures the API invocation expression to process the HTTP status code of the response
             asynchronously using the specified function.
@@ -1401,7 +1349,7 @@
             Thrown if the <paramref name="func"/> parameter is <c>null</c>.
             </exception>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiExpressionConditionalStarter`1.ProcessProblemAsync(System.Func{MyLab.ApiClient.Problems.ProblemDetails,System.Net.HttpStatusCode,System.Threading.Tasks.Task})">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessProblemAsync(System.Func{MyLab.ApiClient.Problems.ProblemDetails,System.Net.HttpStatusCode,System.Threading.Tasks.Task})">
             <summary>
             Configures an asynchronous processing action to handle API invocation results as problems.
             </summary>
@@ -1409,14 +1357,14 @@
             A delegate that processes the <see cref="T:MyLab.ApiClient.Problems.ProblemDetails"/> object and the associated HTTP status code asynchronously.
             </param>
             <returns>
-            An instance of <see cref="T:MyLab.ApiClient.Usage.Invocation2.IApiInvocationExpression`1"/> to allow further configuration or execution of the API invocation.
+            An instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1"/> to allow further configuration or execution of the API invocation.
             </returns>
             <remarks>
             This method is used to define custom asynchronous logic for handling API invocation results that are represented
             as problems, typically conforming to the Problem Details standard (RFC 7807).
             </remarks>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IApiExpressionConditionalStarter`1.ProcessValidationProblemAsync(System.Func{MyLab.ApiClient.Problems.ValidationProblemDetails,System.Net.HttpStatusCode,System.Threading.Tasks.Task})">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessValidationProblemAsync(System.Func{MyLab.ApiClient.Problems.ValidationProblemDetails,System.Net.HttpStatusCode,System.Threading.Tasks.Task})">
             <summary>
             Configures an asynchronous processing action to handle validation problems encountered during an API client invocation.
             </summary>
@@ -1432,299 +1380,65 @@
             transforming validation details into a specific format, or triggering additional asynchronous operations.
             </remarks>
         </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation2.UnexpectedResponseStatusCodeException">
+        <member name="T:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1">
             <summary>
-            Represents an exception that is thrown when an API response status code does not match the expected or handled status codes.
+            Represents an API invocation expression that allows configuration and execution of API calls
+            based on a contract interface.
             </summary>
-            <remarks>
-            This exception is typically used in scenarios where API response validation fails, 
-            and the status code is not among the predefined or handled status codes.
-            </remarks>
+            <typeparam name="TContract">
+            The type of the contract interface that defines the API methods to be invoked.
+            </typeparam>
         </member>
-        <member name="P:MyLab.ApiClient.Usage.Invocation2.UnexpectedResponseStatusCodeException.StatusCode">
-            <summary>
-            Gets the HTTP status code that caused the exception.
-            </summary>
-            <value>
-            The unexpected HTTP status code returned by the API response.
-            </value>
-            <remarks>
-            This property provides the status code that was not expected or handled, 
-            leading to the exception being thrown. It can be used for debugging or 
-            logging purposes to identify the issue with the API response.
-            </remarks>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.UnexpectedResponseStatusCodeException.#ctor(System.Net.HttpStatusCode)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Usage.Invocation2.UnexpectedResponseStatusCodeException"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation2.StatusCodePredicate">
-            <summary>
-            Represents a predicate that evaluates a condition on an HTTP status code.
-            </summary>
-            <param name="statusCode">The HTTP status code to evaluate.</param>
-            <returns>
-            <c>true</c> if the condition is met for the specified <paramref name="statusCode"/>; otherwise, <c>false</c>.
-            </returns>
-        </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation2.IProcessingAction">
-            <summary>
-            Defines an action to be performed during the processing of an API call result.
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Usage.Invocation2.IProcessingAction.Predicate">
-            <summary>
-            Gets the predicate that determines whether the processing action should be executed 
-            based on the provided <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/>.
-            </summary>
-            <value>
-            A delegate of type <see cref="T:MyLab.ApiClient.Usage.Invocation2.CallDetailsPredicate"/> that evaluates the 
-            <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/> and returns <c>true</c> if the action should be performed; 
-            otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation2.IProcessingAction.PerformAsync(MyLab.ApiClient.ResponseProcessing.CallDetails,System.Threading.CancellationToken)">
-            <summary>
-            Executes the processing action asynchronously using the provided call details and cancellation token.
-            </summary>
-            <param name="callDetails">
-            The details of the API call to be processed. Must not be <c>null</c>.
-            </param>
-            <param name="cancellationToken">
-            A token to monitor for cancellation requests.
-            </param>
-            <returns>
-            A task that represents the asynchronous operation.
-            </returns>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown when <paramref name="callDetails"/> is <c>null</c>.
-            </exception>
-        </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation2.CallDetailsPredicate">
-            <summary>
-            Represents a predicate that evaluates a <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/> instance.
-            </summary>
-            <param name="callDetails">The details of the service call to evaluate.</param>
-            <returns>
-            <c>true</c> if the predicate condition is satisfied for the provided <paramref name="callDetails"/>; otherwise, <c>false</c>.
-            </returns>
-        </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult">
-            <summary>
-            Represents the result of an API client invocation, including details about the API call
-            and the context for processing the call result.
-            </summary>
-            <remarks>
-            This record encapsulates the details of an API call, such as the call's metadata and
-            the processing context, which defines how the result of the call should be handled.
-            </remarks>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult.#ctor(MyLab.ApiClient.ResponseProcessing.CallDetails,MyLab.ApiClient.Usage.Invocation.CallResultProcessingContext)">
-            <summary>
-            Represents the result of an API client invocation, including details about the API call
-            and the context for processing the call result.
-            </summary>
-            <remarks>
-            This record encapsulates the details of an API call, such as the call's metadata and
-            the processing context, which defines how the result of the call should be handled.
-            </remarks>
-        </member>
-        <member name="P:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult.ProcessingStrategy">
-            <summary>
-            Gets or sets the strategy used for processing the result of an API client invocation.
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult.When(System.Net.HttpStatusCode,System.Net.HttpStatusCode[])">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.When(System.Net.HttpStatusCode,System.Net.HttpStatusCode[])">
             <summary>
             Configures processing logic for specific HTTP status codes.
             </summary>
             <param name="code">The primary HTTP status code to handle.</param>
             <param name="anotherCodes">Additional HTTP status codes to handle.</param>
-            <returns>A <see cref="T:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder"/> instance to define further processing actions.</returns>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult.When1xx">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.When1xx">
             <summary>
             Configures processing logic specifically for HTTP 1xx (Informational) status codes.
             </summary>
-            <returns>
-            A <see cref="T:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder"/> instance to define further processing actions
-            for HTTP 1xx status codes.
-            </returns>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult.When2xx">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.When2xx">
             <summary>
             Configures processing logic specifically for HTTP 2xx (Successful) status codes.
             </summary>
-            <returns>
-            A <see cref="T:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder"/> instance to define further processing actions
-            for HTTP 2xx status codes.
-            </returns>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult.When3xx">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.When3xx">
             <summary>
             Configures processing logic specifically for HTTP 3xx (Redirection) status codes.
             </summary>
-            <returns>
-            A <see cref="T:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder"/> instance to define further processing actions
-            for HTTP 3xx status codes.
-            </returns>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult.When4xx">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.When4xx">
             <summary>
             Configures processing logic specifically for HTTP 4xx (Client Error) status codes.
             </summary>
-            <returns>
-            A <see cref="T:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder"/> instance to define further processing actions
-            for HTTP 4xx status codes.
-            </returns>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult.When5xx">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.When5xx">
             <summary>
             Configures processing logic specifically for HTTP 5xx (Server Error) status codes.
             </summary>
-            <returns>
-            A <see cref="T:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder"/> instance to define further processing actions
-            for HTTP 5xx status codes.
-            </returns>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult.ThrowIfAnotherStatusCode">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.ThrowIfAnotherStatusCode">
             <summary>
-            Throws an exception if the HTTP response status code does not match any of the configured status codes.
+            Ensures that an exception is thrown if the HTTP response status code does not match any of the configured status codes.
             </summary>
             <returns>
-            A new <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult"/> instance with the updated processing context
-            that enforces throwing an exception for unhandled status codes.
+            The current API invocation expression, allowing for further configuration or execution of the API call.
             </returns>
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult.ProcessAsync(System.Threading.CancellationToken)">
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.InvokeAsync(System.Threading.CancellationToken)">
             <summary>
-            Executes the processing logic defined in the <see cref="T:MyLab.ApiClient.Usage.Invocation.CallResultProcessingContext"/> 
-            for the current API call details.
+            Executes the API call asynchronously based on the configured invocation expression.
             </summary>
-            <param name="cancellationToken">
-            A <see cref="T:System.Threading.CancellationToken"/> that can be used to cancel the processing operation.
-            </param>
-            <returns>
-            A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.
-            </returns>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if the <see cref="P:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult.CallDetails"/> is null.
-            </exception>
-            <exception cref="T:System.OperationCanceledException">
-            Thrown if the operation is canceled via the provided <paramref name="cancellationToken"/>.
-            </exception>
-        </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1">
-            <summary>
-            Provides functionality to invoke methods on an API client contract.
-            </summary>
-            <typeparam name="TContract">
-            The type of the API client contract that defines the interface for interacting with the API.
-            </typeparam>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1.FromContract(MyLab.ApiClient.Usage.IRequestProcessor,MyLab.ApiClient.Options.ApiClientOptions)">
-            <summary>
-            Creates an instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1"/> for the specified contract type.
-            </summary>
-            <typeparam name="TContract">
-            The contract type that defines the API client interface.
-            </typeparam>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1.InvokeAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
-            <summary>
-            Invokes a method on the API client contract asynchronously.
-            </summary>
-            <param name="invocation">
-            An expression representing the method invocation on the API client contract.
-            The expression must be a lambda expression that specifies the method to call and its arguments.
-            </param>
-            <returns>
-            A task that represents the asynchronous operation. The task result contains an 
-            <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult"/> object, which provides details about the API call and its processing context.
-            </returns>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown when the <paramref name="invocation"/> parameter is <c>null</c>.
-            </exception>
-            <exception cref="T:System.ArgumentException">
-            Thrown when the <paramref name="invocation"/> parameter is not a valid lambda expression representing a method call.
-            </exception>
-        </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation.CallDetailsPredicate">
-            <summary>
-            Represents a predicate that evaluates a <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/> instance.
-            </summary>
-            <param name="callDetails">The details of the service call to evaluate.</param>
-            <returns>
-            <c>true</c> if the predicate condition is satisfied for the provided <paramref name="callDetails"/>; otherwise, <c>false</c>.
-            </returns>
-        </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation.CallResultProcessingContext">
-            <summary>
-            Represents the context for processing the result of an API call.
-            </summary>
-            <param name="HandledStatusPredicates">
-            A collection of predicates that define the status codes handled by the processing logic.
-            </param>
-            <param name="ProcessingActions">
-            A collection of actions to be executed during the processing of the API call result.
-            </param>
-            <param name="ThrowIfAnotherStatusCode">
-            Indicates whether an exception should be thrown if the status code of the API response
-            does not match any of the handled status predicates.
-            </param>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.CallResultProcessingContext.#ctor(System.Collections.ObjectModel.ReadOnlyCollection{MyLab.ApiClient.Usage.Invocation.StatusCodePredicate},System.Collections.ObjectModel.ReadOnlyCollection{MyLab.ApiClient.Usage.Invocation.IProcessingAction},System.Boolean)">
-            <summary>
-            Represents the context for processing the result of an API call.
-            </summary>
-            <param name="HandledStatusPredicates">
-            A collection of predicates that define the status codes handled by the processing logic.
-            </param>
-            <param name="ProcessingActions">
-            A collection of actions to be executed during the processing of the API call result.
-            </param>
-            <param name="ThrowIfAnotherStatusCode">
-            Indicates whether an exception should be thrown if the status code of the API response
-            does not match any of the handled status predicates.
-            </param>
-        </member>
-        <member name="P:MyLab.ApiClient.Usage.Invocation.CallResultProcessingContext.HandledStatusPredicates">
-            <summary>
-            A collection of predicates that define the status codes handled by the processing logic.
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Usage.Invocation.CallResultProcessingContext.ProcessingActions">
-            <summary>
-            A collection of actions to be executed during the processing of the API call result.
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Usage.Invocation.CallResultProcessingContext.ThrowIfAnotherStatusCode">
-            <summary>
-            Indicates whether an exception should be thrown if the status code of the API response
-            does not match any of the handled status predicates.
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation.IFluentProcessingStrategy">
-            <summary>
-            Defines a strategy for fluent processing of API client invocation results.
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.IFluentProcessingStrategy.ProcessAsync(MyLab.ApiClient.ResponseProcessing.CallDetails,MyLab.ApiClient.Usage.Invocation.CallResultProcessingContext,System.Threading.CancellationToken)">
-            <summary>
-            Processes the result of an API client invocation asynchronously.
-            </summary>
-            <param name="callDetails">
-            Contains detailed information about the API call, including request and response data.
-            </param>
-            <param name="processingContext">
-            The context for processing the API call result, which includes status predicates and processing actions.
-            </param>
             <param name="cancellationToken">
             A token to monitor for cancellation requests.
             </param>
             <returns>
-            A task that represents the asynchronous operation.
+            A task that represents the asynchronous operation. The task result contains detailed information
+            about the service call, including the HTTP request and response details.
             </returns>
         </member>
         <member name="T:MyLab.ApiClient.Usage.Invocation.IProcessingAction">
@@ -1759,68 +1473,6 @@
             <exception cref="T:System.ArgumentNullException">
             Thrown when <paramref name="callDetails"/> is <c>null</c>.
             </exception>
-        </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder">
-            <summary>
-            Provides a builder for configuring processing actions for API client invocation results.
-            </summary>
-            <remarks>
-            This class is used to define custom processing logic for API client invocation results,
-            such as handling specific HTTP status codes or processing errors.
-            </remarks>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder.#ctor(MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult,MyLab.ApiClient.Usage.Invocation.CallDetailsPredicate)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder.ProcessResult``1(System.Action{``0,System.Net.HttpStatusCode})">
-            <summary>
-            Configures the processing of the result for the current API client invocation.
-            </summary>
-            <typeparam name="TResult">The type of the result to be processed.</typeparam>
-            <param name="action">
-            The action to be executed for processing the result. 
-            It receives the result of type <typeparamref name="TResult"/> (which can be <c>null</c>) 
-            and the HTTP status code of the response.
-            </param>
-            <returns>
-            An updated <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult"/> instance with the configured processing action.
-            </returns>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if the <paramref name="action"/> parameter is <c>null</c>.
-            </exception>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder.ProcessProblem(System.Action{MyLab.ApiClient.Problems.ProblemDetails,System.Net.HttpStatusCode})">
-            <summary>
-            Configures a processing action to handle API invocation results as problems.
-            </summary>
-            <param name="action">
-            A delegate that processes the <see cref="T:MyLab.ApiClient.Problems.ProblemDetails"/> object and the associated HTTP status code.
-            </param>
-            <returns>
-            The <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult"/> instance to allow further configuration or processing.
-            </returns>
-            <remarks>
-            This method is used to define custom logic for handling API invocation results that are represented
-            as problems, typically conforming to the Problem Details standard (RFC 7807).
-            </remarks>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ProcessingActionBuilder.ProcessValidationProblem(System.Action{MyLab.ApiClient.Problems.ValidationProblemDetails,System.Net.HttpStatusCode})">
-            <summary>
-            Configures a processing action to handle validation problems encountered during an API client invocation.
-            </summary>
-            <param name="action">
-            The action to execute when a validation problem occurs. The action receives the 
-            <see cref="T:MyLab.ApiClient.Problems.ValidationProblemDetails"/> instance and the associated HTTP status code as parameters.
-            </param>
-            <returns>
-            The <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvocationResult"/> instance, allowing further configuration or processing.
-            </returns>
-            <remarks>
-            Use this method to define custom logic for handling validation problems, such as logging errors
-            or transforming validation details into a specific format.
-            </remarks>
         </member>
         <member name="T:MyLab.ApiClient.Usage.Invocation.StatusCodePredicate">
             <summary>

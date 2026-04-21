@@ -6,9 +6,9 @@ using MyLab.ApiClient.ResponseProcessing;
 
 namespace MyLab.ApiClient.Usage.Invocation;
 
-class ProcessResultAction<TResult>
+class AsyncProcessStatusCodeAction
 (
-    Action<TResult?, HttpStatusCode> action,
+    Func<HttpStatusCode, Task> func,
     CallDetailsPredicate predicate
 )
     : IProcessingAction
@@ -18,8 +18,6 @@ class ProcessResultAction<TResult>
     public async Task PerformAsync(CallDetails callDetails, CancellationToken cancellationToken)
     {
         if (callDetails == null) throw new ArgumentNullException(nameof(callDetails));
-
-        var result = await callDetails.ReadContentAsync<TResult>();
-        action(result, callDetails.StatusCode);
+        await func(callDetails.StatusCode);
     }
 }

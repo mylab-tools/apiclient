@@ -29,7 +29,7 @@ public class UnexpectedResponseStatusCodeException : Exception
     /// Initializes a new instance of <see cref="UnexpectedResponseStatusCodeException"/>
     /// </summary>
     public UnexpectedResponseStatusCodeException(HttpStatusCode statusCode)
-        :   base("Unexpected status code")
+        : base("Unexpected status code")
     {
         StatusCode = statusCode;
     }

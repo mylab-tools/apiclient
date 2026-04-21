@@ -1,18 +1,15 @@
-﻿using System;
-using JetBrains.Annotations;
-using MyLab.ApiClient.Usage.Invocation2;
+﻿using JetBrains.Annotations;
+using MyLab.ApiClient.Usage.Invocation;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using MyLab.ApiClient.Contracts.Attributes.ForMethod;
-using MyLab.ApiClient.Contracts.Attributes.ForParameters;
 using MyLab.ApiClient.Tests;
 using Xunit;
 
 namespace UnitTests.Usage
 {
     [TestSubject(typeof(ApiClientInvoker<>))]
-    public class ApiClientInvokerBehavior
+    public partial class ApiClientInvokerBehavior
     {
         [Fact]
         public async Task ShouldSendRequest()
@@ -180,50 +177,6 @@ namespace UnitTests.Usage
 
             //Assert
             Assert.Equal(expected, unexpectedResponseStatusCodeException == null);
-        }
-
-        public static object?[][] GetUnexpectedTestCases()
-        {
-            return new object?[][]
-            {
-                [
-                    new HttpResponseMessage(HttpStatusCode.BadRequest),
-                    true
-                ],
-                [
-                    new HttpResponseMessage(HttpStatusCode.NotFound),
-                    false
-                ]
-            };
-        }
-
-        public static object?[][] GetHandlersCases()
-        {
-            var successStringResponse = new HttpResponseMessage(HttpStatusCode.OK);
-            successStringResponse.Content = new StringContent("foo");
-
-            return new object?[][]
-            {
-                [
-                    successStringResponse,
-                    "foo",
-                    HttpStatusCode.OK
-                ],
-                [
-                    new HttpResponseMessage(HttpStatusCode.NotFound),
-                    null,
-                    HttpStatusCode.NotFound
-                ]
-            };
-        }
-
-        interface IContract
-        {
-            [Get("get")]
-            Task GetAsync();
-
-            [Post("echo")]
-            Task<string> EchoAsync([StringContent] string value);
         }
     }
 }
