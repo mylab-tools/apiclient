@@ -23,6 +23,11 @@ namespace MyLab.ApiClient.Tools
                 return dt.ToString("O");
             }
 
+            if (target is DateTimeOffset dto)
+            {
+                return dto.ToString("O");
+            }
+
             if (target is DateOnly date)
             {
                 return date.ToString("O");
@@ -31,6 +36,11 @@ namespace MyLab.ApiClient.Tools
             if (target is TimeOnly t)
             {
                 return t.ToString("O");
+            }
+
+            if (target is TimeSpan ts)
+            {
+                return ts.ToString("c");
             }
 
             if (target is Guid guid)

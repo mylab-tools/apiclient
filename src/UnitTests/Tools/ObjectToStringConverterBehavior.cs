@@ -118,6 +118,7 @@ public class ObjectToStringConverterBehavior
         // Assert
         Assert.Equal("2023-10-05", result); // Expected RFC3339 format for DateOnly
     }
+    
     [Fact]
     public void ShouldConvertTimeOnlyToString()
     {
@@ -127,6 +128,31 @@ public class ObjectToStringConverterBehavior
         var result = ObjectToStringConverter.ToString(time);
         // Assert
         Assert.Equal("14:30:15.0000000", result); // Expected RFC3339 format for TimeOnly
+    }
+    
+    [Fact]
+    public void ShouldConvertDateTimeOffsetToString()
+    {
+        // Arrange
+        var dateTime = new DateTime(2010, 10, 11, 12, 13, 14, 15, 16);
+        var offset = new TimeSpan(0, 3, 0, 0);
+        var dtOffset = new DateTimeOffset(dateTime, offset);
+        // Act
+        var result = ObjectToStringConverter.ToString(dtOffset);
+        // Assert
+        Assert.Equal("2010-10-11T12:13:14.0150160+03:00", result); // Expected RFC3339 format for DateTimeOffset
+    }
+
+    [Fact]
+    public void ShouldConvertTimeSpanToString()
+    {
+        // Arrange
+        var dateTime = new DateTime(2010, 10, 11, 12, 13, 14, 15, 16);
+        
+        // Act
+        var result = ObjectToStringConverter.ToString(dateTime.TimeOfDay);
+        // Assert
+        Assert.Equal("12:13:14.0150160", result); // Expected RFC3339 format for DateTimeOffset
     }
 
     [Theory]
