@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using MyLab.ApiClient;
 using MyLab.ApiClient.JsonSerialization;
 using MyLab.ApiClient.Options;
 using Xunit;
@@ -22,10 +25,9 @@ public class ApiClientOptionsBehavior
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(configurationData)
             .Build();
-        var section = configuration.GetSection(ApiClientOptions.DefaultSectionName);
 
         // Act
-        var options = ApiClientOptions.ExtractFromSection(section);
+        var options = GetOptions(configuration);
 
         // Assert
         Assert.NotNull(options);
@@ -45,10 +47,9 @@ public class ApiClientOptionsBehavior
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(configurationData)
             .Build();
-        var section = configuration.GetSection(ApiClientOptions.DefaultSectionName);
 
         // Act
-        var options = ApiClientOptions.ExtractFromSection(section);
+        var options = GetOptions(configuration);
 
         // Assert
         Assert.NotNull(options.UrlFormSettings);
@@ -69,10 +70,9 @@ public class ApiClientOptionsBehavior
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(configurationData)
             .Build();
-        var section = configuration.GetSection(ApiClientOptions.DefaultSectionName);
         
         // Act
-        var options = ApiClientOptions.ExtractFromSection(section);
+        var options = GetOptions(configuration);
         
         // Assert
         Assert.NotNull(options.Endpoints);
@@ -97,10 +97,9 @@ public class ApiClientOptionsBehavior
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(configurationData)
             .Build();
-        var section = configuration.GetSection(ApiClientOptions.DefaultSectionName);
 
         // Act
-        var options = ApiClientOptions.ExtractFromSection(section);
+        var options = GetOptions(configuration);
 
         // Assert
         Assert.NotNull(options.Endpoints);
@@ -117,12 +116,12 @@ public class ApiClientOptionsBehavior
     public void ShouldThrowExceptionForNullSection()
     {
         // Arrange
-        IConfigurationSection section = null;
+        IConfiguration config = null;
         // Act & Assert
         var exception = Assert.Throws<ArgumentNullException>(() =>
-            ApiClientOptions.ExtractFromSection(section)
+            GetOptions(config)
         );
-        Assert.Equal("Value cannot be null. (Parameter 'section')", exception.Message);
+        Assert.Equal("Value cannot be null. (Parameter 'config')", exception.Message);
     }
     
     [Fact]
@@ -133,7 +132,7 @@ public class ApiClientOptionsBehavior
         var section = configuration.GetSection("NonExistentSection");
         // Act & Assert
         var exception = Assert.Throws<ArgumentException>(() =>
-            ApiClientOptions.ExtractFromSection(section)
+            GetOptions(section)
         );
         Assert.Equal("The section does not exists (Parameter 'section')", exception.Message);
     }
@@ -149,14 +148,24 @@ public class ApiClientOptionsBehavior
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(configurationData)
             .Build();
-        var section = configuration.GetSection(ApiClientOptions.DefaultSectionName);
         // Act
-        var options = ApiClientOptions.ExtractFromSection(section);
+        var options = GetOptions(configuration);
         // Assert
         Assert.NotNull(options);
         Assert.NotNull(options.UrlFormSettings);
         Assert.True(options.UrlFormSettings.EscapeSymbols);
         Assert.NotNull(options.Endpoints);
         Assert.Empty(options.Endpoints);
+    }
+
+    ApiClientOptions GetOptions(IConfiguration config)
+    {
+        var sp = new ServiceCollection()
+            .ConfigureApiClient(config)
+            .BuildServiceProvider();
+
+        var opts = sp.GetService<IOptions<ApiClientOptions>>();
+
+        return opts.Value;
     }
 }

@@ -764,9 +764,9 @@
             Gets or sets the HTTP message dumper used to log or inspect HTTP requests and responses.
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.Options.ApiClientOptions.ExtractFromSection(Microsoft.Extensions.Configuration.IConfigurationSection)">
+        <member name="M:MyLab.ApiClient.Options.ApiClientOptions.FillFromSection(MyLab.ApiClient.Options.ApiClientOptions,Microsoft.Extensions.Configuration.IConfigurationSection)">
             <summary>
-            Extracts options from configuration section 
+            Fill options from configuration section 
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.Options.ApiEndpointOptions">

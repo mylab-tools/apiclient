@@ -39,17 +39,15 @@ public class ApiClientOptions
     public HttpMessageDumper? Dumper { get; set; }
 
     /// <summary>
-    /// Extracts options from configuration section 
+    /// Fill options from configuration section 
     /// </summary>
-    public static ApiClientOptions ExtractFromSection(IConfigurationSection section)
+    public static void FillFromSection(ApiClientOptions opt, IConfigurationSection section)
     {
+        if (opt == null) throw new ArgumentNullException(nameof(opt));
         if (section == null) throw new ArgumentNullException(nameof(section));
         if (!section.Exists()) throw new ArgumentException("The section does not exists", nameof(section));
 
-        var opt = new ApiClientOptions
-        {
-            UrlFormSettings = ExtractUrlFormSettings(section.GetSection(nameof(UrlFormSettings)))
-        };
+        opt.UrlFormSettings = ExtractUrlFormSettings(section.GetSection(nameof(UrlFormSettings)));
 
         var listSection = section.GetSection("List");
         if (listSection.Exists())
@@ -64,8 +62,6 @@ public class ApiClientOptions
             : section.GetChildren().Where(s => s.Key != nameof(UrlFormSettings));
 
         ExtractEndpoints(opt.Endpoints, endpointSections);
-
-        return opt;
     }
 
     static void ExtractEndpoints(Dictionary<string, ApiEndpointOptions> optEndpoints, IEnumerable<IConfigurationSection> endpointSections)

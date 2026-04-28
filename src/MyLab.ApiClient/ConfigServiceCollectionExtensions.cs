@@ -36,9 +36,10 @@ public static class ConfigServiceCollectionExtensions
             if (sectionName == null)
                 throw new ArgumentNullException(nameof(sectionName));
 
+           
             var optionsSection = config.GetSection(sectionName);
 
-            services.Configure<ApiClientOptions>(optionsSection);
+            services.Configure<ApiClientOptions>(opt => ApiClientOptions.FillFromSection(opt, optionsSection));
 
             return services;
         }
