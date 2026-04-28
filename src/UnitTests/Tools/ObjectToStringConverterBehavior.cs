@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.Serialization;
 using JetBrains.Annotations;
 using MyLab.ApiClient.Tools;
 using Xunit;
@@ -126,5 +127,26 @@ public class ObjectToStringConverterBehavior
         var result = ObjectToStringConverter.ToString(time);
         // Assert
         Assert.Equal("14:30:15.0000000", result); // Expected RFC3339 format for TimeOnly
+    }
+
+    [Theory]
+    [InlineData(TestEnum.ValueOne, "Value_One")]
+    [InlineData(TestEnum.ValueTwo, "ValueTwo")]
+    [InlineData(TestEnum.ValueThree, "ValueThree")]
+    public void ShouldConvertEnumWithEnumMemberAttributeToString(TestEnum input, string expected)
+    {
+        // Act
+        var result = ObjectToStringConverter.ToString(input);
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+    public enum TestEnum
+    {
+        [EnumMember(Value = "Value_One")]
+        ValueOne,
+        ValueTwo,
+        [EnumMember]
+        ValueThree
     }
 }
