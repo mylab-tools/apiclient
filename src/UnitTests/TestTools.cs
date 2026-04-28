@@ -1,13 +1,13 @@
-﻿using MyLab.ApiClient.Options;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Moq;
+using MyLab.ApiClient.Options;
 using MyLab.ApiClient.Usage;
 
-namespace MyLab.ApiClient.Tests
+namespace UnitTests
 {
     static class TestTools
     {

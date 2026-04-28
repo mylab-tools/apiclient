@@ -9,7 +9,7 @@ using MyLab.ApiClient.Contracts.Attributes.ForParameters;
 using MyLab.ApiClient.Contracts.Models;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Contracts.Models
+namespace UnitTests.Contracts.Models
 {
     [TestSubject(typeof(EndpointModel))]
     public class EndpointModelBehavior

@@ -6,7 +6,7 @@ using MyLab.ApiClient.Options;
 using MyLab.ApiClient.RequestFactoring.ContentFactoring;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.RequestFactoring.ContentFactoring;
+namespace UnitTests.RequestFactoring.ContentFactoring;
 
 [TestSubject(typeof(UrlFormHttpContentFactory))]
 public class UrlFormHttpContentFactoryBehavior

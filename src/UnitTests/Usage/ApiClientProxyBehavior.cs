@@ -1,15 +1,15 @@
 ﻿using System;
-using JetBrains.Annotations;
-using MyLab.ApiClient.Options;
-using MyLab.ApiClient.ResponseProcessing;
-using MyLab.ApiClient.Usage;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using MyLab.ApiClient.JsonSerialization;
+using MyLab.ApiClient.Options;
+using MyLab.ApiClient.ResponseProcessing;
+using MyLab.ApiClient.Usage;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Usage;
+namespace UnitTests.Usage;
 
 using static TestTools;
 

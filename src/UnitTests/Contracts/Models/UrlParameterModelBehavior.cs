@@ -6,7 +6,7 @@ using MyLab.ApiClient.Contracts.Models;
 using MyLab.ApiClient.RequestFactoring.UrlModifying;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Contracts.Models;
+namespace UnitTests.Contracts.Models;
 
 [TestSubject(typeof(UrlParameterModel))]
 public class UrlParameterModelBehavior

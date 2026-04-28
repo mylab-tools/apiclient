@@ -4,7 +4,7 @@ using MyLab.ApiClient.DI;
 using MyLab.ApiClient.Options;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.DI;
+namespace UnitTests.DI;
 
 [TestSubject(typeof(ApiContractBinding))]
 public partial class ApiContractBindingBehavior

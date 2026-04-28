@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using MyLab.ApiClient.Tools;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Tools;
+namespace UnitTests.Tools;
 
 [TestSubject(typeof(ObjectToStringConverter))]
 public class ObjectToStringConverterBehavior

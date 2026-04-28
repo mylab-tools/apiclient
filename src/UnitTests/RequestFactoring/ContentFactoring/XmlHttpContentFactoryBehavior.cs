@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using JetBrains.Annotations;
 using MyLab.ApiClient.RequestFactoring.ContentFactoring;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.RequestFactoring.ContentFactoring;
+namespace UnitTests.RequestFactoring.ContentFactoring;
 
 [TestSubject(typeof(XmlHttpContentFactory))]
 public class XmlHttpContentFactoryBehavior

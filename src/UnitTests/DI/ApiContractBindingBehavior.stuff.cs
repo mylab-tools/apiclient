@@ -1,6 +1,6 @@
 ﻿using MyLab.ApiClient.Contracts.Attributes.ForContract;
 
-namespace MyLab.ApiClient.Tests.DI;
+namespace UnitTests.DI;
 
 public partial class ApiContractBindingBehavior
 {

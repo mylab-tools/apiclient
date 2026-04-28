@@ -1,10 +1,11 @@
-﻿using JetBrains.Annotations;
+﻿using System.Net.Http;
+using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
+using MyLab.ApiClient;
 using MyLab.ApiClient.Usage;
-using System.Net.Http;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests;
+namespace UnitTests;
 
 [TestSubject(typeof(AddServiceCollectionExtensions))]
 public partial class AddServiceCollectionExtensionsBehavior

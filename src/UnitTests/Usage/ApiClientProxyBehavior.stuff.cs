@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Moq;
 using MyLab.ApiClient.Contracts.Attributes.ForMethod;
 using MyLab.ApiClient.Contracts.Attributes.ForParameters;
 using MyLab.ApiClient.Options;
-using MyLab.ApiClient.Usage;
 
-namespace MyLab.ApiClient.Tests.Usage;
+namespace UnitTests.Usage;
 
 public partial class ApiClientProxyBehavior
 {

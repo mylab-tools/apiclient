@@ -4,10 +4,11 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using MyLab.ApiClient;
 using MyLab.ApiClient.Options;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests;
+namespace UnitTests;
 
 [TestSubject(typeof(ConfigServiceCollectionExtensions))]
 public class ConfigServiceCollectionExtensionsBehavior

@@ -3,7 +3,6 @@ using MyLab.ApiClient.Usage.Invocation;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using MyLab.ApiClient.Tests;
 using Xunit;
 
 namespace UnitTests.Usage

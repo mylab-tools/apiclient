@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +8,7 @@ using MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.ResponseProcessing.ContentDeserializing;
+namespace UnitTests.ResponseProcessing.ContentDeserializing;
 
 [TestSubject(typeof(EnumerableContentDeserializer))]
 public class EnumerableContentDeserializerBehavior

@@ -6,7 +6,7 @@ using MyLab.ApiClient.Contracts.Attributes.ForMethod;
 using MyLab.ApiClient.Contracts.Models;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Contracts.Models
+namespace UnitTests.Contracts.Models
 {
     [TestSubject(typeof(ServiceModel))]
     public class ServiceModelBehavior

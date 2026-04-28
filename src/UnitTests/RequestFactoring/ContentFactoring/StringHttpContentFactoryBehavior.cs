@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using MyLab.ApiClient.RequestFactoring.ContentFactoring;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.RequestFactoring.ContentFactoring;
+namespace UnitTests.RequestFactoring.ContentFactoring;
 
 [TestSubject(typeof(StringHttpContentFactory))]
 public class StringHttpContentFactoryBehavior

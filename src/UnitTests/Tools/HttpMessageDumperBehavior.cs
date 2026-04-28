@@ -1,10 +1,10 @@
-﻿using MyLab.ApiClient.Tools;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using MyLab.ApiClient.Tools;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Tools;
+namespace UnitTests.Tools;
 
 public class HttpMessageDumperBehavior
 {

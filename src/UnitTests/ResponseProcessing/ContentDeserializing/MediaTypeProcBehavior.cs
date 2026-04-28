@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.ResponseProcessing.ContentDeserializing;
+namespace UnitTests.ResponseProcessing.ContentDeserializing;
 
 [TestSubject(typeof(MediaTypeProc))]
 public class MediaTypeProcBehavior

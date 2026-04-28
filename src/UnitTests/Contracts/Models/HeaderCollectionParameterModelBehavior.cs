@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using MyLab.ApiClient.Contracts.Models;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Contracts.Models;
+namespace UnitTests.Contracts.Models;
 
 [TestSubject(typeof(HeaderCollectionParameterModel))]
 public class HeaderCollectionParameterModelBehavior

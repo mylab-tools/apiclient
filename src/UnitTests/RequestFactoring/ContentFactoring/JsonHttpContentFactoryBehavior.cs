@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using MyLab.ApiClient.JsonSerialization;
-using Newtonsoft.Json;
 using MyLab.ApiClient.RequestFactoring.ContentFactoring;
+using Newtonsoft.Json;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.RequestFactoring.ContentFactoring;
+namespace UnitTests.RequestFactoring.ContentFactoring;
 
 [TestSubject(typeof(JsonHttpContentFactory))]
 public class JsonHttpContentFactoryBehavior

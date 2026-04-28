@@ -5,7 +5,7 @@ using Moq;
 using MyLab.ApiClient.RequestFactoring.ContentFactoring;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.RequestFactoring.ContentFactoring;
+namespace UnitTests.RequestFactoring.ContentFactoring;
 
 [TestSubject(typeof(MultipartFormHttpContentFactory))]
 public class MultipartFormHttpContentFactoryBehavior

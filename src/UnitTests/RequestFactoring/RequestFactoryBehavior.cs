@@ -1,15 +1,15 @@
-﻿using JetBrains.Annotations;
-using MyLab.ApiClient.RequestFactoring;
-using MyLab.ApiClient.Contracts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using JetBrains.Annotations;
 using Moq;
+using MyLab.ApiClient.Contracts;
 using MyLab.ApiClient.Contracts.Models;
+using MyLab.ApiClient.RequestFactoring;
 using MyLab.ApiClient.RequestFactoring.UrlModifying;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.RequestFactoring;
+namespace UnitTests.RequestFactoring;
 
 [TestSubject(typeof(RequestFactory))]
 public class RequestFactoryBehavior

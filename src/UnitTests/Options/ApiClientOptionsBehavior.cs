@@ -1,13 +1,12 @@
-﻿using JetBrains.Annotations;
-using Microsoft.Extensions.Configuration;
-using Moq;
-using MyLab.ApiClient.Options;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using Microsoft.Extensions.Configuration;
 using MyLab.ApiClient.JsonSerialization;
+using MyLab.ApiClient.Options;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Options;
+namespace UnitTests.Options;
 
 [TestSubject(typeof(ApiClientOptions))]
 public class ApiClientOptionsBehavior

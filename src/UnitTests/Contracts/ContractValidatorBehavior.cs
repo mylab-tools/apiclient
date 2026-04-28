@@ -1,13 +1,12 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using MyLab.ApiClient.Contracts;
+using MyLab.ApiClient.Contracts.Attributes.ForContract;
 using MyLab.ApiClient.Contracts.Attributes.ForMethod;
 using MyLab.ApiClient.Contracts.Attributes.ForParameters;
-using System;
-using System.Net.Http;
-using MyLab.ApiClient.Contracts.Attributes.ForContract;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.Contracts;
+namespace UnitTests.Contracts;
 
 [TestSubject(typeof(ContractValidator))]
 public class ContractValidatorBehavior

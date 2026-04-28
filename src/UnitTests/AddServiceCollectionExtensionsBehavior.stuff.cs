@@ -3,7 +3,7 @@ using MyLab.ApiClient.Contracts.Attributes.ForContract;
 using MyLab.ApiClient.Options;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests;
+namespace UnitTests;
 
 public partial class AddServiceCollectionExtensionsBehavior
 {

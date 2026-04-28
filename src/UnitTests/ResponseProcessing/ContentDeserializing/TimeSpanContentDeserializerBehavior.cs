@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 using Xunit;
 
-namespace MyLab.ApiClient.Tests.ResponseProcessing.ContentDeserializing;
+namespace UnitTests.ResponseProcessing.ContentDeserializing;
 
 [TestSubject(typeof(TimeSpanContentDeserializer))]
 public class TimeSpanContentDeserializerBehavior
