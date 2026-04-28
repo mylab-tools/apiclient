@@ -64,16 +64,22 @@ public class ApiClientOptions
         ExtractEndpoints(opt.Endpoints, endpointSections);
     }
 
-    static void ExtractEndpoints(Dictionary<string, ApiEndpointOptions> optEndpoints, IEnumerable<IConfigurationSection> endpointSections)
-    {
-        foreach (var endpointSection in endpointSections)
-        {
-            var endpointSettings = GetEndpointOptions(endpointSection);
-            optEndpoints.Add(endpointSection.Key, endpointSettings);
-        }
-    }
-
-    static ApiEndpointOptions GetEndpointOptions(IConfigurationSection endpointSection)
+    /// <summary>
+    /// Retrieves the API endpoint options from the specified configuration section.
+    /// </summary>
+    /// <param name="endpointSection">
+    /// The configuration section containing the endpoint options. Must not be null and must exist.
+    /// </param>
+    /// <returns>
+    /// An instance of <see cref="ApiEndpointOptions"/> populated with the settings from the configuration section.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="endpointSection"/> is null.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="endpointSection"/> does not exist.
+    /// </exception>
+    public static ApiEndpointOptions GetEndpointOptions(IConfigurationSection endpointSection)
     {
         if (endpointSection == null) throw new ArgumentNullException(nameof(endpointSection));
         if (!endpointSection.Exists()) throw new ArgumentException("The section does not exists", nameof(endpointSection));
@@ -88,8 +94,17 @@ public class ApiClientOptions
         {
             endpointSection.Bind(res);
         }
-        
+
         return res;
+    }
+
+    static void ExtractEndpoints(Dictionary<string, ApiEndpointOptions> optEndpoints, IEnumerable<IConfigurationSection> endpointSections)
+    {
+        foreach (var endpointSection in endpointSections)
+        {
+            var endpointSettings = GetEndpointOptions(endpointSection);
+            optEndpoints.Add(endpointSection.Key, endpointSettings);
+        }
     }
 
     static ApiUrlFormSettings? ExtractUrlFormSettings(IConfigurationSection? section)

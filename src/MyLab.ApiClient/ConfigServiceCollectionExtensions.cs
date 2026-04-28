@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyLab.ApiClient.Options;
@@ -42,6 +43,66 @@ public static class ConfigServiceCollectionExtensions
             services.Configure<ApiClientOptions>(opt => ApiClientOptions.FillFromSection(opt, optionsSection));
 
             return services;
+        }
+
+        /// <summary>
+        /// Configures an API client endpoint with the specified binding name and configuration.
+        /// </summary>
+        /// <param name="bindingKey">
+        /// The name of the binding to associate with the endpoint configuration.
+        /// </param>
+        /// <param name="config">
+        /// The <see cref="IConfiguration"/> instance containing the endpoint configuration.
+        /// </param>
+        /// <param name="endpointSectionName">
+        /// The name of the configuration section that contains the endpoint settings.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IServiceCollection"/> instance to allow for method chaining.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="config"/> or <paramref name="endpointSectionName"/> is <c>null</c>.
+        /// </exception>
+        public IServiceCollection ConfigureApiClientEndpoint(string bindingKey, IConfiguration config, string endpointSectionName)
+        {
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
+            if (endpointSectionName == null)
+                throw new ArgumentNullException(nameof(endpointSectionName));
+
+            var endpointSection = config.GetSection(endpointSectionName);
+
+            services.Configure<ApiClientOptions>(opt =>
+            {
+                var epOptions = ApiClientOptions.GetEndpointOptions(endpointSection);
+                opt.Endpoints[bindingKey] = epOptions;
+            });
+
+            return services;
+        }
+
+        /// <summary>
+        /// Configures an API client endpoint for the specified contract type using the provided configuration.
+        /// </summary>
+        /// <typeparam name="TContract">
+        /// The type of the contract associated with the API client endpoint.
+        /// </typeparam>
+        /// <param name="config">
+        /// The <see cref="IConfiguration"/> instance containing the endpoint configuration.
+        /// </param>
+        /// <param name="endpointSectionName">
+        /// The name of the configuration section that contains the endpoint settings.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IServiceCollection"/> instance to allow for method chaining.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="config"/> or <paramref name="endpointSectionName"/> is <c>null</c>.
+        /// </exception>
+        public IServiceCollection ConfigureApiClientEndpoint<TContract>(IConfiguration config,
+            string endpointSectionName)
+        {
+            return services.ConfigureApiClientEndpoint(typeof(TContract).FullName!, config, endpointSectionName);
         }
 
         /// <summary>
