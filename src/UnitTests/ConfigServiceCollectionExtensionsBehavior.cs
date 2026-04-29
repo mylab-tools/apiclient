@@ -78,4 +78,52 @@ public class ConfigServiceCollectionExtensionsBehavior
         Assert.True(options.Endpoints.ContainsKey("foo"));
         Assert.Equal("http://foo.com", options.Endpoints["foo"].Url);
     }
+    
+    [Fact]
+    public void ShouldConfigureEndpointWithBindingKey()
+    {
+        //Arrange
+        var services = new ServiceCollection();
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection(new[]
+            {
+                new KeyValuePair<string, string>("MyApiEndpointSection:Url", "http://custom.com")
+            })
+            .Build();
+
+        //Act
+        var sp = services.ConfigureApiClientEndpoint("myCustomBinding", configuration, "MyApiEndpointSection")
+            .BuildServiceProvider();
+
+        var options = sp.GetRequiredService<IOptions<ApiClientOptions>>().Value;
+
+        //Assert
+        Assert.NotNull(options);
+        Assert.True(options.Endpoints.ContainsKey("myCustomBinding"));
+        Assert.Equal("http://custom.com", options.Endpoints["myCustomBinding"].Url);
+    }
+
+    [Fact]
+    public void ShouldConfigureEndpointWithContract()
+    {
+        //Arrange
+        var services = new ServiceCollection();
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection(new[]
+            {
+                new KeyValuePair<string, string>("MyApiEndpointSection:Url", "http://contract.com")
+            })
+            .Build();
+
+        //Act
+        var sp = services.ConfigureApiClientEndpoint<IContract>(configuration, "MyApiEndpointSection")
+            .BuildServiceProvider();
+
+        var options = sp.GetRequiredService<IOptions<ApiClientOptions>>().Value;
+
+        //Assert
+        Assert.NotNull(options);
+        Assert.True(options.Endpoints.ContainsKey(typeof(IContract).FullName));
+        Assert.Equal("http://contract.com", options.Endpoints[typeof(IContract).FullName].Url);
+    }
+
+    public interface IContract;
 }
