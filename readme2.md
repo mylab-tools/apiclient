@@ -110,12 +110,13 @@ public interface IOrdersApiV1
 В этих атрибутах можно указать часть пути, относительно пути уровня контракта:
 
 ```C#
+[ApiContract(Url="orders")] 
 public interface IOrderService
 {
-    [Get("last-year")]
+    [Get("last-year")] // GET orders/last-year
     Task GetLastYearOrdersAsync();
     
-    [Post]
+    [Post]	// POST orders
     Task PostOrdersAsync();
 }
 ```
@@ -467,15 +468,53 @@ Content-Type: multipart/form-data; boundary="2150a4df-de36-421a-8ef7-028f86f9040
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: form-data; name=part1
 
-
 fo
 
 --2150a4df-de36-421a-8ef7-028f86f90403
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: form-data; name=part2
 
-
 o
 
 --2150a4df-de36-421a-8ef7-028f86f90403--
 ```
+
+### Результат
+
+#### Статус-код
+
+`WEB API` соет вернуть как успешный ответ: `2xx`, так и ответ с ошибкой: `4xx`(по вине клиента) или `5xx`(по вине сервера). `1xx` и `3xx` статусы обыяно в `WEB API` не применяются. 
+
+`ApiClient` определяет, что вызов сервиса прошёл успешно, если ответ будет содержать статус-код `2xx`. Во всех других случаях возникнет исключение `ResponseCodeException`, в свойствах которого доступны:
+
+* `StatusCode` - код ответа
+* `ServerMessage` - текстовое создание ответа (до 1024 символов)
+
+#### Содержание ответа
+
+Выходной параметр метода контракта должен быть `Task` - если содержательная часть метода не ожидается, или `Task<T>` - если ожидается результат типа `Т`.
+
+Поддерживаются следующие типы:
+
+* примитивы: `string`, `bool`, `int`, `uint`, `short`, `ushort`, `long`, `ulong`, `decimal`, `double`, `float`, если `Content-Type` = `application/json` или `text/plain`
+* типы значений: `Guid`, `DateTime`, `TimeSpan`, если `Content-Type` = `application/json` или `text/plain`
+* бинарные данные: `byte[]` 
+* объекты, если `Content-Type` = `application/json`, `application/xml`
+* множества: `IEnumerable<T>` , если `Content-Type` = `application/json` или `application/xml`
+* проблемы: `ProblemDetails` и `ValidationProblemDetails`, если  `Content-Type` = `application/problem+json`
+
+Если ожидаемый тип ответа не будет соответствовать `Content-Type`, то возникнет исключение `UnexpectedResponseContentTypeException`, которое по мимо всего стандартного имеет поле `ActualContentType`, в котором указан актальный тип содержимого из ответа.
+
+## Конфигурирование
+
+### Привязка к конфигурации
+
+### Конфигурация ApiClient
+
+### Свободная конфигурация конечной точки
+
+## Прозрачный прокси
+
+## Детальный вызов
+
+## Тестирование
