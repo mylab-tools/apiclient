@@ -8,16 +8,16 @@ namespace MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 public class UnexpectedResponseContentTypeException : Exception
 {
     /// <summary>
-    /// Gets the actual media type of the response content that caused the exception.
+    /// Gets the actual content type of the response content that caused the exception.
     /// </summary>
-    public string ActualMediaType { get; }
+    public string ActualContentType { get; }
 
     /// <summary>
     /// Initializes a new instance of <see cref="UnexpectedResponseContentTypeException"/>
     /// </summary>
-    public UnexpectedResponseContentTypeException(string actualMediaType)
-        : base($"The response has unexpected media type: '{actualMediaType}'")
+    public UnexpectedResponseContentTypeException(string actualContentType)
+        : base($"The response has unexpected media type: '{actualContentType}'")
     {
-        ActualMediaType = actualMediaType;
+        ActualContentType = actualContentType;
     }
 }

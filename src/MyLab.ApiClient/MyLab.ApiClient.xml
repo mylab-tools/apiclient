@@ -1113,9 +1113,9 @@
             Throws when response content has unexpected media type
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UnexpectedResponseContentTypeException.ActualMediaType">
+        <member name="P:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UnexpectedResponseContentTypeException.ActualContentType">
             <summary>
-            Gets the actual media type of the response content that caused the exception.
+            Gets the actual content type of the response content that caused the exception.
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UnexpectedResponseContentTypeException.#ctor(System.String)">
