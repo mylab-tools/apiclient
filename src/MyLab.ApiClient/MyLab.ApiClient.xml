@@ -1183,6 +1183,17 @@
             DumpAsync text when body is too large
             </summary>
         </member>
+        <member name="F:MyLab.ApiClient.Tools.HttpMessageDumper.SensitiveInfoPlaceholder">
+            <summary>
+            Placeholder written instead of sensitive header values
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Tools.HttpMessageDumper.SensitiveHeaders">
+            <summary>
+            Header names whose values are masked in dumps unless <see cref="P:MyLab.ApiClient.Tools.HttpMessageDumper.ShowSensitiveInfo"/> is <c>true</c>.
+            Comparison is case-insensitive.
+            </summary>
+        </member>
         <member name="P:MyLab.ApiClient.Tools.HttpMessageDumper.MaxRequestBodySize">
             <summary>
             Set to customize request body size which is maximum dor dumping
@@ -1191,6 +1202,13 @@
         <member name="P:MyLab.ApiClient.Tools.HttpMessageDumper.MaxResponseBodySize">
             <summary>
             Set to customize response body size which is maximum dor dumping
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Tools.HttpMessageDumper.ShowSensitiveInfo">
+            <summary>
+            When <c>true</c>, sensitive header values are written as-is.
+            When <c>false</c> (default), values of headers from <see cref="P:MyLab.ApiClient.Tools.HttpMessageDumper.SensitiveHeaders"/>
+            are replaced with <see cref="F:MyLab.ApiClient.Tools.HttpMessageDumper.SensitiveInfoPlaceholder"/>.
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.Tools.HttpMessageDumper.DumpAsync(System.Net.Http.HttpRequestMessage)">

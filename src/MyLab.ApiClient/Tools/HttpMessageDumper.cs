@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -24,6 +25,30 @@ public class HttpMessageDumper
     public const string ContentIsTooLargeText = "... [content is too large to dump]";
 
     /// <summary>
+    /// Placeholder written instead of sensitive header values
+    /// </summary>
+    public const string SensitiveInfoPlaceholder = "[sensitive-info]";
+
+    static readonly HashSet<string> SensitiveHeaderSet = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Authorization",
+        "Proxy-Authorization",
+        "Cookie",
+        "Set-Cookie",
+        "X-Api-Key",
+        "Api-Key",
+        "X-Auth-Token",
+        "X-Access-Token",
+        "X-CSRF-Token"
+    };
+
+    /// <summary>
+    /// Header names whose values are masked in dumps unless <see cref="ShowSensitiveInfo"/> is <c>true</c>.
+    /// Comparison is case-insensitive.
+    /// </summary>
+    public static IReadOnlyCollection<string> SensitiveHeaders => SensitiveHeaderSet;
+
+    /// <summary>
     /// Set to customize request body size which is maximum dor dumping
     /// </summary>
     public int MaxRequestBodySize { get; set; } = DefaultMaxBodySize;
@@ -31,6 +56,13 @@ public class HttpMessageDumper
     /// Set to customize response body size which is maximum dor dumping
     /// </summary>
     public int MaxResponseBodySize { get; set; } = DefaultMaxBodySize;
+
+    /// <summary>
+    /// When <c>true</c>, sensitive header values are written as-is.
+    /// When <c>false</c> (default), values of headers from <see cref="SensitiveHeaders"/>
+    /// are replaced with <see cref="SensitiveInfoPlaceholder"/>.
+    /// </summary>
+    public bool ShowSensitiveInfo { get; set; }
 
     /// <summary>
     /// Dumps a request
@@ -79,12 +111,7 @@ public class HttpMessageDumper
         {
             foreach (var header in rha)
             {
-                var hvs = header.Value.Select(
-                    v => string.IsNullOrWhiteSpace(v)
-                        ? "<empty>"
-                        : v);
-                AppendLine(dumpBuilder,
-                    $"{header.Key}: {string.Join(", ", hvs)}");
+                AppendLine(dumpBuilder, FormatHeader(header.Key, header.Value));
             }
         }
 
@@ -94,7 +121,7 @@ public class HttpMessageDumper
             if (cha.Length != 0)
             {
                 foreach (var header in cha)
-                    AppendLine(dumpBuilder, $"{header.Key}: {string.Join(", ", header.Value)}");
+                    AppendLine(dumpBuilder, FormatHeader(header.Key, header.Value));
             }
 
             var strm = await content.ReadAsStreamAsync();
@@ -105,7 +132,6 @@ public class HttpMessageDumper
                 strm.Seek(0, SeekOrigin.Begin);
 
                 int readCount;
-                var contentBuilder = new StringBuilder();
 
                 if ((readCount = await strm.ReadAsync(buff, 0, buff.Length)) != 0)
                 {
@@ -130,6 +156,21 @@ public class HttpMessageDumper
             }
         }
     }
+
+    string FormatHeader(string name, IEnumerable<string> values)
+    {
+        if (!ShowSensitiveInfo && IsSensitiveHeader(name))
+            return $"{name}: {SensitiveInfoPlaceholder}";
+
+        var hvs = values.Select(
+            v => string.IsNullOrWhiteSpace(v)
+                ? "<empty>"
+                : v);
+
+        return $"{name}: {string.Join(", ", hvs)}";
+    }
+
+    static bool IsSensitiveHeader(string name) => SensitiveHeaderSet.Contains(name);
 
     void AppendLine(StringBuilder sb, string str) => sb.Append(str + "\r\n");
 }
