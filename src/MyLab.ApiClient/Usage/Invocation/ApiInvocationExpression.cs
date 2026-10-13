@@ -73,7 +73,7 @@ class ApiInvocationExpression<TContract>
 
         var args = ExtractArgs(mce);
 
-        var callDetails = await processingLogic.SendRequestAsync(mce.Method, args);
+        var callDetails = await processingLogic.SendRequestAsync(mce.Method, cancellationToken, args);
 
         await PostPreProcessAsync(callDetails, buildingState, cancellationToken);
 

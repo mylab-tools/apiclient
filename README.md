@@ -479,6 +479,19 @@ o
 --2150a4df-de36-421a-8ef7-028f86f90403--
 ```
 
+#### CancellationToken
+
+Для передачи в метод `CancellationToken`, который будет использоваться при отправке запроса, просто добавьте этот параметр в любое место списка входящих параметров метода.
+
+```c#
+[ApiContract("company-services/api")]
+public interface IService
+{   
+    [Get("orders/{id}")]
+    Task GetAsync([Path]string id, CancellationToken ct);
+}
+```
+
 ### Результат
 
 #### Статус-код
@@ -870,6 +883,28 @@ await ordersApi
     })
     .ThrowIfAnotherStatusCode()
     .InvokeAsync();
+```
+
+### CancellationToken
+
+Для управления отменой отправки запроса, в метод `InvokeAsync` можно передать `CancellationToken`.
+
+```c#
+CancellationToken ct = ...
+
+await ordersApi
+    .ForExpression(api => api.CreateAsync(dto))
+    .InvokeAsync(ct);
+```
+
+Если по контракту метод `API` тоже принимает `CancellationToken`, то следует использовать `CancellationTokenInsert.FromInvoke`, чтобы указать, что для вызова метода `API`  `CancellationToken` нужно брать из параметров метода `InvokeAsync`.
+
+```c#
+CancellationToken ct = ...
+
+await ordersApi
+    .ForExpression(api => api.CreateAsync(dto, CancellationTokenInsert.FromInvoke))
+    .InvokeAsync(ct);
 ```
 
 ### Результат детального вызова — `CallDetails`

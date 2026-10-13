@@ -119,13 +119,13 @@ public class ApiClientProxy : DispatchProxy
 
     async Task ProcRequestForVoidAsync(MethodInfo targetMethod, object?[]? args)
     {
-        var callDetails = await RequestProcLogic!.SendRequestAsync(targetMethod, args);
+        var callDetails = await RequestProcLogic!.SendRequestAsync(targetMethod, CancellationToken.None, args);
         await callDetails.ThrowIfNotOKAsync();
     }
 
     async Task<T?> ProcRequestAsync<T>(MethodInfo targetMethod, object?[]? args)
     {
-        var callDetails = await RequestProcLogic!.SendRequestAsync(targetMethod, args);
+        var callDetails = await RequestProcLogic!.SendRequestAsync(targetMethod, CancellationToken.None, args);
         await callDetails.ThrowIfNotOKAsync(); 
             
         return await callDetails.ReadContentAsync<T>();

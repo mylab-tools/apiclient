@@ -2,6 +2,7 @@
 using MyLab.ApiClient.RequestFactoring;
 using MyLab.ApiClient.ResponseProcessing;
 using MyLab.ApiClient.Usage;
+using MyLab.ApiClient.Usage.Invocation;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -21,8 +22,7 @@ namespace MyLab.ApiClient.Tools
         public IRequestProcessor RequestProcessor { get; } = requestProcessor;
         public CallDetailsFactory CallDetailsFactory { get; } = callDetailsFactory;
 
-
-        public async Task<CallDetails> SendRequestAsync(MethodInfo targetMethod, object?[]? args)
+        public async Task<CallDetails> SendRequestAsync(MethodInfo targetMethod, CancellationToken cancellationToken, object?[]? args)
         {
             if (!ServiceModel.Endpoints.TryGetValue(targetMethod.MetadataToken, out var endpointModel))
                 throw new InvalidOperationException($"Endpoint description not found for method '{targetMethod.Name}'.");
@@ -32,7 +32,12 @@ namespace MyLab.ApiClient.Tools
 
             var ct = args != null
                 ? args.OfType<CancellationToken>().FirstOrDefault(CancellationToken.None)
-                : CancellationToken.None;
+                : cancellationToken;
+
+            if (ct == CancellationTokenInsert.FromInvocation)
+            {
+                ct = cancellationToken;
+            }
             
             var response = await RequestProcessor.ProcessRequestAsync(request, ct);
             return await CallDetailsFactory.CreateAsync(request, response);

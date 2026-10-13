@@ -1344,6 +1344,16 @@
             <c>true</c> if the predicate condition is satisfied for the provided <paramref name="callDetails"/>; otherwise, <c>false</c>.
             </returns>
         </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.CancellationTokenInsert">
+            <summary>
+            Contains indications of the source from which to obtain the CancellationToken.
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.Usage.Invocation.CancellationTokenInsert.FromInvoke">
+            <summary>
+            A source is Invocation method
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1">
             <summary>
             Defines an interface for invoking API client methods based on a contract interface.
