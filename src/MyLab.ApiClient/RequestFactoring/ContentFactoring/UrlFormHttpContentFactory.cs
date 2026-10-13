@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using MyLab.ApiClient.Contracts.Attributes.ForData;
+using MyLab.ApiClient.Options;
 
 namespace MyLab.ApiClient.RequestFactoring.ContentFactoring;
 
@@ -28,7 +29,8 @@ class UrlFormHttpContentFactory : IHttpContentFactory
 
                 if (strVal != null)
                 {
-                    var normVal = settings is { UrlFormSettings: { EscapeSymbols: true } }
+                    string normVal =
+                        settings?.UrlFormSettings?.EscapeSymbols ?? ApiUrlFormSettings.DefaultEscapeSymbols
                         ? Uri.EscapeDataString(strVal)
                         : strVal;
 

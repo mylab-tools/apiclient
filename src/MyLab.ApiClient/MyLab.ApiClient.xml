@@ -862,6 +862,11 @@
             Defines url-encoded-form serialization settings
             </summary>
         </member>
+        <member name="F:MyLab.ApiClient.Options.ApiUrlFormSettings.DefaultEscapeSymbols">
+            <summary>
+            Specifies the default behavior for escaping symbols during URL-encoded form serialization.
+            </summary>
+        </member>
         <member name="P:MyLab.ApiClient.Options.ApiUrlFormSettings.EscapeSymbols">
             <summary>
             Converts symbols to its escaped representation. True by default
