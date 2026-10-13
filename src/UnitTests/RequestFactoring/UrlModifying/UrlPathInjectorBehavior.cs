@@ -110,6 +110,114 @@ public class UrlPathInjectorBehavior
         Assert.Throws<ArgumentException>(() => injector.Modify(uri, null, "value"));
     }
 
+    /// <summary>
+    /// Reveals: EscapeDataString does not encode '.' so ".." remains a path segment
+    /// and UriBuilder normalizes /a/../b → /b (path traversal).
+    /// </summary>
+    [Theory]
+    [InlineData("http://example.com/a/{param}/b", "param", "..", "http://example.com/a/%2E%2E/b")]
+    [InlineData("http://example.com/a/{param}/b", "param", ".", "http://example.com/a/%2E/b")]
+    [InlineData("/a/{param}/b", "param", "..", "/a/%2E%2E/b")]
+    [InlineData("/a/{param}/b", "param", ".", "/a/%2E/b")]
+    public void ShouldNotAllowPathTraversalViaPathParameter(
+        string origin,
+        string paramName,
+        object value,
+        string expected)
+    {
+        // Arrange
+        var injector = new UrlPathInjector();
+        var uri = new Uri(origin, UriKind.RelativeOrAbsolute);
+
+        // Act
+        var result = injector.Modify(uri, paramName, value);
+
+        // Assert — segment must stay encoded so ".." / "." cannot act as path navigation
+        Assert.Equal(expected, UriToString(result));
+        Assert.DoesNotContain("/../", UriToString(result));
+        Assert.DoesNotContain("/./", UriToString(result));
+    }
+
+    /// <summary>
+    /// Reveals: for absolute URIs PathAndQuery is passed as UriBuilder path argument,
+    /// so '?' is encoded into the path and the original query is lost.
+    /// </summary>
+    [Theory]
+    [InlineData(
+        "http://example.com/api/{param}?x=1&y=2",
+        "param",
+        "v",
+        "http://example.com/api/v?x=1&y=2")]
+    [InlineData(
+        "http://example.com/{param}?q=search",
+        "param",
+        "orders",
+        "http://example.com/orders?q=search")]
+    [InlineData(
+        "http://example.com/api/{param}/details?filter=active",
+        "param",
+        "42",
+        "http://example.com/api/42/details?filter=active")]
+    public void ShouldPreserveQueryStringWhenInjectingIntoAbsoluteUri(
+        string origin,
+        string paramName,
+        object value,
+        string expected)
+    {
+        // Arrange
+        var injector = new UrlPathInjector();
+        var uri = new Uri(origin, UriKind.Absolute);
+
+        // Act
+        var result = injector.Modify(uri, paramName, value);
+
+        // Assert
+        Assert.Equal(expected, UriToString(result));
+        Assert.Equal(new Uri(expected).Query, result.Query);
+    }
+
+    /// <summary>
+    /// Reveals: UrlDecode of the whole path before injection turns encoded segments
+    /// (%2E%2E, %2F) into traversable / structural characters.
+    /// </summary>
+    [Theory]
+    [InlineData(
+        "http://example.com/files/%2E%2E/%2E%2E/etc/{param}",
+        "param",
+        "passwd",
+        "http://example.com/files/%2E%2E/%2E%2E/etc/passwd")]
+    [InlineData(
+        "http://example.com/%2Ffoo/{param}",
+        "param",
+        "bar",
+        "http://example.com/%2Ffoo/bar")]
+    [InlineData(
+        "/files/%2E%2E/%2E%2E/etc/{param}",
+        "param",
+        "passwd",
+        "/files/%2E%2E/%2E%2E/etc/passwd")]
+    [InlineData(
+        "/%2Ffoo/{param}",
+        "param",
+        "bar",
+        "/%2Ffoo/bar")]
+    public void ShouldNotUrlDecodePathTemplateBeforeInjection(
+        string origin,
+        string paramName,
+        object value,
+        string expected)
+    {
+        // Arrange
+        var injector = new UrlPathInjector();
+        var uri = new Uri(origin, UriKind.RelativeOrAbsolute);
+
+        // Act
+        var result = injector.Modify(uri, paramName, value);
+
+        // Assert
+        Assert.Equal(expected, UriToString(result));
+    }
+
     public static object[][] GetVariousValueTypes()
     {
         return new object[][]

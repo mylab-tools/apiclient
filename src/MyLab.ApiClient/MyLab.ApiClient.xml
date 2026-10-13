@@ -982,6 +982,18 @@
             Modifies a URI
             </summary>
         </member>
+        <member name="M:MyLab.ApiClient.RequestFactoring.UrlModifying.UrlPathInjector.EscapePathSegment(System.String)">
+            <summary>
+            Encodes a single path segment. Dot segments ("." / "..") are encoded explicitly
+            because <see cref="M:System.Uri.EscapeDataString(System.String)"/> leaves '.' unescaped (RFC 3986 unreserved).
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.RequestFactoring.UrlModifying.UrlPathInjector.SplitPathAndQuery(System.Uri,System.String@,System.String@)">
+            <summary>
+            Splits path and query from <see cref="P:System.Uri.OriginalString"/> without decoding,
+            so encoded template segments like %2E%2E / %2F stay intact.
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.ResponseProcessing.CallDetails">
             <summary>
             Contains detailed service call information 
