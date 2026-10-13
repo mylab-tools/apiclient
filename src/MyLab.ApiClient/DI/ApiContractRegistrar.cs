@@ -88,7 +88,7 @@ class ApiContractRegistrar<TContract> where TContract : class
         }
 
         var httpFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
-        var httpClientProvider = SingleHttpClientProvider.CrateFromHttpClientFactory(httpFactory, bindingKey!);
+        var httpClientProvider = new FactoryHttpClientProvider(httpFactory, bindingKey!);
         reqProc = new HttpClientRequestProcessor(httpClientProvider);
 
         return true;
