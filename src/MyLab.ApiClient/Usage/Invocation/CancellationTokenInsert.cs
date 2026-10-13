@@ -10,6 +10,6 @@ namespace MyLab.ApiClient.Usage.Invocation
         /// <summary>
         /// A source is Invocation method
         /// </summary>
-        public static readonly CancellationToken FromInvocation = new();
+        public static readonly CancellationToken FromInvoke = new();
     }
 }

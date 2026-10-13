@@ -34,7 +34,7 @@ namespace MyLab.ApiClient.Tools
                 ? args.OfType<CancellationToken>().FirstOrDefault(CancellationToken.None)
                 : cancellationToken;
 
-            if (ct == CancellationTokenInsert.FromInvocation)
+            if (ct == CancellationTokenInsert.FromInvoke)
             {
                 ct = cancellationToken;
             }
