@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MyLab.ApiClient.Contracts.Attributes.ForMethod;
 using MyLab.ApiClient.Contracts.Attributes.ForParameters;
 
-namespace UnitTests.Usage;
+namespace UnitTests.Usage.Invocation;
 
 public partial class ApiClientInvokerBehavior
 {
@@ -42,7 +42,7 @@ public partial class ApiClientInvokerBehavior
             ]
         };
     }
-
+    
     interface IContract
     {
         [Get("get")]

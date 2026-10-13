@@ -1261,40 +1261,6 @@
         <member name="M:MyLab.ApiClient.Usage.HttpClientRequestProcessor.ProcessRequestAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1">
-            <summary>
-            Provides functionality to invoke API client methods defined in a contract interface.
-            </summary>
-            <typeparam name="TContract">
-            The type of the contract interface that defines the API client methods.
-            </typeparam>
-            <remarks>
-            This class is responsible for processing API requests and responses, 
-            creating invocation expressions, and managing the configuration and logic 
-            required to interact with the API.
-            </remarks>
-        </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1.FromContract(MyLab.ApiClient.Usage.IRequestProcessor,MyLab.ApiClient.Options.ApiClientOptions)">
-            <summary>
-            Creates an instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1"/> from the specified contract type.
-            </summary>
-            <typeparam name="TContract">
-            The type of the contract interface that defines the API client methods.
-            </typeparam>
-            <param name="requestProcessor">
-            An implementation of <see cref="T:MyLab.ApiClient.Usage.IRequestProcessor"/> used to process HTTP requests.
-            </param>
-            <param name="options">
-            The <see cref="T:MyLab.ApiClient.Options.ApiClientOptions"/> containing configuration settings for the API client.
-            </param>
-            <returns>
-            A new instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1"/> configured for the specified contract type.
-            </returns>
-            <remarks>
-            This method initializes the API client invoker by creating the necessary request processing logic,
-            including request factoring settings, service model, and response deserialization tools.
-            </remarks>
-        </member>
         <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1.ForExpression(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
             <summary>
             Creates an API invocation expression based on the provided contract method expression.
@@ -1311,6 +1277,34 @@
             The type of the contract interface that defines the API methods.
             </typeparam>
         </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvokerFactory">
+            <summary>
+            Provides a factory for creating API client invokers based on contract types.
+            </summary>
+            <remarks>
+            This class is responsible for generating instances of <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1"/> 
+            using the provided request processor and API client options. It supports both generic and 
+            non-generic contract types.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvokerFactory.FromContract``1(MyLab.ApiClient.Usage.IRequestProcessor,MyLab.ApiClient.Options.ApiClientOptions)">
+            <summary>
+            Creates an API client invoker for the specified contract type.
+            </summary>
+            <typeparam name="TContract">
+            The type of the contract for which the API client invoker is created. 
+            This type defines the API contract that the invoker will adhere to.
+            </typeparam>
+            <returns>
+            An instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1"/> that can be used to invoke API methods
+            defined in the specified contract.
+            </returns>
+            <remarks>
+            This method initializes the necessary components, such as request factoring settings,
+            service model, content deserializers, and processing logic, to create a fully functional
+            API client invoker.
+            </remarks>
+        </member>
         <member name="T:MyLab.ApiClient.Usage.Invocation.CallDetailsPredicate">
             <summary>
             Represents a predicate that evaluates a <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/> instance.
@@ -1319,6 +1313,35 @@
             <returns>
             <c>true</c> if the predicate condition is satisfied for the provided <paramref name="callDetails"/>; otherwise, <c>false</c>.
             </returns>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1">
+            <summary>
+            Defines an interface for invoking API client methods based on a contract interface.
+            </summary>
+            <typeparam name="TContract">
+            The type of the contract interface that specifies the API methods to be invoked.
+            </typeparam>
+            <remarks>
+            This interface provides the capability to create and configure API invocation expressions 
+            for methods defined in the specified contract interface. It serves as an abstraction for 
+            managing API interactions, including request preparation and response handling.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1.ForExpression(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
+            <summary>   
+            Creates an API invocation expression based on the provided contract method expression.
+            </summary>
+            <param name="expression">
+            An expression representing a method of the contract interface <typeparamref name="TContract"/> 
+            that defines the API call to be invoked.
+            </param>
+            <returns>
+            An object implementing <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1"/> that allows further configuration 
+            and execution of the API invocation.
+            </returns>
+            <typeparam name="TContract">
+            The type of the contract interface that defines the API methods.
+            </typeparam>
         </member>
         <member name="T:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1">
             <summary>

@@ -69,7 +69,7 @@ public class TestApiFixture<TStartup, TContract> : IDisposable
         var testRequestProcessor = new TestHttpClientRequestProcessor(requestProcessor, typeof(TContract), Output);
         var opts = new ApiClientOptions();
 
-        var invoker = ApiClientInvoker<TContract>.FromContract(testRequestProcessor, opts);
+        var invoker = ApiClientInvokerFactory.FromContract<TContract>(testRequestProcessor, opts);
 
         return new InvokerTestApiAsset<TContract>()
         {

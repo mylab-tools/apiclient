@@ -12,5 +12,5 @@ public class InvokerTestApiAsset<TContract> : TestApiAsset
     /// <summary>
     /// A client intended for interaction with API
     /// </summary>
-    public required ApiClientInvoker<TContract> Invoker { get; init; }
+    public required IApiClientInvoker<TContract> Invoker { get; init; }
 }

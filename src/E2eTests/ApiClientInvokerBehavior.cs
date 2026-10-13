@@ -7,7 +7,7 @@ namespace E2eTests;
 
 public class ApiClientInvokerBehavior : IClassFixture<TestApiFixture<Program, ITestServerContract>>
 {
-    readonly ApiClientInvoker<ITestServerContract> _invoker;
+    readonly IApiClientInvoker<ITestServerContract> _invoker;
 
     public ApiClientInvokerBehavior(TestApiFixture<Program, ITestServerContract> apiFxt, ITestOutputHelper output)
     {

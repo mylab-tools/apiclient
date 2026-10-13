@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace UnitTests.Usage
+namespace UnitTests.Usage.Invocation
 {
     [TestSubject(typeof(ApiClientInvoker<>))]
     public partial class ApiClientInvokerBehavior
@@ -19,7 +19,7 @@ namespace UnitTests.Usage
                     TestTools.CreateOkResponse()
                 );
 
-            var invoker = ApiClientInvoker<IContract>.FromContract(reqProc.Object, TestTools.DefaultOptions);
+            var invoker = ApiClientInvokerFactory.FromContract<IContract>(reqProc.Object, TestTools.DefaultOptions);
 
             //Act
             var callDetails = await invoker
@@ -43,7 +43,7 @@ namespace UnitTests.Usage
                 TestTools.CreateOkResponse("foo")
             );
 
-            var invoker = ApiClientInvoker<IContract>.FromContract(reqProc.Object, TestTools.DefaultOptions);
+            var invoker = ApiClientInvokerFactory.FromContract<IContract>(reqProc.Object, TestTools.DefaultOptions);
 
             //Act
 
@@ -73,7 +73,7 @@ namespace UnitTests.Usage
         {
             //Arrange
             var reqProc = TestTools.CreateReqProcMock(response);
-            var invoker = ApiClientInvoker<IContract>.FromContract(reqProc.Object, TestTools.DefaultOptions);
+            var invoker = ApiClientInvokerFactory.FromContract<IContract>(reqProc.Object, TestTools.DefaultOptions);
 
             string? actualResult = null;
             HttpStatusCode actualStatusCode = default;
@@ -113,7 +113,7 @@ namespace UnitTests.Usage
         {
             //Arrange
             var reqProc = TestTools.CreateReqProcMock(response);
-            var invoker = ApiClientInvoker<IContract>.FromContract(reqProc.Object, TestTools.DefaultOptions);
+            var invoker = ApiClientInvokerFactory.FromContract<IContract>(reqProc.Object, TestTools.DefaultOptions);
 
             string? actualResult = null;
             HttpStatusCode actualStatusCode = default;
@@ -153,7 +153,7 @@ namespace UnitTests.Usage
         {
             //Arrange
             var reqProc = TestTools.CreateReqProcMock(response);
-            var invoker = ApiClientInvoker<IContract>.FromContract(reqProc.Object, TestTools.DefaultOptions);
+            var invoker = ApiClientInvokerFactory.FromContract<IContract>(reqProc.Object, TestTools.DefaultOptions);
 
             UnexpectedResponseStatusCodeException? unexpectedResponseStatusCodeException = null;
 

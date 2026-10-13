@@ -757,31 +757,70 @@ public async Task<OrderDto?> TryGetAsync(string id)
 
 ## Детальный вызов
 
-Для сценариев с нестандартными статус-кодами, ветвлением по диапазонам ответов и доступом к дампам запроса/ответа используйте `ApiClientInvoker<TContract>`.
+Для сценариев с нестандартными статус-кодами, ветвлением по диапазонам ответов и доступом к дампам запроса/ответа используйте `IApiClientInvoker<TContract>`.
 
-### Создание invoker
+### Инъекция invoker
+
+#### Регистрация в DI
 
 ```csharp
-var httpClientProvider = new SingleHttpClientProvider(httpClient);
-var requestProcessor = new HttpClientRequestProcessor(httpClientProvider);
-var options = new ApiClientOptions();
+services
+    .AddApiClient<IOrdersApi>()
+    .ConfigureApiClient(Configuration);
+```
 
-var invoker = ApiClientInvoker<IOrdersApi>.FromContract(requestProcessor, options);
+Та же регистрация, что и для прозрачного proxy: вместе с `IOrdersApi` в контейнер добавляется `IApiClientInvoker<IOrdersApi>`. Для области видимости `Scoped` используйте `AddApiClientScoped<IOrdersApi>()`.
+
+#### Инъекция
+
+```csharp
+public class OrdersService(IApiClientInvoker<IOrdersApi> ordersApi)
+{
+}
 ```
 
 ### Успешный вызов с получением результата
 
-```csharp
-var callDetails = await invoker
+#### Вариант 1 - обработать в делегате
+
+```c#
+OrderDto? resOrder = null;
+
+var callDetails = await ordersApi
     .ForExpression(api => api.GetByIdAsync(orderId))
     .When2xx().ProcessResult<OrderDto>((order, code) =>
     {
         // order — десериализованный результат, code — фактический HTTP-код
+        ProcessOrder(order);
     })
     .ThrowIfAnotherStatusCode()
     .InvokeAsync();
+```
 
-var order = await callDetails.ReadContentAsync<OrderDto>();
+#### Вариант 2 - сохранить в делегате
+
+```csharp
+OrderDto? resOrder = null;
+
+var callDetails = await ordersApi
+    .ForExpression(api => api.GetByIdAsync(orderId))
+    .When2xx().ProcessResult<OrderDto>((order, code) =>
+    {
+        // order — десериализованный результат, code — фактический HTTP-код
+        resOrder = order;
+    })
+    .ThrowIfAnotherStatusCode()
+    .InvokeAsync();
+```
+
+#### Вариант 3 - получить из деталей
+
+```c#
+var callDetails = await ordersApi
+    .ForExpression(api => api.GetByIdAsync(orderId))
+    .InvokeAsync();
+
+var resOrder = await callDetails.ReadContentAsync<OrderDto>();
 ```
 
 ### Нестандартные коды ответа
@@ -792,7 +831,7 @@ Fluent-API позволяет описать разное поведение д�
 OrderDto? order = null;
 ProblemDetails? problem = null;
 
-var callDetails = await invoker
+var callDetails = await ordersApi
     .ForExpression(api => api.GetByIdAsync(orderId))
     .When(HttpStatusCode.OK, HttpStatusCode.Created)
         .ProcessResult<OrderDto>((result, _) => order = result)
@@ -819,7 +858,7 @@ var callDetails = await invoker
 Асинхронные обработчики:
 
 ```csharp
-await invoker
+await ordersApi
     .ForExpression(api => api.CreateAsync(dto))
     .When2xx().ProcessResultAsync<int>(async (id, code) =>
     {

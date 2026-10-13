@@ -33,7 +33,7 @@ public class ApiClientProxy : DispatchProxy
             .First(m => m.Name == nameof(ProcRequestAsync));
     }
 
-    internal ReflectionRequestProcessingLogic? ReflectionRequestSender { get; private set; }
+    internal ReflectionRequestProcessingLogic? RequestProcLogic { get; private set; }
 
     /// <summary>
     /// Creates a proxy instance for the specified API contract type.
@@ -88,7 +88,7 @@ public class ApiClientProxy : DispatchProxy
     {
         if (targetMethod == null) throw new ArgumentNullException(nameof(targetMethod));
 
-        if (ReflectionRequestSender == null) 
+        if (RequestProcLogic == null) 
             throw new InvalidOperationException("Proxy was not initialized");
             
         if (targetMethod.ReturnType == typeof(Task))
@@ -114,18 +114,18 @@ public class ApiClientProxy : DispatchProxy
         if (requestProcessor == null) throw new ArgumentNullException(nameof(requestProcessor));
         if (callDetailsFactory == null) throw new ArgumentNullException(nameof(callDetailsFactory));
             
-        ReflectionRequestSender = new ReflectionRequestProcessingLogic(serviceModel, requestProcessor, callDetailsFactory);
+        RequestProcLogic = new ReflectionRequestProcessingLogic(serviceModel, requestProcessor, callDetailsFactory);
     }
 
     async Task ProcRequestForVoidAsync(MethodInfo targetMethod, object?[]? args)
     {
-        var callDetails = await ReflectionRequestSender!.SendRequestAsync(targetMethod, args);
+        var callDetails = await RequestProcLogic!.SendRequestAsync(targetMethod, args);
         await callDetails.ThrowIfNotOKAsync();
     }
 
     async Task<T?> ProcRequestAsync<T>(MethodInfo targetMethod, object?[]? args)
     {
-        var callDetails = await ReflectionRequestSender!.SendRequestAsync(targetMethod, args);
+        var callDetails = await RequestProcLogic!.SendRequestAsync(targetMethod, args);
         await callDetails.ThrowIfNotOKAsync(); 
             
         return await callDetails.ReadContentAsync<T>();
