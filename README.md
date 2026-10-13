@@ -1,129 +1,123 @@
 # MyLab.ApiClient
-[![NuGet Version and Downloads count](https://buildstats.info/nuget/MyLab.ApiClient)](https://www.nuget.org/packages/MyLab.ApiClient)
 
-```
-Поддерживаемые платформы: .NET Core 3.1+
-```
-Ознакомьтесь с последними изменениями в [журнале изменений](/CHANGELOG.md).
+[![NuGet Version](https://img.shields.io/nuget/v/MyLab.ApiClient.svg)](https://www.nuget.org/packages/MyLab.ApiClient) [![NuGet Downloads](https://img.shields.io/nuget/dt/MyLab.ApiClient.svg)](https://www.nuget.org/packages/MyLab.ApiClient) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE) [![.NET10+](https://img.shields.io/badge/framework-.NET10%2B-8A2BE2)](https://dotnet.microsoft.com/ru-ru/download/dotnet/10.0)
 
-## Обзор 
+.NET библиотека для декларативного описания HTTP API-контрактов и вызова удаленных сервисов через типобезопасный .NET-интерфейс.
 
-`MyLab.ApiClient` предоставляет возможность создавать клиенты для `WEB API` на основе контрактов.
+## Возможности
 
-Чтобы описать `WEB API` контракт, следует:
+- Описание API через интерфейсы и атрибуты (`ApiContract`, `Get`, `Post`, и др.);
+- Прозрачный proxy-клиент: вызываете методы интерфейса как обычный объект-сервис;
+- Гибкая передача данных: `Path`, `Query`, `Header`, `JsonContent`, `FormContent`, `MultipartContent`, `BinContent`;
+- Интеграция с `IServiceCollection` и `IHttpClientFactory`;
+- Конфигурация endpoint-ов через `appsettings.json` или код;
+- Поддержка детализированного результата вызова (`CallDetails`).
 
-* объявить контракт сервиса как интерфейс
-* пометить интерфейс атрибутом `ApiAttribute`
-* объявить асинхронные методы, которые будут соответствовать конечным точкам сервиса
-* пометить соответствующими атрибутами (`ApiMethodAttribute` или наследниками)
-* указать у методов типы возвращаемых параметров в соответствии с содержанием, которое возвращает сервис
-* указать у методов аргументы, соответствующие передаваемым в запросе данным
-* пометить аргументы соответствующими атрибутами, указывающими на расположение и формат этих данных (наследники `ApiParameterAttribute`)
+## Быстрый старт
 
-Описание контракта сервиса:
+### 1) Опишите контракт API
 
-```C#
-[Api("api")]
-public interface IServiceContract
-{   
-    [Post("orders")]
-    Task<int> CreateOrder([JsonContent] Order order);
-}
-```
+```csharp
+using MyLab.ApiClient.Contracts.Attributes.ForContract;
+using MyLab.ApiClient.Contracts.Attributes.ForMethod;
+using MyLab.ApiClient.Contracts.Attributes.ForParameters;
 
-Описание контракта данных (не требует дополнительной разметки):
-
-```C#
-public class Order
+public interface IOrdersApi
 {
-	public string Foo { get; set; }
+    [Get("{id}")]
+    Task<OrderDto> GetByIdAsync([Path] string id);
+
+    [Post]
+    Task CreateAsync([JsonContent] CreateOrderDto dto);
 }
 ```
 
-Контроллер сервера:
+### 2) Добавьте конфигурацию endpoint-ов
 
-```C#
-[ApiController]
-[Route("api")]
-public class OrderController : ControllerBase
+```json
 {
-    [HttpPost("orders")]
-    public IActionResult CreateOrder([FromBody]Order order)
-    {
-        //...
-        return Ok(newOrderId);
-    }
+  "Api": {
+    "IOrdersApi": "https://example.org/api/orders"
+  }
 }
 ```
 
-Использование:
+### 3) Зарегистрируйте клиента в DI
 
-```C#
-HttpClient httpClient = ...
-var s = ApiClient<ITestServer>.Create(new SingleHttpClientProvider(httpClient));
+```csharp
+services
+    .AddApiClient<IOrdersApi>()
+    .ConfigureApiClient(Configuration);
+```
 
-var order = new Order{ Foo ="bar" }
-int newOrderId = await _client.Request(s => s.CreateOrder(order)).GetResultAsync();
+### 4) Используйте контракт как зависимость
+
+```csharp
+public class OrdersService(IOrdersApi api)
+{
+    public Task CreateOrderAsync(CreateOrderDto dto) => api.CreateAsync(dto);
+}
 ```
 
 ## Контракт сервиса
 
-Чтобы начать описание сервиса, объявите его контракт в виде интерфейса.
+Чтобы начать описание сервиса, объявите его контракт в виде интерфейса. **Опционально** контракт может декорироваться атрибутом `ApiContractAttribute`:
 
-Используйте `ApiAttribute` чтобы отметить интерфейс-контракт сервиса:
-
-```C#
-[Api]
-public interface IService
+```c# 
+[ApiContract] //Опционально
+public interface IOrdersApi
 {
-    //...
 }
 ```
 
-В этом атрибуте можно указать базовый путь к сервису, который будет использоваться как базовый для формирования полного адреса запроса с учётом относительных путей конечных точек (методов):
+На уровне контракта можно указать:
+
+* общий для всех методов путь относительно базового пути из настроек
+* ключ, по которому будет осуществляться привязка к настройкам
 
 ```C#
-[Api("orders/v1")]
-public interface IService
+[ApiContract(Url="v1", Binding="orders")] 
+public interface IOrdersApiV1
 {
-    //...
 }
+
+//appsettings.json
+//
+//{
+//  "Api": {
+//    "orders": "https://example.org/api/orders"
+//  }
+//}
 ```
 
-## Методы
+### Методы
 
-### Асинхронные методы
+#### Асинхронные методы
 
-Все методы контракта `API` должны быть асинхронными, т.е. возвращать `Task` или `Task<>`.
+Все методы контракта `API` должны быть асинхронными, т.е. возвращать `Task` или `Task<T>`, где `T` - ожидаемое содержание ответа.
 
-### Разметка
+#### Разметка
 
-Метод контракта должен быть помечен атрибутом `ApiMethodAttribute` или его наследником. Здесь определяется относительный путь и `HTTP`-метод. Также у `ApiMethodAttribute`  есть ряд наследников для основных случаев:
+Все методы контракта должны быть помечены атрибутами (наследниками `ApiMethodAttribute`), которые соответствуют HTTP-методам:
+
+* `GET`- `GetAttribute`;
+* `HEAD` - `HeadAttribute`;
+* `POST` - `PostAttribute`;
+* `PUT` - `PutAttribute`;
+* `PATCH` - `PatchAttribute`;
+* `DELETE` - `DeleteAttribute`.
+
+В этих атрибутах можно указать часть пути, относительно пути уровня контракта:
 
 ```C#
-[Api]
-public interface IService
+[ApiContract(Url="orders")] 
+public interface IOrderService
 {
-    [ApiMethod("orders", HttpMethod.Get)]
-    Task GetOrders1();
+    [Get("last-year")] // GET orders/last-year
+    Task GetLastYearOrdersAsync();
     
-    [Get("orders")]
-    Task GetOrders2();
-    
-    [Get]
-    Task GetOrders3();
-    
-    [Post]
-    Task PostOrders();
-    
-    [Put]
-    Task PutOrders();
-    
-    [Head]
-    Task HeadOrders();
-    
-    [Delete]
-    Task DeleteOrders();
+    [Post]	// POST orders
+    Task PostOrdersAsync();
 }
 ```
 
@@ -136,18 +130,18 @@ public interface IService
 Аргумент - часть пути
 
 ```C#
-[Api("company-services/api")]
+[ApiContract("company-services/api")]
 public interface IService
 {   
     [Get("orders/{id}")]
-    Task Get([Path]string id);
+    Task GetAsync([Path]string id);
 }
 ```
 
 Вызов:
 
 ```C#
-await srv.Get("2");
+await srv.GetAsync("2");
 ```
 
 Результирующий запрос:
@@ -161,18 +155,18 @@ GET /company-services/api/orders/2
 Аргумент - часть запроса в URL.
 
 ```C#
-[Api("company-services/api")]
+[ApiContract("company-services/api")]
 public interface IService
 {   
     [Get("orders")]
-    Task Get([Query]string id);
+    Task GetAsync([Query]string id);
 }
 ```
 
 Вызов:
 
 ```C#
-await srv.Get("2");
+await srv.GetAsync("2");
 ```
 
 Результирующий запрос:
@@ -186,25 +180,25 @@ GET /company-services/api/orders?id=2
 Аргумент - заголовок
 
 ```C#
-[Api("company-services/api")]
+[ApiContract("company-services/api")]
 public interface IService
 {   
     [Get("orders")]
-    Task Get([Header("X-Identifier")]string id);
+    Task GetAsync([Header("X-Identifier")]string id);
 }
 ```
 
 Вызов:
 
 ```C#
-await srv.Get("2");
+await srv.GetAsync("2");
 ```
 
 Результирующий запрос:
 
 ```http
 GET /company-services/api/orders
-Headers:
+
 X-Identifier: 2
 ```
 
@@ -217,11 +211,11 @@ X-Identifier: 2
 Аргумент - произвольный список заголовков. Тип параметра должен реализовывать интерфейс `IEnumerable<KeyValuePair<string, object>>`;
 
 ```C#
-[Api("company-services/api")]
+[ApiContract("company-services/api")]
 public interface IService
 {   
     [Get("orders")]
-    Task Get([HeaderCollection] Dictionary<string, object> headers);
+    Task GetAsync([HeaderCollection] Dictionary<string, object> headers);
 }
 ```
 
@@ -234,7 +228,7 @@ var headers = new Dictionary<string, object>
     {"X-Header-2", "bar"}    
 }
 
-await srv.Get(headers);
+await srv.GetAsync(headers);
 ```
 
 Результирующий запрос:
@@ -251,18 +245,18 @@ X-Header-2: bar
 Аргумент - содержательная часть запроса в строковой форме
 
 ```C#
-[Api("company-services/api")]
+[ApiContract("company-services/api")]
 public interface IService
 {   
     [Post("orders")]
-    Task Create([StringContent] int orderId);
+    Task CreateAsync([StringContent] int orderId);
 }
 ```
 
 Вызов:
 
 ```C#
-await srv.Create(2);
+await srv.CreateAsync(2);
 ```
 
 Результирующий запрос:
@@ -286,7 +280,7 @@ Content-Type: text/plain
 public interface IService
 {   
     [Post("orders")]
-    Task Create([JsonContent] Order order);
+    Task CreateAsync([JsonContent] Order order);
 }
 
 public class Order
@@ -303,7 +297,7 @@ var order = new Order
     Id = "2"
 }
 
-await srv.Create(order);
+await srv.CreateAsync(order);
 ```
 
 Результирующий запрос:
@@ -325,7 +319,7 @@ Content-Type: application/json
 public interface IService
 {   
     [Post("orders")]
-    Task Create([XmlContent] Order order);
+    Task CreateAsync([XmlContent] Order order);
 }
 
 public class Order
@@ -342,7 +336,7 @@ var order = new Order
     Id = "2"
 }
 
-await srv.Create(order);
+await srv.CreateAsync(order);
 ```
 
 Результирующий запрос:
@@ -364,7 +358,7 @@ Content-Type: application/xml
 public interface IService
 {   
     [Post("orders")]
-    Task Create([FormContent] Order order);
+    Task CreateAsync([FormContent] Order order);
 }
 
 public class Order
@@ -385,7 +379,7 @@ var order = new Order
     Number = "foo"
 }
 
-await srv.Create(order);
+await srv.CreateAsync(order);
 ```
 
 Результирующий запрос:
@@ -407,7 +401,7 @@ Id=2&order_number=foo
 public interface IService
 {       
     [Post("orders")]    
-    Task Create([BinContent] byte[] orderData);
+    Task CreateAsync([BinContent] byte[] orderData);
 }
 ```
 
@@ -416,7 +410,7 @@ public interface IService
 ```C#
 var bin = Encoding.UTF8.GetBytes("foo")
 
-await srv.Create(bin);
+await srv.CreateAsync(bin);
 ```
 
 Результирующий запрос:
@@ -438,7 +432,7 @@ foo
 public interface IService
 {       
     [Post("orders")]    
-    Task Create([MultipartContent] TestMultipartParameter p);
+    Task CreateAsync([MultipartContent] TestMultipartParameter p);
 }
 
  public class TestMultipartParameter : IMultipartContentParameter
@@ -459,7 +453,7 @@ public interface IService
 ```C#
 var p = new TestMultipartParameter{ Part1 = "fo", Part2 = "o"}
 
-await srv.Create(p);
+await srv.CreateAsync(p);
 ```
 
 Результирующий запрос:
@@ -474,522 +468,555 @@ Content-Type: multipart/form-data; boundary="2150a4df-de36-421a-8ef7-028f86f9040
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: form-data; name=part1
 
-
 fo
 
 --2150a4df-de36-421a-8ef7-028f86f90403
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: form-data; name=part2
 
-
 o
 
 --2150a4df-de36-421a-8ef7-028f86f90403--
 ```
 
-## Результат
-
-### Статус-код
-
-`WEB API` может вернуть как успешный ответ, так и ответ с шибкой. Положительным ответом считаются ответы со статус-кодом `2xx`, а `4xx` и `5xx` - ошибочными. (`3xx` при разработке API обычно не используются) 
-
-Часто при проектировании `WEB API` ответы 2хх, как и 4хх наделяют особым смыслом. Поэтому важно проверять, что статус-код входит в определённое подмножество установленных возможных статус-кодов.
-
-Для этого в `MyLab.ApiCLient` есть атрибут `ExpectedCodeAttribute`. Отметьте на целевом методе статус-коды, которые ожидаются в ответ на вызов сервера:
-
-```C#
-[Api]
-public interface IService
-{
-    [ExpectedCode(HttpStatusCode.BadRequest)]
-    [Get("orders/count")]
-    Task<int> GetOrdersCount();
-}
-```
-
-Алгоритм проверки статус-кода выглядит следующим образом:
-
-* если код == 200:
-  * если в списке, определённом атрибутами `ExpectedCodeAttribute`, есть другие коды 2хх:
-    * если есть атрибут `ExpectedCodeAttribute` с кодом 200 - успех
-    * иначе - ошибка 
-  * иначе - успех
-* если код есть в списке, определённом атрибутами `ExpectedCodeAttribute` - успех
-* ошибка `ResponseCodeException`
-
-### Содержание ответа
-
-Тип содержания определяется типом возвращаемым значением соответствующего метода. Поддерживаются следующие типы:
-
-* `void` - если важен только статус-код ответа 
-* примитивы: `string`, `bool`, `int`, `uint`, `double`
-* типы значений: `DateTime`, `TimeSpan`, `Guid`
-* объекты/структуры: только если содержательная часть ответа в формате `XML`, `JSON`или `url-encoded-form`
-
-В случае, если содержательная часть ответа отсутствует, метод будет возвращать значения по умолчанию:
-
-- `null` для ссылочных типов;
-- `default()` - для типов значений.
-
-## Вызов
-
 ### Результат
 
-На следующем примере показан вызов сервиса с получением результата:
+#### Статус-код
 
-```C#
-[Api]
-public interface IService
+`WEB API` может вернуть как успешный ответ: `2xx`, так и ответ с ошибкой: `4xx`(по вине клиента) или `5xx`(по вине сервера). `1xx` и `3xx` статусы обыяно в `WEB API` не применяются. 
+
+`ApiClient` определяет, что вызов сервиса прошёл успешно, если ответ будет содержать статус-код `2xx`. Во всех других случаях возникнет исключение `ResponseCodeException`, в свойствах которого доступны:
+
+* `StatusCode` - код ответа
+* `ServerMessage` - текстовое создание ответа (до 1024 символов)
+
+#### Содержание ответа
+
+Выходной параметр метода контракта должен быть `Task` - если содержательная часть метода не ожидается, или `Task<T>` - если ожидается результат типа `Т`.
+
+Поддерживаются следующие типы:
+
+* примитивы: `string`, `bool`, `int`, `uint`, `short`, `ushort`, `long`, `ulong`, `decimal`, `double`, `float`, если `Content-Type` = `application/json` или `text/plain`
+* типы значений: `Guid`, `DateTime`, `TimeSpan`, если `Content-Type` = `application/json` или `text/plain`
+* бинарные данные: `byte[]` 
+* объекты, если `Content-Type` = `application/json`, `application/xml`
+* множества: `IEnumerable<T>` , если `Content-Type` = `application/json` или `application/xml`
+* проблемы: `ProblemDetails` и `ValidationProblemDetails`, если  `Content-Type` = `application/problem+json`
+
+Если ожидаемый тип ответа не будет соответствовать `Content-Type`, то возникнет исключение `UnexpectedResponseContentTypeException`, которое по мимо всего стандартного имеет поле `ActualContentType`, в котором указан актальный тип содержимого из ответа.
+
+## Конфигурирование
+
+Клиент сопоставляется с настройками конечной точки по ключу привязки. Ключ ищется в секции `Api` (имя по умолчанию, `ApiClientOptions.DefaultSectionName`).
+
+### Привязка к конфигурации
+
+Для каждого контракта библиотека проверяет следующие ключи (в порядке объявления):
+
+1. короткое имя типа контракта — `IOrdersApi`;
+2. полное имя типа контракта — `MyApp.Clients.IOrdersApi`;
+3. значение `Binding` из атрибута `ApiContract`, если оно задано — например, `orders`.
+
+Достаточно совпадения любого из этих ключей с записью в конфигурации.
+
+#### По имени интерфейса
+
+```csharp
+public interface IOrdersApi
 {
-    [Post("orders")]
-    Task<int> CreateOrder(Order order);
-}
-
-//....
-
-var orderId = await service.Request(s => s.CreateOrder(order)).GetResultAsync();
-```
-
-Вызов сервиса без получения результата:
-
-```C#
-[Api]
-public interface IService
-{
-    [Post("orders")]
-    Task CreateOrder(Order order);
-}
-
-//....
-
-await service.Call(s => s.CreateOrder(order)).CallAsync();
-```
-
-При получении непредвиденного статус-кода, кроме `200 (OK)`, метод `GetResultAsync` выдаёт исключение `ResponseCodeException`. Это можно использовать следующим образом:
-
-```C#
-try
-{
-    await service.Request(s => s.CreateOrder(order)).GetResultAsync();
-}
-catch(ResponseCodeException e) when (e.StatusCode == HttpStatusCode.BadRequest)
-{
-    //when status code = 400 
-}
-catch(ResponseCodeException e) when (e.StatusCode == HttpStatusCode.Forbidden)
-{
-    //when status code = 403
-}
-```
-
-### Детализация
-
-Детализация по вызову представляет собой объект, содержащий всё необходимое для составления представления о выполненном запросе и полученном ответе:
-
-```C#
-/// <summary>
-/// Contains detailed service call information with response
-/// </summary>
-public class CallDetails<T> : CallDetails
-{
-    /// <summary>
-    /// Expected response content
-    /// </summary>
-    public T ResponseContent { get; set; }
-}
-
-/// <summary>
-/// Contains detailed service call information 
-/// </summary>
-public class CallDetails
-{
-    /// <summary>
-    /// HTTP status code
-    /// </summary>
-    public HttpStatusCode StatusCode { get; set; }
-    /// <summary>
-    /// Gets true if status code is unexpected
-    /// </summary>
-    public bool IsUnexpectedStatusCode { get; set; }
-    /// <summary>
-    /// Text request dump
-    /// </summary>
-    public string RequestDump { get; set; }
-    /// <summary>
-    /// Text response dump
-    /// </summary>
-    public string ResponseDump { get; set; }
-    /// <summary>
-    /// Response object
-    /// </summary>
-    public HttpResponseMessage ResponseMessage { get; set; }
-    /// <summary>
-    /// Request object
-    /// </summary>
-    public HttpRequestMessage RequestMessage { get; set; }
+    // ...
 }
 ```
-
-На следующем примере показан вызов сервиса с получением детализированного результата:
-
-```C#
-[Api]
-public interface IService
-{
-    [Post("orders")]
-    Task<int> CreateOrder(Order order);
-}
-
-//....
-
-CallDetails<int> response = await service.Request(s => s.CreateOrder(order)).GetDetailedAsync();
-```
-
-Вызов сервиса без получения результата:
-
-```C#
-[Api]
-public interface IService
-{
-    [Post("orders")]
-    Task CreateOrder(Order order);
-}
-
-//....
-
-CallDetails response = await service.Request(s => s.CreateOrder(order)).GetDetailedAsync();
-```
-
-В случае, когда метод контракта сервиса не имеет возвращаемого значения, метод `GetDetailedAsync` возвращает объект детализации без содержимого ответа: `CallDetails`.
-
-При получении непредвиденного статус-кода, кроме `200 (OK)`, метод `GetDetailedAsync` не выбрасывает исключение, а устанавливает свойства объекта детализации `IsUnexpectedStatusCode` в `true`.
-
-```C#
-var response = await service.Request(s => s.CreateOrder(order)).GetResultAsync();
-
-if (response.IsUnexpectedStatusCode)
-{
-    switch (response.StatusCode)
-    {
-        case HttpStatusCode.BadRequest:
-            //when status code = 400
-            break;
-        case HttpStatusCode.Forbidden:
-            //when status code = 403
-            break;
-        default:
-            throw new ArgumentOutOfRangeException();
-    }
-}
-```
-
-Пример дампа запроса из детализации:
-
-```http
-POST http://localhost/test/ping/body/obj/json
-
-Cookie: <empty>
-Content-Type: application/json; charset=utf-8
-
-{"TestValue":"foo"}
-```
-
-Пример дампа ответа из детализации:
-
-```http
-200 OK
-
-Content-Type: text/plain; charset=utf-8
-
-foo
-```
-
-## DI инъекция
-
-### Обзор
-
-Особенности DI инъекции:
-
-* определение настроек подключения к удалённым API через конфигурацию;
-* регистрация контрактов API на этапе конфигурирования сервисов в `Startup.ConfigureServices`;
-* сопоставление зарегистрированных контрактов и конфигураций;
-* получение клиентов в целевых объектах в качестве зависимостей двумя способами.
-
-Данный механизм основан на использовании [фабрики HttpClient](https://docs.microsoft.com/ru-ru/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests)-ов. 
-
-### Конфигурирование
-
-Целью загрузки конфигурации является создание именованных фабрик http-клиентов в соответствии параметрам из конфигурации.
-
-На примере ниже представлены способы определения конфигураций подключений к API:
-
-```C#
-public class Startup
-{
-    public Startup(IConfiguration configuration)
-    {
-    	Configuration = configuration;
-    }
-
-    public IConfiguration Configuration { get; }
-
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddApiClients(r => r.RegisterContract<IApiContract>();
-                               
-        // Simple case - using default section name "Api"
-    	services.ConfigureApiClients(Configuration);
-        
-        // Or specify custom section name
-        services.ConfigureApiClients(Configuration, "MyApiSectionName");
-
-        // Or create options directly in code
-        services.ConfigureApiClients(o =>
-            {
-                o.List.Add("foo", new ApiConnectionOptions{Url = "http://test.com"})
-            });
-    }
-
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-    	...
-    }
-}
-```
-
-Объектная модель конфигурации [тут](src/MyLab.ApiClient/ApiClientsOptions.cs).
-
-Пример файла конфигурации:
 
 ```json
 {
   "Api": {
-    "List": {
-      "foo": { "Url": "http://foo-test.com" },
-      "bar": { "Url": "http://bar-test.com" }
+    "IOrdersApi": "https://example.org/api/orders/"
+  }
+}
+```
+
+#### По полному имени типа
+
+```csharp
+namespace MyApp.Clients;
+
+public interface IOrdersApi
+{
+    // ...
+}
+```
+
+```json
+{
+  "Api": {
+    "MyApp.Clients.IOrdersApi": "https://example.org/api/orders/"
+  }
+}
+```
+
+#### По явному ключу `Binding`
+
+```csharp
+[ApiContract(Binding = "orders")]
+public interface IOrdersApi
+{
+    // ...
+}
+```
+
+```json
+{
+  "Api": {
+    "orders": "https://example.org/api/orders/"
+  }
+}
+```
+
+### Конфигурация ApiClient
+
+Пример `appsettings.json` с несколькими конечными точками и дополнительными настройками:
+
+```json
+{
+  "Api": {
+    "UrlFormSettings": {
+      "EscapeSymbols": true,
+      "IgnoreNullValues": true
+    },
+    "Endpoints": {
+      "orders": {
+        "Url": "https://example.org/api/orders/",
+        "SkipServerSslCertVerification": false
+      },
+      "ICatalogApi": {
+        "Url": "https://example.org/api/catalog/",
+        "SkipServerSslCertVerification": true
+      }
     }
   }
 }
 ```
 
-### Сопоставление контрактов 
-
-Для сопоставления контракта API и настроек конфигурации используется ключ контракта, указываемый в атрибуте `ApiAttribute` в поле `Key`. 
-
-Пример контракта `API` с указанным кодом контракта:
-
-```c#
- [Api("echo", Key = "foo")]
- interface ITestServer
- {
-     [Get]
-     Task<string> Echo([JsonContent]string msg);
- }
-```
-
-Конфигурационный файл с сопоставленной записью:
+Краткая форма — значение ключа сразу задаёт URL:
 
 ```json
 {
   "Api": {
-    "List": {
-      "foo": { "Url": "http://foo-test.com" }, //<--- here it is 
-      "bar": { "Url": "http://bar-test.com" }
+    "orders": "https://example.org/api/orders/",
+    "ICatalogApi": "https://example.org/api/catalog/"
+  }
+}
+```
+
+Загрузка конфигурации в DI:
+
+```csharp
+services
+    .AddApiClient<IOrdersApi>()
+    .AddApiClient<ICatalogApi>()
+    .ConfigureApiClient(Configuration);
+```
+
+Можно указать имя секции явно:
+
+```csharp
+services.ConfigureApiClient(Configuration, "MyApi");
+```
+
+### Свободная конфигурация конечной точки
+
+Если настройки конечной точки лежат вне общей секции `Api`, их можно привязать отдельно:
+
+```csharp
+// по ключу привязки
+services.ConfigureApiClientEndpoint(
+    "orders",
+    Configuration,
+    "ExternalServices:Orders");
+
+// по типу контракта (ключ = FullName типа)
+services.ConfigureApiClientEndpoint<IOrdersApi>(
+    Configuration,
+    "ExternalServices:Orders");
+```
+
+Пример соответствующей секции:
+
+```json
+{
+  "ExternalServices": {
+    "Orders": {
+      "Url": "https://example.org/api/orders/",
+      "SkipServerSslCertVerification": false
     }
   }
 }
 ```
 
-В случае отсутствия указанного ключа используется имя интерфейса контракта (без пространства имён):
+### Раздельная конфигурация
 
- ```json
- {
-   "Api": {
-     "List": {
-       "ITestServer": { "Url": "http://foo-test.com" }, //<--- here it is 
-       "bar": { "Url": "http://bar-test.com" }
-     }
-   }
- }
- ```
+Часто в `appsettings.json` оставляют только адрес конечной точки, а остальные параметры задают в коде через перегрузку `ConfigureApiClient(Action<ApiClientOptions>)`.
 
-### Инъекция IApiClientFactory
+Изменения, внесённые в коде, имеют более высокий приоритет, чем значения из конфигурационного файла: при последовательной регистрации сначала загружается файл, затем применяется код — итоговыми становятся значения из кода.
 
-Инъекция `IApiClientFactory` в объект-потребитель позволяет создавать объекты `ApiClient<>` для дальнейшей работы с `API` через методы `Call` с передачей `Expressions`-выражений вызова методов контракта `API`. 
+`appsettings.json` — только URL и базовое значение настройки формы:
 
-Это может быть полезно, например, если в дальнейшем нужно получить детали вызова метода API.
-
-Ниже приведён пример класса-потребителя с использованием инъекции `IApiClientFactory`:
-
-```C#
-class TestServiceForApiClientFactory
+```json
 {
-    private readonly ApiClient<ITestServer> _server;
+  "Api": {
+    "UrlFormSettings": {
+      "EscapeSymbols": true,
+      "IgnoreNullValues": false
+    },
+    "orders": "https://example.org/api/orders/"
+  }
+}
+```
 
-    public TestServiceForHttpClientFactory(IApiClientFactory apiClientFactory)
+В коде адрес берётся из файла, а параметры `UrlFormSettings` переопределяются:
+
+```csharp
+services
+    .AddApiClient<IOrdersApi>()
+    .ConfigureApiClient(Configuration)
+    .ConfigureApiClient(opt =>
     {
-        _server = apiClientFactory.CreateApiClient<ITestServer>();
-    }
+        opt.UrlFormSettings ??= new ApiUrlFormSettings();
+        opt.UrlFormSettings.EscapeSymbols = false;      // было true в appsettings.json
+        opt.UrlFormSettings.IgnoreNullValues = true;    // было false в appsettings.json
+    });
+```
 
-    public async Task<string> TestMethod(string msg, ITestOutputHelper log)
+В результате клиент использует URL из конфигурационного файла, а `EscapeSymbols` и `IgnoreNullValues` — значения, заданные в коде.
+
+## Прозрачный прокси
+
+Прозрачный proxy реализует интерфейс контракта и позволяет вызывать API как обычный DI-сервис: без явной работы с `HttpClient` и без построения выражений вызова.
+
+### Регистрация в DI
+
+```csharp
+services
+    .AddApiClient<IOrdersApi>()
+    .ConfigureApiClient(Configuration);
+```
+
+Для области видимости `Scoped` используйте `AddApiClientScoped<IOrdersApi>()`.
+
+### Применение
+
+```csharp
+public class OrdersService(IOrdersApi ordersApi)
+{
+    public async Task<OrderDto> GetAsync(string id)
     {
-        var resp = await _server.Request(s => s.Echo(msg)).GetDetailedAsync();
-
-        log.WriteLine("Resquest dump:");
-        log.WriteLine(resp.RequestDump);
-        log.WriteLine("Response dump:");
-        log.WriteLine(resp.ResponseDump);
-
-        return resp.ResponseContent;
+        return await ordersApi.GetByIdAsync(id);
     }
 }
 ```
 
-Для создания клиента таким образом, у контракта `API`  должен быть определён ключ контракта в атрибуте `ApiAttribute` и должна быть загружена конфигурация с соответствующим ключом.
+При успешном ответе (`2xx`) метод возвращает десериализованное содержимое (для `Task<T>`) или завершается без результата (для `Task`).
 
-### Прозрачное прокси 
+### Обработка ошибок
+
+При вызове через proxy возможны два типичных исключения:
+
+| Исключение | Когда возникает | Полезные свойства |
+|---|---|---|
+| `ResponseCodeException` | HTTP-код ответа не входит в `2xx` | `StatusCode`, `ServerMessage` |
+| `UnexpectedResponseContentTypeException` | `Content-Type` ответа не соответствует ожидаемому типу результата | `ActualContentType` |
+
+Пример обработки:
+
+```csharp
+public async Task<OrderDto?> TryGetAsync(string id)
+{
+    try
+    {
+        return await _ordersApi.GetByIdAsync(id);
+    }
+    catch (ResponseCodeException e) when (e.StatusCode == HttpStatusCode.NotFound)
+    {
+        // заказ не найден
+        return null;
+    }
+    catch (ResponseCodeException e) when (e.StatusCode == HttpStatusCode.Forbidden)
+    {
+        // нет доступа
+        throw;
+    }
+    catch (UnexpectedResponseContentTypeException e)
+    {
+        // например, ожидали application/json, а пришло text/html
+        throw new InvalidOperationException(
+            $"Unexpected content type: {e.ActualContentType}", e);
+    }
+}
+```
+
+## Детальный вызов
+
+Для сценариев с нестандартными статус-кодами, ветвлением по диапазонам ответов и доступом к дампам запроса/ответа используйте `IApiClientInvoker<TContract>`.
+
+### Инъекция invoker
+
+#### Регистрация в DI
+
+```csharp
+services
+    .AddApiClient<IOrdersApi>()
+    .ConfigureApiClient(Configuration);
+```
+
+Та же регистрация, что и для прозрачного proxy: вместе с `IOrdersApi` в контейнер добавляется `IApiClientInvoker<IOrdersApi>`. Для области видимости `Scoped` используйте `AddApiClientScoped<IOrdersApi>()`.
 
 #### Инъекция
 
-Инъекция прозрачного прокси в объект-потребитель позволяет использовать контракт `API` так же, как любой другой сервис, добавляемый через DI контейнер. Кроме того, это значительно упрощает тестирование класса-потребителя и избавляет от лишнего погружения в детали реализации зависимости.
-
-Для обеспечения инъекции прозрачных прокси контрактов API необходимо зарегистрировать эти контракты следующим образом:
-
-```C#
-public void ConfigureServices(IServiceCollection services)
+```csharp
+public class OrdersService(IApiClientInvoker<IOrdersApi> ordersApi)
 {
-    // Simple case - using default section name "Api"
-    services.AddApiClients(
-        registrar => 
-        {
-            registrar.RegisterContract<ITestServer>();
-        });
 }
 ```
 
-Для регистрации контракта таким образом, у контракта `API`  должен быть определён ключ контракта в атрибуте `ApiAttribute` и должна быть загружена конфигурация с соответствующим ключом.
+### Успешный вызов с получением результата
 
-Ниже приведён пример использования инъекции прозрачного прокси:
+#### Вариант 1 - обработать в делегате
 
-```C#
-class TestServiceForProxy
-{
-    private readonly ITestServer _server;
+```c#
+OrderDto? resOrder = null;
 
-    public TestServiceForProxy(ITestServer server)
+var callDetails = await ordersApi
+    .ForExpression(api => api.GetByIdAsync(orderId))
+    .When2xx().ProcessResult<OrderDto>((order, code) =>
     {
-    	_server = server;
-    }
+        // order — десериализованный результат, code — фактический HTTP-код
+        ProcessOrder(order);
+    })
+    .ThrowIfAnotherStatusCode()
+    .InvokeAsync();
+```
 
-    public Task<string> TestMethod(string msg)
+#### Вариант 2 - сохранить в делегате
+
+```csharp
+OrderDto? resOrder = null;
+
+var callDetails = await ordersApi
+    .ForExpression(api => api.GetByIdAsync(orderId))
+    .When2xx().ProcessResult<OrderDto>((order, code) =>
     {
-    	return _server.Echo(msg);
+        // order — десериализованный результат, code — фактический HTTP-код
+        resOrder = order;
+    })
+    .ThrowIfAnotherStatusCode()
+    .InvokeAsync();
+```
+
+#### Вариант 3 - получить из деталей
+
+```c#
+var callDetails = await ordersApi
+    .ForExpression(api => api.GetByIdAsync(orderId))
+    .InvokeAsync();
+
+var resOrder = await callDetails.ReadContentAsync<OrderDto>();
+```
+
+### Нестандартные коды ответа
+
+Fluent-API позволяет описать разное поведение для разных кодов и диапазонов:
+
+```csharp
+OrderDto? order = null;
+ProblemDetails? problem = null;
+
+var callDetails = await ordersApi
+    .ForExpression(api => api.GetByIdAsync(orderId))
+    .When(HttpStatusCode.OK, HttpStatusCode.Created)
+        .ProcessResult<OrderDto>((result, _) => order = result)
+    .When(HttpStatusCode.NotFound)
+        .ProcessStatusCode(_ => order = null)
+    .When4xx()
+        .ProcessProblem((p, _) => problem = p)
+    .When5xx()
+        .ProcessStatusCode(code =>
+            throw new InvalidOperationException($"Upstream error: {(int)code}"))
+    .ThrowIfAnotherStatusCode()
+    .InvokeAsync();
+```
+
+Доступные условия:
+
+- `When(HttpStatusCode, params HttpStatusCode[])` — конкретные коды;
+- `When1xx()`, `When2xx()`, `When3xx()`, `When4xx()`, `When5xx()` — диапазоны;
+- `ProcessResult` / `ProcessResultAsync` — десериализация содержимого;
+- `ProcessStatusCode` / `ProcessStatusCodeAsync` — только код ответа;
+- `ProcessProblem` / `ProcessValidationProblem` (+ async-варианты) — RFC 7807;
+- `ThrowIfAnotherStatusCode()` — если код не обработан ни одним `When*`, будет выброшено `UnexpectedResponseStatusCodeException`.
+
+Асинхронные обработчики:
+
+```csharp
+await ordersApi
+    .ForExpression(api => api.CreateAsync(dto))
+    .When2xx().ProcessResultAsync<int>(async (id, code) =>
+    {
+        await _log.WriteAsync($"Created {id} with {(int)code}");
+    })
+    .When4xx().ProcessStatusCodeAsync(async code =>
+    {
+        await _log.WriteAsync($"Client error {(int)code}");
+    })
+    .ThrowIfAnotherStatusCode()
+    .InvokeAsync();
+```
+
+### Результат детального вызова — `CallDetails`
+
+`InvokeAsync()` всегда возвращает `CallDetails` со следующими свойствами:
+
+| Свойство | Описание |
+|---|---|
+| `StatusCode` | HTTP-код ответа |
+| `IsOK` | `true`, если код входит в диапазон `2xx` |
+| `RequestMessage` | исходный `HttpRequestMessage` |
+| `ResponseMessage` | исходный `HttpResponseMessage` |
+| `RequestDump` | текстовый дамп запроса |
+| `ResponseDump` | текстовый дамп ответа |
+
+Дополнительно:
+
+- `ThrowIfNotOKAsync()` — выбрасывает `ResponseCodeException`, если `IsOK == false`;
+- `ReadContentAsync<T>()` — десериализует тело ответа в тип `T`.
+
+### `RequestDump` и `ResponseDump`
+
+Поля заполняются через `HttpMessageDumper` (`MyLab.ApiClient.Tools.HttpMessageDumper`). Дампер сериализует сообщение в читаемый текст: стартовая строка, заголовки и тело (с ограничением размера).
+
+Пример дампа запроса:
+
+```http
+POST https://example.org/api/orders/
+
+Content-Type: application/json; charset=utf-8
+
+{"Name":"foo"}
+```
+
+Пример дампа ответа:
+
+```http
+201 Created
+
+Content-Type: application/json; charset=utf-8
+
+{"Id":"42"}
+```
+
+Если тело превышает лимит (`DefaultMaxBodySize` = 10 КБ, настраивается через `MaxRequestBodySize` / `MaxResponseBodySize`), в конец добавляется `... [content is too large to dump]`.
+
+Dumper можно задать в опциях:
+
+```csharp
+var options = new ApiClientOptions
+{
+    Dumper = new HttpMessageDumper
+    {
+        MaxRequestBodySize = 32 * 1024,
+        MaxResponseBodySize = 32 * 1024
+    }
+};
+```
+
+Либо использовать напрямую:
+
+```csharp
+var dumper = new HttpMessageDumper();
+string requestDump = await dumper.DumpAsync(httpRequestMessage);
+string responseDump = await dumper.DumpAsync(httpResponseMessage);
+```
+
+## Тестирование
+
+Пакет/проект `MyLab.ApiClient.Test` предоставляет `TestApiFixture<TStartup, TContract>` для интеграционных тестов на базе `WebApplicationFactory`.
+
+### Подключение
+
+Добавьте ссылку на `MyLab.ApiClient.Test` и используйте xUnit class fixture:
+
+```csharp
+public class OrdersApiBehavior : IClassFixture<TestApiFixture<Program, IOrdersApi>>
+{
+    readonly TestApiFixture<Program, IOrdersApi> _fixture;
+
+    public OrdersApiBehavior(
+        TestApiFixture<Program, IOrdersApi> fixture,
+        ITestOutputHelper output)
+    {
+        _fixture = fixture;
+        _fixture.Output = output; // опционально: логи запросов/ответов в вывод теста
     }
 }
 ```
 
-#### Детализация
+### Тест через прозрачный proxy
 
-Прозрачное прокси поддерживает возврат детализации (`CallDetails`) методом контракта:
-
-```C#
-[Api("echo")]
-interface ITestServer
+```csharp
+[Fact]
+public async Task ShouldReturnOrder()
 {
-    [Get]
-    Task<CallDetails<string>> CallEchoAndGetDetails([JsonContent] string msg);
-    
-    [Get]
-    Task<CallDetails> CallEchoAndGetDetailsWithoutResonse([JsonContent] string msg);
+    //Arrange
+    var api = _fixture.StartAppWithProxy().Proxy;
+
+    //Act
+    var order = await api.GetByIdAsync("42");
+
+    //Assert
+    Assert.NotNull(order);
+    Assert.Equal("42", order.Id);
 }
-
-//....
-    
-CallDetails<string> call = await api.CallEchoAndGetDetails("foo");
-
-CallDetails call = await api.CallEchoAndGetDetailsWithoutResonse("foo");
 ```
 
-## Тестирование 
+### Тест через `ApiClientInvoker`
 
-При написании функциональных и интеграционных тестов, для взаимодействия с сервисом через его контракт `API`, используйте класс `ApiClient<>` и провайдер `DelegateHttpClientProvider`. 
+```csharp
+[Fact]
+public async Task ShouldReturnOrderWithDetails()
+{
+    //Arrange
+    var invoker = _fixture.StartAppWithInvoker().Invoker;
 
-Ниже приведены примеры тестов с разным подходом в создании клиентов в зависимости от особенностей взаимодействия:
+    //Act
+    var callDetails = await invoker
+        .ForExpression(api => api.GetByIdAsync("42"))
+        .When2xx().ProcessResult<OrderDto>((_, _) => { })
+        .ThrowIfAnotherStatusCode()
+        .InvokeAsync();
 
-* можно создать один `api`-клиент на тестовый класс, если в каждом методе, где он используется, будет один вызов сервиса;
+    var order = await callDetails.ReadContentAsync<OrderDto>();
 
-```C#
- public class TestServerBehavior : IClassFixture<WebApplicationFactory<Startup>>
- {
-     private readonly ApiClient<ITestServer> _client;
-
-     public TestServerBehavior(
-         WebApplicationFactory<Startup> webApplicationFactory)
-     {
-         var clientProvider = new DelegateHttpClientProvider(
-             webApplicationFactory.CreateClient);
-
-         _client = new ApiClient<ITestServer>(clientProvider); 
-     }
-
-     [Fact]
-     public async Task ShouldReturnPayload()
-     {
-         //Arrange
-
-         //Act 
-         var result = await _client.Request(s => s.Get()).GetResultAsync();
-
-         //Assert
-         Assert.NotNull(result);
-     }
-
-     [Api("test/resource")]
-     interface ITestServer
-     {
-         [Get]
-         Task<string> Get();
-     }
- }
+    //Assert
+    Assert.True(callDetails.IsOK);
+    Assert.Equal(HttpStatusCode.OK, callDetails.StatusCode);
+    Assert.NotNull(order);
+}
 ```
 
-+ можно создать `HttpClient` в тестовом методе, если будут многократные запросы к сервису.
+### Дополнительные возможности fixture
 
-```C#
-public class TestServerBehavior : IClassFixture<WebApplicationFactory<Startup>>
- {
-     private readonly WebApplicationFactory<Startup> _webApplicationFactory;
+- `ServiceOverrider` / параметр `serviceOverrider` — подмена сервисов тестового приложения;
+- `HttpClientTuner` / параметр `httpClientTuner` — дополнительная настройка `HttpClient`;
+- `StartAppWithProxy()` возвращает `ProxyTestApiAsset<TContract>` (`Proxy`, `HttpClient`, `ServiceProvider`);
+- `StartAppWithInvoker()` возвращает `InvokerTestApiAsset<TContract>` (`Invoker`, `HttpClient`, `ServiceProvider`).
 
-     public TestServerBehavior(
-         WebApplicationFactory<Startup> webApplicationFactory)
-     {
-         _webApplicationFactory = webApplicationFactory;
-     }
+Пример с подменой сервисов:
 
-     [Fact]
-     public async Task ShouldReturnPayload()
-     {
-         //Arrange
-         var clProvider = new SingleHttpClientProvider(
-             _webApplicationFactory.CreateClient());
-         var client = new ApiClient<ITestServer>(clProvider);
+```csharp
+var asset = _fixture.StartAppWithProxy(services =>
+{
+    services.AddSingleton<IOrdersRepository, FakeOrdersRepository>();
+});
 
-         //Act
-         await client.Request(s => s.Post("foo")).GetResultAsync();
-         var result = await client.Request(s => s.Get()).GetResultAsync();
-
-         //Assert
-         Assert.Equal("foo", result);
-     }
-
-     [Api("test/resource")]
-     interface ITestServer
-     {
-         [Post]
-         Task Post([StringContent]string str);
-         [Get]
-         Task<string> Get();
-     }
- }
+var order = await asset.Proxy.GetByIdAsync("42");
 ```
-
