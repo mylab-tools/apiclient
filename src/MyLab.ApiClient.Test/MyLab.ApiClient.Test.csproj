@@ -4,7 +4,31 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Version>4.0.0</Version>
+    <Authors>Andrey O.</Authors>
+    <Description>.NET library for integrating MyLab.ApiClient mechanisms into xUnit tests.</Description>
+    <Copyright>Copyright (c) 2026 Andrey Osintsev &lt;ozzy.ext@gmail.com&gt;</Copyright>
+    <PackageProjectUrl>https://github.com/ozzy-ext-mylab/apiclient</PackageProjectUrl>
+    <PackageIcon>tools.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/ozzy-ext-mylab/apiclient.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>http;api;xunit </PackageTags>
+    <AssemblyVersion>4.0.0.1510</AssemblyVersion>
+    <FileVersion>4.0.0.1510</FileVersion>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.13" />
@@ -14,6 +38,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MyLab.ApiClient\MyLab.ApiClient.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="tools.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

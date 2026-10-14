@@ -9,10 +9,10 @@
     <RepositoryUrl>https://github.com/ozzy-ext-mylab/apiclient.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>4.0.0.0000</AssemblyVersion>
-    <FileVersion>4.0.0.0000</FileVersion>
-    <Description>Provides an object model for working with the HTTP API. Provides transparent integration with .NET Core</Description>
-    <PackageTags>http api</PackageTags>
+    <AssemblyVersion>4.0.0.1510</AssemblyVersion>
+    <FileVersion>4.0.0.1510</FileVersion>
+    <Description>.NET library for declarative description of HTTP API contracts and calling remote services via a type‑safe .NET interface.</Description>
+    <PackageTags>http;api;fluent</PackageTags>
     <PackageIcon>tools.png</PackageIcon>
     <PackageIconUrl />
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
