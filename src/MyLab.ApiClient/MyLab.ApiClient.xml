@@ -60,6 +60,121 @@
             Integrates ApiClient for default HttpClient
             </summary>
         </member>
+        <member name="T:MyLab.ApiClient.ApiAttribute">
+            <summary>
+            Legacy contract attribute from MyLab.ApiClient 3.x.
+            Prefer <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute"/> with <see cref="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute.Binding"/>.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ApiAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiAttribute"/>.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ApiAttribute.Key">
+            <summary>
+            Legacy alias of <see cref="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute.Binding"/>.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ExpectedCodeAttribute">
+            <summary>
+            Legacy expected HTTP status attribute from MyLab.ApiClient 3.x.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ExpectedCodeAttribute.ExpectedCode">
+            <summary>
+            Gets the expected HTTP status code.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ExpectedCodeAttribute.#ctor(System.Net.HttpStatusCode)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ExpectedCodeAttribute"/>.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.GetAttribute">
+            <summary>Legacy GET method attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.GetAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.GetAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.PostAttribute">
+            <summary>Legacy POST method attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.PostAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PostAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.PutAttribute">
+            <summary>Legacy PUT method attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.PutAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PutAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.PatchAttribute">
+            <summary>Legacy PATCH method attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.PatchAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PatchAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.DeleteAttribute">
+            <summary>Legacy DELETE method attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.DeleteAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.DeleteAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.HeadAttribute">
+            <summary>Legacy HEAD method attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.HeadAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.HeadAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.PathAttribute">
+            <summary>Legacy path parameter attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.PathAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.PathAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.QueryAttribute">
+            <summary>Legacy query parameter attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.QueryAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.QueryAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.HeaderAttribute">
+            <summary>Legacy header parameter attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.HeaderAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.HeaderCollectionAttribute">
+            <summary>Legacy header-collection parameter attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.JsonContentAttribute">
+            <summary>Legacy JSON content attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.XmlContentAttribute">
+            <summary>Legacy XML content attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.StringContentAttribute">
+            <summary>Legacy string content attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.BinContentAttribute">
+            <summary>Legacy binary content attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.BinContentAttribute.#ctor">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute.#ctor"/>
+        </member>
+        <member name="M:MyLab.ApiClient.BinContentAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.FormContentAttribute">
+            <summary>Legacy URL-form content attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.MultipartContentAttribute">
+            <summary>Legacy multipart content attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.UrlFormItemAttribute">
+            <summary>Legacy URL-form item attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
         <member name="T:MyLab.ApiClient.ConfigServiceCollectionExtensions">
             <summary>
             Provides extension methods for configuring API client options in an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
@@ -164,26 +279,6 @@
         <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClients(System.Action{MyLab.ApiClient.Options.ApiClientOptions})">
             <summary>
             Configures ApiClient factoring
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiAttribute">
-            <summary>
-            Obsolete
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiAttribute.Url">
-            <summary>
-            Base service URL
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiAttribute.Key">
-            <summary>
-            Determine key to bind with configuration
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiAttribute"/>
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute">

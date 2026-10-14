@@ -34,10 +34,10 @@ namespace MyLab.ApiClient.Tools
                     case UrlParameterAttribute urlA:
                         allParams.Add(new UrlParameterModel(i, urlA.Name ?? p.Name!, urlA.UrlModifier) { Settings = settings });
                         break;
-                    case HeaderAttribute hdrA:
+                    case Contracts.Attributes.ForParameters.HeaderAttribute hdrA:
                         allParams.Add(new HeaderParameterModel(i, hdrA.Name ?? p.Name!) { Settings = settings });
                         break;
-                    case HeaderCollectionAttribute:
+                    case Contracts.Attributes.ForParameters.HeaderCollectionAttribute:
                         allParams.Add(new HeaderCollectionParameterModel(i) { Settings = settings });
                         break;
                     case ContentParameterAttribute contA:

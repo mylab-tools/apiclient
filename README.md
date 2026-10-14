@@ -1125,3 +1125,158 @@ var asset = _fixture.StartAppWithProxy(services =>
 
 var order = await asset.Proxy.GetByIdAsync("42");
 ```
+
+## ApiClient v3
+
+Раздел для проектов, которые уже используют MyLab.ApiClient 3.x и переходят на 4.x, либо продолжают опираться на ранее собранные контракты v3.
+
+### Переход v3 -> v4
+
+#### Разметка контракта
+
+В v4 атрибуты контракта перенесены в пространства имён `MyLab.ApiClient.Contracts.Attributes.*`. Рекомендуемый путь — переписать разметку на новые типы:
+
+| v3 | v4 |
+| --- | --- |
+| `[Api(...)]` / `ApiAttribute` | `[ApiContract(...)]` / `ApiContractAttribute` |
+| `ApiAttribute.Key` | `ApiContractAttribute.Binding` |
+| `[Get]`, `[Post]`, … | те же имена в `Contracts.Attributes.ForMethod` |
+| `[Path]`, `[Query]`, `[Header]`, `[JsonContent]`, … | те же имена в `Contracts.Attributes.ForParameters` |
+
+Пример до / после:
+
+```csharp
+// v3
+using MyLab.ApiClient;
+
+[Api(Key = "orders", Url = "v1")]
+public interface IOrdersApi
+{
+    [Get("items/{id}")]
+    Task<OrderDto> GetAsync([Path] string id, [Query] int? take);
+}
+
+// v4
+using MyLab.ApiClient.Contracts.Attributes.ForContract;
+using MyLab.ApiClient.Contracts.Attributes.ForMethod;
+using MyLab.ApiClient.Contracts.Attributes.ForParameters;
+
+[ApiContract(Binding = "orders", Url = "v1")]
+public interface IOrdersApi
+{
+    [Get("items/{id}")]
+    Task<OrderDto> GetAsync([Path] string id, [Query] int? take);
+}
+```
+
+`ApiAttribute` и остальные типы в корневом пространстве имён `MyLab.ApiClient` в v4 помечены как устаревшие (soft-Obsolete): исходники на старой разметке ещё компилируются с предупреждением, но для нового кода предпочтительны атрибуты из `Contracts.Attributes`.
+
+#### Инъекция в приложение
+
+В v3 регистрация шла через registrar и пакетные методы:
+
+```csharp
+// v3
+services.AddApiClients(r =>
+{
+    r.RegisterContract<IOrdersApi>();
+});
+services.ConfigureApiClients(Configuration);
+```
+
+В v4 каждый контракт регистрируется явно; старые `AddApiClients` / `AddOptionalApiClients` / `AddScopedApiClients` помечены Obsolete с ошибкой компиляции и не работают:
+
+```csharp
+// v4
+services
+    .AddApiClient<IOrdersApi>()
+    .ConfigureApiClient(Configuration);
+
+// Scoped:
+services.AddApiClientScoped<IOrdersApi>();
+```
+
+Что меняется по смыслу:
+
+* вместо `RegisterContract<T>()` внутри callback - цепочка `AddApiClient<T>()` / `AddApiClientScoped<T>()`;
+* `ConfigureApiClients` -> `ConfigureApiClient` (без "s");
+* вместе с контрактом регистрируются proxy (`TContract`), `IApiClientInvoker<TContract>` и `IApiClientAccessor<TContract>`;
+* для необязательных endpoint-ов используйте `AddApiClient<T>(optional: true)` и безопасную инъекцию через `IApiClientAccessor<T>` (см. раздел [Безопасная инъекция](#безопасная-инъекция)).
+
+#### Конфигурирование
+
+В v3 конечные точки лежали в секции `Api:List`, опции соединения - в `ApiConnectionOptions`:
+
+```json
+{
+  "Api": {
+    "List": {
+      "orders": { "Url": "https://example.org/api/orders/" },
+      "ICatalogApi": { "Url": "https://example.org/api/catalog/" }
+    }
+  }
+}
+```
+
+В v4 структура плоская: ключи endpoint-ов — прямо в секции `Api` (или вложенный объект `Endpoints` с расширенными настройками). Ключ привязки по-прежнему берётся из имени интерфейса, полного имени типа или `Binding` / устаревшего `Key`:
+
+```json
+{
+  "Api": {
+    "orders": "https://example.org/api/orders/",
+    "ICatalogApi": "https://example.org/api/catalog/"
+  }
+}
+```
+
+Или развёрнуто:
+
+```json
+{
+  "Api": {
+    "Endpoints": {
+      "orders": {
+        "Url": "https://example.org/api/orders/",
+        "SkipServerSslCertVerification": false
+      }
+    }
+  }
+}
+```
+
+Важно: конфигурация вида `Api:List:...` из v3 **не читается** как раньше. При миграции перенесите записи из `List` на верхний уровень секции `Api` (или в `Endpoints`) и замените `ConfigureApiClients` на `ConfigureApiClient`. Подробности формата - в разделе [Конфигурирование](#конфигурирование).
+
+### Обратная совместимость с v3
+
+#### Готовые сборки контрактов
+
+Приложение на MyLab.ApiClient **v4** может использовать уже скомпилированные DLL контрактов, которые ссылались на MyLab.ApiClient **v3**, без пересборки этих контрактов.
+
+Это работает за счёт type unification: в v4 в пространстве имён `MyLab.ApiClient` сохранены типы атрибутов с теми же полными именами (`ApiAttribute`, `GetAttribute`, `PathAttribute`, …). Атрибуты-наследники v4-баз, поэтому runtime-разбор контракта (`ServiceModel`, привязка endpoint-ов) видит разметку v3 так же, как нативную v4.
+
+Условия:
+
+* в процессе приложения загружена одна сборка `MyLab.ApiClient` — версия **4.x** (пакет v3 в выходной каталог не копировать);
+* контрактная DLL ссылается на `MyLab.ApiClient` только как на assembly с атрибутами (типичный сценарий отдельных «contracts»-проектов).
+
+#### Разметка
+
+Совместимы по смыслу:
+
+* `[Api]` / `Key` / `Url` на интерфейсе — `Key` отображается в `Binding`;
+* HTTP-методы `[Get]`, `[Post]`, `[Put]`, `[Patch]`, `[Delete]`, `[Head]`;
+* параметры `[Path]`, `[Query]`, `[Header]`, `[HeaderCollection]`, `[JsonContent]`, `[XmlContent]`, `[StringContent]`, `[BinContent]`, `[FormContent]`, `[MultipartContent]`;
+* `[UrlFormItem]` на свойствах form-моделей;
+* `[ExpectedCode]` присутствует для загрузки атрибута из старых сборок (отдельного runtime-поведения в v4 у него нет).
+
+Новые контракты лучше описывать атрибутами из `MyLab.ApiClient.Contracts.Attributes.*`. Старые имена в корне `MyLab.ApiClient` оставлены для unification и постепенной миграции исходников.
+
+#### Инъекция и конфигурация — несовместимы
+
+Обратная совместимость **не распространяется** на DI и настройки приложения:
+
+* `AddApiClients`, `RegisterContract`, `ConfigureApiClients`, `IApiClientFactory` и связанный registrar API v3 в v4 не поддерживаются (методы registration помечены Obsolete с ошибкой компиляции);
+* схема `Api:List` и модель `ApiConnectionOptions` / `List` не являются форматом v4;
+* host-приложение нужно перевести на `AddApiClient<T>` / `ConfigureApiClient` и актуальную структуру `appsettings`, даже если сами интерфейсы контрактов остаются в старых DLL.
+
+Итого: **разметку контрактов** (в том числе уже собранные assemblies) можно продолжать использовать; **точку входа приложения** (регистрация в DI и конфигурация endpoint-ов) необходимо мигрировать на API v4.

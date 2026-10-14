@@ -21,7 +21,7 @@ class UrlFormHttpContentFactory : IHttpContentFactory
 
             foreach (var prop in props)
             {
-                var formItemAttr = prop.GetCustomAttribute<UrlFormItemAttribute>();
+                var formItemAttr = prop.GetCustomAttribute<Contracts.Attributes.ForData.UrlFormItemAttribute>();
 
                 string name = formItemAttr?.Name ?? prop.Name;
 
