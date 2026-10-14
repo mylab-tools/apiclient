@@ -37,7 +37,7 @@ public interface IOrdersApi
 
 ```json
 {
-  "Api": {
+  "ApiClient": {
     "IOrdersApi": "https://example.org/api/orders"
   }
 }
@@ -85,7 +85,7 @@ public interface IOrdersApiV1
 //appsettings.json
 //
 //{
-//  "Api": {
+//  "ApiClient": {
 //    "orders": "https://example.org/api/orders"
 //  }
 //}
@@ -521,7 +521,7 @@ public interface IService
 
 ## Конфигурирование
 
-Клиент сопоставляется с настройками конечной точки по ключу привязки. Ключ ищется в секции `Api` (имя по умолчанию, `ApiClientOptions.DefaultSectionName`).
+Клиент сопоставляется с настройками конечной точки по ключу привязки. Ключ ищется в секции `ApiClient` (имя по умолчанию, `ApiClientOptions.DefaultSectionName`).
 
 ### Привязка к конфигурации
 
@@ -544,7 +544,7 @@ public interface IOrdersApi
 
 ```json
 {
-  "Api": {
+  "ApiClient": {
     "IOrdersApi": "https://example.org/api/orders/"
   }
 }
@@ -563,7 +563,7 @@ public interface IOrdersApi
 
 ```json
 {
-  "Api": {
+  "ApiClient": {
     "MyApp.Clients.IOrdersApi": "https://example.org/api/orders/"
   }
 }
@@ -581,7 +581,7 @@ public interface IOrdersApi
 
 ```json
 {
-  "Api": {
+  "ApiClient": {
     "orders": "https://example.org/api/orders/"
   }
 }
@@ -593,7 +593,7 @@ public interface IOrdersApi
 
 ```json
 {
-  "Api": {
+  "ApiClient": {
     "UrlFormSettings": {
       "EscapeSymbols": true,
       "IgnoreNullValues": true
@@ -616,7 +616,7 @@ public interface IOrdersApi
 
 ```json
 {
-  "Api": {
+  "ApiClient": {
     "orders": "https://example.org/api/orders/",
     "ICatalogApi": "https://example.org/api/catalog/"
   }
@@ -640,7 +640,7 @@ services.ConfigureApiClient(Configuration, "MyApi");
 
 ### Свободная конфигурация конечной точки
 
-Если настройки конечной точки лежат вне общей секции `Api`, их можно привязать отдельно:
+Если настройки конечной точки лежат вне общей секции `ApiClient`, их можно привязать отдельно:
 
 ```csharp
 // по ключу привязки
@@ -678,7 +678,7 @@ services.ConfigureApiClientEndpoint<IOrdersApi>(
 
 ```json
 {
-  "Api": {
+  "ApiClient": {
     "UrlFormSettings": {
       "EscapeSymbols": true,
       "IgnoreNullValues": false
@@ -1218,11 +1218,11 @@ services.AddApiClientScoped<IOrdersApi>();
 }
 ```
 
-В v4 структура плоская: ключи endpoint-ов — прямо в секции `Api` (или вложенный объект `Endpoints` с расширенными настройками). Ключ привязки по-прежнему берётся из имени интерфейса, полного имени типа или `Binding` / устаревшего `Key`:
+В v4 корневая секция — `ApiClient`, структура плоская: ключи endpoint-ов — прямо в этой секции (или во вложенном объекте `Endpoints` с расширенными настройками). Ключ привязки по-прежнему берётся из имени интерфейса, полного имени типа или `Binding` / устаревшего `Key`:
 
 ```json
 {
-  "Api": {
+  "ApiClient": {
     "orders": "https://example.org/api/orders/",
     "ICatalogApi": "https://example.org/api/catalog/"
   }
@@ -1233,7 +1233,7 @@ services.AddApiClientScoped<IOrdersApi>();
 
 ```json
 {
-  "Api": {
+  "ApiClient": {
     "Endpoints": {
       "orders": {
         "Url": "https://example.org/api/orders/",
@@ -1244,7 +1244,7 @@ services.AddApiClientScoped<IOrdersApi>();
 }
 ```
 
-Важно: конфигурация вида `Api:List:...` из v3 **не читается** как раньше. При миграции перенесите записи из `List` на верхний уровень секции `Api` (или в `Endpoints`) и замените `ConfigureApiClients` на `ConfigureApiClient`. Подробности формата - в разделе [Конфигурирование](#конфигурирование).
+Важно: конфигурация вида `Api:List:...` из v3 **не читается** как раньше. При миграции перенесите записи из `List` в секцию `ApiClient` (на верхний уровень или в `Endpoints`) и замените `ConfigureApiClients` на `ConfigureApiClient`. Подробности формата - в разделе [Конфигурирование](#конфигурирование).
 
 ### Обратная совместимость с v3
 
@@ -1271,7 +1271,7 @@ services.AddApiClientScoped<IOrdersApi>();
 
 Новые контракты лучше описывать атрибутами из `MyLab.ApiClient.Contracts.Attributes.*`. Старые имена в корне `MyLab.ApiClient` оставлены для unification и постепенной миграции исходников.
 
-#### Инъекция и конфигурация — несовместимы
+#### Инъекция и конфигурация - несовместимы
 
 Обратная совместимость **не распространяется** на DI и настройки приложения:
 

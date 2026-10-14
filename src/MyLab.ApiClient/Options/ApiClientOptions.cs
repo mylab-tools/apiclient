@@ -16,7 +16,7 @@ public class ApiClientOptions
     /// <summary>
     /// Default configuration section name
     /// </summary>
-    public const string DefaultSectionName = "Api";
+    public const string DefaultSectionName = "ApiClient";
     
     /// <summary>
     /// List of api connections options

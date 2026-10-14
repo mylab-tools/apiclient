@@ -34,7 +34,7 @@ public class ConfigServiceCollectionExtensionsBehavior
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new[]
             {
-                new KeyValuePair<string, string>("Api:Endpoints:foo:Url", "http://foo.com")
+                new KeyValuePair<string, string>("ApiClient:Endpoints:foo:Url", "http://foo.com")
             })
             .Build();
 
