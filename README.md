@@ -1053,14 +1053,14 @@ services
 ```csharp
 public class OrdersApiBehavior : IClassFixture<TestApiFixture<Program, IOrdersApi>>
 {
-    readonly TestApiFixture<Program, IOrdersApi> _fixture;
+    readonly TestApiFixture<Program, IOrdersApi> _fxt;
 
     public OrdersApiBehavior(
         TestApiFixture<Program, IOrdersApi> fixture,
         ITestOutputHelper output)
     {
-        _fixture = fixture;
-        _fixture.Output = output; // опционально: логи запросов/ответов в вывод теста
+        _fxt = fixture;
+        _fxt.Output = output; // опционально: логи запросов/ответов в вывод теста
     }
 }
 ```
@@ -1072,10 +1072,10 @@ public class OrdersApiBehavior : IClassFixture<TestApiFixture<Program, IOrdersAp
 public async Task ShouldReturnOrder()
 {
     //Arrange
-    var api = _fixture.StartAppWithProxy().Proxy;
+    using var asset = _fxt.StartAppWithProxy();
 
     //Act
-    var order = await api.GetByIdAsync("42");
+    var order = await asset.Proxy.GetByIdAsync("42");
 
     //Assert
     Assert.NotNull(order);
@@ -1090,10 +1090,10 @@ public async Task ShouldReturnOrder()
 public async Task ShouldReturnOrderWithDetails()
 {
     //Arrange
-    var invoker = _fixture.StartAppWithInvoker().Invoker;
+    using var asset = _fxt.StartAppWithInvoker();
 
     //Act
-    var callDetails = await invoker
+    var callDetails = await asset.Invoker
         .ForExpression(api => api.GetByIdAsync("42"))
         .When2xx().ProcessResult<OrderDto>((_, _) => { })
         .ThrowIfAnotherStatusCode()

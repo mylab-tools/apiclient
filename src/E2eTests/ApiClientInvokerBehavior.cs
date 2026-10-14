@@ -1,27 +1,27 @@
 ﻿using AutoFixture.Xunit3;
 using MyLab.ApiClient.Test;
-using MyLab.ApiClient.Usage.Invocation;
 using TestServer;
 
 namespace E2eTests;
 
 public class ApiClientInvokerBehavior : IClassFixture<TestApiFixture<Program, ITestServerContract>>
 {
-    readonly IApiClientInvoker<ITestServerContract> _invoker;
+    readonly TestApiFixture<Program, ITestServerContract> _fxt;
 
     public ApiClientInvokerBehavior(TestApiFixture<Program, ITestServerContract> apiFxt, ITestOutputHelper output)
     {
-        apiFxt.Output = output;
-        _invoker = apiFxt.StartAppWithInvoker().Invoker;
+        _fxt = apiFxt;
+        _fxt.Output = output;
     }
 
     [Theory, AutoData]
     public async Task ShouldTransferJsonPayload(TestDto initial)
     {
         //Arrange
+        using var asset = _fxt.StartAppWithInvoker();
 
         //Act
-        var callDetails = await _invoker
+        var callDetails = await asset.Invoker
             .ForExpression(c => c.GetJsonDto(initial))
             .InvokeAsync(TestContext.Current.CancellationToken);
 
@@ -35,9 +35,10 @@ public class ApiClientInvokerBehavior : IClassFixture<TestApiFixture<Program, IT
     public async Task ShouldTransferXmlPayload(TestDto initial)
     {
         //Arrange
+        using var asset = _fxt.StartAppWithInvoker();
 
         //Act
-        var callDetails = await _invoker
+        var callDetails = await asset.Invoker
             .ForExpression(c => c.GetXmlDto(initial))
             .InvokeAsync(TestContext.Current.CancellationToken);
 

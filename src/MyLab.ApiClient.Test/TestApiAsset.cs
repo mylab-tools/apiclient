@@ -3,7 +3,7 @@
 /// <summary>
 /// Contains tools to operate with test API
 /// </summary>
-public class TestApiAsset
+public class TestApiAsset : IDisposable
 {
     /// <summary>
     /// Application service provider
@@ -13,4 +13,9 @@ public class TestApiAsset
     /// An <see cref="HttpClient"/> which will be used for interaction with API
     /// </summary>
     public required HttpClient HttpClient { get; init; }
+
+    public void Dispose()
+    {
+        HttpClient.Dispose();
+    }
 }

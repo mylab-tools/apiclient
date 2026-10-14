@@ -71,7 +71,7 @@ public class TestApiFixture<TStartup, TContract> : IDisposable
 
         var invoker = ApiClientInvokerFactory.FromContract<TContract>(testRequestProcessor, opts);
 
-        return new InvokerTestApiAsset<TContract>()
+        return new InvokerTestApiAsset<TContract>
         {
             Invoker = invoker,
             HttpClient = innerHttpClient,
@@ -109,7 +109,7 @@ public class TestApiFixture<TStartup, TContract> : IDisposable
 
         var proxy = ApiClientProxy.CreateForContract<TContract>(testRequestProcessor, opts);
 
-        return new ProxyTestApiAsset<TContract>()
+        return new ProxyTestApiAsset<TContract>
         {
             Proxy = proxy,
             HttpClient = innerHttpClient,
@@ -120,6 +120,6 @@ public class TestApiFixture<TStartup, TContract> : IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
-        _appFactory?.Dispose();
+        _appFactory.Dispose();
     }
 }
