@@ -27,8 +27,6 @@ namespace UnitTests.Contracts.Models
             Assert.NotNull(desc);
             Assert.Equal(IApiContract.PostUrl, desc.Url);
             Assert.Equal(HttpMethod.Post, desc.HttpMethod);
-            Assert.NotNull(desc.ExpectedStatusCodes);
-            Assert.Contains(HttpStatusCode.BadRequest, desc.ExpectedStatusCodes);
             Assert.NotNull(desc.Parameters);
             Assert.Single(desc.Parameters);
             Assert.Contains(desc.Parameters, p => p is UrlParameterModel { Name: "urlParam", Position:0 });
@@ -57,7 +55,6 @@ namespace UnitTests.Contracts.Models
             void MethodWithoutApiMethodAttribute();
 
             [Post(PostUrl)]
-            [ExpectedResponse(HttpStatusCode.BadRequest)]
             void Method([Path] string urlParam);
         }
     }

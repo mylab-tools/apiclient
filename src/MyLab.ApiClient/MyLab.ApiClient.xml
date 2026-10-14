@@ -241,21 +241,6 @@
             Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.DeleteAttribute"/>
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.ExpectedResponseAttribute">
-            <summary>
-            Defines expected response parameters
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForMethod.ExpectedResponseAttribute.ExpectedCode">
-            <summary>
-            Gets expected response code
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.ExpectedResponseAttribute.#ctor(System.Net.HttpStatusCode)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.ExpectedResponseAttribute"/>
-            </summary>
-        </member>
         <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.GetAttribute">
             <summary>
             Determines that the method corresponds to the GET HTTP method
@@ -503,11 +488,6 @@
         <member name="P:MyLab.ApiClient.Contracts.Models.EndpointModel.HttpMethod">
             <summary>
             Gets the HTTP method used by the endpoint (e.g., GET, POST, PUT, DELETE).
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointModel.ExpectedStatusCodes">
-            <summary>
-            Gets the list of HTTP status codes that are expected as valid responses for the endpoint.
             </summary>
         </member>
         <member name="P:MyLab.ApiClient.Contracts.Models.EndpointModel.Parameters">

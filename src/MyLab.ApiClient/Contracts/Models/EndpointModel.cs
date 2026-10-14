@@ -24,12 +24,6 @@ class EndpointModel
     /// Gets the HTTP method used by the endpoint (e.g., GET, POST, PUT, DELETE).
     /// </summary>
     public HttpMethod HttpMethod { get; }
-
-    /// <summary>
-    /// Gets the list of HTTP status codes that are expected as valid responses for the endpoint.
-    /// </summary>
-    //todo: Вероятно вообще такое понятие исключить
-    public IReadOnlyList<HttpStatusCode>? ExpectedStatusCodes { get; set; }
         
     /// <summary>
     /// Gets endpoint request parameters
@@ -62,15 +56,7 @@ class EndpointModel
 
         return new EndpointModel(httpMethodAttr.HttpMethod, parameters.ToArray())
         {
-            Url = httpMethodAttr.Url,
-            ExpectedStatusCodes = GetExpectedStatusCodes(mi)
+            Url = httpMethodAttr.Url
         };
-    }
-
-    static IReadOnlyList<HttpStatusCode> GetExpectedStatusCodes(MethodInfo mi)
-    {
-        return mi.GetCustomAttributes<ExpectedResponseAttribute>()
-            .Select(a => a.ExpectedCode)
-            .ToList();
     }
 }
