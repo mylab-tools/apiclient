@@ -45,7 +45,7 @@ public class SingleHttpClientProvider : IHttpClientProvider
     /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="httpClientFactory"/> or <paramref name="serviceName"/> is <c>null</c>.
     /// </exception>
-    public static SingleHttpClientProvider CrateFromHttpClientFactory
+    public static SingleHttpClientProvider CreateFromHttpClientFactory
     (
         IHttpClientFactory httpClientFactory,
         string serviceName

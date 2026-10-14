@@ -687,7 +687,7 @@
         <member name="M:MyLab.ApiClient.DI.SingleHttpClientProvider.Provide">
             <inheritdoc />
         </member>
-        <member name="M:MyLab.ApiClient.DI.SingleHttpClientProvider.CrateFromHttpClientFactory(System.Net.Http.IHttpClientFactory,System.String)">
+        <member name="M:MyLab.ApiClient.DI.SingleHttpClientProvider.CreateFromHttpClientFactory(System.Net.Http.IHttpClientFactory,System.String)">
             <summary>
             Creates a new instance of <see cref="T:MyLab.ApiClient.DI.SingleHttpClientProvider"/> using the specified
             <see cref="T:System.Net.Http.IHttpClientFactory"/> and service name.
