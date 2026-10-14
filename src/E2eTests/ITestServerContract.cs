@@ -13,7 +13,7 @@ namespace E2eTests
         Task GetStatusAsync([StringContent] HttpStatusCode codeForReceive);
 
         [Post("dto/xml")]
-        Task<TestDto> GetXmlDto([JsonContent]TestDto dto);
+        Task<TestDto> GetXmlDto([XmlContent]TestDto dto);
         
         [Post("dto/json")]
         Task<TestDto> GetJsonDto([JsonContent] TestDto dto);

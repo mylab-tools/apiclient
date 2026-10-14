@@ -20,9 +20,15 @@ public class TestController : ControllerBase
     }
 
     [HttpPost("dto/xml")]
-    public IActionResult GetXmlDto(TestDto dto)
+    public async Task<IActionResult> GetXmlDto()
     {
         var s = new XmlSerializer(typeof(TestDto));
+
+        var rdr = new StreamReader(Request.Body);
+        var xmlStr = await rdr.ReadToEndAsync();
+        using var txtReader = new StringReader(xmlStr);
+        var dto = s.Deserialize(txtReader);
+        
         using var mem = new MemoryStream();
         s.Serialize(mem, dto);
         var strContent = Encoding.UTF8.GetString(mem.ToArray());
