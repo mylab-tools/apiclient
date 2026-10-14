@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace MyLab.ApiClient.Problems;
 
@@ -13,5 +14,6 @@ public class ValidationProblemDetails : ProblemDetails
     /// Gets the validation errors associated with this instance of <see cref="ValidationProblemDetails"/>.
     /// </summary>
     [JsonPropertyName("errors")]
+    [JsonProperty("errors")]
     public IDictionary<string, string[]> Errors { get; set; } = new Dictionary<string, string[]>();
 }
