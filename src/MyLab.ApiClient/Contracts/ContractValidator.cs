@@ -3,7 +3,6 @@ using MyLab.ApiClient.Contracts.Attributes.ForParameters;
 using System;
 using System.Linq;
 using System.Reflection;
-using MyLab.ApiClient.Contracts.Attributes.ForContract;
 
 namespace MyLab.ApiClient.Contracts
 {
@@ -45,6 +44,9 @@ namespace MyLab.ApiClient.Contracts
                     
                     if(apiAttr == null)
                         throw new InvalidApiContractException("All contract method parameters must be decorated with one of ApiParameterAttribute inheritors");
+
+                    apiAttr.ValidateParameter(p);
+
                 }
             }
         }
