@@ -10,6 +10,12 @@ namespace MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 
 class XmlDeserializationTools
 {
+    static readonly XmlReaderSettings SecureReaderSettings = new()
+    {
+        DtdProcessing = DtdProcessing.Prohibit,
+        XmlResolver = null
+    };
+
     public async Task<object?> ReadObjectXml(HttpContent content, Type returnType)
     {
         var contentStr = await content.ReadAsStringAsync();
@@ -23,19 +29,22 @@ class XmlDeserializationTools
 
     object? DeserializeFromXml(string str, Type returnType)
     {
-        var rootAttribute = returnType.GetTypeInfo().GetCustomAttribute<XmlRootAttribute>();
+        var rootAttribute = returnType.GetTypeInfo().GetCustomAttribute<XmlRootAttribute>()
+                            ?? new XmlRootAttribute(ReadRootElementName(str));
 
-        if (rootAttribute == null)
-        {
-            using var strReader = new StringReader(str);
-            using var xmlReader = new XmlTextReader(strReader);
-            xmlReader.MoveToContent();
-            rootAttribute = new XmlRootAttribute(xmlReader.Name);
-        }
+        var serializer = new XmlSerializer(returnType, rootAttribute);
 
-        var d = new XmlSerializer(returnType, rootAttribute);
+        using var stringReader = new StringReader(str);
+        using var xmlReader = XmlReader.Create(stringReader, SecureReaderSettings);
+        return serializer.Deserialize(xmlReader);
+    }
 
-        using var r = new StringReader(str);
-        return d.Deserialize(r);
+    static string ReadRootElementName(string xml)
+    {
+        using var stringReader = new StringReader(xml);
+        using var xmlReader = XmlReader.Create(stringReader, SecureReaderSettings);
+
+        xmlReader.MoveToContent();
+        return xmlReader.Name;
     }
 }
