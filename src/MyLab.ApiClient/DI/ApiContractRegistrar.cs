@@ -40,6 +40,9 @@ class ApiContractRegistrar<TContract> where TContract : class
 
             return ApiClientInvokerFactory.FromContract<TContract>(reqProc!, opts!);
         });
+
+        //Inject accessor (always non-null; Client/Invoker may be null when optional)
+        services.AddSingleton<IApiClientAccessor<TContract>>(CreateAccessor);
     }
 
     public void RegisterScoped(IServiceCollection services)
@@ -67,6 +70,17 @@ class ApiContractRegistrar<TContract> where TContract : class
 
             return ApiClientInvokerFactory.FromContract<TContract>(reqProc!, opts!);
         });
+
+        //Inject accessor (always non-null; Client/Invoker may be null when optional)
+        services.AddScoped<IApiClientAccessor<TContract>>(CreateAccessor);
+    }
+
+    static IApiClientAccessor<TContract> CreateAccessor(IServiceProvider serviceProvider)
+    {
+        var client = serviceProvider.GetService<TContract>();
+        var invoker = serviceProvider.GetService<IApiClientInvoker<TContract>>();
+
+        return new ApiClientAccessor<TContract>(client, invoker);
     }
 
     bool TryGetFactoringParams(IServiceProvider serviceProvider, out IRequestProcessor? reqProc, out ApiClientOptions? opts)

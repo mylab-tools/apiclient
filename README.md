@@ -11,7 +11,8 @@
 - Гибкая передача данных: `Path`, `Query`, `Header`, `JsonContent`, `FormContent`, `MultipartContent`, `BinContent`;
 - Интеграция с `IServiceCollection` и `IHttpClientFactory`;
 - Конфигурация endpoint-ов через `appsettings.json` или код;
-- Поддержка детализированного результата вызова (`CallDetails`).
+- Поддержка детализированного результата вызова (`CallDetails`);
+- Безопасная инъекция optional-клиентов через `IApiClientAccessor<TContract>`.
 
 ## Быстрый старт
 
@@ -971,6 +972,75 @@ var dumper = new HttpMessageDumper();
 string requestDump = await dumper.DumpAsync(httpRequestMessage);
 string responseDump = await dumper.DumpAsync(httpResponseMessage);
 ```
+
+## Безопасная инъекция
+
+### Проблема optional-клиентов
+
+При регистрации с `optional: true` endpoint может отсутствовать в конфигурации:
+
+```csharp
+services
+    .AddApiClient<IOrdersApi>(optional: true)
+    .ConfigureApiClient(Configuration);
+```
+
+В этом случае фабрики proxy и invoker возвращают `null`. Это удобно для `GetService<IOrdersApi>()`, но опасно при обычной constructor injection:
+
+```csharp
+// Опасно: если endpoint не настроен, api будет null → NullReferenceException при вызове
+public class OrdersService(IOrdersApi api)
+{
+    public Task<OrderDto> GetAsync(string id) => api.GetByIdAsync(id);
+}
+```
+
+Контейнер успешно создаёт сервис, а падение происходит позже, в рантайме.
+
+### Решение: `IApiClientAccessor<TContract>`
+
+`IApiClientAccessor<TContract>` — дополнительный вариант инъекции наряду с `TContract` (proxy) и `IApiClientInvoker<TContract>`. Accessor **всегда** регистрируется и **никогда не бывает `null`**:
+
+| Свойство | Когда endpoint есть | Когда endpoint отсутствует (`optional: true`) |
+|---|---|---|
+| `IsConfigured` | `true` | `false` |
+| `Client` | proxy `TContract` | `null` |
+| `Invoker` | `IApiClientInvoker<TContract>` | `null` |
+
+Пример безопасного использования:
+
+```csharp
+public class OrdersService(IApiClientAccessor<IOrdersApi> orders)
+{
+    public async Task<OrderDto?> TryGetAsync(string id)
+    {
+        if (!orders.IsConfigured)
+            return null; // API не сконфигурирован — штатная ситуация
+
+        return await orders.Client!.GetByIdAsync(id);
+    }
+
+    public async Task<CallDetails?> GetDetailedAsync(string id)
+    {
+        if (!orders.IsConfigured)
+            return null;
+
+        return await orders.Invoker!
+            .ForExpression(api => api.GetByIdAsync(id))
+            .InvokeAsync();
+    }
+}
+```
+
+Регистрация та же — accessor появляется автоматически при `AddApiClient` / `AddApiClientScoped`:
+
+```csharp
+services
+    .AddApiClient<IOrdersApi>(optional: true)
+    .ConfigureApiClient(Configuration);
+```
+
+Когда API обязателен (`optional: false`, значение по умолчанию), по-прежнему можно инжектить `IOrdersApi` или `IApiClientInvoker<IOrdersApi>` напрямую. Accessor полезен именно для сценариев, где наличие endpoint зависит от окружения или конфигурации.
 
 ## Тестирование
 

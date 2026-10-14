@@ -633,6 +633,38 @@
         <member name="M:MyLab.ApiClient.DI.FactoryHttpClientProvider.Provide">
             <inheritdoc />
         </member>
+        <member name="T:MyLab.ApiClient.DI.IApiClientAccessor`1">
+            <summary>
+            Provides safe access to an optionally configured API client and invoker.
+            </summary>
+            <typeparam name="TContract">
+            The API contract interface associated with the client.
+            </typeparam>
+            <remarks>
+            Use this abstraction when the API endpoint may be absent from configuration
+            (<c>AddApiClient&lt;TContract&gt;(optional: true)</c>). Unlike direct injection of
+            <typeparamref name="TContract"/> or <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1"/>,
+            the accessor itself is always registered and never <c>null</c>.
+            </remarks>
+        </member>
+        <member name="P:MyLab.ApiClient.DI.IApiClientAccessor`1.IsConfigured">
+            <summary>
+            Gets a value indicating whether the API endpoint is present in configuration
+            and the client was created.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.DI.IApiClientAccessor`1.Client">
+            <summary>
+            Gets the transparent proxy for <typeparamref name="TContract"/>,
+            or <c>null</c> when the endpoint is not configured.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.DI.IApiClientAccessor`1.Invoker">
+            <summary>
+            Gets the detailed invoker for <typeparamref name="TContract"/>,
+            or <c>null</c> when the endpoint is not configured.
+            </summary>
+        </member>
         <member name="T:MyLab.ApiClient.DI.IApiContractRegistrar">
             <summary>
             Registers api contract 
