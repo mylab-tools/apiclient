@@ -1,22 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>3.21.35</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>4.0.0</Version>
     <Authors>Andrey O.</Authors>
     <Copyright>Copyright (c) 2026 Andrey Osintsev &lt;ozzy.ext@gmail.com&gt;</Copyright>
     <PackageProjectUrl>https://github.com/ozzy-ext-mylab/apiclient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ozzy-ext-mylab/apiclient.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>3.21.35.2603</AssemblyVersion>
-    <FileVersion>3.21.35.2603</FileVersion>
-    <Description>Provides an object model for working with the HTTP API. Provides transparent integration with .NET Core</Description>
-    <PackageTags>http api</PackageTags>
+    <AssemblyVersion>4.0.0.1510</AssemblyVersion>
+    <FileVersion>4.0.0.1510</FileVersion>
+    <Description>.NET library for declarative description of HTTP API contracts and calling remote services via a type‑safe .NET interface.</Description>
+    <PackageTags>http;api;fluent</PackageTags>
     <PackageIcon>tools.png</PackageIcon>
     <PackageIconUrl />
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -28,12 +29,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.3" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.3" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.3" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.13" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.13" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.13" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.13" />
     <PackageReference Include="MyLab.ExpressionTools" Version="1.0.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup>

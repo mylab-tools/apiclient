@@ -135,8 +135,10 @@ DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
 
-# Click-Once directory
-publish/
+# Click-Once / local publish outputs — keep NuGet scripts in /publish
+/publish/*
+!/publish/.gitignore
+!/publish/*.bat
 
 # Publish Web Output
 *.[Pp]ublish.xml

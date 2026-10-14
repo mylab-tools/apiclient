@@ -1,0 +1,181 @@
+﻿using JetBrains.Annotations;
+using MyLab.ApiClient.Usage.Invocation;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace UnitTests.Usage.Invocation
+{
+    [TestSubject(typeof(ApiClientInvoker<>))]
+    public partial class ApiClientInvokerBehavior
+    {
+        [Fact]
+        public async Task ShouldSendRequest()
+        {
+            //Arrange
+            var reqProc = TestTools.CreateReqProcMock
+                (
+                    TestTools.CreateOkResponse()
+                );
+
+            var invoker = ApiClientInvokerFactory.FromContract<IContract>(reqProc.Object, TestTools.DefaultOptions);
+
+            //Act
+            var callDetails = await invoker
+                .ForExpression(c => c.GetAsync())
+                .InvokeAsync(TestContext.Current.CancellationToken);
+            
+            //Assert
+            TestTools.VerifyRequestUrl(reqProc, "get");
+
+            Assert.NotNull(callDetails);
+            Assert.Equal(HttpStatusCode.OK, callDetails.StatusCode);
+            Assert.Equal(HttpMethod.Get, callDetails.RequestMessage.Method);
+        }
+
+        [Fact]
+        public async Task ShouldTransferContent()
+        {
+            //Arrange
+            var reqProc = TestTools.CreateReqProcMock
+            (
+                TestTools.CreateOkResponse("foo")
+            );
+
+            var invoker = ApiClientInvokerFactory.FromContract<IContract>(reqProc.Object, TestTools.DefaultOptions);
+
+            //Act
+
+            var callDetails = await invoker
+                .ForExpression(c => c.EchoAsync("foo"))
+                .InvokeAsync(TestContext.Current.CancellationToken);
+
+            var result = await callDetails.ReadContentAsync<string>();
+            
+            //Assert
+            TestTools.VerifyRequestUrl(reqProc, "echo");
+            TestTools.VerifyRequestContent(reqProc, "foo");
+
+            Assert.NotNull(callDetails);
+            Assert.Equal(HttpStatusCode.OK, callDetails.StatusCode);
+            Assert.Equal(HttpMethod.Post, callDetails.RequestMessage.Method);
+            Assert.Equal("foo", result);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetHandlersCases))]
+        public async Task ShouldSupportFluentHandlers(
+            HttpResponseMessage response, 
+            string expectedResultContent,
+            HttpStatusCode expectedStatusCode
+            )
+        {
+            //Arrange
+            var reqProc = TestTools.CreateReqProcMock(response);
+            var invoker = ApiClientInvokerFactory.FromContract<IContract>(reqProc.Object, TestTools.DefaultOptions);
+
+            string? actualResult = null;
+            HttpStatusCode actualStatusCode = default;
+
+            //Act
+            var callDetails = await invoker
+                .ForExpression(c => c.EchoAsync("foo"))
+                .When2xx().ProcessResult<string>((res, code) =>
+                {
+                    actualResult = res;
+                    actualStatusCode = code;
+                })
+                .When4xx().ProcessStatusCode(code =>
+                {
+                    actualStatusCode = code;
+                })
+                .InvokeAsync(TestContext.Current.CancellationToken);
+
+            //Assert
+            TestTools.VerifyRequestUrl(reqProc, "echo");
+            TestTools.VerifyRequestContent(reqProc, "foo");
+
+            Assert.NotNull(callDetails);
+            Assert.Equal(expectedStatusCode, callDetails.StatusCode);
+            Assert.Equal(HttpMethod.Post, callDetails.RequestMessage.Method);
+            Assert.Equal(expectedResultContent, actualResult);
+            Assert.Equal(expectedStatusCode, actualStatusCode);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetHandlersCases))]
+        public async Task ShouldSupportFluentAsyncHandlers(
+            HttpResponseMessage response,
+            string expectedResultContent,
+            HttpStatusCode expectedStatusCode
+        )
+        {
+            //Arrange
+            var reqProc = TestTools.CreateReqProcMock(response);
+            var invoker = ApiClientInvokerFactory.FromContract<IContract>(reqProc.Object, TestTools.DefaultOptions);
+
+            string? actualResult = null;
+            HttpStatusCode actualStatusCode = default;
+
+            //Act
+
+            var callDetails = await invoker
+                .ForExpression(c => c.EchoAsync("foo"))
+                .When2xx().ProcessResultAsync<string>((res, code) =>
+                {
+                    actualResult = res;
+                    actualStatusCode = code;
+
+                    return Task.CompletedTask;
+                })
+                .When4xx().ProcessStatusCodeAsync(code =>
+                {
+                    actualStatusCode = code;
+                    return Task.CompletedTask;
+                })
+                .InvokeAsync(TestContext.Current.CancellationToken);
+
+            //Assert
+            TestTools.VerifyRequestUrl(reqProc, "echo");
+            TestTools.VerifyRequestContent(reqProc, "foo");
+
+            Assert.NotNull(callDetails);
+            Assert.Equal(expectedStatusCode, callDetails.StatusCode);
+            Assert.Equal(HttpMethod.Post, callDetails.RequestMessage.Method);
+            Assert.Equal(expectedResultContent, actualResult);
+            Assert.Equal(expectedStatusCode, actualStatusCode);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetUnexpectedTestCases))]
+        public async Task ShouldFailWhenUnexpectedResponseCode(HttpResponseMessage response, bool expected)
+        {
+            //Arrange
+            var reqProc = TestTools.CreateReqProcMock(response);
+            var invoker = ApiClientInvokerFactory.FromContract<IContract>(reqProc.Object, TestTools.DefaultOptions);
+
+            UnexpectedResponseStatusCodeException? unexpectedResponseStatusCodeException = null;
+
+            //Act
+            try
+            {
+                await invoker
+                    .ForExpression(c => c.EchoAsync("foo"))
+                    .When(HttpStatusCode.BadRequest).ProcessStatusCode(_ =>
+                    {
+                        //expected
+                    })
+                    .ThrowIfAnotherStatusCode()
+                    .InvokeAsync(TestContext.Current.CancellationToken);
+            }
+            catch (UnexpectedResponseStatusCodeException e)
+            {
+                unexpectedResponseStatusCodeException = e;
+            }
+
+            //Assert
+            Assert.Equal(expected, unexpectedResponseStatusCodeException == null);
+        }
+    }
+}

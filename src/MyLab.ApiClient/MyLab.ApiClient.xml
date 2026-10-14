@@ -4,908 +4,1759 @@
         <name>MyLab.ApiClient</name>
     </assembly>
     <members>
-        <member name="T:MyLab.ApiClient.ApiClient`1">
+        <member name="T:MyLab.ApiClient.AddServiceCollectionExtensions">
             <summary>
-            Provides abilities to send requests to web API
-            </summary>
-            <typeparam name="TContract">API contract</typeparam>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiClient`1.Settings">
-            <summary>
-            Contains request factoring settings
+            Provides extension methods for adding API client services to an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClient`1.#ctor(MyLab.ApiClient.IHttpClientProvider)">
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.AddApiClient``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Boolean)">
+            <inheritdoc cref="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClient``1(System.Boolean)"/>
+        </member>
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.AddApiClientScoped``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Boolean)">
+            <inheritdoc cref="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClientScoped``1(System.Boolean)"/>
+        </member>
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.DI.IApiContractRegistrar})">
+            <inheritdoc cref="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClients(System.Action{MyLab.ApiClient.DI.IApiContractRegistrar})"/>
+        </member>
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.AddOptionalApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.DI.IApiContractRegistrar})">
+            <inheritdoc cref="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddOptionalApiClients(System.Action{MyLab.ApiClient.DI.IApiContractRegistrar})"/>
+        </member>
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.DI.IApiContractRegistrar},System.Net.Http.IHttpClientFactory)">
+            <inheritdoc cref="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClients(System.Action{MyLab.ApiClient.DI.IApiContractRegistrar},System.Net.Http.IHttpClientFactory)"/>
+        </member>
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.AddScopedApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.DI.IApiContractRegistrar})">
+            <inheritdoc cref="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddScopedApiClients(System.Action{MyLab.ApiClient.DI.IApiContractRegistrar})"/>
+        </member>
+        <member name="T:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.&lt;M&gt;$6BEA73177691D2862842D66CC9F1DED9">
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to which the configuration will be added.</param>
+        </member>
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClient``1(System.Boolean)">
             <summary>
-            Initializes a new instance of <see cref="N:MyLab.ApiClient"/>
+            Adds an API client for the specified contract type to the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClient`1.Request(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClientScoped``1(System.Boolean)">
             <summary>
-            Creates API request based on contract method without result
+            Adds an API client for the specified contract type to the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> with a scoped lifetime.
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClient`1.Request``1(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task{``0}}})">
-            <summary>
-            Creates API request based on contract method with result
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiClientException">
-            <summary>
-            Throws when some thing wrong with Api client
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiClientFactoringIntegration">
-            <summary>
-            Contains method to integrate ApiClient factoring
-            </summary>
-        </member>
-        <member name="F:MyLab.ApiClient.ApiClientFactoringIntegration.DefaultConfigSectionName">
-            <summary>
-            Default configuration section name
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar})">
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClients(System.Action{MyLab.ApiClient.DI.IApiContractRegistrar})">
             <summary>
             Integrates ApiClient factoring
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddOptionalApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar})">
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddOptionalApiClients(System.Action{MyLab.ApiClient.DI.IApiContractRegistrar})">
             <summary>
             Integrates ApiClient factoring
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar},System.Action{MyLab.ApiClient.ApiClientsOptions})">
-            <summary>
-            Integrates ApiClient and configures factoring
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar},System.Net.Http.IHttpClientFactory)">
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClients(System.Action{MyLab.ApiClient.DI.IApiContractRegistrar},System.Net.Http.IHttpClientFactory)">
             <summary>
             Integrates ApiClient factoring
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.AddScopedApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.IApiContractRegistrar})">
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddScopedApiClients(System.Action{MyLab.ApiClient.DI.IApiContractRegistrar})">
             <summary>
             Integrates ApiClient for default HttpClient
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.ConfigureApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
-            <summary>
-            Configures ApiClient factoring
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiClientFactoringIntegration.ConfigureApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.ApiClientsOptions})">
-            <summary>
-            Configures ApiClient factoring
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiClientsOptions">
-            <summary>
-            Contains api clients infrastructure options
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiClientsOptions.List">
-            <summary>
-            List of api connections options
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiClientsOptions.JsonSettings">
-            <summary>
-            Defines JSON serialization settings
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiClientsOptions.UrlFormSettings">
-            <summary>
-            Defines url-encoded-form serialization settings
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiConnectionOptions">
-            <summary>
-            Contains api connection options
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiConnectionOptions.Url">
-            <summary>
-            API base url
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiConnectionOptions.SkipServerSslCertVerification">
-            <summary>
-            Do not verify the server SSL certificate
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiJsonSettings">
-            <summary>
-            Defines JSON serialization settings
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiJsonSettings.IgnoreNullValues">
-            <summary>
-            Ignores null fields. True by default.
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiUrlFormSettings">
-            <summary>
-            Defines url-encoded-form serialization settings
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiUrlFormSettings.EscapeSymbols">
-            <summary>
-            Converts symbols to its escaped representation. True by default
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiUrlFormSettings.IgnoreNullValues">
-            <summary>
-            Ignores null fields. False by default.
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiConfigKeyProvider">
-            <summary>
-            Provides config api key
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiContractException">
-            <summary>
-            Throws when some thing wrong with Api contact
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiContractValidationException">
-            <summary>
-            Throws when api contract validation was not passed
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiContractValidationException.#ctor(MyLab.ApiClient.ApiContractValidationResult)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiContractValidationException"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiContractValidator">
-            <summary>
-            Validates web api contract
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiContractValidator.Validate(System.Type)">
-            <summary>
-            Validates web api service contract
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiContractValidationIssuer">
-            <summary>
-            Contains validation issuer details
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiContractValidationResult.#ctor(System.Collections.Generic.IEnumerable{MyLab.ApiClient.ApiContractValidationIssuer})">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiContractValidationResult"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiProxy`1">
-            <summary>
-            Transparent proxy fro API contract
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiProxy`1.Create(MyLab.ApiClient.IHttpClientProvider,MyLab.ApiClient.RequestFactoringSettings,System.IObserver{MyLab.ApiClient.CallDetails})">
-            <summary>
-            Creates transparent proxy 
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiProxy`1.Invoke(System.Reflection.MethodInfo,System.Object[])">
-            <inheritdoc />
-        </member>
-        <member name="M:MyLab.ApiClient.ApiProxy`1.Subscribe(System.IObserver{MyLab.ApiClient.CallDetails})">
-            <inheritdoc />
-        </member>
-        <member name="M:MyLab.ApiClient.ApiProxy`1.Dispose">
-            <inheritdoc />
-        </member>
-        <member name="M:MyLab.ApiClient.ApiRequest`1.#ctor(MyLab.ApiClient.ApiRequest{`0})">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiRequest`1"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiRequest`1.GetDetailedAsync(System.Threading.CancellationToken)">
-            <inheritdoc />
-        </member>
-        <member name="M:MyLab.ApiClient.ApiRequest`1.GetResultAsync(System.Threading.CancellationToken)">
-            <summary>
-            Send request and return serialized response
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiRequest.#ctor(MyLab.ApiClient.ApiRequest)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiRequest`1"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiRequest.CallAsync(System.Threading.CancellationToken)">
-            <summary>
-            Calls API without result
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiRequestBase`1">
-            <summary>
-            Provides abilities to tune and send request
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiRequestBase`1.RequestModifiers">
-            <summary>
-            Gets request modifiers collection
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiRequestBase`1.ExpectedCodes">
-            <summary>
-            Contains expected response http status codes
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiRequestBase`1.#ctor(MyLab.ApiClient.ApiRequestBase{`0})">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiRequestBase`1"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiRequestBase`1.GetDetailedAsync(System.Threading.CancellationToken)">
-            <summary>
-            Send request and return detailed information about operation
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiRequestExtensions">
-            <summary>
-            Contains extensions for <see cref="T:MyLab.ApiClient.ApiRequest`1"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiRequestExtensions.GetResultAsync``1(MyLab.ApiClient.ApiRequest{``0})">
-            <summary>
-            Send request and return serialized response
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiRequestExtensions.GetDetailedAsync``1(MyLab.ApiClient.ApiRequest{``0})">
-            <summary>
-            Send request and return detailed information about operation
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiRequestExtensions.GetDetailedAsync(MyLab.ApiClient.ApiRequest)">
-            <summary>
-            Send request and return detailed information about operation
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiRequestExtensions.CallAsync(MyLab.ApiClient.ApiRequest)">
-            <summary>
-            Send request 
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiMarkupAttribute">
-            <summary>
-            The base class for API markup attributes
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiMarkupAttribute.#ctor">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiMarkupAttribute"/>
-            </summary>
-        </member>
         <member name="T:MyLab.ApiClient.ApiAttribute">
             <summary>
-            Defines API service 
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiAttribute.Url">
-            <summary>
-            Base service URL
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiAttribute.Key">
-            <summary>
-            Determine key to bind with configuration
+            Legacy contract attribute from MyLab.ApiClient 3.x.
+            Prefer <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute"/> with <see cref="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute.Binding"/>.
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.ApiAttribute.#ctor(System.String)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiAttribute"/>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiAttribute"/>.
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.CallDetails`1">
+        <member name="P:MyLab.ApiClient.ApiAttribute.Key">
             <summary>
-            Contains detailed service call information with response
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails`1.ResponseContent">
-            <summary>
-            Expected response content
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.CallDetails">
-            <summary>
-            Contains detailed service call information 
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails.StatusCode">
-            <summary>
-            HTTP status code
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails.IsUnexpectedStatusCode">
-            <summary>
-            Gets true if status code is unexpected
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails.RequestDump">
-            <summary>
-            Text request dump
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails.ResponseDump">
-            <summary>
-            Text response dump
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails.ResponseMessage">
-            <summary>
-            Response object
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.CallDetails.RequestMessage">
-            <summary>
-            Request object
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.CallDetails.ThrowIfUnexpectedStatusCode">
-            <summary>
-            Throws <see cref="T:MyLab.ApiClient.ResponseCodeException"/> if <see cref="P:MyLab.ApiClient.CallDetails.IsUnexpectedStatusCode"/> is true
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.DetailedResponseProcessingException`1">
-            <summary>
-            Occurs in Details provided method when response processing error
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.DetailedResponseProcessingException`1.CallDetails">
-            <summary>
-            Gets or sets call details
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.DetailedResponseProcessingException`1.#ctor(`0,System.Exception)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.DetailedResponseProcessingException`1"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.IHttpClientProvider">
-            <summary>
-            Specifies <see cref="T:System.Net.Http.HttpClient"/> provider
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.IHttpClientProvider.Provide">
-            <summary>
-            Provides http client
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.FactoryHttpClientProvider.#ctor(System.Net.Http.IHttpClientFactory)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.FactoryHttpClientProvider"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.FactoryHttpClientProvider.#ctor(System.Net.Http.IHttpClientFactory,System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.FactoryHttpClientProvider"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.SingleHttpClientProvider.#ctor(System.Net.Http.HttpClient)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.SingleHttpClientProvider"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.DelegateHttpClientProvider.#ctor(System.Func{System.Net.Http.HttpClient})">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.DelegateHttpClientProvider"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.HttpMessageDumper">
-            <summary>
-            Contains tools to create dump from http request and response
-            </summary>
-        </member>
-        <member name="F:MyLab.ApiClient.HttpMessageDumper.DefaultMaxBodySize">
-            <summary>
-            Default max body size for dumping
-            </summary>
-        </member>
-        <member name="F:MyLab.ApiClient.HttpMessageDumper.ContentIsTooLargeText">
-            <summary>
-            DumpAsync text when body is too large
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.HttpMessageDumper.MaxRequestBodySize">
-            <summary>
-            Set to customize request body size which is maximum dor dumping
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.HttpMessageDumper.MaxResponseBodySize">
-            <summary>
-            Set to customize response body size which is maximum dor dumping
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.HttpMessageDumper.DumpAsync(System.Net.Http.HttpRequestMessage)">
-            <summary>
-            Dumps a request
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.HttpMessageDumper.DumpAsync(System.Net.Http.HttpResponseMessage)">
-            <summary>
-            Dumps a response
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.IApiClientFactory">
-            <summary>
-            Creates Api clients
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.IApiClientFactory.CreateApiClient``1">
-            <summary>
-            Creates api client for specified contract
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.IApiContractRegistrar">
-            <summary>
-            Registers api contract 
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.IApiContractRegistrar.RegisterContract``1(System.String)">
-            <summary>
-            Registers api contract 
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.IApiContractRegistrar.RegisterContract``1">
-            <summary>
-            Registers api contract 
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.KeyBasedApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.KeyBasedApiContractRegistrar"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.OptionalKeyBasedApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.OptionalKeyBasedApiContractRegistrar"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ScopedApiContractRegistrar.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ScopedApiContractRegistrar"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ExpressionBasedApiRequestParameterValueProvider.#ctor(System.Linq.Expressions.Expression)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ExpressionBasedApiRequestParameterValueProvider"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.IHttpContentFactory">
-            <summary>
-            Creates <see cref="T:System.Net.Http.HttpContent"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.IHttpContentFactory.Create(System.Object,MyLab.ApiClient.RequestFactoringSettings)">
-            <summary>
-            Creates content object
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.IMultipartContentParameter">
-            <summary>
-            Specifies input parameter which will be used to create request multipart content
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.IMultipartContentParameter.AddParts(System.Net.Http.MultipartFormDataContent)">
-            <summary>
-            Implement to add parts to content
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.IRequestMessageModifier">
-            <summary>
-            Integrates into request message preparing pipeline
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.IRequestMessageModifier.Modify(System.Net.Http.HttpRequestMessage)">
-            <summary>
-            Modifies <see cref="T:System.Net.Http.HttpRequestMessage"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.IUriModifier">
-            <summary>
-            Modifies a URI
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.IUriModifier.Modify(System.Uri,System.String,System.Object)">
-            <summary>
-            Modifies a URI
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ApiMethodAttribute">
-            <summary>
-            The base class for method attributes
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiMethodAttribute.Url">
-            <summary>
-            Related end-point url
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ApiMethodAttribute.HttpMethod">
-            <summary>
-            HTTP method
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ApiMethodAttribute.#ctor(System.String,System.Net.Http.HttpMethod)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiMethodAttribute"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.GetAttribute">
-            <summary>
-            GET HTTP method
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.GetAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.GetAttribute"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.HeadAttribute">
-            <summary>
-            HEAD HTTP method
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.HeadAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.HeadAttribute"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.PostAttribute">
-            <summary>
-            POST HTTP method
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.PostAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.PostAttribute"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.PutAttribute">
-            <summary>
-            PUT HTTP method
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.PutAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.PutAttribute"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.PatchAttribute">
-            <summary>
-            PATCH HTTP method
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.PatchAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.PutAttribute"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.DeleteAttribute">
-            <summary>
-            DELETE HTTP method
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.DeleteAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.DeleteAttribute"/>
+            Legacy alias of <see cref="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute.Binding"/>.
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.ExpectedCodeAttribute">
             <summary>
-            Determines expected response HTTP code
+            Legacy expected HTTP status attribute from MyLab.ApiClient 3.x.
             </summary>
         </member>
         <member name="P:MyLab.ApiClient.ExpectedCodeAttribute.ExpectedCode">
             <summary>
-            Expected response HTTP code
+            Gets the expected HTTP status code.
             </summary>
         </member>
         <member name="M:MyLab.ApiClient.ExpectedCodeAttribute.#ctor(System.Net.HttpStatusCode)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ExpectedCodeAttribute"/>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ExpectedCodeAttribute"/>.
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.UrlParameterApplier.#ctor(MyLab.ApiClient.UrlRequestParameterDescription,MyLab.ApiClient.IApiRequestParameterValueProvider)">
+        <member name="T:MyLab.ApiClient.GetAttribute">
+            <summary>Legacy GET method attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.GetAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.GetAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.PostAttribute">
+            <summary>Legacy POST method attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.PostAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PostAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.PutAttribute">
+            <summary>Legacy PUT method attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.PutAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PutAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.PatchAttribute">
+            <summary>Legacy PATCH method attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.PatchAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PatchAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.DeleteAttribute">
+            <summary>Legacy DELETE method attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.DeleteAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.DeleteAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.HeadAttribute">
+            <summary>Legacy HEAD method attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.HeadAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.HeadAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.PathAttribute">
+            <summary>Legacy path parameter attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.PathAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.PathAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.QueryAttribute">
+            <summary>Legacy query parameter attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.QueryAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.QueryAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.HeaderAttribute">
+            <summary>Legacy header parameter attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.HeaderAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.HeaderCollectionAttribute">
+            <summary>Legacy header-collection parameter attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.JsonContentAttribute">
+            <summary>Legacy JSON content attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.XmlContentAttribute">
+            <summary>Legacy XML content attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.StringContentAttribute">
+            <summary>Legacy string content attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.BinContentAttribute">
+            <summary>Legacy binary content attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="M:MyLab.ApiClient.BinContentAttribute.#ctor">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute.#ctor"/>
+        </member>
+        <member name="M:MyLab.ApiClient.BinContentAttribute.#ctor(System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute.#ctor(System.String)"/>
+        </member>
+        <member name="T:MyLab.ApiClient.FormContentAttribute">
+            <summary>Legacy URL-form content attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.MultipartContentAttribute">
+            <summary>Legacy multipart content attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.UrlFormItemAttribute">
+            <summary>Legacy URL-form item attribute from MyLab.ApiClient 3.x.</summary>
+        </member>
+        <member name="T:MyLab.ApiClient.ConfigServiceCollectionExtensions">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.UrlParameterApplier"/>
+            Provides extension methods for configuring API client options in an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
             </summary>
+            <remarks>
+            This class contains methods to simplify the configuration of API client options, 
+            including binding configuration sections or using custom configuration actions.
+            </remarks>
         </member>
-        <member name="M:MyLab.ApiClient.HeaderParameterApplier.#ctor(MyLab.ApiClient.HeaderRequestParameterDescription,MyLab.ApiClient.IApiRequestParameterValueProvider)">
+        <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.ConfigureApiClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClient(Microsoft.Extensions.Configuration.IConfiguration,System.String)"/>
+        </member>
+        <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.ConfigureApiClientEndpoint(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClientEndpoint(System.String,Microsoft.Extensions.Configuration.IConfiguration,System.String)"/>
+        </member>
+        <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.ConfigureApiClientEndpoint``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClientEndpoint``1(Microsoft.Extensions.Configuration.IConfiguration,System.String)"/>
+        </member>
+        <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.ConfigureApiClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.Options.ApiClientOptions})">
+            <inheritdoc cref="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClient(System.Action{MyLab.ApiClient.Options.ApiClientOptions})"/>
+        </member>
+        <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.ConfigureApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
+            <inheritdoc cref="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClients(Microsoft.Extensions.Configuration.IConfiguration,System.String)"/>
+        </member>
+        <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.ConfigureApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.Options.ApiClientOptions})">
+            <inheritdoc cref="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClients(System.Action{MyLab.ApiClient.Options.ApiClientOptions})"/>
+        </member>
+        <member name="T:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.&lt;M&gt;$6BEA73177691D2862842D66CC9F1DED9">
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to which the configuration will be added.</param>
+        </member>
+        <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClient(Microsoft.Extensions.Configuration.IConfiguration,System.String)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.HeaderParameterApplier"/>
+            Configures the API client options for the application using the specified configuration section.
             </summary>
+            <param name="config">The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> instance containing the configuration data.</param>
+            <param name="sectionName">
+            The name of the configuration section to bind to the <see cref="T:MyLab.ApiClient.Options.ApiClientOptions"/>. 
+            Defaults to <see cref="F:MyLab.ApiClient.Options.ApiClientOptions.DefaultSectionName"/> if not specified.
+            </param>
+            <returns>The updated <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="config"/> or <paramref name="sectionName"/> is <c>null</c>.
+            </exception>
         </member>
-        <member name="M:MyLab.ApiClient.ContentParameterApplier.#ctor(MyLab.ApiClient.ContentRequestParameterDescription,MyLab.ApiClient.IApiRequestParameterValueProvider,MyLab.ApiClient.RequestFactoringSettings)">
+        <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClientEndpoint(System.String,Microsoft.Extensions.Configuration.IConfiguration,System.String)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ContentParameterApplier"/>
+            Configures an API client endpoint with the specified binding name and configuration.
             </summary>
+            <param name="bindingKey">
+            The name of the binding to associate with the endpoint configuration.
+            </param>
+            <param name="config">
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> instance containing the endpoint configuration.
+            </param>
+            <param name="endpointSectionName">
+            The name of the configuration section that contains the endpoint settings.
+            </param>
+            <returns>
+            The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to allow for method chaining.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="config"/> or <paramref name="endpointSectionName"/> is <c>null</c>.
+            </exception>
         </member>
-        <member name="M:MyLab.ApiClient.UrlRequestParameterDescription.#ctor(System.Int32,System.String,MyLab.ApiClient.IUriModifier)">
+        <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClientEndpoint``1(Microsoft.Extensions.Configuration.IConfiguration,System.String)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.UrlRequestParameterDescription"/>
+            Configures an API client endpoint for the specified contract type using the provided configuration.
             </summary>
+            <typeparam name="TContract">
+            The type of the contract associated with the API client endpoint.
+            </typeparam>
+            <param name="config">
+            The <see cref="T:Microsoft.Extensions.Configuration.IConfiguration"/> instance containing the endpoint configuration.
+            </param>
+            <param name="endpointSectionName">
+            The name of the configuration section that contains the endpoint settings.
+            </param>
+            <returns>
+            The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to allow for method chaining.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="config"/> or <paramref name="endpointSectionName"/> is <c>null</c>.
+            </exception>
         </member>
-        <member name="M:MyLab.ApiClient.HeaderRequestParameterDescription.#ctor(System.Int32,System.String)">
+        <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClient(System.Action{MyLab.ApiClient.Options.ApiClientOptions})">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.HeaderRequestParameterDescription"/>
+            Configures API client options for the application.
             </summary>
+            <param name="configureOptions">
+            An <see cref="T:System.Action`1"/> to configure the <see cref="T:MyLab.ApiClient.Options.ApiClientOptions"/>.
+            </param>
+            <returns>The updated <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="configureOptions"/> is <c>null</c>.
+            </exception>
         </member>
-        <member name="M:MyLab.ApiClient.HeaderCollectionRequestParameterDescription.#ctor(System.Int32)">
+        <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClients(Microsoft.Extensions.Configuration.IConfiguration,System.String)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.HeaderCollectionRequestParameterDescription"/>
+            Configures ApiClient factoring
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ContentRequestParameterDescription.#ctor(System.Int32,MyLab.ApiClient.IHttpContentFactory)">
+        <member name="M:MyLab.ApiClient.ConfigServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.ConfigureApiClients(System.Action{MyLab.ApiClient.Options.ApiClientOptions})">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ContentRequestParameterDescription"/>
+            Configures ApiClient factoring
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.RequestFactoringSettings">
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute">
             <summary>
-            Contains request factoring settings
+            Defines metadata for an API contract interface.
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.RequestFactoringSettings.JsonSettings">
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute.Url">
             <summary>
-            JSON serialization settings
+            Gets or sets the relative URL associated with the API contract.
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.RequestFactoringSettings.UrlFormSettings">
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForContract.ApiContractAttribute.Binding">
+            <summary>
+            Gets or sets the configuration key associated with the API contract.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForData.UrlFormItemAttribute">
+            <summary>
+            Defines URL-Form item properties
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForData.UrlFormItemAttribute.Name">
+            <summary>
+            Specify name to override
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.ApiMethodAttribute">
+            <summary>
+            The base class for method attributes
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForMethod.ApiMethodAttribute.Url">
+            <summary>
+            Related end-point url
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForMethod.ApiMethodAttribute.HttpMethod">
+            <summary>
+            HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.ApiMethodAttribute.#ctor(System.String,System.Net.Http.HttpMethod)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.ApiMethodAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.DeleteAttribute">
+            <summary>
+            Determines that the method corresponds to the DELETE HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.DeleteAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.DeleteAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.GetAttribute">
+            <summary>
+            Determines that the method corresponds to the GET HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.GetAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.GetAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.HeadAttribute">
+            <summary>
+            Determines that the method corresponds to the HEAD HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.HeadAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.HeadAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PatchAttribute">
+            <summary>
+            Determines that the method corresponds to the PATCH HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PatchAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PatchAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PostAttribute">
+            <summary>
+            Determines that the method corresponds to the POST HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PostAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PostAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PutAttribute">
+            <summary>
+            Determines that the method corresponds to the PUT HTTP method
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForMethod.PutAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForMethod.PutAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.ApiParameterAttribute">
+            <summary>
+            The base class for api client parameter attributes
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.ApiParameterAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.ApiParameterAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.ApiParameterAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+            <summary>
+            Override to validate parameter
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute">
+            <summary>
+            Determines request parameter which place in content with binary format
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.BinContentAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.ContentParameterAttribute">
+            <summary>
+            Determines api request parameter which place in content
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForParameters.ContentParameterAttribute.HttpContentFactory">
+            <summary>
+            Gets content factory
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.ContentParameterAttribute.#ctor(MyLab.ApiClient.RequestFactoring.ContentFactoring.IHttpContentFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.ContentParameterAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.FormContentAttribute">
+            <summary>
+            Determines request parameter which place in content as Url Encoded Form
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.FormContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.FormContentAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderAttribute">
+            <summary>
+            Determines api request parameter which place in header
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderAttribute.Name">
+            <summary>
+            Gets overriden header name
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderCollectionAttribute">
+            <summary>
+            Determines api request parameter which place in header
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.HeaderCollectionAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.JsonContentAttribute">
+            <summary>
+            Determines request parameter which place in content with JSON format
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.JsonContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.JsonContentAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.MultipartContentAttribute">
+            <summary>
+            Determines request parameter which place in content as Multipart form
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.MultipartContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.MultipartContentAttribute"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.MultipartContentAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.PathAttribute">
+            <summary>
+            Determines request parameter which place in URL path
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.PathAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.PathAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.QueryAttribute">
+            <summary>
+            Determines request parameter which place in URL query
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.QueryAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.QueryAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.StringContentAttribute">
+            <summary>
+            Determines request parameter which place in content with simple string format
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.StringContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.StringContentAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.UrlParameterAttribute">
+            <summary>
+            Determines api request parameter which place in URL
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForParameters.UrlParameterAttribute.Name">
+            <summary>
+            Gets overriden parameter name
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Attributes.ForParameters.UrlParameterAttribute.UrlModifier">
+            <summary>
+            Gets URL modifier
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.UrlParameterAttribute.#ctor(System.String,MyLab.ApiClient.RequestFactoring.UrlModifying.IUrlModifier)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.UrlParameterAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.XmlContentAttribute">
+            <summary>
+            Determines request parameter which place in content with XML format
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Attributes.ForParameters.XmlContentAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Attributes.ForParameters.XmlContentAttribute"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.InvalidApiContractException">
+            <summary>
+            Represents an exception that is thrown when an API contract is invalid.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.InvalidApiContractException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.InvalidApiContractException"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.ContentParameterModel">
+            <summary>
+            Represent parameter which will be used to create request content
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.ContentParameterModel.#ctor(System.Int32,MyLab.ApiClient.RequestFactoring.ContentFactoring.IHttpContentFactory)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.ContentParameterModel"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.EndpointModel">
+            <summary>
+            Represent service endpoint
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointModel.Url">
+            <summary>
+            Gets the relative URL for endpoint
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointModel.HttpMethod">
+            <summary>
+            Gets the HTTP method used by the endpoint (e.g., GET, POST, PUT, DELETE).
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.EndpointModel.Parameters">
+            <summary>
+            Gets endpoint request parameters
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.EndpointModel.#ctor(System.Net.Http.HttpMethod,System.Collections.Generic.IEnumerable{MyLab.ApiClient.Contracts.Models.IRequestParameterModel})">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.EndpointModel"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.EndpointModel.FromMethod(System.Reflection.MethodInfo,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
+            <summary>
+            FromMethod <see cref="T:MyLab.ApiClient.Contracts.Models.EndpointModel"/> from reflection method
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.HeaderCollectionParameterModel">
+            <summary>
+            Represent parameter which is a collection of the headers, and it will be added into headers
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.HeaderCollectionParameterModel.Settings">
+            <summary>
+            Request factoring settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.HeaderCollectionParameterModel.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.HeaderCollectionParameterModel"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.HeaderParameterModel">
+            <summary>
+            Represent parameter which will be added into headers
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.HeaderParameterModel.Settings">
+            <summary>
+            Request factoring settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.HeaderParameterModel.#ctor(System.Int32,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.HeaderParameterModel"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.IRequestParameterModel">
+            <summary>
+            Represent API request parameter
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.IRequestParameterModel.Position">
+            <summary>
+            Position in method arguments
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.IRequestParameterModel.Settings">
+            <summary>
+            Request factoring settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.IRequestParameterModel.Apply(System.Net.Http.HttpRequestMessage,System.Object)">
+            <summary>
+            Applies the parameter to the specified HTTP request.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.ServiceModel">
+            <summary>
+            Represent API contract
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.ServiceModel.Url">
+            <summary>
+            Gets the relative URL for all endpoints
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.ServiceModel.Bindings">
+            <summary>
+            Gets the relative URL for all endpoints
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.ServiceModel.Endpoints">
+            <summary>
+            Gets endpoint map by Method.MetadataToken
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.ServiceModel.FromContract(System.Type,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
+            <summary>
+            Creates <see cref="T:MyLab.ApiClient.Contracts.Models.ServiceModel"/> from contract type
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Contracts.Models.UrlParameterModel">
+            <summary>
+            Represent parameter which will modify a URL
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Contracts.Models.UrlParameterModel.Settings">
+            <summary>
+            Request factoring settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Contracts.Models.UrlParameterModel.#ctor(System.Int32,System.String,MyLab.ApiClient.RequestFactoring.UrlModifying.IUrlModifier)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Contracts.Models.UrlParameterModel"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.DI.FactoryHttpClientProvider">
+            <summary>
+            Provides an implementation of <see cref="T:MyLab.ApiClient.DI.IHttpClientProvider"/> that uses an <see cref="T:System.Net.Http.IHttpClientFactory"/> 
+            to create and configure instances of <see cref="T:System.Net.Http.HttpClient"/> based on a specified service name.
+            </summary>
+            <remarks>
+            This class is designed to integrate with dependency injection and simplifies the process of obtaining 
+            pre-configured <see cref="T:System.Net.Http.HttpClient"/> instances for making HTTP requests.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.DI.FactoryHttpClientProvider.#ctor(System.Net.Http.IHttpClientFactory,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.DI.FactoryHttpClientProvider"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.DI.FactoryHttpClientProvider.Provide">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.DI.IApiClientAccessor`1">
+            <summary>
+            Provides safe access to an optionally configured API client and invoker.
+            </summary>
+            <typeparam name="TContract">
+            The API contract interface associated with the client.
+            </typeparam>
+            <remarks>
+            Use this abstraction when the API endpoint may be absent from configuration
+            (<c>AddApiClient&lt;TContract&gt;(optional: true)</c>). Unlike direct injection of
+            <typeparamref name="TContract"/> or <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1"/>,
+            the accessor itself is always registered and never <c>null</c>.
+            </remarks>
+        </member>
+        <member name="P:MyLab.ApiClient.DI.IApiClientAccessor`1.IsConfigured">
+            <summary>
+            Gets a value indicating whether the API endpoint is present in configuration
+            and the client was created.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.DI.IApiClientAccessor`1.Client">
+            <summary>
+            Gets the transparent proxy for <typeparamref name="TContract"/>,
+            or <c>null</c> when the endpoint is not configured.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.DI.IApiClientAccessor`1.Invoker">
+            <summary>
+            Gets the detailed invoker for <typeparamref name="TContract"/>,
+            or <c>null</c> when the endpoint is not configured.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.DI.IApiContractRegistrar">
+            <summary>
+            Registers api contract 
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.DI.IApiContractRegistrar.RegisterContract``1(System.String)">
+            <summary>
+            Registers api contract 
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.DI.IApiContractRegistrar.RegisterContract``1">
+            <summary>
+            Registers api contract 
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.DI.IHttpClientProvider">
+            <summary>
+            Provides a mechanism to supply an instance of <see cref="T:System.Net.Http.HttpClient"/> for making HTTP requests.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.DI.IHttpClientProvider.Provide">
+            <summary>
+            Provides an instance of <see cref="T:System.Net.Http.HttpClient"/> for making HTTP requests.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.DI.SingleHttpClientProvider">
+            <summary>
+            Provides a single instance of <see cref="T:System.Net.Http.HttpClient"/> for making HTTP requests.
+            </summary>
+            <remarks>
+            This class implements the <see cref="T:MyLab.ApiClient.DI.IHttpClientProvider"/> interface and ensures that the same
+            <see cref="T:System.Net.Http.HttpClient"/> instance is reused for all requests.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.DI.SingleHttpClientProvider.#ctor(System.Net.Http.HttpClient)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.DI.SingleHttpClientProvider"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.DI.SingleHttpClientProvider.Provide">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.DI.SingleHttpClientProvider.CreateFromHttpClientFactory(System.Net.Http.IHttpClientFactory,System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:MyLab.ApiClient.DI.SingleHttpClientProvider"/> using the specified
+            <see cref="T:System.Net.Http.IHttpClientFactory"/> and service name.
+            </summary>
+            <param name="httpClientFactory">
+            The <see cref="T:System.Net.Http.IHttpClientFactory"/> used to create the <see cref="T:System.Net.Http.HttpClient"/> instance.
+            </param>
+            <param name="serviceName">
+            The name of the service for which the <see cref="T:System.Net.Http.HttpClient"/> is created.
+            </param>
+            <returns>
+            A new instance of <see cref="T:MyLab.ApiClient.DI.SingleHttpClientProvider"/> configured with the specified
+            <see cref="T:System.Net.Http.HttpClient"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="httpClientFactory"/> or <paramref name="serviceName"/> is <c>null</c>.
+            </exception>
+        </member>
+        <member name="T:MyLab.ApiClient.JsonSerialization.IJsonSerializer">
+            <summary>
+            Provides methods for serializing objects to JSON and deserializing JSON strings to objects.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.IJsonSerializer.Deserialize``1(System.String)">
+            <summary>
+            Deserializes the specified JSON string into an object of the specified type.
+            </summary>
+            <typeparam name="T">The type of the object to deserialize to.</typeparam>
+            <param name="json">The JSON string to deserialize.</param>
+            <returns>An object of type <typeparamref name="T"/> deserialized from the JSON string.</returns>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="json"/> string is null, empty, or consists only of white-space characters.</exception>
+            <exception cref="T:Newtonsoft.Json.JsonException">Thrown when the JSON string is invalid or cannot be deserialized into the specified type.</exception>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.IJsonSerializer.Deserialize(System.String,System.Type)">
+            <summary>
+            Deserializes the specified JSON string into an object of the specified type.
+            </summary>
+            <param name="json">The JSON string to deserialize.</param>
+            <param name="targetType">The target type of the object to deserialize to.</param>
+            <returns>An object of the specified <paramref name="targetType"/> deserialized from the JSON string.</returns>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="json"/> string is null, empty, or consists only of white-space characters.</exception>
+            <exception cref="T:Newtonsoft.Json.JsonException">Thrown when the JSON string is invalid or cannot be deserialized into the specified type.</exception>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.IJsonSerializer.Serialize``1(``0)">
+            <summary>
+            Serializes the specified object into a JSON string.
+            </summary>
+            <typeparam name="T">The type of the object to serialize.</typeparam>
+            <param name="obj">The object to serialize.</param>
+            <returns>A JSON string representation of the specified object.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="obj"/> is null.</exception>
+        </member>
+        <member name="T:MyLab.ApiClient.JsonSerialization.MicrosoftJsonSerializer">
+            <summary>
+            A JSON serializer implementation using the Microsoft JSON library.
+            </summary>
+            <remarks>
+            This class provides methods for serializing objects to JSON strings and deserializing JSON strings to objects.
+            It is configured using the <see cref="T:MyLab.ApiClient.Options.ApiJsonSettings"/> class to customize serialization behavior.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.MicrosoftJsonSerializer.#ctor(MyLab.ApiClient.Options.ApiJsonSettings)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.JsonSerialization.MicrosoftJsonSerializer"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.MicrosoftJsonSerializer.Deserialize``1(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.MicrosoftJsonSerializer.Deserialize(System.String,System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.MicrosoftJsonSerializer.Serialize``1(``0)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer">
+            <summary>
+            A JSON serializer implementation using Newtonsoft.Json.
+            </summary>
+            <remarks>
+            This class provides methods for serializing objects to JSON strings and deserializing JSON strings to objects.
+            It utilizes <see cref="T:Newtonsoft.Json.JsonSerializerSettings"/> for configuring serialization behavior.
+            </remarks>
+        </member>
+        <member name="F:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer.Default">
+            <summary>
+            Provides a default instance of <see cref="T:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer"/> configured with default JSON serialization settings.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer.#ctor(MyLab.ApiClient.Options.ApiJsonSettings)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer.Deserialize``1(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer.Deserialize(System.String,System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.JsonSerialization.NewtonJsonSerializer.Serialize``1(``0)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.Options.ApiClientOptions">
+            <summary>
+            Represents the configuration options for API clients, including endpoints, 
+            JSON serialization settings, and URL-encoded form serialization settings.
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.Options.ApiClientOptions.DefaultSectionName">
+            <summary>
+            Default configuration section name
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiClientOptions.Endpoints">
+            <summary>
+            List of api connections options
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiClientOptions.JsonSerializer">
+            <summary>
+            Defines JSON serializer
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiClientOptions.UrlFormSettings">
             <summary>
             Defines url-encoded-form serialization settings
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.RequestFactoringSettings.CreateFromOptions(MyLab.ApiClient.ApiClientsOptions)">
+        <member name="P:MyLab.ApiClient.Options.ApiClientOptions.Dumper">
+            <summary>
+            Gets or sets the HTTP message dumper used to log or inspect HTTP requests and responses.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Options.ApiClientOptions.FillFromSection(MyLab.ApiClient.Options.ApiClientOptions,Microsoft.Extensions.Configuration.IConfigurationSection)">
+            <summary>
+            Fill options from configuration section 
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Options.ApiClientOptions.GetEndpointOptions(Microsoft.Extensions.Configuration.IConfigurationSection)">
+            <summary>
+            Retrieves the API endpoint options from the specified configuration section.
+            </summary>
+            <param name="endpointSection">
+            The configuration section containing the endpoint options. Must not be null and must exist.
+            </param>
+            <returns>
+            An instance of <see cref="T:MyLab.ApiClient.Options.ApiEndpointOptions"/> populated with the settings from the configuration section.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="endpointSection"/> is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            Thrown when <paramref name="endpointSection"/> does not exist.
+            </exception>
+        </member>
+        <member name="T:MyLab.ApiClient.Options.ApiEndpointOptions">
+            <summary>
+            Contains api connection options
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiEndpointOptions.Url">
+            <summary>
+            API base url
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiEndpointOptions.SkipServerSslCertVerification">
+            <summary>
+            Do not verify the server SSL certificate
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Options.ApiJsonSettings">
+            <summary>
+            Defines JSON serialization settings
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiJsonSettings.IgnoreNullValues">
+            <summary>
+            Ignores null fields. True by default.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Options.ApiUrlFormSettings">
+            <summary>
+            Defines url-encoded-form serialization settings
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.Options.ApiUrlFormSettings.DefaultEscapeSymbols">
+            <summary>
+            Specifies the default behavior for escaping symbols during URL-encoded form serialization.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiUrlFormSettings.EscapeSymbols">
+            <summary>
+            Converts symbols to its escaped representation. True by default
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Options.ApiUrlFormSettings.IgnoreNullValues">
+            <summary>
+            Ignores null fields. False by default.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Problems.ProblemDetails">
+            <summary>
+            A machine-readable format for specifying errors in HTTP API responses based on <see href="https://tools.ietf.org/html/rfc7807"/>.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Problems.ProblemDetails.Type">
+            <summary>
+            A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when
+            dereferenced, it provide human-readable documentation for the problem type
+            (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be
+            "about:blank".
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Problems.ProblemDetails.Title">
+            <summary>
+            A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence
+            of the problem, except for purposes of localization(e.g., using proactive content negotiation;
+            see[RFC7231], Section 3.4).
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Problems.ProblemDetails.Status">
+            <summary>
+            The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Problems.ProblemDetails.Detail">
+            <summary>
+            A human-readable explanation specific to this occurrence of the problem.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Problems.ProblemDetails.Instance">
+            <summary>
+            A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Problems.ProblemDetails.Extensions">
+            <summary>
+            Gets the <see cref="T:System.Collections.Generic.IDictionary`2"/> for extension members.
+            <para>
+            Problem type definitions MAY extend the problem details object with additional members. Extension members appear in the same namespace as
+            other members of a problem type.
+            </para>
+            </summary>
+            <remarks>
+            The round-tripping behavior for <see cref="P:MyLab.ApiClient.Problems.ProblemDetails.Extensions"/> is determined by the implementation of the Input \ Output formatters.
+            In particular, complex types or collection types may not round-trip to the original type when using the built-in JSON or XML formatters.
+            Marked for both System.Text.Json and Newtonsoft.Json so extension members are preserved with either serializer.
+            </remarks>
+        </member>
+        <member name="T:MyLab.ApiClient.Problems.ValidationProblemDetails">
+            <summary>
+            A <see cref="T:MyLab.ApiClient.Problems.ProblemDetails"/> for validation errors.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Problems.ValidationProblemDetails.Errors">
+            <summary>
+            Gets the validation errors associated with this instance of <see cref="T:MyLab.ApiClient.Problems.ValidationProblemDetails"/>.
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.RequestFactoring.ContentFactoring.IHttpContentFactory">
+            <summary>
+            Creates <see cref="T:System.Net.Http.HttpContent"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.RequestFactoring.ContentFactoring.IHttpContentFactory.Create(System.Object,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
+            <summary>
+            Creates content object
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.RequestFactoring.ContentFactoring.IMultipartContentParameter">
+            <summary>
+            Specifies input parameter which will be used to create request multipart content
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.RequestFactoring.ContentFactoring.IMultipartContentParameter.AddParts(System.Net.Http.MultipartFormDataContent)">
+            <summary>
+            Implement to add parts to content
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings">
+            <summary>
+            Contains request factoring settings
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings.JsonSerializer">
+            <summary>
+            Defines JSON serializer
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings.UrlFormSettings">
+            <summary>
+            Defines url-encoded-form serialization settings
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings.CreateFromOptions(MyLab.ApiClient.Options.ApiClientOptions)">
             <summary>
             Creates req factoring settings from app options
             </summary>
             <param name="options"></param>
             <returns></returns>
         </member>
-        <member name="T:MyLab.ApiClient.ApiParameterAttribute">
+        <member name="T:MyLab.ApiClient.RequestFactoring.UrlModifying.IUrlModifier">
             <summary>
-            The base class for input parameter attributes
+            Modifies a URI
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.ApiParameterAttribute.#ctor">
+        <member name="M:MyLab.ApiClient.RequestFactoring.UrlModifying.IUrlModifier.Modify(System.Uri,System.String,System.Object)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ApiParameterAttribute"/>
+            Modifies a URI
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.UrlParameterAttribute">
+        <member name="M:MyLab.ApiClient.RequestFactoring.UrlModifying.UrlPathInjector.EscapePathSegment(System.String)">
             <summary>
-            Determines api request parameter which place in URL
+            Encodes a single path segment. Dot segments ("." / "..") are encoded explicitly
+            because <see cref="M:System.Uri.EscapeDataString(System.String)"/> leaves '.' unescaped (RFC 3986 unreserved).
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.UrlParameterAttribute.#ctor(System.String,MyLab.ApiClient.IUriModifier)">
+        <member name="M:MyLab.ApiClient.RequestFactoring.UrlModifying.UrlPathInjector.SplitPathAndQuery(System.Uri,System.String@,System.String@)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.UrlParameterAttribute"/>
+            Splits path and query from <see cref="P:System.Uri.OriginalString"/> without decoding,
+            so encoded template segments like %2E%2E / %2F stay intact.
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.PathAttribute">
+        <member name="T:MyLab.ApiClient.ResponseProcessing.CallDetails">
             <summary>
-            Determines request parameter which place in URL path
+            Contains detailed service call information 
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.QueryAttribute">
+        <member name="P:MyLab.ApiClient.ResponseProcessing.CallDetails.StatusCode">
             <summary>
-            Determines request parameter which place in URL query
+            HTTP status code
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.HeaderAttribute">
+        <member name="P:MyLab.ApiClient.ResponseProcessing.CallDetails.IsOK">
             <summary>
-            Determines api request parameter which place in header
+            Indicates whether the service call was successful based on the HTTP status code.
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.HeaderAttribute.#ctor(System.String)">
+        <member name="P:MyLab.ApiClient.ResponseProcessing.CallDetails.RequestDump">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.HeaderAttribute"/>
+            Text request dump
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.HeaderCollectionAttribute">
+        <member name="P:MyLab.ApiClient.ResponseProcessing.CallDetails.ResponseDump">
             <summary>
-            Determines api request parameter which place in header
+            Text response dump
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.HeaderCollectionAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+        <member name="P:MyLab.ApiClient.ResponseProcessing.CallDetails.ResponseMessage">
+            <summary>
+            Response object
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseProcessing.CallDetails.RequestMessage">
+            <summary>
+            Request object
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.CallDetails.#ctor(MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializerProvider)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.CallDetails.ThrowIfNotOKAsync">
+            <summary>
+            Throws <see cref="T:MyLab.ApiClient.ResponseProcessing.ResponseCodeException"/> if <see cref="P:MyLab.ApiClient.ResponseProcessing.CallDetails.IsOK"/> is false
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.CallDetails.ReadContentAsync``1">
+            <summary>
+            Reads and deserializes the content of the HTTP response message into an object of the specified type.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.BoolContentDeserializer.DeserializeCore(System.String)">
             <inheritdoc />
         </member>
-        <member name="T:MyLab.ApiClient.ContentParameterAttribute">
-            <summary>
-            Determines api request parameter which place in content
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ContentParameterAttribute.#ctor(MyLab.ApiClient.IHttpContentFactory)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ContentParameterAttribute"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.StringContentAttribute">
-            <summary>
-            Determines request parameter which place in content with simple string format
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.StringContentAttribute.#ctor">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.StringContentAttribute"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.JsonContentAttribute">
-            <summary>
-            Determines request parameter which place in content with JSON format
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.JsonContentAttribute.#ctor">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.JsonContentAttribute"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.XmlContentAttribute">
-            <summary>
-            Determines request parameter which place in content with XML format
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.XmlContentAttribute.#ctor">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.XmlContentAttribute"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.FormContentAttribute">
-            <summary>
-            Determines request parameter which place in content as Url Encoded Form
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.FormContentAttribute.#ctor">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.FormContentAttribute"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.MultipartContentAttribute">
-            <summary>
-            Determines request parameter which place in content as Multipart form
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.MultipartContentAttribute.#ctor">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.MultipartContentAttribute"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.MultipartContentAttribute.ValidateParameter(System.Reflection.ParameterInfo)">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.DateTimeContentDeserializer.DeserializeCore(System.String)">
             <inheritdoc />
         </member>
-        <member name="T:MyLab.ApiClient.BinContentAttribute">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.DecimalContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.DoubleContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.FloatContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.GuidContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializer">
             <summary>
-            Determines request parameter which place in content with binary format
+            Defines a contract for deserializing HTTP content into objects of a specified type.
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.BinContentAttribute.#ctor">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializer.Predicate(System.Type)">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.BinContentAttribute"/>
+            Determines whether the deserializer can process content for the specified return type.
+            </summary>
+            <param name="returnType">The type of the object to be deserialized.</param>
+            <returns>
+            <see langword="true"/> if the deserializer supports the specified return type; otherwise, <see langword="false"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="returnType"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializer.DeserializeAsync(System.Net.Http.HttpContent,System.Type)">
+            <summary>
+            Asynchronously deserializes the provided HTTP content into an object of the specified type.
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.BinContentAttribute.#ctor(System.String)">
+        <member name="T:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializerProvider">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.BinContentAttribute"/>
+            Provides a mechanism to retrieve a content deserializer capable of processing a specific target type.
+            </summary>
+            <remarks>
+            This interface is designed to support the selection of an appropriate implementation of 
+            <see cref="T:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializer"/> based on the target type for deserialization.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IContentDeserializerProvider.GetRequiredDeserializer(System.Type)">
+            <summary>
+            Retrieves a content deserializer that is capable of processing the specified target type.
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.ResponseCodeException">
-            <summary>
-            Throws when got an unexpected response HTTP code
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ResponseCodeException.StatusCode">
-            <summary>
-            Response status code
-            </summary>
-        </member>
-        <member name="P:MyLab.ApiClient.ResponseCodeException.ServerMessage">
-            <summary>
-            Server message
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ResponseCodeException.CreateDescription(System.Net.HttpStatusCode,System.String)">
-            <summary>
-            Format serverMessage
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ResponseCodeException.#ctor(System.Net.HttpStatusCode,System.String)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ResponseCodeException"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ResponseCodeException.FromResponseMessage(System.Net.Http.HttpResponseMessage)">
-            <summary>
-            Creates <see cref="T:MyLab.ApiClient.ResponseCodeException"/> based on <see cref="T:System.Net.Http.HttpResponseMessage"/>
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ResponseProcessing">
-            <summary>
-            Contains response processing logic
-            </summary>
-        </member>
-        <member name="T:MyLab.ApiClient.ResponseProcessingException">
-            <summary>
-            Occurs in Result provided method when response processing error
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.ResponseProcessingException.#ctor(System.Exception)">
-            <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.ResponseProcessingException"/>
-            </summary>
-        </member>
-        <member name="M:MyLab.ApiClient.VoidResponseProcessor.GetResponse(System.Net.Http.HttpContent,System.Type)">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.IntContentDeserializer.DeserializeCore(System.String)">
             <inheritdoc />
         </member>
-        <member name="M:MyLab.ApiClient.PrimitiveResponseProcessor`1.Predicate(System.Type)">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.LongContentDeserializer.DeserializeCore(System.String)">
             <inheritdoc />
         </member>
-        <member name="M:MyLab.ApiClient.PrimitiveResponseProcessor`1.GetResponse(System.Net.Http.HttpContent,System.Type)">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.PrimitiveContentDeserializer`1.Predicate(System.Type)">
             <inheritdoc />
         </member>
-        <member name="M:MyLab.ApiClient.UintResponseProcessor.Deserialize(System.String)">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.PrimitiveContentDeserializer`1.DeserializeAsync(System.Net.Http.HttpContent,System.Type)">
             <inheritdoc />
         </member>
-        <member name="M:MyLab.ApiClient.IntResponseProcessor.Deserialize(System.String)">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.ShortContentDeserializer.DeserializeCore(System.String)">
             <inheritdoc />
         </member>
-        <member name="M:MyLab.ApiClient.DoubleResponseProcessor.Deserialize(System.String)">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.TimeSpanContentDeserializer.DeserializeCore(System.String)">
             <inheritdoc />
         </member>
-        <member name="M:MyLab.ApiClient.FloatResponseProcessor.Deserialize(System.String)">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UintContentDeserializer.DeserializeCore(System.String)">
             <inheritdoc />
         </member>
-        <member name="M:MyLab.ApiClient.DecimalResponseProcessor.Deserialize(System.String)">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.ULongContentDeserializer.DeserializeCore(System.String)">
             <inheritdoc />
         </member>
-        <member name="M:MyLab.ApiClient.ShortResponseProcessor.Deserialize(System.String)">
-            <inheritdoc />
-        </member>
-        <member name="M:MyLab.ApiClient.UShortResponseProcessor.Deserialize(System.String)">
-            <inheritdoc />
-        </member>
-        <member name="M:MyLab.ApiClient.LongResponseProcessor.Deserialize(System.String)">
-            <inheritdoc />
-        </member>
-        <member name="M:MyLab.ApiClient.ULongResponseProcessor.Deserialize(System.String)">
-            <inheritdoc />
-        </member>
-        <member name="M:MyLab.ApiClient.BoolResponseProcessor.Deserialize(System.String)">
-            <inheritdoc />
-        </member>
-        <member name="M:MyLab.ApiClient.TimeSpanResponseProcessor.Deserialize(System.String)">
-            <inheritdoc />
-        </member>
-        <member name="M:MyLab.ApiClient.DateTimeResponseProcessor.Deserialize(System.String)">
-            <inheritdoc />
-        </member>
-        <member name="M:MyLab.ApiClient.GuidResponseProcessor.Deserialize(System.String)">
-            <inheritdoc />
-        </member>
-        <member name="T:MyLab.ApiClient.UnexpectedResponseContentTypeException">
+        <member name="T:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UnexpectedResponseContentTypeException">
             <summary>
             Throws when response content has unexpected media type
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.UnexpectedResponseContentTypeException.#ctor(System.String)">
+        <member name="P:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UnexpectedResponseContentTypeException.ActualContentType">
             <summary>
-            Initializes a new instance of <see cref="T:MyLab.ApiClient.UnexpectedResponseContentTypeException"/>
+            Gets the actual content type of the response content that caused the exception.
             </summary>
         </member>
-        <member name="T:MyLab.ApiClient.UrlFormItemAttribute">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UnexpectedResponseContentTypeException.#ctor(System.String)">
             <summary>
-            Defines URL-Form item properties
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UnexpectedResponseContentTypeException"/>
             </summary>
         </member>
-        <member name="P:MyLab.ApiClient.UrlFormItemAttribute.Name">
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ContentDeserializing.UShortContentDeserializer.DeserializeCore(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.ResponseProcessing.ResponseCodeException">
             <summary>
-            Specify name to override
+            Throws when got an unexpected response HTTP code
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseProcessing.ResponseCodeException.StatusCode">
+            <summary>
+            Response status code
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.ResponseProcessing.ResponseCodeException.ServerMessage">
+            <summary>
+            Server message
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ResponseCodeException.CreateDescription(System.Net.HttpStatusCode,System.String)">
+            <summary>
+            Format serverMessage
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ResponseCodeException.#ctor(System.Net.HttpStatusCode,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.ResponseProcessing.ResponseCodeException"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.ResponseProcessing.ResponseCodeException.FromResponseMessage(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Creates <see cref="T:MyLab.ApiClient.ResponseProcessing.ResponseCodeException"/> based on <see cref="T:System.Net.Http.HttpResponseMessage"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Tools.HttpMessageDumper">
+            <summary>
+            Contains tools to create dump from http request and response
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.Tools.HttpMessageDumper.DefaultMaxBodySize">
+            <summary>
+            Default max body size for dumping
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.Tools.HttpMessageDumper.ContentIsTooLargeText">
+            <summary>
+            DumpAsync text when body is too large
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.Tools.HttpMessageDumper.SensitiveInfoPlaceholder">
+            <summary>
+            Placeholder written instead of sensitive header values
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Tools.HttpMessageDumper.SensitiveHeaders">
+            <summary>
+            Header names whose values are masked in dumps unless <see cref="P:MyLab.ApiClient.Tools.HttpMessageDumper.ShowSensitiveInfo"/> is <c>true</c>.
+            Comparison is case-insensitive.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Tools.HttpMessageDumper.MaxRequestBodySize">
+            <summary>
+            Set to customize request body size which is maximum dor dumping
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Tools.HttpMessageDumper.MaxResponseBodySize">
+            <summary>
+            Set to customize response body size which is maximum dor dumping
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Tools.HttpMessageDumper.ShowSensitiveInfo">
+            <summary>
+            When <c>true</c>, sensitive header values are written as-is.
+            When <c>false</c> (default), values of headers from <see cref="P:MyLab.ApiClient.Tools.HttpMessageDumper.SensitiveHeaders"/>
+            are replaced with <see cref="F:MyLab.ApiClient.Tools.HttpMessageDumper.SensitiveInfoPlaceholder"/>.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Tools.HttpMessageDumper.DumpAsync(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Dumps a request
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Tools.HttpMessageDumper.DumpAsync(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Dumps a response
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Tools.RequestParameterModelExtractor.FromMethod(System.Reflection.MethodInfo,MyLab.ApiClient.RequestFactoring.ContentFactoring.RequestFactoringSettings)">
+            <summary>
+            Extract <see cref="T:MyLab.ApiClient.Contracts.Models.IRequestParameterModel"/> from reflection method
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.ApiClientProxy">
+            <summary>
+            Represents a dynamic proxy for API client contracts, enabling the interception and processing
+            of API requests based on the specified contract and configuration.
+            </summary>
+            <remarks>
+            This class is designed to dynamically create and manage API client proxies for specified contracts.
+            It utilizes reflection and request processing logic to handle API calls, ensuring proper serialization,
+            deserialization, and request execution.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.ApiClientProxy.CreateForContract``1(MyLab.ApiClient.Usage.IRequestProcessor,MyLab.ApiClient.Options.ApiClientOptions)">
+            <summary>
+            Creates a proxy instance for the specified API contract type.
+            </summary>
+            <typeparam name="TContract">
+            The type of the API contract for which the proxy is being created. 
+            This type must be an interface that defines the API contract.
+            </typeparam>
+            <param name="requestProcessor">
+            The request processor responsible for handling HTTP requests and responses.
+            </param>
+            <param name="options">
+            The options used to configure the API client, including serialization settings and optional HTTP message dumper.
+            </param>
+            <returns>
+            A proxy instance that implements the specified API contract type.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the proxy instance cannot be created.
+            </exception>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.ApiClientProxy.Invoke(System.Reflection.MethodInfo,System.Object[])">
+            <inheritdoc />
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.HttpClientRequestProcessor">
+            <summary>
+            Processes HTTP requests using an <see cref="T:MyLab.ApiClient.DI.IHttpClientProvider"/> to obtain an <see cref="T:System.Net.Http.HttpClient"/>.
+            </summary>
+            <remarks>
+            This class implements the <see cref="T:MyLab.ApiClient.Usage.IRequestProcessor"/> interface and is responsible for sending HTTP requests
+            using the provided <see cref="T:System.Net.Http.HttpClient"/> instance.
+            </remarks>
+        </member>
+        <member name="P:MyLab.ApiClient.Usage.HttpClientRequestProcessor.HttpClientProvider">
+            <summary>
+            Gets the <see cref="T:MyLab.ApiClient.DI.IHttpClientProvider"/> instance used to supply <see cref="T:System.Net.Http.HttpClient"/> objects
+            for processing HTTP requests.
+            </summary>
+            <value>
+            An implementation of <see cref="T:MyLab.ApiClient.DI.IHttpClientProvider"/> that provides <see cref="T:System.Net.Http.HttpClient"/> instances.
+            </value>
+            <remarks>
+            This property is initialized through the constructor and is used internally to obtain
+            <see cref="T:System.Net.Http.HttpClient"/> instances for sending HTTP requests.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.HttpClientRequestProcessor.#ctor(MyLab.ApiClient.DI.IHttpClientProvider)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Usage.HttpClientRequestProcessor"/>
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.HttpClientRequestProcessor.ProcessRequestAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1.ForExpression(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
+            <summary>
+            Creates an API invocation expression based on the provided contract method expression.
+            </summary>
+            <param name="expression">
+            An expression representing a method of the contract interface <typeparamref name="TContract"/> 
+            that defines the API call to be invoked.
+            </param>
+            <returns>
+            An object implementing <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1"/> that allows further configuration 
+            and execution of the API invocation.
+            </returns>
+            <typeparam name="TContract">
+            The type of the contract interface that defines the API methods.
+            </typeparam>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvokerFactory">
+            <summary>
+            Provides a factory for creating API client invokers based on contract types.
+            </summary>
+            <remarks>
+            This class is responsible for generating instances of <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1"/> 
+            using the provided request processor and API client options. It supports both generic and 
+            non-generic contract types.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvokerFactory.FromContract``1(MyLab.ApiClient.Usage.IRequestProcessor,MyLab.ApiClient.Options.ApiClientOptions)">
+            <summary>
+            Creates an API client invoker for the specified contract type.
+            </summary>
+            <typeparam name="TContract">
+            The type of the contract for which the API client invoker is created. 
+            This type defines the API contract that the invoker will adhere to.
+            </typeparam>
+            <returns>
+            An instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1"/> that can be used to invoke API methods
+            defined in the specified contract.
+            </returns>
+            <remarks>
+            This method initializes the necessary components, such as request factoring settings,
+            service model, content deserializers, and processing logic, to create a fully functional
+            API client invoker.
+            </remarks>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.CallDetailsPredicate">
+            <summary>
+            Represents a predicate that evaluates a <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/> instance.
+            </summary>
+            <param name="callDetails">The details of the service call to evaluate.</param>
+            <returns>
+            <c>true</c> if the predicate condition is satisfied for the provided <paramref name="callDetails"/>; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.CancellationTokenInsert">
+            <summary>
+            Contains indications of the source from which to obtain the CancellationToken.
+            </summary>
+        </member>
+        <member name="F:MyLab.ApiClient.Usage.Invocation.CancellationTokenInsert.FromInvoke">
+            <summary>
+            A source is Invocation method
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1">
+            <summary>
+            Defines an interface for invoking API client methods based on a contract interface.
+            </summary>
+            <typeparam name="TContract">
+            The type of the contract interface that specifies the API methods to be invoked.
+            </typeparam>
+            <remarks>
+            This interface provides the capability to create and configure API invocation expressions 
+            for methods defined in the specified contract interface. It serves as an abstraction for 
+            managing API interactions, including request preparation and response handling.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1.ForExpression(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
+            <summary>   
+            Creates an API invocation expression based on the provided contract method expression.
+            </summary>
+            <param name="expression">
+            An expression representing a method of the contract interface <typeparamref name="TContract"/> 
+            that defines the API call to be invoked.
+            </param>
+            <returns>
+            An object implementing <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1"/> that allows further configuration 
+            and execution of the API invocation.
+            </returns>
+            <typeparam name="TContract">
+            The type of the contract interface that defines the API methods.
+            </typeparam>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1">
+            <summary>
+            Represents a conditional starter interface for configuring API invocation expressions 
+            based on specific HTTP status codes or conditions.
+            </summary>
+            <typeparam name="TContract">
+            The type of the API client contract associated with the invocation.
+            </typeparam>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessResult``1(System.Action{``0,System.Net.HttpStatusCode})">
+            <summary>
+            Configures the processing of the result for the current API client invocation.
+            </summary>
+            <typeparam name="TResult">The type of the result to be processed.</typeparam>
+            <param name="action">
+            The action to be executed for processing the result. 
+            It receives the result of type <typeparamref name="TResult"/> (which can be <c>null</c>) 
+            and the HTTP status code of the response.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if the <paramref name="action"/> parameter is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessStatusCode(System.Action{System.Net.HttpStatusCode})">
+            <summary>
+            Configures the API invocation expression to process the HTTP status code of the response
+            using the specified action.
+            </summary>
+            <param name="action">
+            An action to be executed with the HTTP status code of the response.
+            </param>
+            <returns>
+            The API invocation expression for further configuration or execution.
+            </returns>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessProblem(System.Action{MyLab.ApiClient.Problems.ProblemDetails,System.Net.HttpStatusCode})">
+            <summary>
+            Configures a processing action to handle API invocation results as problems.
+            </summary>
+            <param name="action">
+            A delegate that processes the <see cref="T:MyLab.ApiClient.Problems.ProblemDetails"/> object and the associated HTTP status code.
+            </param>
+            <remarks>
+            This method is used to define custom logic for handling API invocation results that are represented
+            as problems, typically conforming to the Problem Details standard (RFC 7807).
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessValidationProblem(System.Action{MyLab.ApiClient.Problems.ValidationProblemDetails,System.Net.HttpStatusCode})">
+            <summary>
+            Configures a processing action to handle validation problems encountered during an API client invocation.
+            </summary>
+            <param name="action">
+            The action to execute when a validation problem occurs. The action receives the 
+            <see cref="T:MyLab.ApiClient.Problems.ValidationProblemDetails"/> instance and the associated HTTP status code as parameters.
+            </param>
+            <remarks>
+            Use this method to define custom logic for handling validation problems, such as logging errors
+            or transforming validation details into a specific format.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessResultAsync``1(System.Func{``0,System.Net.HttpStatusCode,System.Threading.Tasks.Task})">
+            <summary>
+            Configures the asynchronous processing of the result for the current API client invocation.
+            </summary>
+            <typeparam name="TResult">The type of the result to be processed.</typeparam>
+            <param name="func">
+            The asynchronous function to be executed for processing the result. 
+            It receives the result of type <typeparamref name="TResult"/> (which can be <c>null</c>) 
+            and the HTTP status code of the response.
+            </param>
+            <returns>
+            The current API invocation expression, allowing further configuration or execution.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if the <paramref name="func"/> parameter is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessStatusCodeAsync(System.Func{System.Net.HttpStatusCode,System.Threading.Tasks.Task})">
+            <summary>
+            Configures the API invocation expression to process the HTTP status code of the response
+            asynchronously using the specified function.
+            </summary>
+            <param name="func">
+            A function to be executed asynchronously with the HTTP status code of the response.
+            </param>
+            <returns>
+            The API invocation expression for further configuration or execution.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if the <paramref name="func"/> parameter is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessProblemAsync(System.Func{MyLab.ApiClient.Problems.ProblemDetails,System.Net.HttpStatusCode,System.Threading.Tasks.Task})">
+            <summary>
+            Configures an asynchronous processing action to handle API invocation results as problems.
+            </summary>
+            <param name="func">
+            A delegate that processes the <see cref="T:MyLab.ApiClient.Problems.ProblemDetails"/> object and the associated HTTP status code asynchronously.
+            </param>
+            <returns>
+            An instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1"/> to allow further configuration or execution of the API invocation.
+            </returns>
+            <remarks>
+            This method is used to define custom asynchronous logic for handling API invocation results that are represented
+            as problems, typically conforming to the Problem Details standard (RFC 7807).
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1.ProcessValidationProblemAsync(System.Func{MyLab.ApiClient.Problems.ValidationProblemDetails,System.Net.HttpStatusCode,System.Threading.Tasks.Task})">
+            <summary>
+            Configures an asynchronous processing action to handle validation problems encountered during an API client invocation.
+            </summary>
+            <param name="func">
+            The asynchronous function to execute when a validation problem occurs. The function receives the 
+            <see cref="T:MyLab.ApiClient.Problems.ValidationProblemDetails"/> instance and the associated HTTP status code as parameters.
+            </param>
+            <returns>
+            An updated API invocation expression that allows further configuration or execution of the API call.
+            </returns>
+            <remarks>
+            Use this method to define custom asynchronous logic for handling validation problems, such as logging errors,
+            transforming validation details into a specific format, or triggering additional asynchronous operations.
+            </remarks>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1">
+            <summary>
+            Represents an API invocation expression that allows configuration and execution of API calls
+            based on a contract interface.
+            </summary>
+            <typeparam name="TContract">
+            The type of the contract interface that defines the API methods to be invoked.
+            </typeparam>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.When(System.Net.HttpStatusCode,System.Net.HttpStatusCode[])">
+            <summary>
+            Configures processing logic for specific HTTP status codes.
+            </summary>
+            <param name="code">The primary HTTP status code to handle.</param>
+            <param name="anotherCodes">Additional HTTP status codes to handle.</param>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.When1xx">
+            <summary>
+            Configures processing logic specifically for HTTP 1xx (Informational) status codes.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.When2xx">
+            <summary>
+            Configures processing logic specifically for HTTP 2xx (Successful) status codes.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.When3xx">
+            <summary>
+            Configures processing logic specifically for HTTP 3xx (Redirection) status codes.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.When4xx">
+            <summary>
+            Configures processing logic specifically for HTTP 4xx (Client Error) status codes.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.When5xx">
+            <summary>
+            Configures processing logic specifically for HTTP 5xx (Server Error) status codes.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.ThrowIfAnotherStatusCode">
+            <summary>
+            Ensures that an exception is thrown if the HTTP response status code does not match any of the configured status codes.
+            </summary>
+            <returns>
+            The current API invocation expression, allowing for further configuration or execution of the API call.
+            </returns>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1.InvokeAsync(System.Threading.CancellationToken)">
+            <summary>
+            Executes the API call asynchronously based on the configured invocation expression.
+            </summary>
+            <param name="cancellationToken">
+            A token to monitor for cancellation requests.
+            </param>
+            <returns>
+            A task that represents the asynchronous operation. The task result contains detailed information
+            about the service call, including the HTTP request and response details.
+            </returns>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.IProcessingAction">
+            <summary>
+            Defines an action to be performed during the processing of an API call result.
+            </summary>
+        </member>
+        <member name="P:MyLab.ApiClient.Usage.Invocation.IProcessingAction.Predicate">
+            <summary>
+            Gets the predicate that determines whether the processing action should be executed 
+            based on the provided <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/>.
+            </summary>
+            <value>
+            A delegate of type <see cref="T:MyLab.ApiClient.Usage.Invocation.CallDetailsPredicate"/> that evaluates the 
+            <see cref="T:MyLab.ApiClient.ResponseProcessing.CallDetails"/> and returns <c>true</c> if the action should be performed; 
+            otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.IProcessingAction.PerformAsync(MyLab.ApiClient.ResponseProcessing.CallDetails,System.Threading.CancellationToken)">
+            <summary>
+            Executes the processing action asynchronously using the provided call details and cancellation token.
+            </summary>
+            <param name="callDetails">
+            The details of the API call to be processed. Must not be <c>null</c>.
+            </param>
+            <param name="cancellationToken">
+            A token to monitor for cancellation requests.
+            </param>
+            <returns>
+            A task that represents the asynchronous operation.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="callDetails"/> is <c>null</c>.
+            </exception>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.StatusCodePredicate">
+            <summary>
+            Represents a predicate that evaluates a condition on an HTTP status code.
+            </summary>
+            <param name="statusCode">The HTTP status code to evaluate.</param>
+            <returns>
+            <c>true</c> if the condition is met for the specified <paramref name="statusCode"/>; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.Invocation.UnexpectedResponseStatusCodeException">
+            <summary>
+            Represents an exception that is thrown when an API response status code does not match the expected or handled status codes.
+            </summary>
+            <remarks>
+            This exception is typically used in scenarios where API response validation fails, 
+            and the status code is not among the predefined or handled status codes.
+            </remarks>
+        </member>
+        <member name="P:MyLab.ApiClient.Usage.Invocation.UnexpectedResponseStatusCodeException.StatusCode">
+            <summary>
+            Gets the HTTP status code that caused the exception.
+            </summary>
+            <value>
+            The unexpected HTTP status code returned by the API response.
+            </value>
+            <remarks>
+            This property provides the status code that was not expected or handled, 
+            leading to the exception being thrown. It can be used for debugging or 
+            logging purposes to identify the issue with the API response.
+            </remarks>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.Invocation.UnexpectedResponseStatusCodeException.#ctor(System.Net.HttpStatusCode)">
+            <summary>
+            Initializes a new instance of <see cref="T:MyLab.ApiClient.Usage.Invocation.UnexpectedResponseStatusCodeException"/>
+            </summary>
+        </member>
+        <member name="T:MyLab.ApiClient.Usage.IRequestProcessor">
+            <summary>
+            Defines a mechanism for processing HTTP requests in an API client.
+            </summary>
+        </member>
+        <member name="M:MyLab.ApiClient.Usage.IRequestProcessor.ProcessRequestAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            Processes an HTTP request asynchronously and returns the corresponding HTTP response.
             </summary>
         </member>
     </members>
