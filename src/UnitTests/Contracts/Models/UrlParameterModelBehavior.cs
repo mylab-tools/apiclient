@@ -5,6 +5,7 @@ using Moq;
 using MyLab.ApiClient.Contracts.Models;
 using MyLab.ApiClient.RequestFactoring.UrlModifying;
 using Xunit;
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 namespace UnitTests.Contracts.Models;
 

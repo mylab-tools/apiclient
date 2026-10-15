@@ -12,7 +12,7 @@
 - Интеграция с `IServiceCollection` и `IHttpClientFactory`;
 - Конфигурация endpoint-ов через `appsettings.json` или код;
 - Поддержка детализированного результата вызова (`CallDetails`);
-- Безопасная инъекция optional-клиентов через `IApiClientAccessor<TContract>`.
+- Доступ к клиенту и invoker через `IApiClientAccessor<TContract>`.
 
 ## Быстрый старт
 
@@ -973,62 +973,26 @@ string requestDump = await dumper.DumpAsync(httpRequestMessage);
 string responseDump = await dumper.DumpAsync(httpResponseMessage);
 ```
 
-## Безопасная инъекция
+## `IApiClientAccessor<TContract>`
 
-### Проблема optional-клиентов
+`IApiClientAccessor<TContract>` — дополнительный вариант инъекции наряду с `TContract` (proxy) и `IApiClientInvoker<TContract>`. Accessor регистрируется вместе с контрактом и даёт доступ к обоим представлениям клиента:
 
-При регистрации с `optional: true` endpoint может отсутствовать в конфигурации:
-
-```csharp
-services
-    .AddApiClient<IOrdersApi>(optional: true)
-    .ConfigureApiClient(Configuration);
-```
-
-В этом случае фабрики proxy и invoker возвращают `null`. Это удобно для `GetService<IOrdersApi>()`, но опасно при обычной constructor injection:
-
-```csharp
-// Опасно: если endpoint не настроен, api будет null → NullReferenceException при вызове
-public class OrdersService(IOrdersApi api)
-{
-    public Task<OrderDto> GetAsync(string id) => api.GetByIdAsync(id);
-}
-```
-
-Контейнер успешно создаёт сервис, а падение происходит позже, в рантайме.
-
-### Решение: `IApiClientAccessor<TContract>`
-
-`IApiClientAccessor<TContract>` — дополнительный вариант инъекции наряду с `TContract` (proxy) и `IApiClientInvoker<TContract>`. Accessor **всегда** регистрируется и **никогда не бывает `null`**:
-
-| Свойство | Когда endpoint есть | Когда endpoint отсутствует (`optional: true`) |
-|---|---|---|
-| `IsConfigured` | `true` | `false` |
-| `Client` | proxy `TContract` | `null` |
-| `Invoker` | `IApiClientInvoker<TContract>` | `null` |
-
-Пример безопасного использования:
+| Свойство | Описание |
+|---|---|
+| `IsConfigured` | `true`, если клиент создан |
+| `Client` | proxy `TContract` |
+| `Invoker` | `IApiClientInvoker<TContract>` |
 
 ```csharp
 public class OrdersService(IApiClientAccessor<IOrdersApi> orders)
 {
-    public async Task<OrderDto?> TryGetAsync(string id)
-    {
-        if (!orders.IsConfigured)
-            return null; // API не сконфигурирован — штатная ситуация
+    public Task<OrderDto> GetAsync(string id) =>
+        orders.Client!.GetByIdAsync(id);
 
-        return await orders.Client!.GetByIdAsync(id);
-    }
-
-    public async Task<CallDetails?> GetDetailedAsync(string id)
-    {
-        if (!orders.IsConfigured)
-            return null;
-
-        return await orders.Invoker!
+    public Task<CallDetails> GetDetailedAsync(string id) =>
+        orders.Invoker!
             .ForExpression(api => api.GetByIdAsync(id))
             .InvokeAsync();
-    }
 }
 ```
 
@@ -1036,11 +1000,13 @@ public class OrdersService(IApiClientAccessor<IOrdersApi> orders)
 
 ```csharp
 services
-    .AddApiClient<IOrdersApi>(optional: true)
+    .AddApiClient<IOrdersApi>()
     .ConfigureApiClient(Configuration);
 ```
 
-Когда API обязателен (`optional: false`, значение по умолчанию), по-прежнему можно инжектить `IOrdersApi` или `IApiClientInvoker<IOrdersApi>` напрямую. Accessor полезен именно для сценариев, где наличие endpoint зависит от окружения или конфигурации.
+Прямая инъекция `IOrdersApi` или `IApiClientInvoker<IOrdersApi>` по-прежнему доступна.
+
+Рекомендуется использовать в случае, если конфигурация подключения к API опциональна.
 
 ## Тестирование
 
@@ -1184,7 +1150,7 @@ services.AddApiClients(r =>
 services.ConfigureApiClients(Configuration);
 ```
 
-В v4 каждый контракт регистрируется явно; старые `AddApiClients` / `AddOptionalApiClients` / `AddScopedApiClients` помечены Obsolete с ошибкой компиляции и не работают:
+В v4 каждый контракт регистрируется явно; старые `AddApiClients` / `AddScopedApiClients` помечены Obsolete с ошибкой компиляции и не работают:
 
 ```csharp
 // v4
@@ -1200,8 +1166,7 @@ services.AddApiClientScoped<IOrdersApi>();
 
 * вместо `RegisterContract<T>()` внутри callback - цепочка `AddApiClient<T>()` / `AddApiClientScoped<T>()`;
 * `ConfigureApiClients` -> `ConfigureApiClient` (без "s");
-* вместе с контрактом регистрируются proxy (`TContract`), `IApiClientInvoker<TContract>` и `IApiClientAccessor<TContract>`;
-* для необязательных endpoint-ов используйте `AddApiClient<T>(optional: true)` и безопасную инъекцию через `IApiClientAccessor<T>` (см. раздел [Безопасная инъекция](#безопасная-инъекция)).
+* вместе с контрактом регистрируются proxy (`TContract`), `IApiClientInvoker<TContract>` и `IApiClientAccessor<TContract>`.
 
 #### Конфигурирование
 

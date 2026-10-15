@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using MyLab.ApiClient;
 using MyLab.ApiClient.Usage;
 using Xunit;
@@ -60,39 +61,34 @@ public partial class AddServiceCollectionExtensionsBehavior
     }
 
     [Fact]
-    public void ShouldInjectOptionalProxyAsContractImplementation()
+    public void ShouldThrowWhenProxyEndpointIsNotConfigured()
     {
         //Arrange
         var services = new ServiceCollection();
 
         //Act
-        var sp = services.AddApiClient<IContract>(optional: true)
+        var sp = services.AddApiClient<IContract>()
             .ConfigureApiClient(_ => { })
             .BuildServiceProvider();
 
-        var client = sp.GetService<IContract>();
-
         //Assert
-        Assert.Null(client);
+        Assert.Throws<InvalidOperationException>(() => sp.GetRequiredService<IContract>());
     }
 
     [Fact]
-    public void ShouldInjectOptionalProxyAsContractImplementationScoped()
+    public void ShouldThrowWhenProxyEndpointIsNotConfiguredScoped()
     {
         //Arrange
         var services = new ServiceCollection();
 
         //Act
-        var sp = services.AddApiClientScoped<IContract>(optional: true)
+        var sp = services.AddApiClientScoped<IContract>()
             .ConfigureApiClient(_ => { })
             .BuildServiceProvider();
 
-        IContract scopedContract;
-
-        using (var scope = sp.CreateScope())
-            scopedContract = scope.ServiceProvider.GetService<IContract>();
+        using var scope = sp.CreateScope();
 
         //Assert
-        Assert.Null(scopedContract);
+        Assert.Throws<InvalidOperationException>(() => scope.ServiceProvider.GetRequiredService<IContract>());
     }
 }

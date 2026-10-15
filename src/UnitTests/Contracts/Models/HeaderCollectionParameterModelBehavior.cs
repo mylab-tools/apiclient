@@ -5,6 +5,7 @@ using System.Net.Http;
 using JetBrains.Annotations;
 using MyLab.ApiClient.Contracts.Models;
 using Xunit;
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 namespace UnitTests.Contracts.Models;
 
@@ -54,9 +55,9 @@ public class HeaderCollectionParameterModelBehavior
         var request = new HttpRequestMessage();
         var headers = new List<KeyValuePair<string, object>>
         {
-            new KeyValuePair<string, object>("Header1", "Value1"),
-            new KeyValuePair<string, object>("Header2", 123),
-            new KeyValuePair<string, object>("Header3", null)
+            new("Header1", "Value1"),
+            new("Header2", 123),
+            new("Header3", null)
         };
 
         // Act
@@ -91,7 +92,7 @@ public class HeaderCollectionParameterModelBehavior
         var request = new HttpRequestMessage();
         var headers = new List<KeyValuePair<string, object>>
         {
-            new KeyValuePair<string, object>("Header1", null)
+            new("Header1", null)
         };
 
         // Act
@@ -109,7 +110,7 @@ public class HeaderCollectionParameterModelBehavior
         var request = new HttpRequestMessage();
         var headers = new List<KeyValuePair<string, object>>
         {
-            new KeyValuePair<string, object>("Header1", "Value!@#$%^&*()")
+            new("Header1", "Value!@#$%^&*()")
         };
 
         // Act
@@ -127,7 +128,7 @@ public class HeaderCollectionParameterModelBehavior
         var request = new HttpRequestMessage();
         var headers = new List<KeyValuePair<string, object>>
         {
-            new KeyValuePair<string, object>("Header1", new[] { "Value1", "Value2" })
+            new("Header1", new[] { "Value1", "Value2" })
         };
 
         // Act

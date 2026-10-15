@@ -18,7 +18,7 @@ public class ApiClientOptionsBehavior
     public void ShouldExtractJsonSettingsFromConfiguration()
     {
         // Arrange
-        var configurationData = new Dictionary<string, string>
+        var configurationData = new Dictionary<string, string?>
         {
             { ApiClientOptions.DefaultSectionName + ":JsonSettings:IgnoreNullValues", "false" }
         };
@@ -39,7 +39,7 @@ public class ApiClientOptionsBehavior
     public void ShouldExtractApiUrlFormSettingsFromConfiguration()
     {
         // Arrange
-        var configurationData = new Dictionary<string, string>
+        var configurationData = new Dictionary<string, string?>
         {
             { ApiClientOptions.DefaultSectionName + ":UrlFormSettings:EscapeSymbols", "false" },
             { ApiClientOptions.DefaultSectionName + ":UrlFormSettings:IgnoreNullValues", "true" }
@@ -52,7 +52,7 @@ public class ApiClientOptionsBehavior
         var options = GetOptions(configuration);
 
         // Assert
-        Assert.NotNull(options.UrlFormSettings);
+        Assert.NotNull(options?.UrlFormSettings);
         Assert.False(options.UrlFormSettings.EscapeSymbols);
         Assert.True(options.UrlFormSettings.IgnoreNullValues);
     }
@@ -61,7 +61,7 @@ public class ApiClientOptionsBehavior
     public void ShouldExtractEndpointsFromConfigurationWithEndpointSections()
     {
         // Arrange
-        var configurationData = new Dictionary<string, string>
+        var configurationData = new Dictionary<string, string?>
         {
             { ApiClientOptions.DefaultSectionName + ":Endpoints:ServiceA:Url", "https://service-a.com" },
             { ApiClientOptions.DefaultSectionName + ":Endpoints:ServiceA:SkipServerSslCertVerification", "true" },
@@ -75,7 +75,7 @@ public class ApiClientOptionsBehavior
         var options = GetOptions(configuration);
         
         // Assert
-        Assert.NotNull(options.Endpoints);
+        Assert.NotNull(options?.Endpoints);
         Assert.Equal(2, options.Endpoints.Count);
         Assert.True(options.Endpoints.ContainsKey("ServiceA"));
         Assert.Equal("https://service-a.com", options.Endpoints["ServiceA"].Url);
@@ -89,7 +89,7 @@ public class ApiClientOptionsBehavior
     public void ShouldExtractEndpointsFromConfigurationWithoutEndpointSections()
     {
         // Arrange
-        var configurationData = new Dictionary<string, string>
+        var configurationData = new Dictionary<string, string?>
         {
             { ApiClientOptions.DefaultSectionName + ":ServiceA", "https://service-a.com" },
             { ApiClientOptions.DefaultSectionName + ":ServiceB", "https://service-b.com" }
@@ -102,7 +102,7 @@ public class ApiClientOptionsBehavior
         var options = GetOptions(configuration);
 
         // Assert
-        Assert.NotNull(options.Endpoints);
+        Assert.NotNull(options?.Endpoints);
         Assert.Equal(2, options.Endpoints.Count);
         Assert.True(options.Endpoints.ContainsKey("ServiceA"));
         Assert.Equal("https://service-a.com", options.Endpoints["ServiceA"].Url);
@@ -116,10 +116,12 @@ public class ApiClientOptionsBehavior
     public void ShouldThrowExceptionForNullSection()
     {
         // Arrange
-        IConfiguration config = null;
+        IConfiguration? config = null;
         // Act & Assert
         var exception = Assert.Throws<ArgumentNullException>(() =>
-            GetOptions(config)
+#pragma warning disable CS8604 // Possible null reference argument.
+                GetOptions(config)
+#pragma warning restore CS8604 // Possible null reference argument.
         );
         Assert.Equal("Value cannot be null. (Parameter 'config')", exception.Message);
     }
@@ -141,7 +143,7 @@ public class ApiClientOptionsBehavior
     public void ShouldHandleEmptyEndpoints()
     {
         // Arrange
-        var configurationData = new Dictionary<string, string>
+        var configurationData = new Dictionary<string, string?>
         {
             { ApiClientOptions.DefaultSectionName + ":UrlFormSettings:EscapeSymbols", "true" }
         };
@@ -158,7 +160,7 @@ public class ApiClientOptionsBehavior
         Assert.Empty(options.Endpoints);
     }
 
-    ApiClientOptions GetOptions(IConfiguration config)
+    ApiClientOptions? GetOptions(IConfiguration config)
     {
         var sp = new ServiceCollection()
             .ConfigureApiClient(config)
@@ -166,6 +168,6 @@ public class ApiClientOptionsBehavior
 
         var opts = sp.GetService<IOptions<ApiClientOptions>>();
 
-        return opts.Value;
+        return opts?.Value;
     }
 }

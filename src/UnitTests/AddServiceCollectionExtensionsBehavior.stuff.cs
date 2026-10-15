@@ -26,18 +26,16 @@ public partial class AddServiceCollectionExtensionsBehavior
         Assert.Equal("http://foo.com", httpClient.BaseAddress!.ToString().TrimEnd('/'));
     }
 
-    public static object[][] GetBindingKeysCases()
+    public static string?[][] GetBindingKeysCases()
     {
-        return new[]
-        {
-            new[] { "foo" },
-            new[] { nameof(IContract) },
-            new[] { typeof(IContract).FullName },
-        };
+        return
+        [
+            ["foo"],
+            [nameof(IContract)],
+            [typeof(IContract).FullName]
+        ];
     }
 
     [ApiContract(Binding = "foo")]
-    interface IContract
-    {
-    }
+    interface IContract;
 }

@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using MyLab.ApiClient.RequestFactoring.UrlModifying;
 using Xunit;
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 namespace UnitTests.RequestFactoring.UrlModifying;
 
@@ -23,7 +24,7 @@ public class UrlPathInjectorBehavior
     [InlineData("/relative/{param}/path", "param", "", "/relative/path")]
     [InlineData("/relative/{param}/path", "param", "value with spaces", "/relative/value%20with%20spaces/path")]
     [InlineData("/relative/{param}/path", "param", "value/with/slash", "/relative/value%2Fwith%2Fslash/path")]
-    public void ShouldModifyPathCorrectly(string origin, string paramName, object value, string expected)
+    public void ShouldModifyPathCorrectly(string origin, string paramName, object? value, string expected)
     {
         // Arrange
         var injector = new UrlPathInjector();
@@ -42,7 +43,7 @@ public class UrlPathInjectorBehavior
     [InlineData("http://example.com/{param}", "param", "", "http://example.com")]
     [InlineData("http://example.com/{param}", "param", "value with spaces", "http://example.com/value%20with%20spaces")]
     [InlineData("http://example.com/{param}", "param", "value/with/slash", "http://example.com/value%2Fwith%2Fslash")]
-    public void ShouldHandleAbsoluteUris(string origin, string paramName, object value, string expected)
+    public void ShouldHandleAbsoluteUris(string origin, string paramName, object? value, string expected)
     {
         // Arrange
         var injector = new UrlPathInjector();
@@ -61,7 +62,7 @@ public class UrlPathInjectorBehavior
     [InlineData("/relative/{param}", "param", "", "/relative")]
     [InlineData("/relative/{param}", "param", "value with spaces", "/relative/value%20with%20spaces")]
     [InlineData("/relative/{param}", "param", "value/with/slash", "/relative/value%2Fwith%2Fslash")]
-    public void ShouldHandleRelativeUris(string origin, string paramName, object value, string expected)
+    public void ShouldHandleRelativeUris(string origin, string paramName, object? value, string expected)
     {
         // Arrange
         var injector = new UrlPathInjector();

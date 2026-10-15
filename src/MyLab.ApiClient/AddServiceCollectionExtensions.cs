@@ -16,11 +16,11 @@ public static class AddServiceCollectionExtensions
         /// <summary>
         /// Adds an API client for the specified contract type to the <see cref="IServiceCollection"/>.
         /// </summary>
-        public IServiceCollection AddApiClient<TContract>(bool optional = false)
+        public IServiceCollection AddApiClient<TContract>()
             where TContract : class
         {
-            new HttpClientRegistrar<TContract>{ Optional = optional }.Register(services);
-            new ApiContractRegistrar<TContract>{ Optional = optional }.Register(services);
+            new HttpClientRegistrar<TContract>().Register(services);
+            new ApiContractRegistrar<TContract>().Register(services);
 
             return services;
         }
@@ -28,11 +28,11 @@ public static class AddServiceCollectionExtensions
         /// <summary>
         /// Adds an API client for the specified contract type to the <see cref="IServiceCollection"/> with a scoped lifetime.
         /// </summary>
-        public IServiceCollection AddApiClientScoped<TContract>(bool optional = false)
+        public IServiceCollection AddApiClientScoped<TContract>()
             where TContract : class
         {
-            new HttpClientRegistrar<TContract> { Optional = optional }.Register(services);
-            new ApiContractRegistrar<TContract> { Optional = optional }.RegisterScoped(services);
+            new HttpClientRegistrar<TContract>().Register(services);
+            new ApiContractRegistrar<TContract>().RegisterScoped(services);
 
             return services;
         }

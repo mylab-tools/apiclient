@@ -4,7 +4,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>4.0.0</Version>
     <Authors>Andrey O.</Authors>
     <Description>.NET library for integrating MyLab.ApiClient mechanisms into xUnit tests.</Description>
     <Copyright>Copyright (c) 2026 Andrey Osintsev &lt;ozzy.ext@gmail.com&gt;</Copyright>
@@ -14,8 +13,6 @@
     <RepositoryUrl>https://github.com/ozzy-ext-mylab/apiclient.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>http;api;xunit </PackageTags>
-    <AssemblyVersion>4.0.0.1510</AssemblyVersion>
-    <FileVersion>4.0.0.1510</FileVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 

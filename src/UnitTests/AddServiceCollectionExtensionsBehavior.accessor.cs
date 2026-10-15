@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using MyLab.ApiClient;
 using MyLab.ApiClient.DI;
@@ -50,43 +51,35 @@ public partial class AddServiceCollectionExtensionsBehavior
     }
 
     [Fact]
-    public void ShouldInjectUnconfiguredOptionalAccessor()
+    public void ShouldThrowWhenAccessorEndpointIsNotConfigured()
     {
         //Arrange
         var services = new ServiceCollection();
 
         //Act
-        var sp = services.AddApiClient<IContract>(optional: true)
+        var sp = services.AddApiClient<IContract>()
             .ConfigureApiClient(_ => { })
             .BuildServiceProvider();
 
-        var accessor = sp.GetRequiredService<IApiClientAccessor<IContract>>();
-
         //Assert
-        Assert.False(accessor.IsConfigured);
-        Assert.Null(accessor.Client);
-        Assert.Null(accessor.Invoker);
-        Assert.Null(sp.GetService<IContract>());
-        Assert.Null(sp.GetService<IApiClientInvoker<IContract>>());
+        Assert.Throws<InvalidOperationException>(() => sp.GetRequiredService<IApiClientAccessor<IContract>>());
     }
 
     [Fact]
-    public void ShouldInjectUnconfiguredOptionalAccessorScoped()
+    public void ShouldThrowWhenAccessorEndpointIsNotConfiguredScoped()
     {
         //Arrange
         var services = new ServiceCollection();
 
         //Act
-        var sp = services.AddApiClientScoped<IContract>(optional: true)
+        var sp = services.AddApiClientScoped<IContract>()
             .ConfigureApiClient(_ => { })
             .BuildServiceProvider();
 
         using var scope = sp.CreateScope();
-        var accessor = scope.ServiceProvider.GetRequiredService<IApiClientAccessor<IContract>>();
 
         //Assert
-        Assert.False(accessor.IsConfigured);
-        Assert.Null(accessor.Client);
-        Assert.Null(accessor.Invoker);
+        Assert.Throws<InvalidOperationException>(() =>
+            scope.ServiceProvider.GetRequiredService<IApiClientAccessor<IContract>>());
     }
 }

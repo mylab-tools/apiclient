@@ -24,17 +24,19 @@ public class ResponseCodeException : Exception
     /// <summary>
     /// Format serverMessage
     /// </summary>
-    public static string CreateDescription(HttpStatusCode statusCode, string? serverMessage)
-        => $"{(int)statusCode}({statusCode}). {serverMessage ?? "[no message]"}.";
+    public static string CreateDescription(HttpStatusCode statusCode, string serverMessage)
+        => $"{(int)statusCode}({statusCode}). {serverMessage}.";
+
+    static string SafeMessage(string? originMsg) => originMsg ?? "[no message]";
 
     /// <summary>
     /// Initializes a new instance of <see cref="ResponseCodeException"/>
     /// </summary>
-    public ResponseCodeException(HttpStatusCode statusCode, string serverMessage)
-        : base(CreateDescription(statusCode, serverMessage))
+    public ResponseCodeException(HttpStatusCode statusCode, string? serverMessage)
+        : base(CreateDescription(statusCode, SafeMessage(serverMessage)))
     {
         StatusCode = statusCode;
-        ServerMessage = serverMessage;
+        ServerMessage = SafeMessage(serverMessage);
     }
 
     /// <summary>
@@ -42,8 +44,8 @@ public class ResponseCodeException : Exception
     /// </summary>
     public static async Task<ResponseCodeException> FromResponseMessage(HttpResponseMessage responseMsg)
     {
-        var contentString = await GetMessageFromResponseContentAsync(responseMsg.Content);
-        var msg = !string.IsNullOrWhiteSpace(contentString)
+        string contentString = await GetMessageFromResponseContentAsync(responseMsg.Content);
+        var msg = string.IsNullOrWhiteSpace(contentString)
             ? contentString
             : responseMsg.ReasonPhrase;
 

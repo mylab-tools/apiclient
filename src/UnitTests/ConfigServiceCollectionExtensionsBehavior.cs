@@ -7,6 +7,9 @@ using Microsoft.Extensions.Options;
 using MyLab.ApiClient;
 using MyLab.ApiClient.Options;
 using Xunit;
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 
 namespace UnitTests;
 
@@ -32,10 +35,9 @@ public class ConfigServiceCollectionExtensionsBehavior
         //Arrange
         var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new[]
-            {
-                new KeyValuePair<string, string>("ApiClient:Endpoints:foo:Url", "http://foo.com")
-            })
+            .AddInMemoryCollection([
+                new KeyValuePair<string, string?>("ApiClient:Endpoints:foo:Url", "http://foo.com")
+            ])
             .Build();
 
         //Act
@@ -56,7 +58,7 @@ public class ConfigServiceCollectionExtensionsBehavior
         var services = new ServiceCollection();
 
         //Act & Assert
-        Assert.Throws<ArgumentNullException>(() => services.ConfigureApiClient((Action<ApiClientOptions>)null));
+        Assert.Throws<ArgumentNullException>(() => services.ConfigureApiClient(null));
     }
 
     [Fact]
@@ -84,10 +86,9 @@ public class ConfigServiceCollectionExtensionsBehavior
     {
         //Arrange
         var services = new ServiceCollection();
-        var configuration = new ConfigurationBuilder().AddInMemoryCollection(new[]
-            {
-                new KeyValuePair<string, string>("MyApiEndpointSection:Url", "http://custom.com")
-            })
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection([
+                new KeyValuePair<string, string?>("MyApiEndpointSection:Url", "http://custom.com")
+            ])
             .Build();
 
         //Act
@@ -107,10 +108,9 @@ public class ConfigServiceCollectionExtensionsBehavior
     {
         //Arrange
         var services = new ServiceCollection();
-        var configuration = new ConfigurationBuilder().AddInMemoryCollection(new[]
-            {
-                new KeyValuePair<string, string>("MyApiEndpointSection:Url", "http://contract.com")
-            })
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection([
+                new KeyValuePair<string, string?>("MyApiEndpointSection:Url", "http://contract.com")
+            ])
             .Build();
 
         //Act

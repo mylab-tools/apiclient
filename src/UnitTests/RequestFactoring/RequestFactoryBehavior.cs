@@ -8,6 +8,7 @@ using MyLab.ApiClient.Contracts.Models;
 using MyLab.ApiClient.RequestFactoring;
 using MyLab.ApiClient.RequestFactoring.UrlModifying;
 using Xunit;
+#pragma warning disable CS8604 // Possible null reference argument.
 
 namespace UnitTests.RequestFactoring;
 
@@ -16,7 +17,7 @@ public class RequestFactoryBehavior
 {
     [Theory]
     [InlineData(null)]
-    public void ShouldThrowArgumentNullExceptionWhenParametersAreNull(object[] parameters)
+    public void ShouldThrowArgumentNullExceptionWhenParametersAreNull(object[]? parameters)
     {
         // Arrange
         var serviceDesc = new ServiceModel(new Dictionary<int, EndpointModel>());
@@ -31,15 +32,14 @@ public class RequestFactoryBehavior
     public void ShouldThrowInvalidApiContractExceptionWhenParameterCountMismatch()
     {
         // Arrange
-        var epDesc = new EndpointModel(HttpMethod.Get, new[]
-            {
-                new UrlParameterModel(0, "param1", new UrlQueryInjector())
-            });
+        var epDesc = new EndpointModel(HttpMethod.Get, [
+            new UrlParameterModel(0, "param1", new UrlQueryInjector())
+        ]);
         var serviceDesc = new ServiceModel(new Dictionary<int, EndpointModel>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
         // Act & Assert
-        Assert.Throws<InvalidApiContractException>(() => factory.Create(new object[0]));
+        Assert.Throws<InvalidApiContractException>(() => factory.Create([]));
     }
 
     [Fact]
@@ -86,15 +86,14 @@ public class RequestFactoryBehavior
         parameterDescription.Setup(p => p.Position).Returns(0);
         parameterDescription.Setup(p => p.Apply(It.IsAny<HttpRequestMessage>(), It.IsAny<object>()));
 
-        var epDesc = new EndpointModel(HttpMethod.Get, new[]
-        {
+        var epDesc = new EndpointModel(HttpMethod.Get, [
             parameterDescription.Object
-        });
+        ]);
         var serviceDesc = new ServiceModel(new Dictionary<int, EndpointModel>());
         var factory = new RequestFactory(serviceDesc, epDesc);
 
         // Act
-        var request = factory.Create(new object[] { "value" });
+        var request = factory.Create(["value"]);
 
         // Assert
         parameterDescription.Verify(p => p.Apply(It.IsAny<HttpRequestMessage>(), "value"), Times.Once);
