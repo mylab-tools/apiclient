@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 using Xunit;
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+#pragma warning disable CS8604 // Possible null reference argument.
 
 namespace UnitTests.ResponseProcessing.ContentDeserializing;
 
@@ -17,7 +19,7 @@ public class BinaryContentDeserializerBehavior
     [InlineData(typeof(byte[]), true)]
     [InlineData(typeof(string), false)]
     [InlineData(null, false)]
-    public void ShouldCorrectlyPredicateReturnType(Type returnType, bool expectedResult)
+    public void ShouldCorrectlyPredicateReturnType(Type? returnType, bool expectedResult)
     {
         // Act
         var result = _deserializer.Predicate(returnType);

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using MyLab.ApiClient.ResponseProcessing.ContentDeserializing;
 using Xunit;
+#pragma warning disable CS8605 // Unboxing a possibly null value.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 namespace UnitTests.ResponseProcessing.ContentDeserializing;
 

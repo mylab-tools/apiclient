@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using MyLab.ApiClient.RequestFactoring.ContentFactoring;
 using Xunit;
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 namespace UnitTests.RequestFactoring.ContentFactoring;
 

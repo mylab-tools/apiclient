@@ -5,6 +5,7 @@ using MyLab.ApiClient.Contracts.Attributes.ForContract;
 using MyLab.ApiClient.Contracts.Attributes.ForMethod;
 using MyLab.ApiClient.Contracts.Attributes.ForParameters;
 using Xunit;
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 namespace UnitTests.Contracts;
 

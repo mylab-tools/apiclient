@@ -6,6 +6,7 @@ using System;
 using System.Net.Http;
 using MyLab.ApiClient.Usage;
 using MyLab.ApiClient.Usage.Invocation;
+#pragma warning disable CS8634 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'class' constraint.
 
 namespace MyLab.ApiClient.DI;
 
@@ -42,7 +43,7 @@ class ApiContractRegistrar<TContract> where TContract : class
         });
 
         //Inject accessor (always non-null; Client/Invoker may be null when optional)
-        services.AddSingleton<IApiClientAccessor<TContract>>(CreateAccessor);
+        services.AddSingleton(CreateAccessor);
     }
 
     public void RegisterScoped(IServiceCollection services)

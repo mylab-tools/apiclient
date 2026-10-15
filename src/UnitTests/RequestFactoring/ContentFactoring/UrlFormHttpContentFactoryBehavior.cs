@@ -150,14 +150,14 @@ public class UrlFormHttpContentFactoryBehavior
         Assert.Equal("Name=Test&Value=Value With Spaces", await result.ReadAsStringAsync(TestContext.Current.CancellationToken));
     }
 
-    public static IEnumerable<object[]> ContentCreationCases()
+    public static IEnumerable<object?[]> ContentCreationCases()
     {
         yield return [null, null, ""];
         yield return [null, new [] { true, false }, ""];
         yield return [new object(), null, ""];
         yield return [new { Name = "Test", Value = "Value" }, null, "Name=Test&Value=Value"];
-        yield return [new { Name = "Test", Value = (object)null }, new [] { true /*no matter in this case*/, false }, "Name=Test&Value="];
-        yield return [new { Name = "Test", Value = (object)null }, new [] { true /*no matter in this case*/, true }, "Name=Test"];
+        yield return [new { Name = "Test", Value = (object?)null }, new [] { true /*no matter in this case*/, false }, "Name=Test&Value="];
+        yield return [new { Name = "Test", Value = (object?)null }, new [] { true /*no matter in this case*/, true }, "Name=Test"];
         yield return [new { Name = "Test", Value = "Value" }, new [] { true }, "Name=Test&Value=Value"];
         yield return [new { Name = "Test", Value = "Value" }, new [] { false }, "Name=Test&Value=Value"];
         yield return [new { Name = "Test", Value = "Value With Spaces" }, new [] { true }, "Name=Test&Value=Value%20With%20Spaces"

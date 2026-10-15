@@ -19,11 +19,11 @@ public partial class ApiContractBindingBehavior
 
     public static object[][] GetBindingKeysCases()
     {
-        return new[]
-        {
-            new[] { "CustomBinding" },
-            new[] { nameof(ITestContractWithCustomBinding) },
-            new[] { typeof(ITestContractWithCustomBinding).FullName },
-        };
+        return
+        [
+            ["CustomBinding"],
+            [nameof(ITestContractWithCustomBinding)],
+            [typeof(ITestContractWithCustomBinding).FullName!]
+        ];
     }
 }

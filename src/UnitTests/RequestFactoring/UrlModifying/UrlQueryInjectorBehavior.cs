@@ -2,6 +2,8 @@
 using JetBrains.Annotations;
 using MyLab.ApiClient.RequestFactoring.UrlModifying;
 using Xunit;
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+#pragma warning disable CS8604 // Possible null reference argument.
 
 namespace UnitTests.RequestFactoring.UrlModifying;
 
@@ -19,7 +21,7 @@ public class UrlQueryInjectorBehavior
     [InlineData("http://example.com/path", "param", "value", "http://example.com/path?param=value")]
     [InlineData("/relative-path", "param", "value", "/relative-path?param=value")]
     [InlineData("/relative-path?existing=1", "param", "value", "/relative-path?existing=1&param=value")]
-    public void ShouldModifyUriWithQuery(string origin, string paramName, object value, string expected)
+    public void ShouldModifyUriWithQuery(string origin, string paramName, object? value, string expected)
     {
         // Arrange
         var injector = new UrlQueryInjector();
@@ -35,7 +37,7 @@ public class UrlQueryInjectorBehavior
     [Theory]
     [InlineData("http://example.com", null, "value")]
     [InlineData("http://example.com", "", "value")]
-    public void ShouldThrowExceptionWhenParamNameIsInvalid(string origin, string paramName, object value)
+    public void ShouldThrowExceptionWhenParamNameIsInvalid(string origin, string? paramName, object value)
     {
         // Arrange
         var injector = new UrlQueryInjector();

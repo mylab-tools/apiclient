@@ -28,8 +28,5 @@ public interface IApiClientInvoker<TContract>
     /// An object implementing <see cref="IApiInvocationExpression{TContract}"/> that allows further configuration 
     /// and execution of the API invocation.
     /// </returns>
-    /// <typeparam name="TContract">
-    /// The type of the contract interface that defines the API methods.
-    /// </typeparam>
     IApiInvocationExpression<TContract> ForExpression(Expression<Func<TContract, Task>> expression);
 }

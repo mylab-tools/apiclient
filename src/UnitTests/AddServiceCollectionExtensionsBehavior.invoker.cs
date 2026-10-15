@@ -88,7 +88,7 @@ public partial class AddServiceCollectionExtensionsBehavior
             .ConfigureApiClient(_ => { })
             .BuildServiceProvider();
 
-        IApiClientInvoker<IContract> scopedInvoker;
+        IApiClientInvoker<IContract>? scopedInvoker;
 
         using (var scope = sp.CreateScope())
             scopedInvoker = scope.ServiceProvider.GetService<IApiClientInvoker<IContract>>();

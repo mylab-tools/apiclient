@@ -46,8 +46,8 @@ public class MediaTypeProcBehavior
         content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/xml");
 
         var proc = new MediaTypeProc(content)
-            .Supports("application/json", async c => await Task.FromResult<object?>("json-result"))
-            .Default(async c => await Task.FromResult<object?>("default-result"));
+            .Supports("application/json", async c => await Task.FromResult<object>("json-result"))
+            .Default(async c => await Task.FromResult<object>("default-result"));
 
         // Act
         var result = await proc.GetResultAsync();
@@ -64,7 +64,7 @@ public class MediaTypeProcBehavior
         content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/xml");
 
         var proc = new MediaTypeProc(content)
-            .Supports("application/json", async c => await Task.FromResult<object?>("json-result"));
+            .Supports("application/json", async c => await Task.FromResult<object>("json-result"));
 
         // Act & Assert
         await Assert.ThrowsAsync<UnexpectedResponseContentTypeException>(() => proc.GetResultAsync());
@@ -92,7 +92,7 @@ public class MediaTypeProcBehavior
         var proc = new MediaTypeProc(content);
 
         // Act
-        var newProc = proc.Default(async c => await Task.FromResult<object?>("default-result"));
+        var newProc = proc.Default(async c => await Task.FromResult<object>("default-result"));
 
         // Assert
         Assert.NotSame(proc, newProc);

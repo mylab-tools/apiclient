@@ -1404,22 +1404,6 @@
         <member name="M:MyLab.ApiClient.Usage.HttpClientRequestProcessor.ProcessRequestAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="M:MyLab.ApiClient.Usage.Invocation.ApiClientInvoker`1.ForExpression(System.Linq.Expressions.Expression{System.Func{`0,System.Threading.Tasks.Task}})">
-            <summary>
-            Creates an API invocation expression based on the provided contract method expression.
-            </summary>
-            <param name="expression">
-            An expression representing a method of the contract interface <typeparamref name="TContract"/> 
-            that defines the API call to be invoked.
-            </param>
-            <returns>
-            An object implementing <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1"/> that allows further configuration 
-            and execution of the API invocation.
-            </returns>
-            <typeparam name="TContract">
-            The type of the contract interface that defines the API methods.
-            </typeparam>
-        </member>
         <member name="T:MyLab.ApiClient.Usage.Invocation.ApiClientInvokerFactory">
             <summary>
             Provides a factory for creating API client invokers based on contract types.
@@ -1492,9 +1476,6 @@
             An object implementing <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiInvocationExpression`1"/> that allows further configuration 
             and execution of the API invocation.
             </returns>
-            <typeparam name="TContract">
-            The type of the contract interface that defines the API methods.
-            </typeparam>
         </member>
         <member name="T:MyLab.ApiClient.Usage.Invocation.IApiExpressionConditionalStarter`1">
             <summary>

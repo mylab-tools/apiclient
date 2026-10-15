@@ -3,6 +3,7 @@ using System.Net.Http;
 using JetBrains.Annotations;
 using MyLab.ApiClient.Contracts.Models;
 using Xunit;
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 namespace UnitTests.Contracts.Models;
 
@@ -52,7 +53,7 @@ public class HeaderParameterModelBehavior
     [InlineData(" ")]
     [InlineData("123")]
     [InlineData(null)]
-    public void ShouldApplyHeaderCorrectly(string value)
+    public void ShouldApplyHeaderCorrectly(string? value)
     {
         // Arrange
         var headerParamDesc = new HeaderParameterModel(0, "HeaderName");
