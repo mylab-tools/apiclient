@@ -11,7 +11,7 @@ public class UrlQueryInjectorBehavior
     [Theory]
     [InlineData("http://example.com", "param", "value", "http://example.com?param=value")]
     [InlineData("http://example.com?existing=1", "param", "value", "http://example.com?existing=1&param=value")]
-    [InlineData("http://example.com", "param", null, "http://example.com?param=")]
+    [InlineData("http://example.com", "param", null, "http://example.com")]
     [InlineData("http://example.com", "param", "", "http://example.com?param=")]
     [InlineData("http://example.com", "param", "a b", "http://example.com?param=a%20b")]
     [InlineData("http://example.com", "param", "a+b", "http://example.com?param=a%2Bb")]

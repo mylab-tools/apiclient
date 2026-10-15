@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>4.0.0</Version>
+    <Version>4.0.1</Version>
     <Authors>Andrey O.</Authors>
     <Copyright>Copyright (c) 2026 Andrey Osintsev &lt;ozzy.ext@gmail.com&gt;</Copyright>
     <PackageProjectUrl>https://github.com/ozzy-ext-mylab/apiclient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ozzy-ext-mylab/apiclient.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>4.0.0.1510</AssemblyVersion>
-    <FileVersion>4.0.0.1510</FileVersion>
+    <AssemblyVersion>4.0.1.1510</AssemblyVersion>
+    <FileVersion>4.0.1.1510</FileVersion>
     <Description>.NET library for declarative description of HTTP API contracts and calling remote services via a type‑safe .NET interface.</Description>
     <PackageTags>http;api;fluent</PackageTags>
     <PackageIcon>tools.png</PackageIcon>
