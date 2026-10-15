@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using MyLab.ApiClient;
 using MyLab.ApiClient.Usage;
 using MyLab.ApiClient.Usage.Invocation;
@@ -61,39 +62,35 @@ public partial class AddServiceCollectionExtensionsBehavior
     }
 
     [Fact]
-    public void ShouldInjectOptionalInvokerAsContractImplementation()
+    public void ShouldThrowWhenInvokerEndpointIsNotConfigured()
     {
         //Arrange
         var services = new ServiceCollection();
 
         //Act
-        var sp = services.AddApiClient<IContract>(optional: true)
+        var sp = services.AddApiClient<IContract>()
             .ConfigureApiClient(_ => { })
             .BuildServiceProvider();
 
-        var invoker = sp.GetService<IApiClientInvoker<IContract>>();
-
         //Assert
-        Assert.Null(invoker);
+        Assert.Throws<InvalidOperationException>(() => sp.GetRequiredService<IApiClientInvoker<IContract>>());
     }
 
     [Fact]
-    public void ShouldInjectOptionalInvokerAsContractImplementationScoped()
+    public void ShouldThrowWhenInvokerEndpointIsNotConfiguredScoped()
     {
         //Arrange
         var services = new ServiceCollection();
 
         //Act
-        var sp = services.AddApiClientScoped<IContract>(optional: true)
+        var sp = services.AddApiClientScoped<IContract>()
             .ConfigureApiClient(_ => { })
             .BuildServiceProvider();
 
-        IApiClientInvoker<IContract>? scopedInvoker;
-
-        using (var scope = sp.CreateScope())
-            scopedInvoker = scope.ServiceProvider.GetService<IApiClientInvoker<IContract>>();
+        using var scope = sp.CreateScope();
 
         //Assert
-        Assert.Null(scopedInvoker);
+        Assert.Throws<InvalidOperationException>(() =>
+            scope.ServiceProvider.GetRequiredService<IApiClientInvoker<IContract>>());
     }
 }

@@ -10,8 +10,6 @@ class HttpClientRegistrar<TContract>
 {
     readonly ApiContractBinding _binding = new (typeof(TContract));
 
-    public bool Optional { get; set; } = false;
-
     public void Register(IServiceCollection services)
     {
         foreach (var bindingKey in _binding.Keys)
@@ -30,7 +28,7 @@ class HttpClientRegistrar<TContract>
             if (opt!.Url == null)
                 throw new InvalidOperationException($"Api '{typeof(TContract).FullName}' URL is null");
 
-            var normUrl = opt.Url.EndsWith("/")
+            var normUrl = opt.Url.EndsWith('/')
                 ? opt.Url
                 : opt.Url + "/";
 
@@ -60,11 +58,7 @@ class HttpClientRegistrar<TContract>
             throw new InvalidOperationException("ApiClient options not found");
 
         if (!_binding.TryGetOptions(opt.Value, out var epOpt, out _))
-        {
-            return Optional
-                ? null
-                : throw new InvalidOperationException($"Api '{typeof(TContract).FullName}' options not found");
-        }
+            throw new InvalidOperationException($"Api '{typeof(TContract).FullName}' options not found");
 
         return epOpt;
     }

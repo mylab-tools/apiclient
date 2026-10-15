@@ -9,11 +9,11 @@
             Provides extension methods for adding API client services to an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.AddApiClient``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Boolean)">
-            <inheritdoc cref="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClient``1(System.Boolean)"/>
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.AddApiClient``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <inheritdoc cref="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClient``1"/>
         </member>
-        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.AddApiClientScoped``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Boolean)">
-            <inheritdoc cref="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClientScoped``1(System.Boolean)"/>
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.AddApiClientScoped``1(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <inheritdoc cref="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClientScoped``1"/>
         </member>
         <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.AddApiClients(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{MyLab.ApiClient.DI.IApiContractRegistrar})">
             <inheritdoc cref="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClients(System.Action{MyLab.ApiClient.DI.IApiContractRegistrar})"/>
@@ -30,12 +30,12 @@
         <member name="T:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.&lt;M&gt;$6BEA73177691D2862842D66CC9F1DED9">
             <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to which the configuration will be added.</param>
         </member>
-        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClient``1(System.Boolean)">
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClient``1">
             <summary>
             Adds an API client for the specified contract type to the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
             </summary>
         </member>
-        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClientScoped``1(System.Boolean)">
+        <member name="M:MyLab.ApiClient.AddServiceCollectionExtensions.&lt;G&gt;$7B30185E57B8298C6754F16C0BCF4773.AddApiClientScoped``1">
             <summary>
             Adds an API client for the specified contract type to the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> with a scoped lifetime.
             </summary>
@@ -710,34 +710,30 @@
         </member>
         <member name="T:MyLab.ApiClient.DI.IApiClientAccessor`1">
             <summary>
-            Provides safe access to an optionally configured API client and invoker.
+            Provides access to the API client and invoker registered for a contract.
             </summary>
             <typeparam name="TContract">
             The API contract interface associated with the client.
             </typeparam>
             <remarks>
-            Use this abstraction when the API endpoint may be absent from configuration
-            (<c>AddApiClient&lt;TContract&gt;(optional: true)</c>). Unlike direct injection of
-            <typeparamref name="TContract"/> or <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1"/>,
-            the accessor itself is always registered and never <c>null</c>.
+            The accessor is registered together with the contract and is never <c>null</c>.
+            Unlike direct injection of <typeparamref name="TContract"/> or
+            <see cref="T:MyLab.ApiClient.Usage.Invocation.IApiClientInvoker`1"/>, it exposes both the proxy and the invoker.
             </remarks>
         </member>
         <member name="P:MyLab.ApiClient.DI.IApiClientAccessor`1.IsConfigured">
             <summary>
-            Gets a value indicating whether the API endpoint is present in configuration
-            and the client was created.
+            Gets a value indicating whether the client was created.
             </summary>
         </member>
         <member name="P:MyLab.ApiClient.DI.IApiClientAccessor`1.Client">
             <summary>
-            Gets the transparent proxy for <typeparamref name="TContract"/>,
-            or <c>null</c> when the endpoint is not configured.
+            Gets the transparent proxy for <typeparamref name="TContract"/>.
             </summary>
         </member>
         <member name="P:MyLab.ApiClient.DI.IApiClientAccessor`1.Invoker">
             <summary>
-            Gets the detailed invoker for <typeparamref name="TContract"/>,
-            or <c>null</c> when the endpoint is not configured.
+            Gets the detailed invoker for <typeparamref name="TContract"/>.
             </summary>
         </member>
         <member name="T:MyLab.ApiClient.DI.IApiContractRegistrar">

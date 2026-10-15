@@ -6,15 +6,12 @@ using System;
 using System.Net.Http;
 using MyLab.ApiClient.Usage;
 using MyLab.ApiClient.Usage.Invocation;
-#pragma warning disable CS8634 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'class' constraint.
 
 namespace MyLab.ApiClient.DI;
 
 class ApiContractRegistrar<TContract> where TContract : class
 {
     readonly ApiContractBinding _binding = new(typeof(TContract));
-        
-    public bool Optional { get; set; } = false;
 
     public void Register(IServiceCollection services)
     {
@@ -23,26 +20,18 @@ class ApiContractRegistrar<TContract> where TContract : class
         //Inject proxy
         services.AddSingleton(serviceProvider =>
         {
-            if (!TryGetFactoringParams(serviceProvider, out var reqProc, out var opts))
-            {
-                return null;
-            }
-            
-            return ApiClientProxy.CreateForContract<TContract>(reqProc!, opts!);
+            GetFactoringParams(serviceProvider, out var reqProc, out var opts);
+            return ApiClientProxy.CreateForContract<TContract>(reqProc, opts);
         });
 
         //Inject invoker
         services.AddSingleton(serviceProvider =>
         {
-            if (!TryGetFactoringParams(serviceProvider, out var reqProc, out var opts))
-            {
-                return null;
-            }
-
-            return ApiClientInvokerFactory.FromContract<TContract>(reqProc!, opts!);
+            GetFactoringParams(serviceProvider, out var reqProc, out var opts);
+            return ApiClientInvokerFactory.FromContract<TContract>(reqProc, opts);
         });
 
-        //Inject accessor (always non-null; Client/Invoker may be null when optional)
+        //Inject accessor
         services.AddSingleton(CreateAccessor);
     }
 
@@ -53,27 +42,19 @@ class ApiContractRegistrar<TContract> where TContract : class
         //Inject proxy
         services.AddScoped(serviceProvider =>
         {
-            if (!TryGetFactoringParams(serviceProvider, out var reqProc, out var opts))
-            {
-                return null;
-            }
-
-            return ApiClientProxy.CreateForContract<TContract>(reqProc!, opts!);
+            GetFactoringParams(serviceProvider, out var reqProc, out var opts);
+            return ApiClientProxy.CreateForContract<TContract>(reqProc, opts);
         });
 
         //Inject invoker
         services.AddScoped(serviceProvider =>
         {
-            if (!TryGetFactoringParams(serviceProvider, out var reqProc, out var opts))
-            {
-                return null;
-            }
-
-            return ApiClientInvokerFactory.FromContract<TContract>(reqProc!, opts!);
+            GetFactoringParams(serviceProvider, out var reqProc, out var opts);
+            return ApiClientInvokerFactory.FromContract<TContract>(reqProc, opts);
         });
 
-        //Inject accessor (always non-null; Client/Invoker may be null when optional)
-        services.AddScoped<IApiClientAccessor<TContract>>(CreateAccessor);
+        //Inject accessor
+        services.AddScoped(CreateAccessor);
     }
 
     static IApiClientAccessor<TContract> CreateAccessor(IServiceProvider serviceProvider)
@@ -84,28 +65,17 @@ class ApiContractRegistrar<TContract> where TContract : class
         return new ApiClientAccessor<TContract>(client, invoker);
     }
 
-    bool TryGetFactoringParams(IServiceProvider serviceProvider, out IRequestProcessor? reqProc, out ApiClientOptions? opts)
+    void GetFactoringParams(IServiceProvider serviceProvider, out IRequestProcessor reqProc, out ApiClientOptions opts)
     {
-        opts = serviceProvider.GetService<IOptions<ApiClientOptions>>()?.Value;
+        var options = serviceProvider.GetService<IOptions<ApiClientOptions>>()?.Value 
+                      ?? throw new InvalidOperationException("ApiClient options not found");
 
-        if (opts == null)
-            throw new InvalidOperationException("ApiClient options not found");
-
-        if (!_binding.TryGetOptions(opts, out _, out var bindingKey))
-        {
-            if (Optional)
-            {
-                reqProc = null;
-                return false;
-            }
-
+        if (!_binding.TryGetOptions(options, out _, out var bindingKey))
             throw new InvalidOperationException($"Api '{typeof(TContract).FullName}' options not found");
-        }
 
         var httpFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
         var httpClientProvider = new FactoryHttpClientProvider(httpFactory, bindingKey!);
         reqProc = new HttpClientRequestProcessor(httpClientProvider);
-
-        return true;
+        opts = options;
     }
 }
