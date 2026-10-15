@@ -1,0 +1,225 @@
+openapi: 3.0.0
+info:
+  title: Тестовый API
+  version: '1.2.3'
+servers:
+  - url: foo-dev.ru/v1
+    description: Контур разработки
+  - url: foo-test.ru/v1
+    description: Тестовый контур
+  - url: foo.ru/v1
+    description: Промышленный контур
+paths:
+  '/orders':
+    get:
+      tags:
+        - Заказы
+      summary: Все заказы
+      description: Постраничный поиск по всем заказам с возможностью ограничения по пользователю
+      parameters:
+        - $ref: '#/components/parameters/UserIdQuery'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: Перечень найденных заказов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderList'
+
+  '/orders/{id}':
+    get:
+      tags:
+        - Заказы
+      summary: Детальная информация о заказе
+      description: Получает детальную информацию о заказе по его идентификатору
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      responses:
+        '200':
+          description: Полные данные заказа
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDetails'
+        '404':
+          description: Заказ не найден
+
+  '/orders/{id}/comment':
+    put:
+      tags:
+        - Заказы
+      summary: Устанавливает комментарий к заказу
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderComment'
+      responses:
+        '200':
+          description: Комментарий успешно установлен
+        '404':
+          description: Заказ не найден
+
+  '/users':
+    get:
+      tags:
+        - Пользователи
+      summary: Все пользователи
+      description: Постраничный поиск по всем пользователям
+      parameters:
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: Перечень найденных пользователь
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserList'
+
+components:
+  parameters:
+    OrderId:
+      name: id
+      in: path
+      required: true
+      description: Идентификатор заказа
+      schema:
+        type: integer
+      example: 1
+
+    UserIdQuery:
+      name: user_id
+      in: query
+      required: false
+      description: Фильтр по идентификатору пользователя
+      schema:
+        type: string
+      example: '12345'
+
+    Page:
+      name: page
+      in: query
+      required: false
+      description: Номер страницы (по умолчанию 1)
+      schema:
+        type: integer
+        default: 1
+      example: 1
+
+  schemas:
+    DocumentShort:
+      type: object
+      description: Краткая информация о документе
+      properties:
+        id:
+          type: integer
+          description: Идентификатор документа
+          example: 1
+        date:
+          type: string
+          format: date
+          description: Дата создания документа
+          example: '2026-05-04'
+        notaryId:
+          type: string
+          description: Идентификатор нотариуса
+          example: '12345'
+        name:
+          type: string
+          description: Наименование документа
+          example: 'Договор купли-продажи'
+        clientName:
+          type: string
+          description: ФИО клиента
+          example: 'Петров П.П.'
+      required:
+        - id
+        - date
+        - notaryId
+        - name
+        - clientName
+
+    UserList:
+      type: object
+      description: Список пользователей
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserShort'
+        hasNext:
+          type: boolean
+          description: Признак наличия следующей страницы
+          example: true
+      required:
+        - items
+        - hasNext
+
+    OrderList:
+      type: object
+      description: Список заказов
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentShort'
+        hasNext:
+          type: boolean
+          description: Признак наличия следующей страницы
+          example: true
+      required:
+        - items
+        - hasNext
+
+    OrderDetails:
+      type: object
+      description: Детальная информация о заказе
+      properties:
+        date:
+          type: string
+          format: date
+          description: Дата создания
+          example: '2026-05-04'
+        userId:
+          type: string
+          description: Идентификатор пользователя
+          example: '12345'
+        comment:
+          $ref: '#/components/schemas/OrderComment'
+      required:
+        - date
+        - notaryId
+      
+    OrderComment:
+      type: object
+      description: Коммантарий к заказу
+      properties:
+        text: 
+          type: string
+          description: Текст комментария
+          example: "Поспешить!"
+        level:
+          type: integer
+          description: Уровень важности
+          example: 3
+      required:
+        - text
+    
+    UserShort:
+      type: object
+      description: Краткая информаци о опльзователе
+      properties:
+        id: 
+          type: string
+          description: Идентификатор
+          example: "123"
+        name:
+          type: string
+          description: Имя пользователя
+          example: "Ololosh"
+      required:
+        - id
+        - name
